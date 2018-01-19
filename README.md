@@ -1,10 +1,10 @@
 # HHS CMS BizFlow HR Tracking System
 ## (a.k.a. NEIL)
 
-System Components
+## System Components
 
-database
-java
-process
-report
-ui
+- database
+- java
+- process
+- report
+- ui
