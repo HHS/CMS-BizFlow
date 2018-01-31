@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-10-27T07:41:10 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SME_Job_Analysis" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="f3d82fd1-d4d8-4577-bc87-80578ad5722d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - QA"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="https://hrts.dev.hhs.gov/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/SubReports/SME_Job_Analysis"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/SubReports/SME_Job_Analysis"/>
+	<parameter name="reqNum" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+ 
+ "V"."SME_FOR_JOB_ANALYSIS" AS SME_for_JA,
+ "V"."SME_NAME_JA" AS SME_JA_Name,
+ "V"."SME_EMAIL_JA" AS SME_JA_Email,
+ "V"."SME_FOR_QUALIFICATION"  AS SME_for_Quals,
+ "V"."SME_NAME_QUAL_1" AS SME_Qual_Name1,
+ "V"."SME_EMAIL_QUAL_1" AS SME_Qual_Email1,
+ "V"."SME_NAME_QUAL_2" AS SME_Qual_Name2,
+ "V"."SME_EMAIL_QUAL_2" AS SME_Qual_Email2,
+ "V"."JA_SEL_FACTOR_REQ"  ,
+ "V"."JA_SEL_FACTOR_JUST" ,
+ "V"."JA_QUAL_RANK_REQ" ,
+ "V"."JA_QUAL_RANK_JUST" ,
+ "V"."JA_RESPONSES_REQ" ,
+ "V"."JA_TYPE_REQ_DEFAULT" ,
+ "V"."JA_TYPE_YES_NO" ,
+ "V"."JA_TYPE_KNOWL_SCALE" ,
+
+  "V"."JA_ASSESS_TYPE" AS Assessment_Types,
+ 
+  "V"."POS_SERIES" AS Series
+ 
+ 
+FROM  "HHS_CMS_HR"."VW_STRATCON" V
+WHERE  "V"."REQ_JOB_REQ_NUMBER" = $P{reqNum}]]>
+	</queryString>
+	<field name="SME_FOR_JA" class="java.lang.String"/>
+	<field name="SME_JA_NAME" class="java.lang.String"/>
+	<field name="SME_JA_EMAIL" class="java.lang.String"/>
+	<field name="SME_FOR_QUALS" class="java.lang.String"/>
+	<field name="SME_QUAL_NAME1" class="java.lang.String"/>
+	<field name="SME_QUAL_EMAIL1" class="java.lang.String"/>
+	<field name="SME_QUAL_NAME2" class="java.lang.String"/>
+	<field name="SME_QUAL_EMAIL2" class="java.lang.String"/>
+	<field name="JA_SEL_FACTOR_REQ" class="java.lang.String"/>
+	<field name="JA_SEL_FACTOR_JUST" class="java.lang.String"/>
+	<field name="JA_QUAL_RANK_REQ" class="java.lang.String"/>
+	<field name="JA_QUAL_RANK_JUST" class="java.lang.String"/>
+	<field name="JA_RESPONSES_REQ" class="java.lang.String"/>
+	<field name="JA_TYPE_REQ_DEFAULT" class="java.lang.String"/>
+	<field name="JA_TYPE_YES_NO" class="java.lang.String"/>
+	<field name="JA_TYPE_KNOWL_SCALE" class="java.lang.String"/>
+	<field name="ASSESSMENT_TYPES" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="86" splitType="Stretch">
+			<line>
+				<reportElement positionType="Float" x="0" y="20" width="580" height="1" forecolor="#969595" uuid="d8095d85-bf25-4e44-bd4b-ec1bda4904df">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0" lineColor="#9C8F8F"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="24" width="220" height="15" uuid="131485a2-1f72-45a4-88c8-3d53fd454f3b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h3" value="full"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Job Analysis SME]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="39" width="220" height="15" uuid="d83dc2d9-e2da-4e3d-a8ec-6afe086c2b0d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="9"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SME_JA_NAME} != null) ? 
+																			new Boolean($F{SME_JA_EMAIL} != null) ? ($F{SME_JA_NAME} + " (" + $F{SME_JA_EMAIL} + ')') : $F{SME_JA_NAME}
+																			:  "None selected"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="230" y="24" width="341" height="15" uuid="52a2ecd7-5203-4e75-a8ec-a231b8b3756e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qualification SME(s)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="56" width="220" height="15" uuid="b2fbfc06-a02f-4d5f-bbdd-721ea794d13e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Selective Factor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="231" y="56" width="138" height="15" uuid="fa7b239a-ea25-43ec-9d40-b50bd9938bdc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Quality Ranking Factor]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="231" y="71" width="138" height="15" uuid="00eda729-8cc9-4a54-b34b-523a609f278a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JA_QUAL_RANK_REQ}.equals( "No" ) ? "No" : ($F{JA_QUAL_RANK_REQ} + "; " + $F{JA_QUAL_RANK_JUST})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="380" y="56" width="192" height="15" uuid="9b4aba63-4370-466c-abf3-dc475a31c373">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Assessment Type(s)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="230" y="39" width="341" height="15" uuid="0207b4e6-1e01-4996-8bfe-962583daff3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" spacingBefore="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{SME_FOR_QUALS}.equals( "Yes" )) ? 
+
+																	($F{SME_QUAL_NAME2} == null ? 
+																																	($F{SME_QUAL_NAME1} + " (" + $F{SME_QUAL_EMAIL1} + ")") 
+																																	:  ($F{SME_QUAL_NAME1} + " (" + $F{SME_QUAL_EMAIL1} + "); " + $F{SME_QUAL_NAME2} + " (" + $F{SME_QUAL_EMAIL2} + ") ")
+																	)
+
+																	 : "None selected"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="71" width="220" height="15" uuid="e61c66a8-de1c-46c9-ad5a-56d4bdbe52ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SERIES}.equals("0602") ? "Yes; Per CMS policy, to be eligible for referral, applicants must possess a permanent, full, and unrestricted license to practice medicine in a state, the District of Columbia, the Commonwealth of Puerto Rico, or a territory in the United States. "
+:
+$F{JA_SEL_FACTOR_REQ}.equals( "No" ) ? "No" : ($F{JA_SEL_FACTOR_REQ} + "; " + $F{JA_SEL_FACTOR_JUST})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="380" y="71" width="192" height="15" uuid="cc6b4890-5bb3-41b6-9fe7-9defe3e0e932">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JA_RESPONSES_REQ}.equals( "No" ) ? "None" :
+$F{ASSESSMENT_TYPES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="220" height="20" uuid="e5fb5c98-0b2d-4d8e-af45-4defa5581485">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SME/JOB ANALYSIS INFORMATION]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="55" width="573" height="1" forecolor="#FFFFFF" uuid="42cd50fd-610d-4ad7-ba68-6dc53dd09773">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

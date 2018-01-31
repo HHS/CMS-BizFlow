@@ -1,0 +1,11 @@
+UPDATE TBL_LOOKUP SET TBL_LABEL = 'U.S. OPM Flysheet for Comp Science, GS-1550; TS-83; 01/88' WHERE TBL_ID = 568;
+
+UPDATE TBL_LOOKUP SET TBL_LABEL = 'U.S. OPM Flysheet for Mgmt and Prog Analy, GS-0343; TS-98; 08/90' WHERE TBL_ID = 573;
+
+UPDATE TBL_LOOKUP SET TBL_NAME = 'FlysheetForMiscAdminandProg', TBL_LABEL = 'U.S. OPM Flysheet for Misc Admin and Prog, GS-0301; TS-34; 01/79' WHERE TBL_ID = 574;
+
+UPDATE TBL_LOOKUP SET TBL_LABEL = 'U.S. OPM JFS for Prof and Admin Work in Acct and Budget Group, GS-0500; 12/00' WHERE TBL_ID = 601;
+
+UPDATE TBL_LOOKUP SET TBL_LABEL = 'U.S. OPM PCS for Secretary, GS-0318; TS-64; 06/82' WHERE TBL_ID = 628;
+
+UPDATE TBL_LOOKUP SET TBL_LABEL = 'U.S. OPM Research Grade Eval Guide; 09/06' WHERE TBL_ID = 632;

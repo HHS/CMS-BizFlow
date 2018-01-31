@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-13T22:10:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Incentives_and_Outreach" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="f3d82fd1-d4d8-4577-bc87-80578ad5722d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - QA"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="https://hrts.dev.hhs.gov/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/SubReports/Incentives_and_Outreach"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/SubReports/Incentives_and_Outreach"/>
+	<parameter name="reqNum" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT  
+
+"V"."TR_PAID_AD_SPEC_DSCR" AS Paid_Ad ,
+ "V"."TR_PAID_AD_SPEC_OTHR" Paid_Ad_Other,
+ 
+ "V"."TR_SCHL_PSTG_SPEC_DSCR" AS School_Posting,
+ "V"."TR_SCHL_PSTG_SPEC_OTHR" AS School_Posting_Other,
+ 
+  "V"."TR_SOCIAL_MEDIA_SPEC_DSCR" AS Social_Media,
+  "V"."TR_SOCIAL_MEDIA_SPEC_OTHR" AS Social_Media_Other,
+  
+  "V"."TR_OTHER_SPEC" As Other_Outreach,
+  
+  "V"."RI_OA_APRV_ITEM_DSCR" AS Approved_Incentive,
+  "V"."RI_MOVING_EXP_AUTH" AS Moving_Incentive
+  
+  FROM  "HHS_CMS_HR"."VW_STRATCON" V
+  WHERE  "V"."REQ_JOB_REQ_NUMBER"  = $P{reqNum}]]>
+	</queryString>
+	<field name="PAID_AD" class="java.lang.String"/>
+	<field name="PAID_AD_OTHER" class="java.lang.String"/>
+	<field name="SCHOOL_POSTING" class="java.lang.String"/>
+	<field name="SCHOOL_POSTING_OTHER" class="java.lang.String"/>
+	<field name="SOCIAL_MEDIA" class="java.lang.String"/>
+	<field name="SOCIAL_MEDIA_OTHER" class="java.lang.String"/>
+	<field name="OTHER_OUTREACH" class="java.lang.String"/>
+	<field name="APPROVED_INCENTIVE" class="java.lang.String"/>
+	<field name="MOVING_INCENTIVE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="118" splitType="Stretch">
+			<line>
+				<reportElement positionType="Float" x="0" y="20" width="580" height="1" forecolor="#969595" uuid="d8095d85-bf25-4e44-bd4b-ec1bda4904df">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0" lineColor="#9C8F8F"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="25" width="130" height="15" uuid="131485a2-1f72-45a4-88c8-3d53fd454f3b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h3" value="full"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Incentives:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="220" height="20" uuid="e5fb5c98-0b2d-4d8e-af45-4defa5581485">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INCENTIVES AND OUTREACH INFORMATION]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="130" y="25" width="440" height="15" uuid="65d9ef07-e7b5-4038-bd13-2d3ed2cf95ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{APPROVED_INCENTIVE} != null) && ($F{MOVING_INCENTIVE}.equals("Yes"))) ? ($F{APPROVED_INCENTIVE} + "; " + "Moving Expenses") :
+
+
+	($F{APPROVED_INCENTIVE} != null) ? $F{APPROVED_INCENTIVE} :
+	($F{MOVING_INCENTIVE}.equals("Yes")) ? "Moving Expenses" :
+	"None"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="44" width="130" height="15" uuid="61daead8-8476-472c-82ed-8dd3803c67ae">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h3" value="full"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Paid Advertisement(s):]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="130" y="44" width="440" height="15" uuid="69f161b0-81e9-497a-bea4-3a3e696155ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{PAID_AD} != null) && ($F{PAID_AD_OTHER} != null)) ? ($F{PAID_AD} + "; " + $F{PAID_AD_OTHER}) :
+
+
+	($F{PAID_AD} != null) ? $F{PAID_AD} :
+	($F{PAID_AD_OTHER} != null) ? $F{PAID_AD_OTHER} :
+	"None"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="64" width="130" height="15" uuid="2110134a-82b1-4177-bffe-f076cf748914">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h3" value="full"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[School/University Posting(s):]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="130" y="64" width="440" height="15" uuid="7386ad69-b58b-4d03-b7e1-e444b1507deb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{SCHOOL_POSTING} != null) && ($F{SCHOOL_POSTING_OTHER} != null)) ? ($F{SCHOOL_POSTING} + "; " + $F{SCHOOL_POSTING_OTHER}) :
+
+
+	($F{SCHOOL_POSTING} != null) ? $F{SCHOOL_POSTING} :
+	($F{SCHOOL_POSTING_OTHER} != null) ? $F{SCHOOL_POSTING_OTHER} :
+	"None"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="83" width="130" height="15" uuid="2621d957-06ba-4961-bf7e-4386a828693f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h3" value="full"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Social Media:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="130" y="83" width="440" height="15" uuid="711b8ca0-82f4-410f-b37d-1259f495b8a2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{SOCIAL_MEDIA} != null) && ($F{SOCIAL_MEDIA_OTHER} != null)) ? ($F{SOCIAL_MEDIA} + "; " + $F{SOCIAL_MEDIA_OTHER}) :
+
+
+	($F{SOCIAL_MEDIA} != null) ? $F{SOCIAL_MEDIA} :
+	($F{SOCIAL_MEDIA_OTHER} != null) ? $F{SOCIAL_MEDIA_OTHER} :
+	"None"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="101" width="130" height="15" uuid="218384ab-0a6c-430b-bbf1-3116a0b2ebf3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h3" value="full"/>
+					<printWhenExpression><![CDATA[new Boolean ($F{OTHER_OUTREACH} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="none">
+					<font size="9" isBold="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[Other Outreach:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="130" y="101" width="440" height="15" uuid="2f361e4d-3508-4847-a540-674474dc6a8f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean ($F{OTHER_OUTREACH} != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph spacingBefore="2" spacingAfter="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OTHER_OUTREACH} != null ? $F{OTHER_OUTREACH}: "None"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="41" width="279" height="1" forecolor="#FFFFFF" uuid="9a512e67-6853-4ed8-82e0-d522cea72e3d"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="61" width="279" height="1" forecolor="#FFFFFF" uuid="14c532eb-c2ef-4aa3-9ece-d306398a7ff8"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="1" y="81" width="279" height="1" forecolor="#FFFFFF" uuid="58bf9835-2a47-4c51-ad42-0f85fdf3f46d"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="100" width="279" height="1" forecolor="#FFFFFF" uuid="9e85bb70-ad03-4671-95fd-30424d455a48"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

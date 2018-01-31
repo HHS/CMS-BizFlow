@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-26T19:58:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Classification Workload Summary report" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - QA"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
+	<property name="ireport.jasperserver.url" value="https://hrts.dev.hhs.gov/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Classification_Workload_Summary_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Classification_Workload_Summary"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="780"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="206"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+		<queryString language="SQL">
+			<![CDATA[Select top 5 * from  "ORDERS"]]>
+		</queryString>
+		<field name="ORDERID" class="java.lang.Integer"/>
+		<field name="SHIPNAME" class="java.lang.String"/>
+		<field name="SHIPPEDDATE" class="java.sql.Timestamp"/>
+	</subDataset>
+	<parameter name="FiscalYear" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[2017]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT "LK"."TBL_NAME" AS Classification_Type,
+
+	SUM(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 10 AND 12 THEN 1 ELSE 0 END) AS CLASS_COUNT_Q1,
+	AVG(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 10 AND 12 THEN "CF"."PROCESS_AGE" ELSE NULL END) AS Average_Age_Q1,
+
+	SUM(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 1 AND 3 THEN 1 ELSE 0 END) AS CLASS_COUNT_Q2,
+	AVG(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 1 AND 3 THEN "CF"."PROCESS_AGE" ELSE NULL END)  AS Average_Age_Q2,
+	
+	SUM(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 4 AND 6 THEN 1 ELSE 0 END) AS CLASS_COUNT_Q3,
+	AVG(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 4 AND 6 THEN "CF"."PROCESS_AGE" ELSE NULL END)  AS Average_Age_Q3,
+
+	SUM(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 7 AND 9 THEN 1 ELSE 0 END) AS CLASS_COUNT_Q4,
+	AVG(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 7 AND 9 THEN "CF"."PROCESS_AGE" ELSE NULL END)  AS Average_Age_Q4,
+	
+	SUM(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 1 AND 12 THEN 1 ELSE 0 END) AS CLASS_COUNT_ANNUAL,
+	AVG(CASE WHEN TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 1 AND 12 THEN "CF"."PROCESS_AGE" ELSE NULL END)  AS Average_Age_ANNUAL,
+	
+	-- Generates the text for the column labels
+	'10/01/' || SUBSTR(TO_CHAR(TO_Number($P{FiscalYear}) - 1), 3,2) || ' - ' || '12/31/' || SUBSTR(TO_CHAR(TO_Number($P{FiscalYear}) - 1), 3,2)  AS Q1,
+	'01/01/' || SUBSTR($P{FiscalYear}, 3,2) || ' - ' || '03/31/' || SUBSTR($P{FiscalYear}, 3,2)  AS Q2,
+	'04/01/' || SUBSTR($P{FiscalYear}, 3,2) || ' - ' || '06/30/' || SUBSTR($P{FiscalYear}, 3,2)  AS Q3,
+	'07/01/' || SUBSTR($P{FiscalYear}, 3,2) || ' - ' || '09/30/' || SUBSTR($P{FiscalYear}, 3,2)  AS Q4
+	
+			    
+FROM "HHS_CMS_HR"."TBL_LOOKUP" LK
+LEFT JOIN  "HHS_CMS_HR"."VW_STRATCON" SC ON   "LK"."TBL_ID" = "SC"."SG_CT_ID" 
+LEFT JOIN  "HHS_CMS_HR"."VW_CLASSIFICATION" C ON "SC"."REQ_ID"  = "C"."REQ_ID" 
+LEFT JOIN "HHS_VW_CLASSIFICATION_PROC" CF ON  ("CF"."PROCESS_ID" =  "C"."PD_PROCID" 
+									AND "CF"."PROCESS_STATE_DESC" = 'Completed'  AND "CF"."REQUEST_STATUS" <> 'Request Cancelled' -- Classification completed but not cancelled
+									AND ( 		((TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 10 AND 12) AND TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'YYYY') = TO_NUMBER($P{FiscalYear}) - 1)  -- Completed in the first three months of the Fiscal Year
+														OR 	((TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'MM') BETWEEN 1 AND 9) AND TO_CHAR("CF"."PROCESS_COMPLETION_DATE", 'YYYY') = $P{FiscalYear}) -- Completed in the last nine months of the Fiscal Year
+								))
+WHERE TBL_LTYPE = 'ClassificationType' AND TBL_PARENT_ID <> 0
+	
+GROUP BY  "LK"."TBL_NAME"
+
+ORDER BY  "LK"."TBL_NAME"
+
+--RUNS in 12 seconds]]>
+	</queryString>
+	<field name="CLASSIFICATION_TYPE" class="java.lang.String"/>
+	<field name="CLASS_COUNT_Q1" class="java.math.BigDecimal"/>
+	<field name="AVERAGE_AGE_Q1" class="java.math.BigDecimal"/>
+	<field name="CLASS_COUNT_Q2" class="java.math.BigDecimal"/>
+	<field name="AVERAGE_AGE_Q2" class="java.math.BigDecimal"/>
+	<field name="CLASS_COUNT_Q3" class="java.math.BigDecimal"/>
+	<field name="AVERAGE_AGE_Q3" class="java.math.BigDecimal"/>
+	<field name="CLASS_COUNT_Q4" class="java.math.BigDecimal"/>
+	<field name="AVERAGE_AGE_Q4" class="java.math.BigDecimal"/>
+	<field name="CLASS_COUNT_ANNUAL" class="java.math.BigDecimal"/>
+	<field name="AVERAGE_AGE_ANNUAL" class="java.math.BigDecimal"/>
+	<field name="Q1" class="java.lang.String"/>
+	<field name="Q2" class="java.lang.String"/>
+	<field name="Q3" class="java.lang.String"/>
+	<field name="Q4" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="111" y="6" width="530" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NEIL HR Classification Completed Work Summary]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="270" y="30" width="212" height="26" uuid="b371b536-3ed9-4c06-9365-352bbda9e18a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["for Fiscal Year " + $P{FiscalYear}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="70">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="10" width="170" height="60" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Classification Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="170" y="40" width="55" height="30" uuid="551a1227-e9b3-4eff-8588-213f39910d2e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[No. of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="225" y="40" width="55" height="30" uuid="c789146e-79b0-4acd-ad26-c5fbb967cd90"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Avg Days to Classify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="280" y="40" width="55" height="30" uuid="bb1ddca2-5fd1-4ba5-81a8-ae1aba72f348"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[No. of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="335" y="40" width="55" height="30" uuid="4bfa78aa-07d1-4fe4-9a46-a1afecc5477f"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Avg Days to Classify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="170" y="10" width="110" height="30" uuid="0bd76f8b-bf25-450f-b795-450b69f197ac">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="390" y="40" width="55" height="30" uuid="f328bbde-6993-4d12-9865-a660a4a01902"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[No. of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="445" y="40" width="55" height="30" uuid="3af0b777-68a7-42b5-9ebf-578c09ed94e1"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Avg Days to Classify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="390" y="10" width="110" height="30" uuid="2e5422fd-e730-4387-9b3d-90bf7757bb4f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="500" y="40" width="55" height="30" uuid="0c95dd66-6f8a-4452-9cba-4820ce456c72"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[No. of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="555" y="40" width="55" height="30" uuid="d802818c-1d1c-4dc9-95a1-6c65384c45c8"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Avg Days to Classify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="500" y="10" width="110" height="30" uuid="9c2dcbd8-e185-4d1d-aa31-da8975737622">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="610" y="40" width="55" height="30" uuid="56d7a98c-44d6-489d-ba40-abca6b824234"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[No. of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="665" y="40" width="55" height="30" uuid="6037cef1-4050-48da-a8d9-9f7a24c3b9f2"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Avg Days to Classify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="610" y="10" width="110" height="30" uuid="507ac0d9-7fbd-48af-aaf9-2152f57ad0af">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Annual Summary]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="280" y="10" width="110" height="30" uuid="60590d18-85d4-431d-8f40-a601245b6f07">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="170" y="10" width="110" height="30" uuid="c24ebc0f-2386-49f6-a1d4-9fcf6c52f301"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1st Reporting Period " + $F{Q1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="10" width="110" height="30" uuid="a2f81cea-2718-4889-b056-5d24fe6a0d66"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2nd Reporting Period " + $F{Q2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="10" width="110" height="30" uuid="07acd07b-5996-448f-b89e-b8ed4936a34f"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3rd Reporting Period " + $F{Q3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="10" width="110" height="30" uuid="b640a03d-77f9-4013-acef-0c44a20232b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2" rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["4th Reporting Period " + $F{Q4}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="170" height="20" uuid="4e5d3dd3-d1a7-4c82-a31d-0eb424c59a05">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="9"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASSIFICATION_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="0" width="55" height="20" uuid="2a3643c5-701e-4271-ab67-588e43e16f93">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_COUNT_Q1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="55" height="20" uuid="6c770435-7980-4c2d-84ea-78f62cac206a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_COUNT_Q2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.#">
+				<reportElement x="335" y="0" width="55" height="20" uuid="0a7782af-8aaa-4703-8167-e7429e41360e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AVERAGE_AGE_Q2} != null ? $F{AVERAGE_AGE_Q2}: "n/a"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="0" width="55" height="20" uuid="a5fcb212-1826-483f-98af-f3b3287ce5a9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_COUNT_Q3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.#">
+				<reportElement x="445" y="0" width="55" height="20" uuid="c18d689d-871d-45a9-b93c-d0f3e0d761e1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AVERAGE_AGE_Q3} != null ? $F{AVERAGE_AGE_Q3}: "n/a"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="55" height="20" uuid="e10ec645-710c-46bc-ac92-5648668e606e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_COUNT_Q4}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.#">
+				<reportElement x="555" y="0" width="55" height="20" uuid="58caf177-8002-428a-a074-bc4c2057896d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AVERAGE_AGE_Q4} != null ? $F{AVERAGE_AGE_Q4}: "n/a"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="610" y="0" width="55" height="20" uuid="27b38531-e2f0-446f-bc2e-3925cca9ef31">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASS_COUNT_ANNUAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.#">
+				<reportElement x="665" y="0" width="55" height="20" uuid="2f9ce12a-4257-46b1-8db4-e8881fba93df">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AVERAGE_AGE_ANNUAL} != null ? $F{AVERAGE_AGE_ANNUAL}: "n/a"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.#">
+				<reportElement x="225" y="0" width="55" height="20" uuid="31847a7a-33c3-4a38-8bf1-45ecc223a273">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AVERAGE_AGE_Q1} != null ? $F{AVERAGE_AGE_Q1}: "n/a"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="29">
+			<staticText>
+				<reportElement x="-2" y="0" width="286" height="20" uuid="d23f5711-b9b4-4e15-a0cd-940508552535"/>
+				<textElement>
+					<paragraph leftIndent="4" rightIndent="0"/>
+				</textElement>
+				<text><![CDATA[Note: All calculations are based on business days.]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="643" y="0" width="56" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="699" y="0" width="20" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="1" y="0" width="282" height="15" uuid="5905c9bd-f414-4883-b983-3efa9601bbb8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
