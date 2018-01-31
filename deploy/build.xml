@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CaptureWMRuntime" default="package.ui" basedir=".">
+
+	<property name="proj.root.dir" value="${basedir}" />
+	<property name="webserver.dir" value="C:\Program Files\Apache Software Foundation\Tomcat 7.0" />
+	<property name="src.web.bizflow.dir" value="${webserver.dir}/webapps/bizflow" />
+	<property name="src.wmruntime.dir" value="${webserver.dir}/webapps/bizflowwebmaker" />
+	<property name="deploy.dir" value="${proj.root.dir}/deployment" />
+	<property name="deploy.runtime.dir" value="${deploy.dir}/ui/runtime" />
+	<property name="deploy.conf.dir" value="${deploy.runtime.dir}/configuration" />
+	<property name="deploy.webapps.dir" value="${deploy.runtime.dir}/webapps" />
+	<property name="token.bf.base.url" value="http://cms.bizflow.com" />
+	<!-- Note: comment out blastcache.set property if cache blasting should be disabled. -->
+	<property name="blastcache.set" value="true"/>
+
+
+
+
+	<target name="init">
+		<tstamp>
+			<format property="curtime" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<echo message="Start time          = ${curtime}" />
+		<echo message="proj.root.dir       = ${proj.root.dir}" />
+		<echo message="webserver.dir       = ${webserver.dir}" />
+		<echo message="src.wmruntime.dir   = ${src.wmruntime.dir}" />
+		<echo message="deploy.dir          = ${deploy.dir}" />
+		<echo message="deploy.runtime.dir  = ${deploy.runtime.dir}" />
+		<echo message="deploy.conf.dir     = ${deploy.conf.dir}" />
+		<echo message="deploy.webapps.dir  = ${deploy.webapps.dir}" />
+		<echo message="token.bf.base.url   = ${token.bf.base.url}" />
+		<echo message="blastcache.set      = ${blastcache.set}" />
+	</target>
+
+
+	<target name="package.ui"
+			depends="init"
+			description="capture and package form module and configuration file">
+
+		<delete dir="${deploy.runtime.dir}" />
+		<antcall target="package.form" />
+		<antcall target="package.form.blastcache" />
+		<antcall target="package.form.conf" />
+		<antcall target="package.form.addon" />
+		<antcall target="package.bizflow.custom" />
+		<antcall target="package.bizflow.custom.blastcache" />
+		<antcall target="zip.package" />
+	</target>
+
+
+	<target name="package.form"
+			depends="init"
+			description="capture and package form module without configuration">
+
+		<delete dir="${deploy.webapps.dir}/bizflowwebmaker" />
+		<copy todir="${deploy.webapps.dir}/bizflowwebmaker">
+			<fileset dir="${src.wmruntime.dir}">
+				<include name="cmscommon/**" />
+				<include name="StratConMain/**" />
+				<include name="StratCon_AUT/**" />
+				<include name="classification_main/**" />
+				<include name="eligqual/**" />
+
+				<exclude name="**/morphyc.xml" />
+				<exclude name="**/*log.txt" />
+				<exclude name="**/*log.txt.**" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<target name="package.form.blastcache"
+			if="blastcache.set"
+			depends="package.form"
+			description="modifies js/css inclusion with timestamp to blast web cache for webmaker form.">
+		<echo message="Web application cache blast is enabled." />
+		<tstamp>
+			<format property="blockcachesfx" pattern="yyyyMMddHHmmss" />
+		</tstamp>
+		<replace dir="${deploy.webapps.dir}/bizflowwebmaker"
+			includes="**/views/view/Page_Painter/BizFlowEntry.xsl, **/views/view/Page_Painter/NewForm.xsl, **/views/view/Page_Painter/SaveTabContentsForm.xsl">
+			<replacefilter token=".css" value=".css?rev=${blockcachesfx}" />
+			<replacefilter token=".js" value=".js?rev=${blockcachesfx}" />
+		</replace>
+	</target>
+
+
+	<target name="package.form.conf"
+			depends="init"
+			description="capture and package form configuration">
+
+		<delete dir="${deploy.conf.dir}" />
+		<copy todir="${deploy.conf.dir}/template/tomcat/webapps/bizflowwebmaker">
+			<fileset dir="${src.wmruntime.dir}">
+				<include name="cmscommon/doc/morphyc.xml" />
+				<include name="StratConMain/doc/morphyc.xml" />
+				<include name="StratCon_AUT/doc/morphyc.xml" />
+				<include name="classification_main/doc/morphyc.xml" />
+				<include name="eligqual/doc/morphyc.xml" />
+			</fileset>
+		</copy>
+
+		<!-- prepare DEV config -->
+		<copy todir="${deploy.conf.dir}/dev/tomcat/webapps/bizflowwebmaker">
+			<fileset dir="${src.wmruntime.dir}">
+				<include name="cmscommon/doc/morphyc.xml" />
+				<include name="StratConMain/doc/morphyc.xml" />
+				<include name="StratCon_AUT/doc/morphyc.xml" />
+				<include name="classification_main/doc/morphyc.xml" />
+				<include name="eligqual/doc/morphyc.xml" />
+			</fileset>
+		</copy>
+		<replace dir="${deploy.conf.dir}/dev/tomcat/webapps/bizflowwebmaker"
+			includes="**/morphyc.xml">
+			<replacefilter token="${token.bf.base.url}" value="http://localhost:8080" />
+		</replace>
+
+		<!-- prepare QA config -->
+		<copy todir="${deploy.conf.dir}/qa/tomcat/webapps/bizflowwebmaker">
+			<fileset dir="${src.wmruntime.dir}">
+				<include name="cmscommon/doc/morphyc.xml" />
+				<include name="StratConMain/doc/morphyc.xml" />
+				<include name="StratCon_AUT/doc/morphyc.xml" />
+				<include name="classification_main/doc/morphyc.xml" />
+				<include name="eligqual/doc/morphyc.xml" />
+			</fileset>
+		</copy>
+		<replace dir="${deploy.conf.dir}/qa/tomcat/webapps/bizflowwebmaker"
+			includes="**/morphyc.xml">
+			<replacefilter token="${token.bf.base.url}" value="http://localhost:9080" />
+		</replace>
+
+		<!-- prepare PROD config -->
+		<copy todir="${deploy.conf.dir}/prod/tomcat/webapps/bizflowwebmaker">
+			<fileset dir="${src.wmruntime.dir}">
+				<include name="cmscommon/doc/morphyc.xml" />
+				<include name="StratConMain/doc/morphyc.xml" />
+				<include name="StratCon_AUT/doc/morphyc.xml" />
+				<include name="classification_main/doc/morphyc.xml" />
+				<include name="eligqual/doc/morphyc.xml" />
+			</fileset>
+		</copy>
+		<replace dir="${deploy.conf.dir}/prod/tomcat/webapps/bizflowwebmaker"
+			includes="**/morphyc.xml">
+			<replacefilter token="${token.bf.base.url}" value="http://localhost:8080" />
+		</replace>
+	</target>
+
+
+	<target name="package.form.addon"
+			depends="init"
+			description="capture and package form addon module">
+
+		<delete dir="${deploy.webapps.dir}/bizflowwebmaker/WEB-INF" />
+		<copy todir="${deploy.webapps.dir}/bizflowwebmaker/WEB-INF">
+			<fileset dir="${src.wmruntime.dir}/WEB-INF">
+				<include name="classes/HWSessionFactory.properties" />
+				<include name="classes/log4j.properties" />
+				<include name="lib/activation-1.1.jar" />
+				<include name="lib/bcmail-jdk15on-1.54.jar" />
+				<include name="lib/bcpkix-jdk15on-1.54.jar" />
+				<include name="lib/bcprov-jdk15on-1.54.jar" />
+				<include name="lib/cmspdf.jar" />
+				<include name="lib/commons-collections-3.2.1-LICENSE.txt" />
+				<include name="lib/commons-collections-3.2.1.jar" />
+				<include name="lib/commons-logging-1.2.jar" />
+				<include name="lib/fontbox-2.0.4.jar" />
+				<include name="lib/hsfrmwk.jar" />
+				<include name="lib/hwjo.jar" />
+				<include name="lib/hwjsp.jar" />
+				<include name="lib/mail-1.4.jar" />
+				<include name="lib/pdfbox-2.0.4.jar" />
+				<include name="lib/pdfbox-app-2.0.4-sources.jar" />
+				<include name="lib/pdfbox-app-2.0.4.jar" />
+				<include name="lib/pdfbox-debugger-2.0.4.jar" />
+				<include name="lib/pdfbox-tools-2.0.4.jar" />
+				<include name="lib/rijndael-api.jar" />
+				<include name="PDF_Configuration/**" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<target name="package.bizflow.custom"
+			depends="init"
+			description="capture and package bizflow customization">
+
+		<delete dir="${deploy.webapps.dir}/bizflow" />
+		<copy todir="${deploy.webapps.dir}/bizflow">
+			<fileset dir="${src.web.bizflow.dir}">
+				<include name="bizindex.jsp" />
+				<include name="bizindex.org.before.disclaimer.jsp" />
+				<include name="bizindex.org.after.disclaimer.jsp" />
+				<include name="solutions/disclaimer/**" />
+				<include name="solutions/cms/**" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<target name="package.bizflow.custom.blastcache"
+			if="blastcache.set"
+			depends="package.bizflow.custom"
+			description="modifies js/css inclusion with timestamp to blast web cache for bizflow custom module.">
+		<echo message="Web application cache blast is enabled." />
+		<tstamp>
+			<format property="blockcachesfx2" pattern="yyyyMMddHHmmss" />
+		</tstamp>
+		<replace dir="${deploy.webapps.dir}/bizflow/solutions/cms"
+			includes="index.jsp">
+			<replacefilter token=".css" value=".css?rev=${blockcachesfx2}" />
+			<replacefilter token=".js" value=".js?rev=${blockcachesfx2}" />
+		</replace>
+	</target>
+
+
+	<target name="zip.package"
+			depends="init"
+			description="zip packaged deployment files">
+		<tstamp>
+			<format property="ziptime" pattern="yyyyMMdd_HHmmss" />
+		</tstamp>
+		<zip destfile="${deploy.runtime.dir}/../runtime_${ziptime}.zip"
+				basedir="${deploy.runtime.dir}/.."
+				includes="runtime/**" />
+	</target>
+
+</project>
