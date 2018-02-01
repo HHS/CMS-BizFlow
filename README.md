@@ -3,9 +3,9 @@
 
 ## System Components
 
-- database: database scripts for BIZFLOW schema and HHS_CMS_HR schema
-- deploy: deployment script, packaging script
-- java: custom-developed Java module
-- process: process definition, user group, BizCove/View/Menu
-- report: report export
-- ui: UI form
+- ** database ** : Database scripts for BIZFLOW schema and HHS_CMS_HR schema
+- ** deploy ** : Deployment script, packaging script
+- ** java ** : Custom-developed Java module
+- ** process ** : Process definition, user group, BizCove/View/Menu
+- ** report ** : Report export
+- ** ui ** : UI form
