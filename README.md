@@ -9,3 +9,4 @@
 - **process** : Process definition, user group, BizCove/View/Menu
 - **report** : Report export
 - **ui** : UI form
+- **webapps** : Web application, including BizFlow web solution, WebMaker runtime directory
