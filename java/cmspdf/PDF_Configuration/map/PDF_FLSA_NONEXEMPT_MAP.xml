@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<map>
+    <item>
+        <key>#POSITION_TITLE</key>
+        <value>/FORM_DATA/DOCUMENT/GENERAL/CS_TITLE</value>
+    </item>
+    <item>
+        <key>#PAYPLAN_SERIES</key>
+        <value>concat(/FORM_DATA/DOCUMENT/GENERAL/CS_PAY_PLAN_ID, "-", /FORM_DATA/DOCUMENT/GENERAL/CS_SR_ID)</value>
+    </item>
+    <item>
+        <key>#PAYPLAN_SERIES_GRADE</key>
+        <value/>
+    </item>
+
+    <item>
+        <key>#OFFICE_ORGANIZATION</key>
+        <value>/FORM_DATA/DOCUMENT/GENERAL/PD_SUB_ORG_3_DSP</value>
+    </item>
+    <item>
+        <key>#ADMIN_CODE</key>
+        <value>/FORM_DATA/DOCUMENT/GENERAL/CS_AC_ID_DISP</value>
+    </item>
+
+    <item>
+        <key>#FLSA_NONEX_SALARY</key>
+        <value displayValues="X|" whenValueIs="true">/FORM_DATA/DOCUMENT/FLSA_NONEX/FLSA_NONEX_SALARY</value>
+    </item>
+    <item>
+        <key>#FLSA_NONEX_EQUIP_OPER</key>
+        <value displayValues="X|" whenValueIs="true">/FORM_DATA/DOCUMENT/FLSA_NONEX/FLSA_NONEX_EQUIP_OPER</value>
+    </item>
+    <item>
+        <key>#FLSA_NONEX_TECHN</key>
+        <value displayValues="X" whenValueIs="true">/FORM_DATA/DOCUMENT/FLSA_NONEX/FLSA_NONEX_TECHN</value>
+    </item>
+    <item>
+        <key>#FLSA_NONEX_FED_WAGE_SYS</key>
+        <value displayValues="X|" whenValueIs="true">/FORM_DATA/DOCUMENT/FLSA_NONEX/FLSA_NONEX_FED_WAGE_SYS</value>
+    </item>
+
+    <item>
+        <key>#FLSA_NONEX_REMARKS</key>
+        <value>/FORM_DATA/DOCUMENT/FLSA_NONEX/FLSA_REMARKS</value>
+    </item>
+
+    <item>
+        <key>#PD_CLS_SPEC_NAME</key>
+        <value>/FORM_DATA/DOCUMENT/MAIN/CLS_SPC_NAME</value>
+    </item>
+
+    <item>
+        <key>#PD_CLS_SPEC_DT</key>
+        <value></value>
+    </item>
+</map>

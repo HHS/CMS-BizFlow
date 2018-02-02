@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Oracle - @cms.bizflow.com" uuid="a78e2948-25ce-4f6d-a077-c7069d57b311">
+      <database-info product="Oracle" version="Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production&#10;With the Partitioning, OLAP, Data Mining and Real Application Testing options" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>cmsdev</user-name>
+      <introspection-schemas>*:BIZFLOW,CMSDEV</introspection-schemas>
+      <resolve-scope>*:CMSDEV,PUBLIC</resolve-scope>
+      <unqualified-resolve-schemas>*:CMSDEV,PUBLIC</unqualified-resolve-schemas>
+    </data-source>
+    <data-source name="Oracle - @cmstest.bizflow.com" uuid="48d83eeb-3e6d-4450-a166-4ae12c795aef">
+      <database-info product="Oracle" version="Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production&#10;With the Partitioning, OLAP, Data Mining and Real Application Testing options" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>cmsdev</user-name>
+      <introspection-schemas>*:CMSDEV</introspection-schemas>
+      <resolve-scope>*:CMSDEV,PUBLIC</resolve-scope>
+      <unqualified-resolve-schemas>*:CMSDEV,PUBLIC</unqualified-resolve-schemas>
+    </data-source>
+    <data-source name="Oracle - @cms.bizflow.com - BIZFLOW" uuid="8f1efa1e-ac06-46a8-af5f-e8353e470988">
+      <database-info product="Oracle" version="Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production&#10;With the Partitioning, OLAP, Data Mining and Real Application Testing options" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>bizflow</user-name>
+      <introspection-schemas>*:BIZFLOW,CMSDEV</introspection-schemas>
+      <resolve-scope>*:CMSDEV,PUBLIC</resolve-scope>
+      <unqualified-resolve-schemas>*:CMSDEV,PUBLIC</unqualified-resolve-schemas>
+    </data-source>
+    <data-source name="Oracle - @cms.bizflow.com - SYSTEM" uuid="e2347387-67aa-4d6f-874c-c7a010fcbff5">
+      <database-info product="Oracle" version="Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production&#10;With the Partitioning, OLAP, Data Mining and Real Application Testing options" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>system</user-name>
+      <introspection-schemas>*:BIZFLOW,CMSDEV,SYSTEM</introspection-schemas>
+      <resolve-scope>*:CMSDEV,PUBLIC</resolve-scope>
+      <unqualified-resolve-schemas>*:CMSDEV,PUBLIC</unqualified-resolve-schemas>
+    </data-source>
+  </component>
+</project>

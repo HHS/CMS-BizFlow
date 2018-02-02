@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_cmspdf" default="compile.module.cmspdf">
+  <dirname property="module.cmspdf.basedir" file="${ant.file.module_cmspdf}"/>
+  
+  <property name="module.jdk.home.cmspdf" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.cmspdf" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.cmspdf" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.cmspdf" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="cmspdf.output.dir" value="${module.cmspdf.basedir}/out/production/cmspdf"/>
+  <property name="cmspdf.testoutput.dir" value="${module.cmspdf.basedir}/out/test/cmspdf"/>
+  
+  <path id="cmspdf.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="cmspdf.module.production.classpath">
+    <path refid="${module.jdk.classpath.cmspdf}"/>
+    <path refid="library.org.apache.pdfbox:pdfbox-app:2.0.4.classpath"/>
+    <path refid="library.log4j:log4j:1.2.15.classpath"/>
+    <pathelement location="${basedir}/PDF_Configuration"/>
+    <path refid="library.bizflowjolibrary.classpath"/>
+  </path>
+  
+  <path id="cmspdf.runtime.production.module.classpath">
+    <pathelement location="${cmspdf.output.dir}"/>
+    <path refid="library.org.apache.pdfbox:pdfbox-app:2.0.4.classpath"/>
+    <path refid="library.log4j:log4j:1.2.15.classpath"/>
+    <pathelement location="${basedir}/PDF_Configuration"/>
+    <path refid="library.bizflowjolibrary.classpath"/>
+  </path>
+  
+  <path id="cmspdf.module.classpath">
+    <path refid="${module.jdk.classpath.cmspdf}"/>
+    <pathelement location="${cmspdf.output.dir}"/>
+    <path refid="library.org.apache.pdfbox:pdfbox-app:2.0.4.classpath"/>
+    <path refid="library.log4j:log4j:1.2.15.classpath"/>
+    <pathelement location="${basedir}/PDF_Configuration"/>
+    <path refid="library.bizflowjolibrary.classpath"/>
+  </path>
+  
+  <path id="cmspdf.runtime.module.classpath">
+    <pathelement location="${cmspdf.testoutput.dir}"/>
+    <pathelement location="${cmspdf.output.dir}"/>
+    <path refid="library.org.apache.pdfbox:pdfbox-app:2.0.4.classpath"/>
+    <path refid="library.log4j:log4j:1.2.15.classpath"/>
+    <pathelement location="${basedir}/PDF_Configuration"/>
+    <path refid="library.bizflowjolibrary.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.cmspdf">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.cmspdf">
+    <patternset refid="excluded.from.module.cmspdf"/>
+  </patternset>
+  
+  <path id="cmspdf.module.sourcepath">
+    <dirset dir="${module.cmspdf.basedir}">
+      <include name="src"/>
+      <include name="resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.cmspdf" depends="compile.module.cmspdf.production,compile.module.cmspdf.tests" description="Compile module cmspdf"/>
+  
+  <target name="compile.module.cmspdf.production" description="Compile module cmspdf; production classes">
+    <mkdir dir="${cmspdf.output.dir}"/>
+    <javac destdir="${cmspdf.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.cmspdf}/javac">
+      <compilerarg line="${compiler.args.cmspdf}"/>
+      <bootclasspath refid="cmspdf.module.bootclasspath"/>
+      <classpath refid="cmspdf.module.production.classpath"/>
+      <src refid="cmspdf.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.cmspdf"/>
+    </javac>
+    
+    <copy todir="${cmspdf.output.dir}">
+      <fileset dir="${module.cmspdf.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.cmspdf.basedir}/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.cmspdf.tests" depends="compile.module.cmspdf.production" description="compile module cmspdf; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.cmspdf" description="cleanup module">
+    <delete dir="${cmspdf.output.dir}"/>
+    <delete dir="${cmspdf.testoutput.dir}"/>
+  </target>
+</project>
