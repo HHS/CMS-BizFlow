@@ -1,0 +1,59 @@
+<div>
+    <div ng-show="$ctrl.attachments">
+        <error-detail data="$ctrl.attachments.error" name="'$ctrl.attachments'" message="'Error happens while retrieving attachments information'"></error-detail>
+    </div>
+    <div ng-show="attachmentUpdateDocType">
+        <error-detail data="$ctrl.attachmentUpdateDocType.error" name="'$ctrl.attachmentUpdateDocType'" message="'Error happens while updating document type'"></error-detail>
+    </div>
+    <div ng-show="attachmentDelete">
+        <error-detail data="$ctrl.attachmentDelete.error" name="'$ctrl.attachmentDelete'" message="'Error happens while deleting an attachment'"></error-detail>
+    </div>
+
+    <table id="bfAttachmentList" class="table table-striped table-hover table-condensed" ng-show="$ctrl.attachments.length > 0" style="margin-bottom: 0;">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th class="text-top" ng-show="isBulkProcess">Process ID</th>
+            <th class="text-top">Document Name</th>
+            <th class="col-md-3 text-top">Document Type</th>
+            <th class="text-top">Date Received</th>
+            <th class="text-top">Creator Name</th>
+            <th class="text-top">Description</th>
+            <th ng-show="showHideOriginals">Originals Received</th>
+            <th ng-show="showHideOriginals">Originals Returned</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="attachment in $ctrl.attachments">
+            <td>{{$index+1}}</td>
+            <td ng-show="$ctrl.isBulkProcess">{{attachment.PROCESSID}}</td>
+            <td>
+                <a ng-href="{{$ctrl.main.getAttachmentUrl(attachment.ID)}}" target="_blank">{{attachment.FILENAME}}</a>
+            </td>
+            <td>
+                <ui-select ng-model="attachment.category" on-select="$ctrl.main.updateAttachmentDocType(attachment, $select.selected.Name)" ng-show="$ctrl.documentTypes" ng-disabled="$ctrl.readOnly">
+                    <ui-select-match placeholder="Select document types...">{{$select.selected.Label}}</ui-select-match>
+                    <ui-select-choices repeat="docType in $ctrl.documentTypes | filter: $select.search">
+                        <div ng-bind-html="docType.Label | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <span ng-hide="$ctrl.documentTypes">{{attachment.category}}</span>
+            </td>
+            <td>{{attachment.CREATIONDATE | date}}</td>
+            <td>{{attachment | printCreatorName}}</td>
+            <td class="description">{{attachment.DESCRIPTION}}</td>
+            <td class="text-center vcenter" ng-show="$ctrl.showHideOriginals"><input type="checkbox" ng-model="attachment.OriginalsReceived"></td>
+            <td class="text-center vcenter" ng-show="$ctrl.showHideOriginals"><input type="checkbox" ng-model="attachment.OriginalsReturned"></td>
+            <td>
+                <button type="button" class="btn btn-danger btn-xs" ng-click="$ctrl.main.deleteAttachment(attachment.ID, attachment.PROCESSID)" ng-show="$ctrl.main.deleteAttachment" tooltip="Remove" ng-disabled="$ctrl.readOnly">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center" role="alert" ng-show="angularExt.isInvalidObject($ctrl.attachments) || $ctrl.attachments.length == 0">
+        No attachment
+    </div>
+</div>

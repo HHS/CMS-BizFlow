@@ -1,0 +1,26 @@
+<div class="alert alert-warning" role="alert" ng-show="error != null" id="{{id}}Error">
+    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+    <span class="sr-only" style="font-style: italic"></span>{{message}}
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{id}}ErrorModal">
+        <span class="glyphicon glyphicon-eye-open"></span> View Error Detail
+    </button>
+    <button type="button" class="btn btn-primary" ng-show="retry" ng-click="retry()">
+        <span class="glyphicon glyphicon-repeat"></span> Retry
+    </button>
+    <div class="modal fade" id="{{id}}ErrorModal" tabindex="-1" role="dialog" aria-labelledby="{{id}}ErrorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:80%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="{{id}}ErrorModalLabel">Error Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-bind-html="error.data"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

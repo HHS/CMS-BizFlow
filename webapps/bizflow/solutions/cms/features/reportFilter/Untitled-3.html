@@ -1,0 +1,35 @@
+<ul role="listbox" 
+    aria-hidden="{{!$select.open || $select.items.length == 0}}" 
+    id="choices_{{$select.generatedId}}"
+    class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu" 
+    ng-show="$select.open && $select.items.length > 0">
+    <li role="option" aria-selected="{{$select.isActive(this)}}" id="option_{{ $select.generatedId }}_{{$index}}" ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}"
+        class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}" role="option">
+        <span class="ui-select-choices-row-inner"></span>
+    </li>
+</ul>
+
+
+
+
+
+
+<div class="ui-select-container ui-select-bootstrap dropdown" ng-class="{open: $select.open}">
+    <div class="ui-select-match"></div>
+    <span ng-show="$select.open && $select.refreshing && $select.spinnerEnabled" class="ui-select-refreshing {{$select.spinnerClass}}"></span>
+    <input role="combobox" aria-controls="choices_{{$select.generatedId}}" aria-owns="choices_{{$select.generatedId}}"
+        aria-autocomplete="both" aria-haspopup="true" aria-expanded="{{$select.open}}" aria-activedescendant="option_{{ $select.generatedId }}_{{$index}}"
+        type="text" autocomplete="off" tabindex="-1" aria-label="{{ $select.baseTitle }}" class="form-control ui-select-search"
+        ng-class="{ \'ui-select-search-hidden\' : !$select.searchEnabled }" placeholder="{{$select.placeholder}}" ng-model="$select.search"
+        ng-show="$select.open" role="combobox">
+    <div class="ui-select-choices"></div>
+    <div class="ui-select-no-choice"></div>
+</div>
+
+
+
+
+
+<ul role=\"listbox\" aria-hidden=\"{{!$select.open || $select.items.length == 0}}\" id=\"choices_{{$select.generatedId}}\" class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\" ng-show=\"$select.open && $select.items.length > 0\"><li role=\"option\" aria-selected=\"{{$select.isActive(this)}}\" id=\"option_{{ $select.generatedId }}-{{$index}}\" ng-attr-id=\"ui-select-choices-row-{{ $select.generatedId }}-{{$index}}\" class=\"ui-select-choices-row\" ng-class=\"{active: $select.isActive(this), disabled: $select.isDisabled(this)}\" role=\"option\"><span class=\"ui-select-choices-row-inner\"></span></li></ul>
+
+<div class=\"ui-select-container ui-select-bootstrap dropdown\" ng-class=\"{open: $select.open}\"><div class=\"ui-select-match\"></div><span ng-show=\"$select.open && $select.refreshing && $select.spinnerEnabled\" class=\"ui-select-refreshing {{$select.spinnerClass}}\"></span><input role=\"combobox\" aria-controls=\"choices_{{$select.generatedId}}\" aria-owns=\"choices_{{$select.generatedId}}\" aria-autocomplete=\"both\" aria-haspopup=\"true\" aria-expanded=\"{{$select.open}}\" aria-activedescendant=\"option_{{ $select.generatedId }}-{{$index}}\" type=\"text\" autocomplete=\"off\" tabindex=\"-1\" aria-label=\"{{ $select.baseTitle }}\" class=\"form-control ui-select-search\" ng-class=\"{ \'ui-select-search-hidden\' : !$select.searchEnabled }\" placeholder=\"{{$select.placeholder}}\" ng-model=\"$select.search\" ng-show=\"$select.open\" role=\"combobox\"><div class=\"ui-select-choices\"></div><div class=\"ui-select-no-choice\"></div></div>

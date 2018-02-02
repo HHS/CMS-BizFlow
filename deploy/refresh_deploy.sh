@@ -11,6 +11,7 @@ PW=
 DIR_SRCDIR=~/deploy/baseline/ui
 DIR_COPY=/hrts/copydir
 DIR_DEPLOYUI=/hrts/deploy/baseline/ui
+ADMUSR=sa-bizdev
 
 
 
@@ -67,7 +68,9 @@ refresh(){
 	rm runtime_*
 	cp -f $DIR_SRCDIR/$FILENAME .
 	chmod 666 $FILENAME
-	echo $PW | sudo -kS su sa-bizdev
+	
+	echo $PW | sudo -kS su $ADMUSR
+	cd $DIR_COPY
 	cp -f $FILENAME $DIR_DEPLOYUI
 	cd $DIR_DEPLOYUI
 	rm -rf runtime

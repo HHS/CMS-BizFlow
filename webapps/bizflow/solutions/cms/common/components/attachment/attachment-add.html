@@ -1,0 +1,97 @@
+<div class="modal-header">
+    <h4 class="modal-title">Add Attachment(s)</h4>
+</div>
+<div class="modal-body align-center" nv-file-drop="" uploader="$ctrl.uploader" filters="queueLimit, customFilter">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne1">
+                    <h4 class="panel-title">
+                        Select file(s)
+                    </h4>
+                </div>
+                <div class="panel-body text-center text-middle">
+                    <div class="row align-center">
+                        <div class="col-md-5" ng-show="uploader.isHTML5">
+                            <div class="well my-drop-zone" nv-file-over="" uploader="$ctrl.uploader">
+                                Please drop files here
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center text-middle" style="height:60px; padding-top: 20px;">
+                            <div>
+                                Or you can
+                            </div>
+                        </div>
+                        <div class="col-md-5 text-left">
+                            <div class="btn btn-primary btn-file col-md-12 text-align-left" style="padding: 19px;">
+                                Click to Select File(s)
+                                <input type="file" nv-file-select="" uploader="$ctrl.uploader" multiple/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="col-md-3" nowrap>Document Type</th>
+                    <th nowrap>Description</th>
+                    <th ng-show="$ctrl.uploader.isHTML5">Size</th>
+                    <th ng-show="$ctrl.uploader.isHTML5">Progress</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in $ctrl.uploader.queue">
+                    <td><strong>{{ item.file.name }}</strong></td>
+                    <td nowrap>
+                        <div class="form-group no-margin no-padding" ng-class="{'has-error': item.category==undefined}">
+                            <ui-select ng-model="item.category">
+                                <ui-select-match placeholder="Select document types...">{{$select.selected.Label}}</ui-select-match>
+                                <ui-select-choices repeat="docType in $ctrl.documentTypes | filter: $select.search">
+                                    <div ng-bind-html="docType.Label | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </td>
+                    <td class="col-xs-4">
+                        <textarea class="form-control" ng-model="item.description" maxlength="100" rows="1"></textarea>
+                        <div id="characters" class="text-muted" style="font-size:10px;">
+                            <span>Characters left: {{100- item.description.length}}</span>
+                        </div>
+                    </td>
+                    <td ng-show="$ctrl.uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                    <td ng-show="$ctrl.uploader.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()" tooltip="Remove">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-show="uploader.queue.length==0">
+                    <td colspan="6" style="text-align: center;">Please select files to upload</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button type="button" class="btn" ng-class="{'btn-success': $ctrl.isReadyToUpload()}" ng-click="$ctrl.upload()" ng-disabled="!$ctrl.isReadyToUpload()">
+                <span class="glyphicon glyphicon-upload"></span> Upload
+            </button>
+            <button type="button" class="btn" ng-click="$ctrl.cancel()">
+                <span class="glyphicon glyphicon-remove-circle"></span> Cancel
+            </button>
+        </div>
+    </div>
+</div>
+

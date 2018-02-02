@@ -1,0 +1,73 @@
+<div class="modal-header">
+	<h4 class="modal-title">Add {{source}} Attachment{{multiTitle}}</h4>
+</div>
+<div class="modal-body align-center" data-ng-init="init();" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="headingOne1">
+					<h4 class="panel-title">Select file{{multiTitle}}</h4>
+				</div>
+				<div data-ng-show="fileSelector" class="panel-body text-center text-middle">
+					<div class="row align-center">
+						<div class="col-md-5" data-ng-show="uploader.isHTML5">
+							<div class="well my-drop-zone" nv-file-over="" uploader="uploader">Please drop File{{multiTitle}} here</div>
+						</div>
+						<div class="col-md-2 text-center text-middle" style="height: 60px; padding-top: 20px;" data-ng-show="uploader.isHTML5">
+							<div>Or you can</div>
+						</div>
+						<div class="col-md-5 text-left">
+							<div class="btn btn-primary btn-file col-md-12 text-align-left"	style="padding: 19px;">
+								Click to Select File{{multiTitle}} <input type="file" nv-file-select="" uploader="uploader" multiple />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="width: 70%;">Name</th>
+						<th style="width: 10%;" data-ng-show="uploader.isHTML5">Size</th>
+						<th style="width: 15%;" data-ng-show="uploader.isHTML5">Progress</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-show="showFileList" data-ng-repeat="item in uploader.queue">
+						<td><strong>{{ item.file.name }}</strong></td>
+						<td data-ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+						<td data-ng-show="uploader.isHTML5">
+							<div class="progress" style="margin-bottom: 0;">
+								<div class="progress-bar" role="progressbar" data-ng-style="{ 'width': item.progress + '%' }"></div>
+							</div>
+						</td>
+						<td>
+							<button type="button" class="btn btn-danger btn-xs"	data-ng-click="queueRemove(item);" tooltip="Remove">
+								<span class="glyphicon glyphicon-trash"></span>
+							</button>
+						</td>
+					</tr>
+					<tr data-ng-hide="showFileList">
+						<td colspan="3" style="text-align: center;">Please select file{{multiTitle}} to upload</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<button type="button" class="btn" data-ng-class="{'btn-success': isReadyToUpload()}" data-ng-click="upload()" data-ng-disabled="!isReadyToUpload()">
+				<span class="glyphicon glyphicon-upload"></span> Upload
+			</button>
+			<button type="button" class="btn" data-ng-click="cancel()">
+				<span class="glyphicon glyphicon-remove-circle"></span> Cancel
+			</button>
+		</div>
+	</div>
+</div>
+

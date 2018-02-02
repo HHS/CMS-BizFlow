@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingAttachments">
+        <h4 class="panel-title">
+            <table cellpadding="10" cellspacing="0" style="width:100%;">
+                <tr>
+                    <td>
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td>
+                                        <span class="glyphicon glyphicon-paperclip"
+                                              ng-click="isCollapsedAttachments = !isCollapsedAttachments"></span>
+                                </td>
+                                <td>
+                                    <div ng-click="isCollapsedAttachments = !isCollapsedAttachments">&nbsp;Documents&nbsp;</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-primary btn-md"
+                                ng-click="$ctrl.addAttachment()"
+                                ng-hide="mainFormReadOnly">
+                            <span class="glyphicon glyphicon-paperclip"></span>&nbsp;Add Document
+                        </button>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td ng-show="false">
+                        <button type="button"
+                                class="btn btn-primary btn-md"
+                                ng-click="$ctrl.loadAttachments()">
+                            <span class="glyphicon glyphicon-refresh"></span>Refresh
+                        </button>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-primary btn-md"
+                                ng-show="$ctrl.attachments.length> 0"
+                                ng-click="$ctrl.viewAllViewableAttachments()">
+                            <span class="glyphicon glyphicon-eye-open"></span> View all attachments
+                        </button>
+                    </td>
+                    <td style="width:80%;" ng-click="isCollapsedAttachments = !isCollapsedAttachments">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+        </h4>
+    </div>
+    <div id="collapseAttachments"
+         class="panel-collapse collapse in"
+         role="tabpanel"
+         aria-labelledby="headingAttachments"
+         uib-collapse="isCollapsedAttachments">
+        <attachment-list attachments="$ctrl.attachments"
+                         document-types="$ctrl.documentTypes"
+                         show-hide-originals="$ctrl.showHideOriginals"
+                         is-bulk-process="$ctrl.isBulkProcess"
+                         read-only="$ctrl.readOnly"></attachment-list>
+    </div>
+</div>

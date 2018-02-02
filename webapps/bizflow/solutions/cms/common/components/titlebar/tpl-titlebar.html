@@ -1,0 +1,16 @@
+<div>
+    <div class="navbar-header">
+        <span class="navbar-brand">{{ngTitle}}<span ng-show="sourceVersion.showVer" class="version-string">&nbsp;&nbsp;Version {{sourceVersion.version}}</span></span>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+            <li ng-repeat="titleBar in titleBars" ng-show="btnShow(titleBar.visible)">
+                <p class="navbar-btn">
+                    <a class="btn btn-md btn-default" style="margin-right: 5px;" ng-click="btnClick(titleBar.onClick)" ng-disabled="btnDisable(titleBar.disable)">
+                        <span class="glyphicon {{titleBar.icon}}"></span> &nbsp;{{titleBar.buttonName}}
+                    </a>
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>

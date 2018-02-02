@@ -1,0 +1,154 @@
+.nowrap {white-space: nowrap !important;}
+.text-top { vertical-align: top !important; }
+.text-middle { vertical-align: middle !important; }
+.text-bottom { vertical-align: bottom !important; }
+.text-ellipsis {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-align-left { text-align: left !important;}
+
+tr.text-top th { vertical-align: top !important; }
+tr.text-middle th { vertical-align: middle !important; }
+tr.text-bottom th { vertical-align: bottom !important; }
+
+.table-no-border > thead > tr > th, .table-no-border > tbody > tr > th, .table-no-border > tfoot > tr > th, .table-no-border > thead > tr > td, .table-no-border > tbody > tr > td, .table-no-border > tfoot > tr > td {
+    border: 0;
+}
+
+.table-no-padding > thead > tr > th, .table-no-padding > tbody > tr > th, .table-no-padding > tfoot > tr > th, .table-no-padding > thead > tr > td, .table-no-padding > tbody > tr > td, .table-no-padding > tfoot > tr > td {
+    padding: 0;
+}
+
+.table-padding-xs > thead > tr > th, .table-padding-xs > tbody > tr > th, .table-padding-xs > tfoot > tr > th, .table-padding-xs > thead > tr > td, .table-padding-xs > tbody > tr > td, .table-padding-xs > tfoot > tr > td {
+    padding: 2px;
+}
+
+.no-border { border: 0 !important; }
+.no-margin { margin: 0; }
+.no-padding { padding: 0; }
+.no-top-border { border-top: 0; }
+
+fieldset.border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0 0 0 0 #000;
+	-moz-box-shadow:  0 0 0 0 #000;
+    box-shadow:  0 0 0 0 #000;
+}
+
+legend.border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width:auto;
+    padding:0 10px;
+    border-bottom:none;
+}
+
+.top-menu button { margin-top: 4px; }
+.text-info-darkgray {color: #5a5a5a;}
+
+.ui-select-bootstrap > .ui-select-choices {
+    max-height: 300px;
+}
+
+.ui-select-highlight { color: blue; }
+.ui-select-clear {
+    float: right;
+    margin-bottom: -50px;
+}
+
+.ui-select-choices-group-label {
+    font-size: 150%;
+}
+
+.ui-select-container .ui-select-match {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ui-select-container .ui-select-match .btn-default {
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.header-container {
+    padding: 0;
+}
+.body-container {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.tab-pane .panel { border-top: 0; }
+
+.carousel-control-bright {
+    width: 20px;
+    filter: alpha(opacity=30);
+    opacity: .3;
+}
+.carousel-control-bright:hover,
+.carousel-control-bright:focus {
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+.carousel-indicators { bottom: 0; }
+.carousel-indicators2 li { border: 1px solid #9f9f9f; }
+.carousel-indicators2 .active { background-color: #5a5a5a; }
+
+.display-inline { display: inline; }
+
+.full-size{
+    width: 100%;
+    hight: 100%;
+}
+.color-black { color: black;}
+.fixed-top,
+.fixed-bottom {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    top: 0;
+    border-width: 0 0 1px;
+}
+
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    float:none;
+    display:inline-block;
+}
+
+/* uib-datepicker customization */
+.uib-datepicker-popup .btn {
+    font-weight: bold;
+    color: black !important;
+}
+.uib-datepicker-popup .text-muted {
+    font-weight: normal;
+    color: grey !important;
+}
+.uib-datepicker-popup .btn:disabled {
+    font-weight: normal;
+    color: lightgray !important;
+}
+.uib-datepicker-popup .btn:disabled > .text-muted {
+    font-weight: normal;
+    color: lightgray !important;
+}
+
+/* Color of invalid field */
+.form-control.ng-invalid-required {
+    background-color: lightyellow;
+}
+
+div.ui-select-container.ng-invalid-required span.form-control.ui-select-toggle {
+    background-color: lightyellow;
+}
