@@ -1,0 +1,27 @@
+<div id="divSuspensionInfo">
+	<table id="suspension-info-table" class="table table-striped table-hover table-condensed table-bordered">
+	    <tr ng-repeat="suspendResumeInfo in suspendResumeInfos track by $id($index)">
+        	<td ng-if="isBulkProcess" data-title="'CASE ID'" class="text-center">
+            	{{suspendResumeInfo.procid}}
+        	</td>
+	        <td data-title="'Activity Name'" class="text-left">
+	            {{suspendResumeInfo.ActName}}
+	        </td>
+	        <td data-title="'Suspension Date'" class="text-center">
+	            {{suspendResumeInfo.SuspendDTime | date: getDateFormat()}}
+	        </td>
+	        <td data-title="'Suspended By'" class="text-center">
+	            {{suspendResumeInfo.SuspendedBy}}
+	        </td>
+	        <td data-title="'Suspension Reason'" class="text-left">
+	            {{suspendResumeInfo.Comment}}
+	        </td>
+	        <td data-title="'Resumption Date'" class="text-center">
+	            {{suspendResumeInfo.ResumeDTime | date: getDateFormat()}}
+	        </td>
+	        <td data-title="'Resumed By'" class="text-center">
+	            {{suspendResumeInfo.ResumedBy}}
+	        </td>
+	    </tr>
+	</table>
+</div>

@@ -1,0 +1,16 @@
+<div class="panel panel-default infobar-panel">
+    <div class="panel-body infobar-panel-body">
+        <div class="row">
+            <table cellpadding="0" cellspacing="0" style="width: 100%">
+                <tr>
+                    <td ng-repeat="infoBar in $ctrl.ngModel" class="{{infoBar.size}}">
+                        <label class="control-label text-top" style="white-space: nowrap;"><span class="glyphicon {{infoBar.icon}}"></span>&nbsp;{{infoBar.labelName}}</label>
+                    </td>
+                </tr>
+                <td ng-repeat="infoBar in $ctrl.ngModel" class="{{infoBar.size}}">
+                    <span class="text-success" style="display:block;font-size: 15px; font-weight: bold">{{infoBar.value}}</span>
+                </td>
+            </table>
+        </div>
+    </div>
+</div>

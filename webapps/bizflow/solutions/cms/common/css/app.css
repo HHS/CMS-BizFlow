@@ -1,0 +1,186 @@
+/* global css stylesheet */
+.inform-fixed {
+    z-index: 1050;
+}
+
+.form-group.required .control-label:after {
+    content:"  *";
+    color:red;
+}
+
+/*.form-group input.ng-invalid.ng-touched {
+	background-color: #FA787E;
+}*/
+
+/*addred to remove the arrows in number input boxes*/
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.alert-block {
+    position: fixed;
+    left:auto;
+    top: 20px;
+    right: 20px;
+    z-index: 1040;
+}
+
+.my-drop-zone {
+    border: dotted 3px lightgray;
+}
+
+/*** Styling for the upload button for docs **/
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+/** END upload button styling **/
+
+/* Vertical Center Align for TD */
+.table tr>td.vcenter{
+    vertical-align: middle;
+}
+
+.panel-heading {
+    cursor: pointer;
+    /*cursor: hand;*/
+}
+
+/*button group class for claim flags*/
+
+.btn-group label:nth-of-type(6n+1){
+
+    clear: both;
+}
+
+/*error messages below fields*/
+.error-message {
+    color:red;
+    margin-top:3px;
+}
+
+.error-sla {
+    color: red;
+}
+
+/* using for Service information section */
+.cashclaim-gray-bgcolor {
+    background: #F5F5F5;
+}
+
+/* bootstrap tab override */
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    background-color: #f3f3f3;
+}
+
+/* section headers text */
+.panel-heading h1>small {
+    font-size: 13px;
+}
+
+.sectionBarTitle {
+    padding-left: 20px;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height:24px;
+    background-color: rgb(227, 227, 227);
+    color: rgb(0, 105, 154);
+    /*-pie-background:linear-gradient(top,rgb(227, 227, 227) 0,rgb(177, 186, 223) 100%);*/
+}
+
+.fieldLabel
+{
+    color: rgb(43, 56, 64);
+    display: inline-block;
+    font-family: etica-1, etica-2, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    height: 20px;
+    line-height: 20px;
+    text-align: right;
+    vertical-align: top;
+    white-space: normal;
+    width:200px;
+}
+
+.fieldValue
+{
+    padding-left:5px;
+    color: rgb(43, 56, 64);
+    display: inline-block;
+    font-family: etica-1, etica-2, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: top;
+    white-space: normal;
+}
+
+.infobar-panel {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+}
+
+.infobar-panel-body {
+    height: 75px;
+    background-color: #f3f3f3;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.ui-select-container {
+    min-height: 34px !important;
+}
+
+/* Login Page CSS Start */
+.Absolute-Center {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.Absolute-Center.is-Responsive {
+    width: 50%;
+    height: 50%;
+    min-width: 200px;
+    max-width: 400px;
+    padding: 40px;
+}
+
+#logo-container {
+    margin: auto auto 20%;
+}
+/* Login Page CSS End */
+
+#bfAttachmentList tr td {
+    vertical-align: middle;
+}

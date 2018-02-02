@@ -1,0 +1,106 @@
+<style>
+    .tree {
+        border: 1px solid lightgrey;
+        overflow: auto;
+        min-height: 600px;
+    }
+
+    .sidebar {
+        background-color: #f5f5f5;
+    }
+
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #tblResource th span {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .searchBox {
+        margin-top: 8px;
+    }
+
+    .short {
+        width: 100px !important;
+    }
+
+    .hidden {
+        display:none;
+    }
+</style>
+<div class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="col-md-9 navbar-header">
+            <a class="navbar-brand" href="#">Resource Manager</a>
+
+        </div>
+        <div class="col-md-3 nopadding">
+            <input class="form-control searchBox" type="text" value="" ng-model="$ctrl.searchText" placeholder="Search.." />
+        </div>
+    </div><!--/.container-fluid -->
+</div>
+<div class="container-fluid">
+    <div class="row">
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive tree" id="divResults">
+            <table id="tblResource" class="table table-hover table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>
+                        <input class="form-control input-sm short" id="resourceID" disabled="disabled" placeholder="ID" ng-model="$ctrl.selectedResource.ID">
+                    </th>
+                    <th>
+                        <input type="text" class="form-control input-sm" id="resourceCategory" placeholder="Category" ng-model="$ctrl.selectedResource.Category" required>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control input-sm" id="resourceResID" placeholder="Resource ID" ng-model="$ctrl.selectedResource.ResID" required>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control input-sm" id="resourceResName" placeholder="Resource Value" ng-model="$ctrl.selectedResource.ResName" required>
+                    </th>
+                    <th>
+                        <select class="form-control" ng-model="$ctrl.selectedResource.Language" ng-options="language.Value as language.Label for language in $ctrl.languages">
+                            <option value="">Select One..</option>
+                        </select>
+                    </th>
+                    <th class="hidden">
+                        <input type="hidden" class="form-control" id="resourceBusiness" ng-model="$ctrl.selectedResource.Business">
+                        <input type="hidden" class="form-control" id="resourceRegion" ng-model="$ctrl.selectedResource.Region">
+                    </th>
+                    <th class="text-center">
+                        <button type="button" class="btn btn-confirm btn-sm" id="btnSave" ng-click="$ctrl.update('SAVE')">Add & Save</button>
+                    </th>
+
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>Resource ID</th>
+                    <th>Resource Value</th>
+                    <th>Language</th>
+                    <th class="hidden">Required</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="table-bordered">
+                <tr ng-repeat="resource in $ctrl.resources | filter:$ctrl.searchText" ng-if="$ctrl.resources.length > 0" class="" ng-click="$ctrl.select($event, resource)">
+                    <td>{{resource.ID}}</td>
+                    <td>{{resource.Category}}</td>
+                    <td>{{resource.ResID}}</td>
+                    <td>{{resource.ResName}}</td>
+                    <td>{{resource.Language}}</td>
+                    <td class="hidden">{{resource.Business}}</td>
+                    <td class="hidden">{{resource.Region}}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-confirm btn-sm" id="btnDelete" ng-click="$ctrl.update('DELETE', resource)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

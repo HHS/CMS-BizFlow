@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h4 class="modal-title">Suspension Details</h4>
+    <!-- <h4 ng-show="isEditMode" class="modal-title">Edit</h4> -->
+</div>
+
+<div class="modal-body" id="diagSuspensionReasonForm">
+    <div class="row">
+        <!-- Suspension Reason -->
+        <div class="form-group col-md-6 required">
+            <label class ="control-label" >Reason</label>
+            <select class="form-control" ng-model="suspensionReasonInfo.Reason" ng-options="suspensionReason.NAME as suspensionReason.NAME for suspensionReason in suspensionReasonType" ng-change="onChangeSuspensionReasion()" tabindex="1" required>
+                <option value=''>Select Reason</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-12" ng-show="suspensionReasonInfo.Reason == 'Other'">
+            <label class ="control-label" >Other</label>
+            <textarea class="form-control" ng-model="suspensionReasonInfo.Other" tabindex="2">
+            </textarea>
+        </div>
+    </div>
+</div>
+ 
+<div class="modal-footer">
+    <div class="pull-right">
+        <button class="btn btn-xm btn-primary" ng-disabled="!suspensionReasonInfo.Reason" ng-click="suspendItem(suspensionReasonInfo)">Submit</button>
+        <button class="btn btn-xm btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</div>

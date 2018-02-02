@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html id="ng-app" ng-app="app">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>View Attachments</title>
+    <link rel="stylesheet" href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../bower_components/angular-inform/dist/angular-inform.min.css">
+    <link rel="stylesheet" href="../../../bower_components/angular-ui-select/dist/select.min.css">
+    <link rel="stylesheet" href="../../../bower_components/angular-block-ui/dist/angular-block-ui.min.css">
+    <link rel="stylesheet" href="../../../bower_components/angular-ui-grid/ui-grid.css">
+    <link rel="stylesheet" href="../../../common/css/bootstrap-ext.css">
+
+    <script src="../../../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../../bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../../bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../../bower_components/angular/angular.min.js"></script>
+    <script src="../../../bower_components/angular-route/angular-route.min.js"></script>
+    <script src="../../../bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="../../../bower_components/angular-inform/dist/angular-inform.min.js"></script>
+    <script src="../../../bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="../../../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="../../../bower_components/angular-ui-select/dist/select.min.js"></script>
+    <script src="../../../bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+    <script src="../../../bower_components/angular-block-ui/dist/angular-block-ui.min.js"></script>
+    <script src="../../../bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="../../../bower_components/angular-messages/angular-messages.min.js"></script>
+    <script src="../../../bower_components/x2js/xml2json.min.js"></script>
+    <script src="../../../bower_components/json-formatter/dist/json-formatter.min.js"></script>
+    <script src="../../../bower_components/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="../../../bower_components/bootbox/bootbox.js"></script>
+
+    <script src="../../../common/js/angular-ext.js"></script>
+    <script src="../../../common/js/basicwihactionclient.js"></script>
+    <script src="../../../common/js/angular-bizflow.js"></script>
+    <script src="../../../common/services/angular-bizflow-service.js"></script>
+    <script src="../../../common/components/common.components.js"></script>
+    <script src="../../../common/components/common.directive.js"></script>
+    <script src="attachment.js"></script>
+    <script src="attachment-carousel-viewer.js"></script>
+</head>
+<body ng-controller="appController"
+      id="appMain"
+      onload="angular.element(document.getElementById('appMain')).scope().stopBlock();" >
+
+    <div ng-include="'attachment-carousel-viewer.html'"></div>
+    <div block-ui="main" class="block-ui-main"></div>
+    <div inform class="inform-fixed inform-shadow inform-animate"></div>
+</body>
+</html>
