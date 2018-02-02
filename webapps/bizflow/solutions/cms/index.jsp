@@ -125,58 +125,58 @@ private String getCMSUserGroups() throws Exception
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS Report Filter</title>
     <script>document.write('<base href="' + document.location + '" />');</script>
-    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css?rev=20180130173620">
-    <link rel="stylesheet" href="./bower_components/angular-inform/dist/angular-inform.min.css?rev=20180130173620">
-    <link rel="stylesheet" href="./bower_components/angular-ui-select/dist/select.css?rev=20180130173620">
-    <link rel="stylesheet" href="./bower_components/angular-block-ui/dist/angular-block-ui.min.css?rev=20180130173620">
-    <link rel="stylesheet" href="./bower_components/angular-ui-grid/ui-grid.css?rev=20180130173620">
-    <link rel="stylesheet" href="./bower_components/json-formatter/dist/json-formatter.min.css?rev=20180130173620">
-    <link rel="stylesheet" href="./bower_components/jstree/dist/themes/default/style.min.css?rev=20180130173620">
+    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./bower_components/angular-inform/dist/angular-inform.min.css">
+    <link rel="stylesheet" href="./bower_components/angular-ui-select/dist/select.css">
+    <link rel="stylesheet" href="./bower_components/angular-block-ui/dist/angular-block-ui.min.css">
+    <link rel="stylesheet" href="./bower_components/angular-ui-grid/ui-grid.css">
+    <link rel="stylesheet" href="./bower_components/json-formatter/dist/json-formatter.min.css">
+    <link rel="stylesheet" href="./bower_components/jstree/dist/themes/default/style.min.css">
 
-    <link rel="stylesheet" href="common/css/bootstrap-ext.css?rev=20180130173620">
-    <link rel="stylesheet" href="common/css/app.css?rev=20180130173620?ver=0.08">
-    <!-- <link rel="stylesheet" href="features/form-example/common/css/app.css?rev=20180130173620"> -->
+    <link rel="stylesheet" href="common/css/bootstrap-ext.css">
+    <link rel="stylesheet" href="common/css/app.css?ver=0.08">
+    <!-- <link rel="stylesheet" href="features/form-example/common/css/app.css"> -->
 
-    <script src="./bower_components/jquery/dist/jquery.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/jquery-ui/jquery-ui.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/lodash/dist/lodash.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular/angular.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-aria/angular-aria.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-route/angular-route.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-cookies/angular-cookies.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-inform/dist/angular-inform.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-animate/angular-animate.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js?rev=20180130173620"></script>
-    <!-- <script src="./bower_components/angular-ui-select/dist/select.min.js?rev=20180130173620"></script> -->
-    <script src="./bower_components/angular-ui-select/dist/select.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-file-upload/dist/angular-file-upload.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-block-ui/dist/angular-block-ui.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-sanitize/angular-sanitize.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/angular-messages/angular-messages.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/x2js/xml2json.min.js?rev=20180130173620"></script>
-    <!-- <script src="./bower_components/json-formatter/dist/json-formatter.min.js?rev=20180130173620"></script> -->
-    <script src="./bower_components/angular-ui-grid/ui-grid.min.js?rev=20180130173620"></script>
-    <script src="./bower_components/bootbox/bootbox.js?rev=20180130173620"></script>
-    <!-- <script src="./bower_components/jstree/dist/jstree.min.js?rev=20180130173620"></script> -->
+    <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="./bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="./bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./bower_components/angular/angular.min.js"></script>
+    <script src="./bower_components/angular-aria/angular-aria.min.js"></script>
+    <script src="./bower_components/angular-route/angular-route.min.js"></script>
+    <script src="./bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="./bower_components/angular-inform/dist/angular-inform.min.js"></script>
+    <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <!-- <script src="./bower_components/angular-ui-select/dist/select.min.js"></script> -->
+    <script src="./bower_components/angular-ui-select/dist/select.js"></script>
+    <script src="./bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+    <script src="./bower_components/angular-block-ui/dist/angular-block-ui.min.js"></script>
+    <script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="./bower_components/angular-messages/angular-messages.min.js"></script>
+    <script src="./bower_components/x2js/xml2json.min.js"></script>
+    <!-- <script src="./bower_components/json-formatter/dist/json-formatter.min.js"></script> -->
+    <script src="./bower_components/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="./bower_components/bootbox/bootbox.js"></script>
+    <!-- <script src="./bower_components/jstree/dist/jstree.min.js"></script> -->
 
-    <script src="./common/common.js?rev=20180130173620"></script>
-    <script src="./common/js/angular-ext.js?rev=20180130173620"></script>
-    <script src="./common/js/angular-bizflow.js?rev=20180130173620"></script>
-    <script src="./common/js/basicwihactionclient.js?rev=20180130173620"></script>
+    <script src="./common/common.js"></script>
+    <script src="./common/js/angular-ext.js"></script>
+    <script src="./common/js/angular-bizflow.js"></script>
+    <script src="./common/js/basicwihactionclient.js"></script>
 
-    <script src="./common/services/angular-bizflow-service.js?rev=20180130173620"></script>
+    <script src="./common/services/angular-bizflow-service.js"></script>
 
-    <script src="./common/components/common.components.js?rev=20180130173620"></script>
-    <script src="./common/components/common.directive.js?rev=20180130173620"></script>
-    <script src="./common/components/calendar/directive-calendar.js?rev=20180130173620"></script>
-    <script src="./common/components/attachment/attachment.js?rev=20180130173620"></script>
-    <script src="./common/components/titlebar/directive-titlebar.js?rev=20180130173620"></script>
-    <script src="./common/components/infobar/directive-infobar.js?rev=20180130173620"></script>
-    <script src="./common/components/csvtodata/directive-csvtodata.js?rev=20180130173620"></script>
+    <script src="./common/components/common.components.js"></script>
+    <script src="./common/components/common.directive.js"></script>
+    <script src="./common/components/calendar/directive-calendar.js"></script>
+    <script src="./common/components/attachment/attachment.js"></script>
+    <script src="./common/components/titlebar/directive-titlebar.js"></script>
+    <script src="./common/components/infobar/directive-infobar.js"></script>
+    <script src="./common/components/csvtodata/directive-csvtodata.js"></script>
 
-    <script src="app.main.js?rev=20180130173620"></script>
-    <script src="features/reportFilter/report-filter.js?rev=20180130173620"></script>
+    <script src="app.main.js"></script>
+    <script src="features/reportFilter/report-filter.js"></script>
 </head>
 <script language="javascript">
 <!--
