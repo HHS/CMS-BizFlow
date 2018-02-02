@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="Oracle - @cms.bizflow.com" uuid="a78e2948-25ce-4f6d-a077-c7069d57b311">
+      <driver-ref>oracle</driver-ref>
+      <configured-by-url>true</configured-by-url>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@cms.bizflow.com:1521:orcl</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Oracle - @cmstest.bizflow.com" uuid="48d83eeb-3e6d-4450-a166-4ae12c795aef">
+      <driver-ref>oracle</driver-ref>
+      <configured-by-url>true</configured-by-url>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@cmstest.bizflow.com:1521:orcl</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Oracle - @cms.bizflow.com - BIZFLOW" uuid="8f1efa1e-ac06-46a8-af5f-e8353e470988">
+      <driver-ref>oracle</driver-ref>
+      <configured-by-url>true</configured-by-url>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@cms.bizflow.com:1521:orcl</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Oracle - @cms.bizflow.com - SYSTEM" read-only="true" uuid="e2347387-67aa-4d6f-874c-c7a010fcbff5">
+      <driver-ref>oracle</driver-ref>
+      <configured-by-url>true</configured-by-url>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@cms.bizflow.com:1521:orcl</jdbc-url>
+    </data-source>
+  </component>
+</project>

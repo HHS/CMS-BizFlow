@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!--<overlays gridSize="10">-->
+<overlays>
+    <overlay template="/PDF_Configuration/template/HHS PDCoversheet.pdf">
+    <!--<overlay template="./webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/template/HHS PDCoversheet.pdf">-->
+    <!--<overlay template="/Users/jolinhama/bizflowrepo/cmspdf/PDF_Configuration/template/HHS PDCoversheet.pdf">-->
+        <item name="Agency PD Number"
+              font="TIMES_ROMAN" fontSize="13" x="20"  y="708">#CS_PD_NUMBER_JOBCO</item>
+        <item name="Employing Office Location"
+              font="TIMES_ROMAN" fontSize="13" x="326"  y="708">#PD_EMPLOYING_OFFICE</item>
+
+        <item name="Official Title of Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="670">#CS_TITLE</item>
+
+        <item name="4. Pay Plan"
+              font="TIMES_ROMAN" fontSize="13" x="325"  y="670">#CS_PAY_PLAN_ID</item>
+        <item name="5. Occupational Series"
+              font="TIMES_ROMAN" fontSize="13" x="380"  y="670">#CS_SR_ID</item>
+        <item name="6. Grade"
+              font="TIMES_ROMAN" fontSize="13" x="460"  y="670">#CS_GR_ID</item>
+        <item name="7. Full Performance Level"
+              font="TIMES_ROMAN" fontSize="13" x="516"  y="670">#CS_PERFORMANCE_LEVEL</item>
+        <item name="8. Organizational Title of Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="641.5">#PD_ORG_POS_TITLE</item>
+
+        <item name="9. Subject to Identical Additional (IA)"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="615">#PD_SUBJECT_IA</item>
+
+        <item name="10. Administrative Code"
+              font="TIMES_ROMAN" fontSize="10" x="231"  y="615">#CS_AC_ID_LABEL</item>
+        <item name="Component-wide"
+              font="TIMES_ROMAN" fontSize="10" x="468.5"  y="615">#PD_SCOPE</item>
+
+
+        <item name="Second sub-organization"
+              font="TIMES_ROMAN" fontSize="9" x="231"  y="590">#PD_SUB_ORG_2_LABEL</item>
+
+        <item name="Third sub-organization"
+              font="TIMES_ROMAN" fontSize="9" x="231"  y="564">#PD_SUB_ORG_3_LABEL</item>
+
+        <item name="Fourth sub-organization"
+              font="TIMES_ROMAN" fontSize="9" x="231"  y="538" >#PD_SUB_ORG_4_LABEL</item>
+
+        <item name="Fifth sub-organization"
+              font="TIMES_ROMAN" fontSize="9" x="231"  y="511">#PD_SUB_ORG_5_LABEL</item>
+
+        <item name="12. Position is"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="539.5">#CS_SUPERVISORY</item>
+
+        <item name="Position Information (Check all that apply) - #1"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="487">#POS_INFORMATION_1</item>
+        <item name="Position Information (Check all that apply) - #2"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="475.5">#POS_INFORMATION_2</item>
+        <item name="Position Information (Check all that apply) - #3"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="464">#POS_INFORMATION_3</item>
+        <item name="Position Information (Check all that apply) - #4"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="452.5">#POS_INFORMATION_4</item>
+
+        <item name="14. Financial Statement Required"
+              font="TIMES_ROMAN" fontSize="10" x="231"  y="487">#CS_FIN_STMT_REQ_ID</item>
+
+        <item name="15. Acquisition Code"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="448">#PD_ACQ_CODE</item>
+
+        <item name="Cyber Security Code"
+              font="TIMES_ROMAN" fontSize="10" x="231"  y="448">#PD_CYB_SEC_CD</item>
+
+        <item name="17. Position Sensitivity"
+              font="TIMES_ROMAN" fontSize="10" x="382"  y="448">#CS_SEC_ID</item>
+
+        <item name="Fair Labor Standards Act"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="422">#CS_FLSA_DETERM_ID</item>
+
+        <item name="19. Competitive Level Code"
+              font="TIMES_ROMAN" fontSize="10" x="231"  y="422">#PD_COMPET_LVL_CD</item>
+        <item name="Bargaining Unit Status (BUS) Code"
+              font="TIMES_ROMAN" fontSize="10" x="382"  y="422">#PD_BUS_CD</item>
+
+
+        <item name="Typed Name and Title of Immediate Supervisor"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="350" width="250" maxFontSize="10">#SO_NAME_TITLE</item>
+
+        <item name="Incumbency only"
+              font="TIMES_ROMAN" fontSize="10" x="22.3"  y="297.8">#PD_INCUMBENCY</item>
+
+        <item name="Typed Name and Title of HR Classification Specialist"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="268" width="248" maxFontSize="10">#CLS_NAME_TITLE</item>
+
+        <!-- Position Standard - Up To 7 -->
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="237">#PD_CLS_STANDARDS_1</item>
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="226">#PD_CLS_STANDARDS_2</item>
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="214">#PD_CLS_STANDARDS_3</item>
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="202">#PD_CLS_STANDARDS_4</item>
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="190">#PD_CLS_STANDARDS_5</item>
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="178">#PD_CLS_STANDARDS_6</item>
+        <item name="Position Classification Standards Used in Classifying/Grading Position"
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="167">#PD_CLS_STANDARDS_7</item>
+
+        <item name="Remarks"
+              font="TIMES_ROMAN" fontSize="8" x="20"  y="140.4" multipleLine="true" width="570" height="11.5">#PD_REMARKS</item>
+
+    </overlay>
+</overlays>

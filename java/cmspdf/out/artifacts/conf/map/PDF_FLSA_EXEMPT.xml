@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<overlays> <!--  gridSize="10" -->
+    <overlay template="/PDF_Configuration/template/HHS FLSA Checklist_Page1.pdf">
+        <!--<overlay template="./webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/template/HHS FLSA Checklist_Page1.pdf">-->
+        <!--<overlay template="/Users/jolinhama/bizflowrepo/cmspdf/PDF_Configuration/template/HHS FLSA Checklist_Page1.pdf">-->
+        <item name="Position Title"
+              font="HELVETICA" fontSize="9" x="139"  y="449" width="178" maxFontSize="10" >#POSITION_TITLE</item>
+        <item name="Office/Organization"
+              font="HELVETICA" fontSize="9" x="165"  y="431">#OFFICE_ORGANIZATION</item>
+        <item name="Position Number"
+              font="HELVETICA" fontSize="9" x="170"  y="418"></item>
+        <item name="Pay Plan/Series"
+              font="HELVETICA" fontSize="9" x="350"  y="414">#PAYPLAN_SERIES_GRADE</item>
+        <item name="Administrative Code"
+              font="HELVETICA" fontSize="9" x="175"  y="396" >#ADMIN_CODE</item>
+        <item name="Job Code"
+              font="HELVETICA" fontSize="9" x="325"  y="396" >#JOB_CODE</item>
+        <item name="5 CFR 551.205"
+              font="HELVETICA" fontSize="13" x="101.5" y="153" >#FLSA_EX_EXEC</item>
+    </overlay>
+
+    <overlay template="/PDF_Configuration/template/HHS FLSA Checklist_Page2.pdf">
+        <!--<overlay template="./webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/template/HHS FLSA Checklist_Page2.pdf">-->
+        <!--<overlay template="/Users/jolinhama/bizflowrepo/cmspdf/PDF_Configuration/template/HHS FLSA Checklist_Page2.pdf">-->
+        <item name="5 CFR 551.206"
+              font="HELVETICA" fontSize="13" x="101.5" y="720" >#FLSA_EX_ADMIN</item>
+        <item name="5 CFR 551:208"
+              font="HELVETICA" fontSize="13" x="101.5" y="651.5" >#FLSA_EX_PROF_LEARNED</item>
+        <item name="5 CFR 551:209"
+              font="HELVETICA" fontSize="13" x="101.5" y="556.5" >#FLSA_EX_PROF_CREATIVE</item>
+        <item name="5 CFR 551:210"
+              font="HELVETICA" fontSize="13" x="101.5" y="474.5" >#FLSA_EX_PROF_COMPUTER</item>
+        <item name="5 CFR 551:216"
+              font="HELVETICA" fontSize="13" x="101.5" y="330" >#FLSA_EX_LAW_ENFORC</item>
+        <item name="5 CFR 551:212"
+              font="HELVETICA" fontSize="13" x="101.5" y="286" >#FLSA_EX_FOREIGN</item>
+        <item name="Final-Determ Exempt"
+              font="HELVETICA" fontSize="13" x="370" y="184.5" >X</item>
+
+        <item name="HR Specialist"
+              font="HELVETICA" fontSize="9" x="145" y="162" >#PD_CLS_SPEC_NAME</item>
+        <item name="Date"
+              font="HELVETICA" fontSize="9" x="424" y="162" >#PD_CLS_SPEC_DT</item>
+        <item name="Remarks"
+              font="HELVETICA" fontSize="9" x="140" y="133" multipleLine="true" width="420" height="12.5">#FLSA_EX_REMARKS</item>
+    </overlay>
+
+</overlays>

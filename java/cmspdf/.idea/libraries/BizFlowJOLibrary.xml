@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="BizFlowJOLibrary">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/hsfrmwk.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/hwjo.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/hwjsp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/hwweb.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/rijndael-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xalan-2.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xercesImpl-2.8.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/servlet-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

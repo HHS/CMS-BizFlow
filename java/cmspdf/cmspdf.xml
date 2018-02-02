@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cmspdf" default="all">
+  
+  
+  <property file="cmspdf.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.7" value="${jdk.home.1.7}/bin"/>
+  <path id="jdk.classpath.1.7">
+    <fileset dir="${jdk.home.1.7}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/htmlconverter.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxrt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="lib/ant-javafx.jar"/>
+      <include name="lib/dt.jar"/>
+      <include name="lib/javafx-doclet.jar"/>
+      <include name="lib/javafx-mx.jar"/>
+      <include name="lib/jconsole.jar"/>
+      <include name="lib/sa-jdi.jar"/>
+      <include name="lib/tools.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.bizflowjolibrary.classpath">
+    <pathelement location="${basedir}/lib/commons-collections-3.2.1.jar"/>
+    <pathelement location="${basedir}/lib/hsfrmwk.jar"/>
+    <pathelement location="${basedir}/lib/hwjo.jar"/>
+    <pathelement location="${basedir}/lib/hwjsp.jar"/>
+    <pathelement location="${basedir}/lib/hwweb.jar"/>
+    <pathelement location="${basedir}/lib/rijndael-api.jar"/>
+    <pathelement location="${basedir}/lib/servlet-api.jar"/>
+    <pathelement location="${basedir}/lib/xalan-2.7.0.jar"/>
+    <pathelement location="${basedir}/lib/xercesImpl-2.8.1.jar"/>
+  </path>
+  
+  <path id="library.log4j:log4j:1.2.15.classpath">
+    <pathelement location="${basedir}/lib/activation-1.1.jar"/>
+    <pathelement location="${basedir}/lib/log4j-1.2.15.jar"/>
+    <pathelement location="${basedir}/lib/mail-1.4.jar"/>
+  </path>
+  
+  <path id="library.org.apache.pdfbox:pdfbox-app:2.0.4.classpath">
+    <pathelement location="${basedir}/lib/bcmail-jdk15on-1.54.jar"/>
+    <pathelement location="${basedir}/lib/bcpkix-jdk15on-1.54.jar"/>
+    <pathelement location="${basedir}/lib/bcprov-jdk15on-1.54.jar"/>
+    <pathelement location="${basedir}/lib/commons-logging-1.2.jar"/>
+    <pathelement location="${basedir}/lib/fontbox-2.0.4.jar"/>
+    <pathelement location="${basedir}/lib/pdfbox-2.0.4.jar"/>
+    <pathelement location="${basedir}/lib/pdfbox-app-2.0.4.jar"/>
+    <pathelement location="${basedir}/lib/pdfbox-debugger-2.0.4.jar"/>
+    <pathelement location="${basedir}/lib/pdfbox-tools-2.0.4.jar"/>
+  </path>
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  <import file="${basedir}/module_cmspdf.xml"/>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.cmspdf, clean.artifact.unnamed" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.cmspdf" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.cmspdf:jar" value="${basedir}/out/artifacts/lib"/>
+    <property name="artifact.output.unnamed" value="${basedir}/out/artifacts/conf"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.cmspdf.jar" value="${artifacts.temp.dir}/cmspdf.jar"/>
+  </target>
+  
+  <target name="clean.artifact.unnamed" description="clean unnamed artifact output">
+    <delete dir="${artifact.output.unnamed}"/>
+  </target>
+  
+  <target name="artifact.cmspdf:jar" depends="init.artifacts, compile.module.cmspdf" description="Build &#39;cmspdf:jar&#39; artifact">
+    <property name="artifact.temp.output.cmspdf:jar" value="${artifacts.temp.dir}/cmspdf_jar"/>
+    <mkdir dir="${artifact.temp.output.cmspdf:jar}"/>
+    <jar destfile="${temp.jar.path.cmspdf.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${cmspdf.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.cmspdf.jar}" tofile="${artifact.temp.output.cmspdf:jar}/cmspdf.jar"/>
+  </target>
+  
+  <target name="artifact.unnamed" depends="init.artifacts" description="Build &#39;unnamed&#39; artifact">
+    <mkdir dir="${artifact.output.unnamed}"/>
+    <copy todir="${artifact.output.unnamed}">
+      <fileset dir="${basedir}/PDF_Configuration"/>
+    </copy>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.cmspdf:jar, artifact.unnamed" description="Build all artifacts">
+    <mkdir dir="${artifact.output.cmspdf:jar}"/>
+    <copy todir="${artifact.output.cmspdf:jar}">
+      <fileset dir="${artifact.temp.output.cmspdf:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
