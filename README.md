@@ -24,7 +24,7 @@
 
 	cd java/cmspdf
 
-1. Using a text editor, modify cmspdf.properties file in the cmspdf directory for the JDK location in the build machine.
+1. Using a text editor, modify `cmspdf.properties` file in the cmspdf directory for the JDK location in the build machine.
 
 	jdk.home.1.7=<full_path_to_jdk_1.7_home>
 
@@ -89,7 +89,9 @@ Normally, the library files and configuration files will only need to be deploye
 
 
 ## UI Module Packaging Instruction
-UI modules are captured from DEV environment's web application directory, using ANT build file.
+UI modules are captured from DEV environment's web application directory, using ANT build file.  
+
+The ANT build file will package the UI modules in a zip file.  Especially for WebMaker runtime files, the script will capture configuration files separately per environment, which will be deployed to the target environment appropriately by the deployment script later on.  The script also appends timestamp to the JavaScript and CSS file references in the web application files so that the web browser cache is forced to be refreshed at the first time loading after the new deployment.
 
 #### Pre-requisite on DEV Server:
 * JDK/JRE 1.7
@@ -116,9 +118,10 @@ UI modules are captured from DEV environment's web application directory, using 
 	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
 
-1. Using a text editor, modify the following property value in the build.xml for tomcat web application directory setting.  Specify the full path to the tomcat directory.
+1. Using a text editor, modify the following property value in the `build.xml` file for tomcat web application directory setting.  Specify the full path to the tomcat directory.
 
-		webserver.dir
+		<property name="webserver.dir" value="full_path_to_tomcat_directory" />
+	
 
 1. In the command line prompt, run ANT.  The following will execute the default target, which will generate a zip file.
 
@@ -134,6 +137,8 @@ UI modules are captured from DEV environment's web application directory, using 
 
 ## UI Module Deployment Instruction
 UI modules are deployed to the higher environments (e.g. QA, PROD) using shell scripts.  
+
+The deployment script will stop tomcat service, copy runtime files to tomcat web application directory, and start tomcat service.
 
 1. Login to higher environment server machine with an administrator account. (Or, sudo to administrator account)
 
@@ -153,8 +158,8 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 
 1. Using a text editor, modify the following property value in the build.xml for tomcat web application directory setting.  Specify the full path to the tomcat directory.
 
-	DIR_DEPLOY=<full_path_to_deploy_baseline_directory_above>
-	DIR_TOMCAT=<full_path_to_tomcat_directory>
+		DIR_DEPLOY=<full_path_to_deploy_baseline_directory_above>
+		DIR_TOMCAT=<full_path_to_tomcat_directory>
 
 1. In the command line prompt, make the UI deployment script mode executable.
 
@@ -182,18 +187,17 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 1. In the command line prompt, change directory back to the deployment directory, and run the deployment script.
 
 	For example:
-		
+
 		cd <DEV_server_dir>/work/deploy
 		./deploy_ui_qa.sh -nodebug
 
 	Note: The deployment script has "-nodebug" option for real deployment action.  If you run the script without the option, it will try to test directory setting without actually deploying any file.  This is a precautionary measure to prevent accidental overwriting of the target application files.  In order to run the deployment script in "DEBUG" mode, i.e. without "-nodebug" option, a dummy script should be placed in the deployment directory.  Make sure the dummy script mode is executable.
 
 	For example:
-
 	* From (source repository):
 		* deploy/script1.sh
 	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
-
+```
 	chomod 744 script1.sh
-		
+```
