@@ -12,14 +12,14 @@
 * **webapps** : Web application, including BizFlow web solution, WebMaker runtime directory
 
 
-## Java module build instruction
+## Java Module Build Instruction
 
-### **cmspdf** (CMS PDF Generation Module)
+### CMS PDF Generation Module
 #### Pre-requisite:
 * JDK 1.7
 * Apache Ant 1.9.x or later
 
-#### Build steps
+#### Build Steps
 1. Open command line interface, and change directory to the cmspdf module directory.
 
 	cd java/cmspdf
@@ -40,7 +40,7 @@
 
 	<tomcat_dir>/webapps/bizflowwebmaker/WEB-INT/lib/
 
-#### Static files for the initial deployment
+#### Static Files for the Initial Deployment
 The following instructions are to deploy the dependent library files and configuration files for the cmspdf module.  They should be copied onto the target tomcat location along with the freshly built cmspdf.jar file.
 
 Normally, the library files and configuration files will only need to be deployed once per environment.  Any subsequent code change to the module will require the rebuild and redeploy of the cmspdf.jar file only under normal circumstances.  If there is library change or configuration change, you need to refresh the changed files using the following steps.
@@ -160,7 +160,7 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 
 	For example:
 
-		chomod 666 deploy_ui_qa.sh
+		chomod 744 deploy_ui_qa.sh
 
 1. Copy UI deployment package file to the UI deployment directory.
 	
@@ -186,14 +186,14 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 		cd <DEV_server_dir>/work/deploy
 		./deploy_ui_qa.sh -nodebug
 
-Note: The deployment script has "-nodebug" option for real deployment action.  If you run the script without the option, it will try to test directory setting without actually deploying any file.  This is a precautionary measure to prevent accidental overwriting of the target application files.  In order to run the deployment script in "DEBUG" mode, i.e. without "-nodebug" option, a dummy script should be placed in the deployment directory.  Make sure the dummy script mode is executable.
+	Note: The deployment script has "-nodebug" option for real deployment action.  If you run the script without the option, it will try to test directory setting without actually deploying any file.  This is a precautionary measure to prevent accidental overwriting of the target application files.  In order to run the deployment script in "DEBUG" mode, i.e. without "-nodebug" option, a dummy script should be placed in the deployment directory.  Make sure the dummy script mode is executable.
 
 	For example:
-		
+
 	* From:
 		* deploy/script1.sh
 	* To:
-		<DEV_server_dir>/work/deploy/
-
-	chomod 666 script1.sh
+		* <DEV_server_dir>/work/deploy/
+		
+		chomod 744 script1.sh
 		
