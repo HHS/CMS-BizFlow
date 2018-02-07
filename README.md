@@ -50,20 +50,20 @@ Normally, the library files and configuration files will only need to be deploye
 	mkdir <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/
 
 1. Copy the generated configuration files to the target location.
-	* From:
+	* From (source repository):
 		* out/artifacts/conf/*
-	* To:
+	* To (target environment):
 		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration
 
 1. Copy the generated configuration files to the target location.
-	* From:
+	* From (source repository):
 		* out/artifacts/conf/HWSessionFactory.properties
 		* out/artifacts/conf/log4j.properties
-	* To:
+	* To (target environment):
 		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/classes/
 
 1. Copy the library files to the target location.
-	* From:
+	* From (source repository):
 		* lib/activation-1.1.jar
 		* lib/bcmail-jdk15on-1.54.jar
 		* lib/bcpkix-jdk15on-1.54.jar
@@ -83,7 +83,7 @@ Normally, the library files and configuration files will only need to be deploye
 		* lib/pdfbox-tools-2.0.4.jar
 		* lib/rijndael-api.jar
 
-	* To:
+	* To (target environment):
 		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/lib/
 
 
@@ -111,9 +111,9 @@ UI modules are captured from DEV environment's web application directory, using 
 
 1. Copy UI packaging script to the deployment directory.
 	
-	* From:
+	* From (source repository):
 		* deploy/build.xml
-	* To:
+	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
 
 1. Using a text editor, modify the following property value in the build.xml for tomcat web application directory setting.  Specify the full path to the tomcat directory.
@@ -146,9 +146,9 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 
 1. Copy UI deployment script to the deployment directory.
 	
-	* From:
+	* From (source repository):
 		* deploy/deploy_ui_qa.sh
-	* To:
+	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
 
 1. Using a text editor, modify the following property value in the build.xml for tomcat web application directory setting.  Specify the full path to the tomcat directory.
@@ -166,9 +166,9 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 	
 	For example:
 
-	* From:
+	* From (source repository):
 		* runtime_20180201_132525.zip
-	* To:
+	* To (target environment):
 		* <DEV_server_dir>/work/deploy/baseline/ui
 
 1. In the command line prompt, extract the UI runtime zip file.  If there is previous extract of runtime files, remove it before fresh extract.
@@ -190,10 +190,11 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 
 	For example:
 
-	* From:
+	* From (source repository):
 		* deploy/script1.sh
-	* To:
+	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
 		
-		chomod 744 script1.sh
+	
+	chomod 744 script1.sh
 		
