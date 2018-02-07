@@ -47,13 +47,13 @@ Normally, the library files and configuration files will only need to be deploye
 
 1. Create PDF_Configuration directory onto the target tomcat location.
 
-	mkdir <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/
+		mkdir <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/
 
 1. Copy the generated configuration files to the target location.
 	* From (source repository):
 		* out/artifacts/conf/*
 	* To (target environment):
-		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration
+		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/
 
 1. Copy the generated configuration files to the target location.
 	* From (source repository):
@@ -100,7 +100,7 @@ UI modules are captured from DEV environment's web application directory, using 
 	* cmspdf files
 	* BizFlow solution files
 
-1. Login to DEV server machine with an administrator account. (Or, sudo to administrator account)
+1. Login to DEV server machine with an administrator (or sudo) account. 
 
 1. In the command line prompt, create a work directory where files will be generated, and change directory to it.
 
@@ -118,11 +118,11 @@ UI modules are captured from DEV environment's web application directory, using 
 
 1. Using a text editor, modify the following property value in the build.xml for tomcat web application directory setting.  Specify the full path to the tomcat directory.
 
-	webserver.dir
+		webserver.dir
 
 1. In the command line prompt, run ANT.  The following will execute the default target, which will generate a zip file.
 
-	ant
+		ant
 
 1. Capture the generated zip file.  The packaging script will create the intermediate directories and generate the UI runtime zip file with timestamp suffix.  
 
@@ -194,7 +194,6 @@ UI modules are deployed to the higher environments (e.g. QA, PROD) using shell s
 		* deploy/script1.sh
 	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
-		
-	
+
 	chomod 744 script1.sh
 		
