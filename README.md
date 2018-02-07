@@ -50,10 +50,10 @@ Normally, the library files and configuration files will only need to be deploye
 	mkdir <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration/
 
 1. Copy the generated configuration files to the target location.
-	From:
-		out/artifacts/conf/*
-	To:
-		<tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration
+	* From:
+		* out/artifacts/conf/*
+	* To:
+		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/PDF_Configuration
 
 1. Copy the generated configuration files to the target location.
 	* From:
@@ -88,10 +88,10 @@ Normally, the library files and configuration files will only need to be deploye
 
 
 
-## UI module packaging instruction
+## UI Module Packaging Instruction
 UI modules are captured from DEV environment's web application directory, using ANT build file.
 
-#### Pre-requisite on DEV server:
+#### Pre-requisite on DEV Server:
 * JDK/JRE 1.7
 * Apache Ant 1.9.x or later
 * Administrator (or sudo) access to DEV server machine
@@ -132,7 +132,7 @@ UI modules are captured from DEV environment's web application directory, using 
 
 
 
-## UI module deployment instruction
+## UI Module Deployment Instruction
 UI modules are deployed to the higher environments (e.g. QA, PROD) using shell scripts.  
 
 1. Login to higher environment server machine with an administrator account. (Or, sudo to administrator account)
