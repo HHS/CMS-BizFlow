@@ -14,7 +14,9 @@
 
 ## Java Module Build Instruction
 
-### CMS PDF Generation Module
+### CMS PDF Module
+CMS PDF module is used to generate PDF document attachment in BizFlow work item handler.  It is built using Java.  Apache ANT build script is used to generate the JAR file.  The module requires dependent library files and configuration files.  It will be deployed to WebMaker server directory.
+
 #### Pre-requisite:
 * JDK 1.7
 * Apache Ant 1.9.x or later
@@ -93,7 +95,7 @@ UI modules are captured from DEV environment's web application directory, using 
 
 The ANT build file will package the UI modules in a zip file.  Especially for WebMaker runtime files, the script will capture configuration files separately per environment, which will be deployed to the target environment appropriately by the deployment script later on.  The script also appends timestamp to the JavaScript and CSS file references in the web application files so that the web browser cache is forced to be refreshed at the first time loading after the new deployment.
 
-#### Pre-requisite on DEV Server:
+### Pre-requisite on DEV Server:
 * JDK/JRE 1.7
 * Apache Ant 1.9.x or later
 * Administrator (or sudo) access to DEV server machine
@@ -102,6 +104,7 @@ The ANT build file will package the UI modules in a zip file.  Especially for We
 	* cmspdf files
 	* BizFlow solution files
 
+### Packaging Steps
 1. Login to DEV server machine with an administrator (or sudo) account. 
 
 1. In the command line prompt, create a work directory where files will be generated, and change directory to it.
