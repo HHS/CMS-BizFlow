@@ -19,14 +19,14 @@
         vm.group = {};
         vm.components = ['Office of the Administrator (OA) Only', 'By Admin Code'];
         vm.includeSubOrgs = ['Yes', 'No'];
-        vm.requestTypes = ['All', 'Appointment', 'Classification Only', 'Recruitment'];
+        vm.requestTypes = ['All', 'Classification Only', 'Recruitment', 'Appointment'];
         vm.allClassificationTypes = ['All', 'Create New Position Description', 'Conduct 5-year Recertification',
                                     'Update Coversheet', 'Audit Position', 'Update Major Duties', 'Reorganization for Existing Position',
                                     'Reorganization for New Position', 'Review Existing Position Description'];
         vm.recruitmentClassificationTypes = ['All', 'Create New Position Description', 'Conduct 5-year Recertification',
                                 'Update Coversheet', 'Update Major Duties',
                                 'Reorganization for New Position', 'Review Existing Position Description'];
-        vm.appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Veteran Recruitment Appointment (VRA)', 'Schedule A', 'Volunteer'];
+        vm.appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
         vm.scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm.volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
         vm.orgSelected = {
