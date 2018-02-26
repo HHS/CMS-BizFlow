@@ -88,6 +88,10 @@ Normally, the library files and configuration files will only need to be deploye
 	* To (target environment):
 		* <tomcat_dir>/webapps/bizflowwebmaker/WEB-INF/lib/
 
+	Note: WebMaker server contains the following libraries, which will be duplicate.  In such case, exclude those from cmspdf module.
+		activation.jar
+		commons-logging-1.1.1.jar
+		mail.jar
 
 
 ## UI Module Packaging Instruction
