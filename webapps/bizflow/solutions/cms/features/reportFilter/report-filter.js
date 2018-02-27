@@ -21,7 +21,7 @@
         vm.allClassificationTypes = ['All', 'Audit Position', 'Conduct 5-year Recertification','Create New Position Description', 'Reorganization for Existing Position',
                                     'Reorganization for New Position', 'Review Existing Position Description','Update Coversheet', 'Update Major Duties'];
         vm.recruitmentClassificationTypes = ['All', 'Conduct 5-year Recertification','Create New Position Description', 'Review Existing Position Description',
-                                'Reorganization for New Position','Update Coversheet', 'Update Major Duties'];
+                                'Reorganization for New Position','Update Coversheet', 'Update Major Duties'];                                
         vm.appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
         vm.scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm.volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
@@ -76,6 +76,8 @@
             } else {
                 types = [];
             }
+
+            types.sort();
             return types;
         };
 
@@ -300,3 +302,8 @@
         };
     }
 })();
+
+
+
+
+
