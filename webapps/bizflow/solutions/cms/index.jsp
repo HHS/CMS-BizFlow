@@ -76,8 +76,10 @@ private String getCMSUserGroups() throws Exception
             
             String grpid = rs.getString("grpid");
             String grpname = rs.getString("grpname");
+            grpname = grpname.replaceAll("'","\\\\'");
             String memberid = rs.getString("memberid");
             String name = rs.getString("name");
+            name = name.replaceAll("'","\\\\'");
 
             sb.append("{");
             sb.append("\"grpid\":\"").append(grpid).append("\",");
