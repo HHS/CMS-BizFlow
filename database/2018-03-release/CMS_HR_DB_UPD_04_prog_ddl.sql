@@ -5,6 +5,238 @@ SET DEFINE OFF;
 
 
 
+
+
+
+--------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_STRATCON_DATA
+--------------------------------------------------------
+/**
+ * Modifies the form data XML for Strategic Consultation for business rule.
+ * Currently, it inserts a new meeting history record depending on the reschedule flag.
+ *
+ * @param I_XMLDOC_PREV - Previous form data xml from the existing record.
+ * @param IO_XMLDOC - Form data xml as an input and output.
+ *
+ * @return IO_XMLDOC - Form data xml that is modified in accordance with business rule.
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_STRATCON_DATA
+(
+	I_XMLDOC_PREV      IN     XMLTYPE
+	, IO_XMLDOC        IN OUT XMLTYPE
+)
+IS
+	V_IS_RESCHEDULE                 VARCHAR2(50);
+	V_SCA_CLASS_SPEC_SIG_PREV       VARCHAR2(50);
+	V_SCA_CLASS_SPEC_SIG_DT_PREV    VARCHAR2(50);
+	V_SCA_STAFF_SIG_PREV            VARCHAR2(50);
+	V_SCA_STAFF_SIG_DT_PREV         VARCHAR2(50);
+	V_SCA_CLASS_SPEC_SIG            VARCHAR2(50);
+	V_SCA_CLASS_SPEC_SIG_DT         VARCHAR2(50);
+	V_SCA_STAFF_SIG                 VARCHAR2(50);
+	V_SCA_STAFF_SIG_DT              VARCHAR2(50);
+BEGIN
+	----------------------------------
+	-- MEETING_HISTORY
+	----------------------------------
+	SELECT LOWER(EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/IS_RESCHEDULE'))
+	INTO V_IS_RESCHEDULE
+	FROM DUAL;
+
+	IF (V_IS_RESCHEDULE = 'true') THEN
+		SELECT APPENDCHILDXML(IO_XMLDOC, 'DOCUMENT/MEETING/MEETING_HISTORY', XMLTYPE
+				(
+				'<record>' ||
+					'<SSH_ID>'                  || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_ID')                  || '</SSH_ID>' ||
+					'<SSH_MEETING_SCHED_DT>'    || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_MEETING_SCHED_DT')    || '</SSH_MEETING_SCHED_DT>' ||
+					'<SSH_RESCHED_FROM_DT>'     || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_RESCHED_FROM_DT')     || '</SSH_RESCHED_FROM_DT>' ||
+					'<SSH_RESCHED_REASON_ID>'   || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_RESCHED_REASON_ID')   || '</SSH_RESCHED_REASON_ID>' ||
+					'<SSH_RESCHED_REASON_TEXT>' || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_RESCHED_REASON_TEXT') || '</SSH_RESCHED_REASON_TEXT>' ||
+					'<SSH_RESCHED_COMMENTS>'    || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_RESCHED_COMMENTS')    || '</SSH_RESCHED_COMMENTS>' ||
+					'<SSH_RESCHED_BY_ID>'       || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_RESCHED_BY_ID')       || '</SSH_RESCHED_BY_ID>' ||
+					'<SSH_RESCHED_BY_NAME>'     || EXTRACTVALUE(IO_XMLDOC, 'DOCUMENT/MEETING/SSH_RESCHED_BY_NAME')     || '</SSH_RESCHED_BY_NAME>' ||
+					'<SSH_RESCHED_ON>'          || TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS')     || '</SSH_RESCHED_ON>' ||
+				'</record>'
+				))
+		INTO IO_XMLDOC
+		FROM DUAL;
+	END IF;
+
+	----------------------------------
+	-- APPROVAL
+	----------------------------------
+	-- If there are multiple work items for one approval activity, and they are being approved at the same time, 
+	-- the signature data of the other will be overwritten (blanked out).  Prevent such overwrite.
+	SELECT
+		X.SCA_CLASS_SPEC_SIG_PREV
+		, X.SCA_CLASS_SPEC_SIG_DT_PREV
+		, X.SCA_STAFF_SIG_PREV
+		, X.SCA_STAFF_SIG_DT_PREV
+		, X.SCA_CLASS_SPEC_SIG
+		, X.SCA_CLASS_SPEC_SIG_DT
+		, X.SCA_STAFF_SIG
+		, X.SCA_STAFF_SIG_DT
+	INTO 
+		V_SCA_CLASS_SPEC_SIG_PREV
+		, V_SCA_CLASS_SPEC_SIG_DT_PREV
+		, V_SCA_STAFF_SIG_PREV
+		, V_SCA_STAFF_SIG_DT_PREV
+		, V_SCA_CLASS_SPEC_SIG
+		, V_SCA_CLASS_SPEC_SIG_DT
+		, V_SCA_STAFF_SIG
+		, V_SCA_STAFF_SIG_DT
+	FROM 
+		XMLTABLE('/DOCUMENT/APPROVAL'
+			PASSING I_XMLDOC_PREV
+			COLUMNS
+				SCA_CLASS_SPEC_SIG_PREV             VARCHAR2(50)    PATH 'SCA_CLASS_SPEC_SIG'
+				, SCA_CLASS_SPEC_SIG_DT_PREV        VARCHAR2(50)    PATH 'SCA_CLASS_SPEC_SIG_DT'
+				, SCA_STAFF_SIG_PREV                VARCHAR2(50)    PATH 'SCA_STAFF_SIG'
+				, SCA_STAFF_SIG_DT_PREV             VARCHAR2(50)    PATH 'SCA_STAFF_SIG_DT'
+		) X
+		, XMLTABLE('/DOCUMENT/APPROVAL'
+			PASSING IO_XMLDOC
+			COLUMNS
+				SCA_CLASS_SPEC_SIG                  VARCHAR2(50)    PATH 'SCA_CLASS_SPEC_SIG'
+				, SCA_CLASS_SPEC_SIG_DT             VARCHAR2(50)    PATH 'SCA_CLASS_SPEC_SIG_DT'
+				, SCA_STAFF_SIG                     VARCHAR2(50)    PATH 'SCA_STAFF_SIG'
+				, SCA_STAFF_SIG_DT                  VARCHAR2(50)    PATH 'SCA_STAFF_SIG_DT'
+		) X
+	;
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_CLASS_SPEC_SIG_PREV       = ' || V_SCA_CLASS_SPEC_SIG_PREV);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_CLASS_SPEC_SIG_DT_PREV    = ' || V_SCA_CLASS_SPEC_SIG_DT_PREV);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_STAFF_SIG_PREV            = ' || V_SCA_STAFF_SIG_PREV);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_STAFF_SIG_DT_PREV         = ' || V_SCA_STAFF_SIG_DT_PREV);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_CLASS_SPEC_SIG       = ' || V_SCA_CLASS_SPEC_SIG);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_CLASS_SPEC_SIG_DT    = ' || V_SCA_CLASS_SPEC_SIG_DT);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_STAFF_SIG            = ' || V_SCA_STAFF_SIG);
+	--DBMS_OUTPUT.PUT_LINE('    V_SCA_STAFF_SIG_DT         = ' || V_SCA_STAFF_SIG_DT);
+	--IF V_SCA_CLASS_SPEC_SIG IS NULL THEN 
+	--	DBMS_OUTPUT.PUT_LINE('V_SCA_CLASS_SPEC_SIG IS DETECTED AS NULL');
+	--END IF;
+	--IF V_SCA_STAFF_SIG IS NULL THEN 
+	--	DBMS_OUTPUT.PUT_LINE('V_SCA_STAFF_SIG IS DETECTED AS NULL');
+	--END IF;
+
+	IF (V_SCA_CLASS_SPEC_SIG IS NOT NULL AND V_SCA_STAFF_SIG IS NULL AND V_SCA_STAFF_SIG_PREV IS NOT NULL)
+		OR (V_SCA_STAFF_SIG IS NOT NULL AND V_SCA_CLASS_SPEC_SIG IS NULL AND V_SCA_CLASS_SPEC_SIG_PREV IS NOT NULL)
+	THEN
+		--SELECT DELETEXML(IO_XMLDOC, '/DOCUMENT/APPROVAL/SCA_STAFF_SIG') INTO IO_XMLDOC FROM DUAL;
+		--SELECT DELETEXML(IO_XMLDOC, '/DOCUMENT/APPROVAL/SCA_STAFF_SIG_DT') INTO IO_XMLDOC FROM DUAL;
+		--SELECT APPENDCHILDXML(IO_XMLDOC , '/DOCUMENT/APPROVAL', XMLTYPE(
+		--		'<SCA_STAFF_SIG>'    || V_SCA_STAFF_SIG_PREV    || '</SCA_STAFF_SIG>'
+		--	))
+		--INTO IO_XMLDOC
+		--FROM DUAL;
+		--SELECT APPENDCHILDXML(IO_XMLDOC , '/DOCUMENT/APPROVAL', XMLTYPE(
+		--		'<SCA_STAFF_SIG_DT>' || V_SCA_STAFF_SIG_DT_PREV || '</SCA_STAFF_SIG_DT>'
+		--	))
+		--INTO IO_XMLDOC
+		--FROM DUAL;
+
+		--SELECT DELETEXML(IO_XMLDOC, '/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG') INTO IO_XMLDOC FROM DUAL;
+		--SELECT DELETEXML(IO_XMLDOC, '/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG_DT') INTO IO_XMLDOC FROM DUAL;
+		--SELECT APPENDCHILDXML(IO_XMLDOC , '/DOCUMENT/APPROVAL', XMLTYPE(
+		--		'<SCA_CLASS_SPEC_SIG>'    || V_SCA_CLASS_SPEC_SIG_PREV    || '</SCA_CLASS_SPEC_SIG>'
+		--	))
+		--INTO IO_XMLDOC
+		--FROM DUAL;
+		--SELECT APPENDCHILDXML(IO_XMLDOC , '/DOCUMENT/APPROVAL', XMLTYPE(
+		--		'<SCA_CLASS_SPEC_SIG_DT>' || V_SCA_CLASS_SPEC_SIG_DT_PREV || '</SCA_CLASS_SPEC_SIG_DT>'
+		--	))
+		--INTO IO_XMLDOC
+		--FROM DUAL;
+
+		SELECT 
+			XMLQUERY('
+				declare function local:retain-sig($elem as element()) {
+					if (
+						local-name($elem) = "SCA_CLASS_SPEC_SIG" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()
+						and 
+						not (
+							($elem/../SCA_STAFF_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text())
+							or 
+							(not($elem/../SCA_STAFF_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()))
+						)
+					) then
+						element {node-name($elem)}
+							{
+								$xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()
+							}
+					else if (
+						local-name($elem) = "SCA_CLASS_SPEC_SIG_DT" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG_DT/text()
+						and 
+						not (
+							($elem/../SCA_STAFF_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text())
+							or 
+							(not($elem/../SCA_STAFF_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()))
+						)
+					) then
+						element {node-name($elem)}
+							{
+								$xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG_DT/text()
+							}
+					else if (
+						local-name($elem) = "SCA_STAFF_SIG" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()
+						and 
+						not (
+							($elem/../SCA_CLASS_SPEC_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text())
+							or 
+							(not($elem/../SCA_CLASS_SPEC_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()))
+						)
+					) then
+						element {node-name($elem)}
+							{
+								$xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()
+							}
+					else if (
+						local-name($elem) = "SCA_STAFF_SIG_DT" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG_DT/text()
+						and 
+						not (
+							($elem/../SCA_CLASS_SPEC_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text())
+							or 
+							(not($elem/../SCA_CLASS_SPEC_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()))
+						)
+					) then
+						element {node-name($elem)}
+							{
+								$xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG_DT/text()
+							}
+					else
+						element {node-name($elem)}
+							{
+								for $child in $elem/node()
+								return 
+									if ($child instance of element()) then local:retain-sig($child)
+									else $child
+							}
+				};
+
+				local:retain-sig($xdoc/*)
+				'
+				PASSING I_XMLDOC_PREV AS "xpre", IO_XMLDOC AS "xdoc" RETURNING CONTENT
+			)
+		INTO IO_XMLDOC
+		FROM DUAL;
+
+	END IF;
+
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_STRATCON_DATA -------------------');
+END;
+
+/
+
+
+
+
+
+
+
+
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_PV_ELIGQUAL
 --------------------------------------------------------
@@ -1422,6 +1654,7 @@ IS
 	V_REC_CNT               NUMBER(10);
 	V_MAX_ID                NUMBER(20);
 	V_XMLDOC                XMLTYPE;
+	V_XMLDOC_PREV           XMLTYPE;
 	V_REQ_FORM_FIELD_XPATH  VARCHAR2(100);
 	V_REQ_FORM_FIELD_PREV	VARCHAR2(500);	
 	V_REQ_FORM_FIELD        VARCHAR2(500);
@@ -1488,16 +1721,19 @@ BEGIN
 			V_REQ_FORM_FIELD_XPATH := '/INVALIDDOC';
 		END IF;
 		BEGIN
-			SELECT 
-				XMLQUERY(V_REQ_FORM_FIELD_XPATH PASSING FIELD_DATA RETURNING CONTENT).GETSTRINGVAL()
+			SELECT
+				FIELD_DATA 
+				, XMLQUERY(V_REQ_FORM_FIELD_XPATH PASSING FIELD_DATA RETURNING CONTENT).GETSTRINGVAL()
 				, XMLQUERY(V_REQ_FORM_FIELD_XPATH PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL()
 			INTO 
-				V_REQ_FORM_FIELD_PREV 
+				V_XMLDOC_PREV
+				, V_REQ_FORM_FIELD_PREV
 				, V_REQ_FORM_FIELD
 			FROM TBL_FORM_DTL 
 			WHERE ID = V_ID;
 		EXCEPTION
 			WHEN NO_DATA_FOUND THEN
+				V_XMLDOC_PREV := NULL;
 				V_REQ_FORM_FIELD_PREV := NULL;
 				V_REQ_FORM_FIELD := NULL;
 				SP_ERROR_LOG();
@@ -1540,7 +1776,7 @@ BEGIN
 
 	-- Strategic Consultation specific xml data manipulation before insert/update
 	IF V_FORM_TYPE = 'CMSSTRATCON' THEN
-		SP_UPDATE_STRATCON_DATA( V_XMLDOC );
+		SP_UPDATE_STRATCON_DATA( V_XMLDOC_PREV, V_XMLDOC );
 	END IF;
 
 	IF V_REC_CNT > 0 THEN
