@@ -15,11 +15,12 @@
             <div class="panel-body">
                 <div class="row container-fluid">
                     <div class="form-group col-md-3 required">
-                        <label id="ComponentLabel" for="selectComponent" class="control-label">Component</label>
-                        <select role="combobox" id="selectComponent" class="form-control" ng-model="$ctrl.selected.component" required aria-labelledby="ComponentLabel">
-                            <option role="option" value="" selected="selected" style="display:none">Select One...</option>
-                            <option ng-repeat="item in $ctrl.components">{{item}}</option>
-                        </select>
+                        <label id="ComponentLabel" for="selectComponent" class="control-label">Component 2</label>
+                        <selectize class="form-control" role="combobox" id="selectComponent" required aria-labelledby="ComponentLabel"
+                                    ng-model="$ctrl.selected.component" 
+                                    options="$ctrl.components"
+                                    config="$ctrl.simpleConfig"
+                                    placeholder="Select One..."></selectize>
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="adminCodeLabel" for="adminCodeInput" class="control-label">Administrative Code</label>
@@ -27,9 +28,10 @@
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="subOrgLabel" for="subOrgSelect" class="control-label">Include Requests for Sub-Orgs?</label>
-                        <select id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" class="form-control" ng-model="$ctrl.selected.includeSubOrg" required>
-                            <option ng-repeat="item in $ctrl.includeSubOrgs">{{item}}</option>
-                        </select>
+                        <selectize id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" required
+                                    ng-model="$ctrl.selected.includeSubOrg" 
+                                    options="$ctrl.includeSubOrgs"
+                                    config="$ctrl.simpleConfig"></selectize>
                     </div>
                 </div>
                 <div class="row container-fluid">
@@ -74,137 +76,80 @@
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
                         <label id="requestTypeLabel" for="requestTypeSelect" class="control-label">Request Type</label>
-                        <select role="combobox" id="requestTypeSelect" class="form-control" ng-model="$ctrl.selected.requestType" required aria-labelledby="requestTypeLabel" >
-                            <option value="" selected="selected" style="display:none">Select One...</option>
-                            <option ng-repeat="item in $ctrl.requestTypes">{{item}}</option>
-                        </select>                        
+                        <selectize id="requestTypeSelect" 
+                                    config="$ctrl.simpleConfig" 
+                                    options="$ctrl.requestTypes" 
+                                    ng-model="$ctrl.selected.requestType"></selectize>
+                        
+                        
                     </div>
                     <div class="form-group col-md-3" 
                         ng-if="$ctrl.selected.appointmentType != 'Expert/Consultant' && $ctrl.selected.appointmentType != 'Volunteer'">
                         <label id="classificationTypeLabel" for="classificationTypeSelect" class="control-label">Classification Type</label>
-                        <select role="combobox" id="classificationTypeSelect" aria-labelledby="classificationTypeLabel" class="form-control" ng-model="$ctrl.selected.classificationType" required>
-                            <option value="" selected="selected" style="display:none">Select One...</option>
-                            <option ng-repeat="item in $ctrl.getClassificationTypes()">{{item}}</option>
-                        </select>                         
+                        <selectize role="combobox" id="classificationTypeSelect" aria-labelledby="classificationTypeLabel" required
+                                    ng-model ="$ctrl.selected.classificationType" 
+                                    options = "$ctrl.getClassificationTypes()"
+                                    config="$ctrl.simpleConfig"></selectize>
+                      
                     </div>
                 </div>
 
                 <div class="row container-fluid" ng-if="$ctrl.selected.requestType == 'Appointment'">
                     <div class="form-group col-md-3 required">
                         <label id="appointmentTypeLabel" for="appointmentTypeSelect" class="control-label">Appointment Type</label>
-                        <select role="combobox" id="appointmentTypeSelect" aria-labelledby="appointmentTypeLabel" class="form-control" ng-model="$ctrl.selected.appointmentType" required>
-                            <option value="" selected="selected" style="display:none">Select One...</option>
-                            <option ng-repeat="item in $ctrl.appointmentTypes">{{item}}</option>
-                        </select>                                                     
+                        <selectize role="combobox" id="appointmentTypeSelect" aria-labelledby="appointmentTypeLabel" required
+                                    ng-model="$ctrl.selected.appointmentType"
+                                    options="$ctrl.appointmentTypes"
+                                    config="$ctrl.simpleConfig"></selectize>
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.appointmentType == 'Schedule A'">
                         <label id="scheduleATypeLabel" for="scheduleATypeSelect" class="control-label">Schedule A Type</label>
-                        <select role="combobox" id="scheduleATypeSelect" aria-labelledby="scheduleATypeLabel" class="form-control" ng-model="$ctrl.selected.scheduleAType" required>
-                            <option value="" selected="selected" style="display:none">Select One...</option>
-                            <option ng-repeat="item in $ctrl.scheduleATypes">{{item}}</option>
-                        </select>                           
+                        <selectize role="combobox" id="scheduleATypeSelect" aria-labelledby="scheduleATypeLabel"  required
+                                    ng-model="$ctrl.selected.scheduleAType"
+                                    options="$ctrl.scheduleATypes"
+                                    config="$ctrl.simpleConfig"></selectize>
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.appointmentType == 'Volunteer'">
                         <label role="combobox" id="volunteerTypeLabel" for="volunteerTypeSelect" class="control-label">Volunteer Type</label>
-                        <select id="volunteerTypeSelect" aria-labelledby="volunteerTypeLabel" class="form-control" ng-model="$ctrl.selected.volunteerType" required>
-                            <option value="" selected="selected" style="display:none">Select One...</option>
-                            <option ng-repeat="item in $ctrl.volunteerTypes">{{item}}</option>
-                        </select>                           
+                        <selectize id="volunteerTypeSelect" aria-labelledby="volunteerTypeLabel" required
+                                    ng-model="$ctrl.selected.volunteerType"
+                                    options="$ctrl.volunteerTypes"
+                                    config="$ctrl.simpleConfig"></selectize>
                     </div>
                 </div>
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
                         <label class="control-label">Selecting Official</label>
-                        <ui-select on-select="$ctrl.onSelect($item, $model, $select)" foccusserTitle="{{$select.selected.name}}" ng-model="$ctrl.selected.selectingOfficial" title="Selecting Official">
-                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices 
-                                repeat="item in $ctrl.group['Selecting Officials'] | filter: $select.search" >
-                                <div aria-live="{{$select.activeIndex == $index ? 'polite' : 'off'}}" 
-                                     aria-atomic="true" 
-                                     aria-relevant="all" 
-                                     aria-label="{{item.name}}, {{ ($index + 1) }} out of {{$select.items.length}}">
-                                     <div aria-hidden="true" ng-bind-html="item.name | highlight: $select.search"></div>
-                                </div>
-                            </ui-select-choices>
-                            <ui-select-no-choice aria-live="polite" aria-atomic="true" aria-relevant="all">
-                                &nbsp;&nbsp;&nbsp;No such user.
-                            </ui-select-no-choice>                            
-                        </ui-select>
+                        <selectize config="$ctrl.membersInGroupConfig" role="combobox"
+                                    options="$ctrl.group['Selecting Officials']" 
+                                    ng-model="$ctrl.selected.selectingOfficial"></selectize>
                     </div>
                     <div class="form-group col-md-3">
                         <label class="control-label">Executive Officer</label>
-                        <ui-select  on-select="$ctrl.onSelect($item, $model, $select)" focusser-title="{{$select.selected.name}}" ng-model="$ctrl.selected.executiveOfficer" title="Executive Officer">
-                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="item in $ctrl.group['Executive Officers'] | filter: $select.search">
-                                <!-- <div ng-bind-html="item.name | highlight: $select.search"></div> -->
-                                <div aria-live="{{$select.activeIndex == $index ? 'polite' : 'off'}}" 
-                                     aria-atomic="true" 
-                                     aria-relevant="all" 
-                                     aria-label="{{item.name}}, {{ ($index + 1) }} out of {{$select.items.length}}">
-                                     <div aria-hidden="true" ng-bind-html="item.name | highlight: $select.search"></div>
-                                </div>                                
-                            </ui-select-choices>
-                            <ui-select-no-choice aria-live="polite" aria-atomic="true" aria-relevant="all">
-                                &nbsp;&nbsp;&nbsp;No such user.
-                            </ui-select-no-choice>                            
-                        </ui-select>                                                     
+                        <selectize config="$ctrl.membersInGroupConfig" role="combobox"
+                                    options="$ctrl.group['Executive Officers']" 
+                                    ng-model="$ctrl.selected.executiveOfficer"></selectize>
                     </div>
                     <div class="form-group col-md-3">
                         <label id="hrLiaison" class="control-label">HR Liaison</label>
-                        <ui-select  on-select="$ctrl.onSelect($item, $model, $select)" focusser-title="{{$select.selected.name}}" ng-model="$ctrl.selected.hrLiaison" title="HR Liaison">
-                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="item in $ctrl.group['HR Liaison'] | filter: $select.search">
-                                <!-- <span aria-label="{{item.name}}" ng-bind-html="item.name | highlight: $select.search"></span> -->
-                                <div aria-live="{{$select.activeIndex == $index ? 'polite' : 'off'}}" 
-                                     aria-atomic="true" 
-                                     aria-relevant="all" 
-                                     aria-label="{{item.name}}, {{ ($index + 1) }} out of {{$select.items.length}}">
-                                     <div aria-hidden="true" ng-bind-html="item.name | highlight: $select.search"></div>
-                                </div>                                
-                            </ui-select-choices>
-                            <ui-select-no-choice aria-live="polite" aria-atomic="true" aria-relevant="all">
-                                &nbsp;&nbsp;&nbsp;No such user.
-                            </ui-select-no-choice>                            
-                        </ui-select>                         
+                        <selectize config="$ctrl.membersInGroupConfig" role="combobox"
+                                    options="$ctrl.group['HR Liaison']" 
+                                    ng-model="$ctrl.selected.hrLiaison"></selectize>
                     </div>
                 </div>
 
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
                         <label class="control-label">Staffing Specialist</label>
-                        <ui-select  on-select="$ctrl.onSelect($item, $model, $select)" focusser-title="{{$select.selected.name}}" ng-model="$ctrl.selected.staffSpecialist" title="Staffing Specialist">
-                            <ui-select-match >{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="item in $ctrl.group['HR Staffing Specialists'] | filter: $select.search">
-                                <!-- <div ng-bind-html="item.name | highlight: $select.search"></div> -->
-                                <div aria-live="{{$select.activeIndex == $index ? 'polite' : 'off'}}" 
-                                     aria-atomic="true" 
-                                     aria-relevant="all" 
-                                     aria-label="{{item.name}}, {{ ($index + 1) }} out of {{$select.items.length}}">
-                                     <div aria-hidden="true" ng-bind-html="item.name | highlight: $select.search"></div>
-                                </div>
-                            </ui-select-choices>
-                            <ui-select-no-choice aria-live="polite" aria-atomic="true" aria-relevant="all">
-                                &nbsp;&nbsp;&nbsp;No such user.
-                            </ui-select-no-choice>                            
-                        </ui-select>     
+                        <selectize config="$ctrl.membersInGroupConfig" role="combobox"
+                                    options="$ctrl.group['HR Staffing Specialists']" 
+                                    ng-model="$ctrl.selected.staffSpecialist"></selectize>
                     </div>
                     <div class="form-group col-md-3">
                         <label class="control-label">Classification Specialist</label>
-                        <ui-select  on-select="$ctrl.onSelect($item, $model, $select)" focusser-title="$select.selected.name" ng-model="$ctrl.selected.classSpecialist" title="Classification Specialist">
-                            <ui-select-match >{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="item in $ctrl.group['HR Classification Specialists'] | filter: $select.search">
-                                <!-- <div ng-bind-html="item.name | highlight: $select.search"></div> -->
-                                <div aria-live="{{$select.activeIndex == $index ? 'polite' : 'off'}}" 
-                                     aria-atomic="true" 
-                                     aria-relevant="all" 
-                                     aria-label="{{item.name}}, {{ ($index + 1) }} out of {{$select.items.length}}">
-                                     <div aria-hidden="true" ng-bind-html="item.name | highlight: $select.search"></div>
-                                </div>
-                            </ui-select-choices>
-                            <ui-select-no-choice aria-live="polite" aria-atomic="true" aria-relevant="all">
-                                &nbsp;&nbsp;&nbsp;No such user.
-                            </ui-select-no-choice>                            
-                        </ui-select>     
+                        <selectize config="$ctrl.membersInGroupConfig" role="combobox"
+                                    options="$ctrl.group['HR Classification Specialists']" 
+                                    ng-model="$ctrl.selected.classSpecialist"></selectize>
                     </div>
                 </div>
 

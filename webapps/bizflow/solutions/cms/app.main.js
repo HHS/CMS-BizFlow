@@ -13,7 +13,8 @@ angular.module('bizflow.app', [
      'inform',
      'inform-exception',
      'ui.bootstrap',
-     'ui.select',
+    //  'ui.select',
+     'selectize',
      'ui.grid',
      'ui.grid.selection',
      'ui.grid.pagination',
@@ -41,13 +42,11 @@ angular.module('bizflow.app', [
         };
     })
     .config(['$httpProvider', 'blockUIConfig', 'bizflowContextProvider', 'informProvider', '$compileProvider',
-                '$routeProvider', '$logProvider', '$locationProvider', 'uiSelectConfig', // 'JSONFormatterConfigProvider'
+                '$routeProvider', '$logProvider', '$locationProvider', // 'JSONFormatterConfigProvider'
         function ($httpProvider, blockUIConfig, bizflowContextProvider, informProvider, $compileProvider,
-                    $routeProvider, $logProvider, $locationProvider, uiSelectConfig /* JSONFormatterConfigProvider */) {
+                    $routeProvider, $logProvider, $locationProvider /* JSONFormatterConfigProvider */) {
             // https://stackoverflow.com/questions/41211875/angularjs-1-6-0-latest-now-routes-not-working
             $locationProvider.hashPrefix('');
-
-            uiSelectConfig.theme = 'bootstrap';
 
             // Turn on or off debugging message
             $logProvider.debugEnabled(true);
@@ -153,26 +152,9 @@ angular.module('bizflow.app', [
             vm.preventBackspace();
 
             if (angular.isUndefined(bizflowContext.custom)) bizflowContext.custom = {};
-            // bizflowContext.custom.componentPath = bizflowContext.appContextPath + "/common/components";
-            // example URL "http://localhost/app/index.html#/Form1?userId=glim&userName=Guerry%20Lim&loginId=glim"
-
-            // var absUrl = $location.absUrl();
-
-            // bizflowContext.custom.bfIntegrationMode = "workitem"; //login, bizcove, workitem
-            // if (bizflowWih.basicWih) {
-                // var workitemContext = bizflowWih.getWorkitemContext();
-                bizflowContext.custom.SESSIONINFO = CMS_REPORT_FILTER.SESSION;
-                bizflowContext.custom.MEMBERID = CMS_REPORT_FILTER.CURUSERID;
-                bizflowContext.custom.MEMBERNAME = CMS_REPORT_FILTER.CURUSERNAME;
-                // Requires BizFlow Patch to get LoginID
-                // bizflowContext.custom.LOGINID = workitemContext.User.LoginID;
-
-                // bizflowContext.custom.PROCESSID = workitemContext.Process.ID;
-                // bizflowContext.custom.ACTIVITYSEQ = workitemContext.Activity.Sequence;
-                // bizflowContext.custom.ACTIVITYNAME = workitemContext.Activity.Name;
-                // bizflowContext.custom.WITEMSEQ = workitemContext.Workitem.Sequence;
-                // bizflowContext.custom.bfIntegrationMode = "workitem"; //login, bizcove, workitem
-            // }
+            bizflowContext.custom.SESSIONINFO = CMS_REPORT_FILTER.SESSION;
+            bizflowContext.custom.MEMBERID = CMS_REPORT_FILTER.CURUSERID;
+            bizflowContext.custom.MEMBERNAME = CMS_REPORT_FILTER.CURUSERNAME;
         };
 
         vm.init();

@@ -89,6 +89,7 @@ private String getCMSUserGroups() throws Exception
             sb.append("}");
             isFirst = false;
         }
+
         sb.append("]}");
 
     } catch (SQLException e) {
@@ -133,25 +134,30 @@ private String getCMSUserGroups() throws Exception
     <link rel="stylesheet" href="./bower_components/angular-block-ui/dist/angular-block-ui.min.css">
     <link rel="stylesheet" href="./bower_components/angular-ui-grid/ui-grid.css">
     <link rel="stylesheet" href="./bower_components/json-formatter/dist/json-formatter.min.css">
-    <link rel="stylesheet" href="./bower_components/jstree/dist/themes/default/style.min.css">
+    <!-- <link rel="stylesheet" href="./bower_components/jstree/dist/themes/default/style.min.css"> -->
+    <link rel="stylesheet" href="./bower_components/selectize/dist/css/selectize.bootstrap3.css ">
 
     <link rel="stylesheet" href="common/css/bootstrap-ext.css">
-    <link rel="stylesheet" href="common/css/app.css?ver=0.08">
-    <!-- <link rel="stylesheet" href="features/form-example/common/css/app.css"> -->
+    <link rel="stylesheet" href="common/css/app.css">
+
 
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
     <script src="./bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script src="./bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="./bower_components/microplugin/src/microplugin.js"></script>
+    
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./bower_components/sifter/sifter.js"></script>
+    <script src="./bower_components/selectize/dist/js/selectize.js"></script>
     <script src="./bower_components/angular/angular.min.js"></script>
-    <script src="./bower_components/angular-aria/angular-aria.min.js"></script>
+    <script src="./bower_components/angular-selectize2/dist/angular-selectize.js"></script>
+    <!-- <script src="./bower_components/angular-aria/angular-aria.min.js"></script> -->
     <script src="./bower_components/angular-route/angular-route.min.js"></script>
     <script src="./bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script src="./bower_components/angular-inform/dist/angular-inform.min.js"></script>
     <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <!-- <script src="./bower_components/angular-ui-select/dist/select.min.js"></script> -->
-    <script src="./bower_components/angular-ui-select/dist/select.js"></script>
+    <script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
     <script src="./bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
     <script src="./bower_components/angular-block-ui/dist/angular-block-ui.min.js"></script>
     <script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>

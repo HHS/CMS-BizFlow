@@ -15,16 +15,13 @@
 
         // Attributes
         vm.group = {};
-        vm.components = ['By Admin Code', 'Office of the Administrator (OA) Only'];
-        vm.includeSubOrgs = ['Yes', 'No'];
-        vm.requestTypes = ['All', 'Appointment', 'Classification Only', 'Recruitment'];
-        vm.allClassificationTypes = ['All', 'Audit Position', 'Conduct 5-year Recertification','Create New Position Description', 'Reorganization for Existing Position',
-                                    'Reorganization for New Position', 'Review Existing Position Description','Update Coversheet', 'Update Major Duties'];
-        vm.recruitmentClassificationTypes = ['All', 'Conduct 5-year Recertification','Create New Position Description', 'Review Existing Position Description',
-                                'Reorganization for New Position','Update Coversheet', 'Update Major Duties'];                                
-        vm.appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
-        vm.scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
-        vm.volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
+        vm._components = ['By Admin Code', 'Office of the Administrator (OA) Only'];
+        vm._includeSubOrgs = ['Yes', 'No'];
+        vm._requestTypes = ['All', 'Appointment', 'Classification Only', 'Recruitment'];
+
+        vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
+        vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
+        vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
         vm.reportNameDescriptionMap = [
             {'name': 'Time of Possession - Classification Only Report', 'description': 'This report calculates the number of days each request resides with HR vs Component users in NEIL for Classification Only request types. It includes the number of days spent in Strategic Consultation and Classification, and produces an average number of days the request resides in HR and the average number of days the request resides with the Component.'},
             {'name': 'Time to Consult Report', 'description': 'This report lists the number of days it takes for each request to proceed from start to end in Strategic Consultation.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'},
@@ -43,11 +40,11 @@
             volunteerType: 'All',
             fromDate: null,
             toDate: null,
-            selectingOfficial: {grpname: '', grpid: '', memberid: 'All', name: 'All'},
-            executiveOfficer: {grpname: '', grpid: '', memberid: 'All', name: 'All'},
-            hrLiaison: {grpname: '', grpid: '', memberid: 'All', name: 'All'},
-            staffSpecialist: {grpname: '', grpid: '', memberid: 'All', name: 'All'},
-            classSpecialist: {grpname: '', grpid: '', memberid: 'All', name: 'All'}
+            selectingOfficial: 'All',
+            executiveOfficer: 'All',
+            hrLiaison: 'All',
+            staffSpecialist: 'All',
+            classSpecialist: 'All'
         };
         vm.selected = {};
         vm.fromDateOpened = false;
@@ -60,25 +57,64 @@
             showWeeks: false,
             maxDate: new Date()
         };
-        vm.onSelect = function ($item, $mode, $select) {
-            $select.focusserTitle = $item.name;
+        // Selectize configuration for members in User Group
+        vm.membersInGroupConfig = {
+            maxItems:1,
+            create: false,
+            valueField: 'memberid',
+            labelField: 'name',
+            searchField: ['name']
+        };
+        // Selectize configuration for simple list
+        vm.simpleConfig = {
+            maxItems:1,
+            create: false,
+            valueField: 'value',
+            labelField: 'key'
+        };
+
+        vm.getOptions = function(items) {
+            return items.map(function(item) {
+                return {key: item, value: item};
+            })
         }
+
+        vm.classTypesForClass = [];
+        vm.classTypesForRecruitment = [];
+        vm.classTypesForAppointment = [];
+        vm.classTypesForOther = [];
+
+        vm.allClassificationTypes = ['All', 'Audit Position', 'Conduct 5-year Recertification','Create New Position Description', 'Reorganization for Existing Position',
+                                    'Reorganization for New Position', 'Review Existing Position Description','Update Coversheet', 'Update Major Duties'];
+        vm.recruitmentClassificationTypes = ['All', 'Conduct 5-year Recertification','Create New Position Description', 'Review Existing Position Description',
+                                'Reorganization for New Position','Update Coversheet', 'Update Major Duties'];
 
         // Functions
         vm.getClassificationTypes = function () {
-            var types = [];
             if (vm.selected.requestType === 'All' || vm.selected.requestType === 'Classification Only') {
-                types = types.concat(vm.allClassificationTypes);
+                if (vm.classTypesForClass.length == 0) {
+                    vm.classTypesForClass = vm.classTypesForClass.concat(vm.allClassificationTypes);
+                    vm.classTypesForClass.sort();
+                    vm.classTypesForClass = vm.getOptions(vm.classTypesForClass);
+                }
+                return vm.classTypesForClass;                
             } else if (vm.selected.requestType === 'Recruitment') {
-                types = types.concat(vm.recruitmentClassificationTypes);
+                if (vm.classTypesForRecruitment.length == 0) {
+                    vm.classTypesForRecruitment = vm.classTypesForRecruitment.concat(vm.recruitmentClassificationTypes);
+                    vm.classTypesForRecruitment.sort();
+                    vm.classTypesForRecruitment = vm.getOptions(vm.classTypesForRecruitment);
+                }
+                return vm.classificaitonTypes2;
             } else if (vm.selected.requestType === 'Appointment') {
-                types = types.concat(vm.recruitmentClassificationTypes, ['Reorganization for Existing Position']);
+                if (vm.classTypesForAppointment.length == 0) {
+                    vm.classTypesForAppointment = vm.classTypesForAppointment.concat(vm.recruitmentClassificationTypes, ['Reorganization for Existing Position']);
+                    vm.classTypesForAppointment.sort();
+                    vm.classTypesForAppointment = vm.getOptions(vm.classTypesForAppointment);
+                }
+                return vm.classificaitonTypes3;
             } else {
-                types = [];
+                return vm.classTypesForOther;
             }
-
-            types.sort();
-            return types;
         };
 
         vm.adjustBizCoveUI = function () {
@@ -96,7 +132,7 @@
             vm.group = _.groupBy(groups, 'grpname');
             for (var prop in vm.group) {
                 if (vm.group.hasOwnProperty(prop)) {
-                    vm.group[prop].unshift({grpname: '', grpid: '', memberid: '', name: 'All'});
+                    vm.group[prop].unshift({grpname: '', grpid: '', memberid: 'All', name: 'All'});
                 }
             }
             var amIDCOManagerLeads = _.filter(vm.group['DCO Managers and Leads'], function (item) {
@@ -106,7 +142,7 @@
                 return item.memberid === CMS_REPORT_FILTER.CURUSERID;
             });
             if (amIDCOManagerLeads.length > 0 || amIAdminTeam.length > 0) {
-                vm.components = ['By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
+                vm._components = ['By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
             }
         };
 
@@ -171,11 +207,11 @@
             url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
             url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
             url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
-            url = url + '&SO_ID=' + vm.selected.selectingOfficial.memberid; // Selecting Official
-            url = url + '&XO_ID=' + vm.selected.executiveOfficer.memberid; // Executive Officer
-            url = url + '&HRL_ID=' + vm.selected.hrLiaison.memberid; // HR Liaison
-            url = url + '&SS_ID=' + vm.selected.staffSpecialist.memberid; // Staff specialist
-            url = url + '&CS_ID=' + vm.selected.classSpecialist.memberid; // Class specialist
+            url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
+            url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
+            url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
+            url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
+            url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             //$log.debug('Report URL [' + url + ']');
             return url;
         };
@@ -217,6 +253,7 @@
             }
         }
 
+        // Example option
         // {
         //     "requestType": {
         //         "setList" : ["Appointment"]
@@ -279,10 +316,10 @@
                 }
 
                 if (option.requestType) {
-                    vm.applyOption(vm, 'requestTypes', 'requestType', option.requestType);
+                    vm.applyOption(vm, '_requestTypes', 'requestType', option.requestType);
                 }
                 if (option.appointmentType) {
-                    vm.applyOption(vm, 'appointmentTypes', 'appointmentType', option.appointmentType);
+                    vm.applyOption(vm, '_appointmentTypes', 'appointmentType', option.appointmentType);
                 }
             }
         }
@@ -295,6 +332,13 @@
             vm.initOption();
             vm.selected = _.assign({}, vm.orgSelected);
             $('#reportFilter').attr('aria-busy', 'false');
+
+            vm.requestTypes = vm.getOptions(vm._requestTypes);
+            vm.appointmentTypes = vm.getOptions(vm._appointmentTypes);
+            vm.scheduleATypes = vm.getOptions(vm._scheduleATypes);
+            vm.volunteerTypes = vm.getOptions(vm._volunteerTypes);
+            vm.components = vm.getOptions(vm._components);
+            vm.includeSubOrgs = vm.getOptions(vm._includeSubOrgs);
         };
 
         vm.$onDestroy = function () {
@@ -302,8 +346,3 @@
         };
     }
 })();
-
-
-
-
-
