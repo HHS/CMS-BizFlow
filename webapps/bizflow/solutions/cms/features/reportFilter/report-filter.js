@@ -111,7 +111,7 @@
                     vm.classTypesForAppointment.sort();
                     vm.classTypesForAppointment = vm.getOptions(vm.classTypesForAppointment);
                 }
-                return vm.classificaitonTypes3;
+                return vm.classTypesForAppointment;
             } else {
                 return vm.classTypesForOther;
             }
