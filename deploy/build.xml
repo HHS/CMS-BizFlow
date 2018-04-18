@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="CaptureWMRuntime" default="package.ui" basedir=".">
 
+	
+	<property file="ui.properties" />
+
 	<property name="proj.root.dir" value="${basedir}" />
 	<property name="webserver.dir" value="C:\Program Files\Apache Software Foundation\Tomcat 7.0" />
 	<property name="src.web.bizflow.dir" value="${webserver.dir}/webapps/bizflow" />
@@ -10,8 +13,44 @@
 	<property name="deploy.conf.dir" value="${deploy.runtime.dir}/configuration" />
 	<property name="deploy.webapps.dir" value="${deploy.runtime.dir}/webapps" />
 	<property name="token.bf.base.url" value="http://cms.bizflow.com" />
+	<property name="replace.bf.url.dev" value="http://localhost:8080" />
+	<property name="replace.bf.url.qa" value="http://localhost:9080" />
+	<property name="replace.bf.url.trn" value="http://localhost:8080" />
+	<property name="replace.bf.url.stg" value="http://localhost:8080" />
+	<property name="replace.bf.url.prd" value="http://localhost:8080" />
 	<!-- Note: comment out blastcache.set property if cache blasting should be disabled. -->
 	<property name="blastcache.set" value="true"/>
+
+	<!-- patters for WebMaker runtime files to be captured, excluding config files -->
+	<patternset id="wm.proj.include.noconf">
+		<include name="cmscommon/**" />
+		<include name="StratConMain/**" />
+		<include name="StratCon_AUT/**" />
+		<include name="classification_main/**" />
+		<include name="eligqual/**" />
+
+		<exclude name="**/morphyc.xml" />
+		<exclude name="**/*log.txt" />
+		<exclude name="**/*log.txt.**" />
+	</patternset>
+
+	<!-- patters for WebMaker runtime config files to be captured -->
+	<patternset id="wm.proj.include.conf">
+		<include name="cmscommon/doc/morphyc.xml" />
+		<include name="StratConMain/doc/morphyc.xml" />
+		<include name="StratCon_AUT/doc/morphyc.xml" />
+		<include name="classification_main/doc/morphyc.xml" />
+		<include name="eligqual/doc/morphyc.xml" />
+	</patternset>
+
+	<!-- patters for web application files for blastcache -->
+	<patternset id="web.include.blastcache">
+		<include name="**/views/view/Page_Painter/BizFlowEntry.xsl" />
+		<include name="**/views/view/Page_Painter/NewForm.xsl" />
+		<include name="**/views/view/Page_Painter/SaveTabContentsForm.xsl" />
+		<include name="classification_main/doc/morphyc.xml" />
+		<include name="eligqual/doc/morphyc.xml" />
+	</patternset>
 
 
 
@@ -55,15 +94,7 @@
 		<delete dir="${deploy.webapps.dir}/bizflowwebmaker" />
 		<copy todir="${deploy.webapps.dir}/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
-				<include name="cmscommon/**" />
-				<include name="StratConMain/**" />
-				<include name="StratCon_AUT/**" />
-				<include name="classification_main/**" />
-				<include name="eligqual/**" />
-
-				<exclude name="**/morphyc.xml" />
-				<exclude name="**/*log.txt" />
-				<exclude name="**/*log.txt.**" />
+				<patternset refid="wm.proj.include.noconf" />
 			</fileset>
 		</copy>
 	</target>
@@ -77,8 +108,8 @@
 		<tstamp>
 			<format property="blockcachesfx" pattern="yyyyMMddHHmmss" />
 		</tstamp>
-		<replace dir="${deploy.webapps.dir}/bizflowwebmaker"
-			includes="**/views/view/Page_Painter/BizFlowEntry.xsl, **/views/view/Page_Painter/NewForm.xsl, **/views/view/Page_Painter/SaveTabContentsForm.xsl">
+		<replace dir="${deploy.webapps.dir}/bizflowwebmaker">
+			<patternset refid="web.include.blastcache" />
 			<replacefilter token=".css" value=".css?rev=${blockcachesfx}" />
 			<replacefilter token=".js" value=".js?rev=${blockcachesfx}" />
 		</replace>
@@ -92,57 +123,41 @@
 		<delete dir="${deploy.conf.dir}" />
 		<copy todir="${deploy.conf.dir}/template/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
-				<include name="cmscommon/doc/morphyc.xml" />
-				<include name="StratConMain/doc/morphyc.xml" />
-				<include name="StratCon_AUT/doc/morphyc.xml" />
-				<include name="classification_main/doc/morphyc.xml" />
-				<include name="eligqual/doc/morphyc.xml" />
+				<patternset refid="wm.proj.include.conf" />
 			</fileset>
 		</copy>
 
 		<!-- prepare DEV config -->
 		<copy todir="${deploy.conf.dir}/dev/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
-				<include name="cmscommon/doc/morphyc.xml" />
-				<include name="StratConMain/doc/morphyc.xml" />
-				<include name="StratCon_AUT/doc/morphyc.xml" />
-				<include name="classification_main/doc/morphyc.xml" />
-				<include name="eligqual/doc/morphyc.xml" />
+				<patternset refid="wm.proj.include.conf" />
 			</fileset>
 		</copy>
 		<replace dir="${deploy.conf.dir}/dev/tomcat/webapps/bizflowwebmaker"
-			includes="**/morphyc.xml">
-			<replacefilter token="${token.bf.base.url}" value="http://localhost:8080" />
+				includes="**/morphyc.xml">
+			<replacefilter token="${token.bf.base.url}" value="${replace.bf.url.dev}" />
 		</replace>
 
 		<!-- prepare QA config -->
 		<copy todir="${deploy.conf.dir}/qa/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
-				<include name="cmscommon/doc/morphyc.xml" />
-				<include name="StratConMain/doc/morphyc.xml" />
-				<include name="StratCon_AUT/doc/morphyc.xml" />
-				<include name="classification_main/doc/morphyc.xml" />
-				<include name="eligqual/doc/morphyc.xml" />
+				<patternset refid="wm.proj.include.conf" />
 			</fileset>
 		</copy>
 		<replace dir="${deploy.conf.dir}/qa/tomcat/webapps/bizflowwebmaker"
-			includes="**/morphyc.xml">
-			<replacefilter token="${token.bf.base.url}" value="http://localhost:9080" />
+				includes="**/morphyc.xml">
+			<replacefilter token="${token.bf.base.url}" value="${replace.bf.url.qa}" />
 		</replace>
 
 		<!-- prepare PROD config -->
 		<copy todir="${deploy.conf.dir}/prod/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
-				<include name="cmscommon/doc/morphyc.xml" />
-				<include name="StratConMain/doc/morphyc.xml" />
-				<include name="StratCon_AUT/doc/morphyc.xml" />
-				<include name="classification_main/doc/morphyc.xml" />
-				<include name="eligqual/doc/morphyc.xml" />
+				<patternset refid="wm.proj.include.conf" />
 			</fileset>
 		</copy>
 		<replace dir="${deploy.conf.dir}/prod/tomcat/webapps/bizflowwebmaker"
-			includes="**/morphyc.xml">
-			<replacefilter token="${token.bf.base.url}" value="http://localhost:8080" />
+				includes="**/morphyc.xml">
+			<replacefilter token="${token.bf.base.url}" value="${replace.bf.url.prd}" />
 		</replace>
 	</target>
 
