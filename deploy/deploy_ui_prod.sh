@@ -100,6 +100,8 @@ copyBfCustom(){
 	else
 		# bizflow web customization file deploy
 		cp -rf $SRC_WEBAPPS/bizflow $TRG_WEBAPPS
+		# bizflow web customization configuration deploy
+		cp -rf $SRC_WEBAPPS/../configuration/prod/tomcat/webapps/bizflow $TRG_WEBAPPS
 	fi
 	echo
 }
