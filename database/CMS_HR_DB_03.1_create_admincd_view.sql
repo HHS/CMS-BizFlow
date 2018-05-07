@@ -1,3 +1,15 @@
+
+SET DEFINE OFF;
+
+
+------------------------------------
+--Backout Script
+------------------------------------
+/*
+DROP VIEW HHS_CMS_HR.ADMIN_CODES;
+*/
+
+
 --------------------------------------------------------
 --  DDL for View ADMIN_CODES
 --------------------------------------------------------
@@ -15,9 +27,11 @@ WHERE
 
 /
 
-------------------------------------
---Backout Script
-------------------------------------
-/*
-DROP VIEW HHS_CMS_HR.ADMIN_CODES;
-*/
+
+
+COMMENT ON COLUMN ADMIN_CODES.AC_ADMIN_CD IS 'Unique admin code';
+COMMENT ON COLUMN ADMIN_CODES.AC_ADMIN_CD_DESCR IS 'Description of admin code';
+COMMENT ON COLUMN ADMIN_CODES.AC_PARENT_CD IS 'Key value of associated parent admin code';
+
+
+
