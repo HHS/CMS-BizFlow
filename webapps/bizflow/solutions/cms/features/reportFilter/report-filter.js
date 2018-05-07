@@ -14,21 +14,48 @@
         var vm = this;
 
         // Attributes
+        vm.report = {'name': '', 'description':''};
         vm.group = {};
+
+        // Primitive Options - Not for Selectize
         vm._components = ['By Admin Code', 'Office of the Administrator (OA) Only'];
         vm._includeSubOrgs = ['Yes', 'No'];
         vm._requestTypes = ['All', 'Appointment', 'Classification Only', 'Recruitment'];
-
         vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
-        vm.reportNameDescriptionMap = [
-            {'name': 'Time of Possession - Classification Only Report', 'description': 'This report calculates the number of days each request resides with HR vs Component users in NEIL for Classification Only request types. It includes the number of days spent in Strategic Consultation and Classification, and produces an average number of days the request resides in HR and the average number of days the request resides with the Component.'},
-            {'name': 'Time to Consult Report', 'description': 'This report lists the number of days it takes for each request to proceed from start to end in Strategic Consultation.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'},
-            {'name': 'Time to Classify Report', 'description': 'This report lists the number of days it takes for each request to proceed from start to end in Classification.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'},
-            {'name': 'Time to Appoint Report', 'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.'},
+
+        vm.reportMap = [
+            {
+                'name': 'Time of Possession - Classification Only Report', 
+                'description': 'This report calculates the number of days each request resides with HR vs Component users in NEIL for Classification Only request types. It includes the number of days spent in Strategic Consultation and Classification, and produces an average number of days the request resides in HR and the average number of days the request resides with the Component.',
+                'requestType': ["Classification Only"]
+            },{
+                'name': 'Time to Consult Report', 
+                'description': 'This report lists the number of days it takes for each request to proceed from start to end in Strategic Consultation.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'
+            },{
+                'name': 'Time to Classify Report', 
+                'description': 'This report lists the number of days it takes for each request to proceed from start to end in Classification.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'
+            },{
+                'name': 'Time to Appoint Report', 
+                'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
+                'requestType': ["Appointment"]
+            },{
+                'name': 'Time to Staff Report', 
+                'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
+                'requestType': ["Recruitment"],
+                'dateFromLabel': 'Date Make and Return Selection Completed (From)',
+                'dateToLabel': 'Date Make and Return Selection Completed (To)'
+            },{
+                'name': 'Time to Offer Report', 
+                'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
+                'requestType': ['All', 'Appointment', 'Recruitment'],
+                'dateFromLabel': 'Date Send Official Offer Completed (From)',
+                'dateToLabel': 'Date Send Official Offer Completed (To)'
+            }
         ];
-        vm.reportDescription = 'This report lists the number of days it takes for each request.';
+        
+        // Default Values
         vm.orgSelected = {
             component: '',
             adminCode: '',
@@ -46,7 +73,13 @@
             staffSpecialist: 'All',
             classSpecialist: 'All'
         };
+        // Selected Values
         vm.selected = {};
+
+        // Date From - To
+        vm.dateFromLabel = "Date Request Completed (From)";
+        vm.dateToLabel = "Date Request Completed (To)";
+
         vm.fromDateOpened = false;
         vm.toDateOpened = false;
         vm.dateOptionFrom = {
@@ -57,6 +90,7 @@
             showWeeks: false,
             maxDate: new Date()
         };
+
         // Selectize configuration for members in User Group
         vm.membersInGroupConfig = {
             maxItems:1,
@@ -73,10 +107,21 @@
             labelField: 'key'
         };
 
-        vm.getOptions = function(items) {
+        vm.getSelectizeOptions = function(items) {
             return items.map(function(item) {
                 return {key: item, value: item};
             })
+        }
+        vm.copyItems = function(targets, sources) {
+            if (targets) {
+                if (targets.length > 0) {
+                    targets.length = 0;
+                }
+
+                for (var i = 0; i < sources.length; i++) {
+                    targets.push(sources[i]);
+                }
+            }
         }
 
         vm.classTypesForClass = [];
@@ -95,21 +140,21 @@
                 if (vm.classTypesForClass.length == 0) {
                     vm.classTypesForClass = vm.classTypesForClass.concat(vm.allClassificationTypes);
                     vm.classTypesForClass.sort();
-                    vm.classTypesForClass = vm.getOptions(vm.classTypesForClass);
+                    vm.classTypesForClass = vm.getSelectizeOptions(vm.classTypesForClass);
                 }
                 return vm.classTypesForClass;                
             } else if (vm.selected.requestType === 'Recruitment') {
                 if (vm.classTypesForRecruitment.length == 0) {
                     vm.classTypesForRecruitment = vm.classTypesForRecruitment.concat(vm.recruitmentClassificationTypes);
                     vm.classTypesForRecruitment.sort();
-                    vm.classTypesForRecruitment = vm.getOptions(vm.classTypesForRecruitment);
+                    vm.classTypesForRecruitment = vm.getSelectizeOptions(vm.classTypesForRecruitment);
                 }
-                return vm.classificaitonTypes2;
+                return vm.classTypesForRecruitment;
             } else if (vm.selected.requestType === 'Appointment') {
                 if (vm.classTypesForAppointment.length == 0) {
                     vm.classTypesForAppointment = vm.classTypesForAppointment.concat(vm.recruitmentClassificationTypes, ['Reorganization for Existing Position']);
                     vm.classTypesForAppointment.sort();
-                    vm.classTypesForAppointment = vm.getOptions(vm.classTypesForAppointment);
+                    vm.classTypesForAppointment = vm.getSelectizeOptions(vm.classTypesForAppointment);
                 }
                 return vm.classTypesForAppointment;
             } else {
@@ -121,7 +166,7 @@
             try {
                 $('#mainWrapper table.tableTab', window.parent.document).remove(); // Remove BizCove Header
                 $('#mainWrapper table.list td', window.parent.document).css({'padding': '0px 0px 0px 0px'}); // Adjust padding
-                $('#modalPopupMax0Title', window.parent.parent.document).text(CMS_REPORT_FILTER.REPORTNAME); // Set report name
+                $('#modalPopupMax0Title', window.parent.parent.document).text(vm.report.name); // Set report name
             } catch (e) {
                 $log.error(e);
             }
@@ -129,6 +174,7 @@
 
         vm.initUserGroups = function () {
             var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
+            CMS_REPORT_FILTER.GROUPS = null;
             vm.group = _.groupBy(groups, 'grpname');
             for (var prop in vm.group) {
                 if (vm.group.hasOwnProperty(prop)) {
@@ -236,9 +282,7 @@
             var url = vm.getTargetReportURL();
 
             window.open(url, '_blank');
-            setTimeout(function () {
-                vm.close();
-            }, 0);
+            setTimeout(function () { vm.close(); }, 0);
         };
 
         vm.reset = function () {
@@ -253,44 +297,9 @@
             }
         }
 
-        // Example option
-        // {
-        //     "requestType": {
-        //         "setList" : ["Appointment"]
-        //     },
-        //     "appointmentType": {
-        //         "addList": {
-        //             "position": 0,
-        //             "list": ["All"]
-        //         },
-        //         "setDefault" : "All"
-        //     }
-        // }
-        // setList, addList cannot be combined.
-        vm.applyOption = function (targetObject, attributeName, selectAttributeName, optionItem) {
-            if (optionItem.setList) {
-                targetObject[attributeName] = optionItem.setList;
-                if (optionItem.setList.length === 1) {
-                    targetObject.orgSelected[selectAttributeName] = optionItem.setList[0];
-                }
-                return;
-            }
-
-            if (optionItem.addList && typeof optionItem.addList.position === 'number' && optionItem.addList.list && optionItem.addList.list.length > 0) {
-                var targetArray = targetObject[attributeName];
-                var position = optionItem.addList.position;
-                var list = optionItem.addList.list;
-                targetObject[attributeName] = targetArray.slice(0, position).concat(list).concat(targetArray.slice(position));
-            }
-
-            if (optionItem.setDefault) {
-                targetObject.orgSelected[selectAttributeName] = optionItem.setDefault;
-            }
-        };
-
-        vm.initDescription = function () {
+        vm.initReportMap = function () {
             if (CMS_REPORT_FILTER.REPORTNAME && CMS_REPORT_FILTER.REPORTNAME.length > 0) {
-                var foundReportMap = _.find(vm.reportNameDescriptionMap, function(item) {
+                var foundReportMap = _.find(vm.reportMap, function(item) {
                     if (item.name === CMS_REPORT_FILTER.REPORTNAME) {
                         return true;
                     } else {
@@ -299,46 +308,45 @@
                 });
 
                 if (foundReportMap) {
-                    vm.reportDescription = foundReportMap.description;
+                    vm.report = foundReportMap
+                    if (foundReportMap.requestType && foundReportMap.requestType.length > 0) {
+                        // vm._requestTypes = foundReportMap.requestType;
+                        vm.copyItems(vm._requestTypes, foundReportMap.requestType);
+                        if (vm._requestTypes.length == 1) {
+                            vm.orgSelected.requestType = vm._requestTypes[0]
+                        }
+                    }
+
+                    if (foundReportMap.dateFromLabel && foundReportMap.dateFromLabel.length > 0) {
+                        vm.dateFromLabel = foundReportMap.dateFromLabel
+                    }
+                    if (foundReportMap.dateToLabel && foundReportMap.dateToLabel.length > 0) {
+                        vm.dateToLabel = foundReportMap.dateToLabel
+                    }
+                    
                 } else {
                     $log.info('No report found from report map. [' + CMS_REPORT_FILTER.REPORTNAME + ']');
                 }
             }
         };
 
-        vm.initOption = function () {
-            if (CMS_REPORT_FILTER.OPTION && CMS_REPORT_FILTER.OPTION.length > 0) {
-                var option = {};
-                try {
-                    option = JSON.parse(CMS_REPORT_FILTER.OPTION);
-                } catch (e) {
-                    $log.error('Failed to parse OPTION - ' + e);
-                }
-
-                if (option.requestType) {
-                    vm.applyOption(vm, '_requestTypes', 'requestType', option.requestType);
-                }
-                if (option.appointmentType) {
-                    vm.applyOption(vm, '_appointmentTypes', 'appointmentType', option.appointmentType);
-                }
-            }
-        }
-
         vm.$onInit = function () {
             $log.info('reportFilter $onInit');
-            vm.adjustBizCoveUI();
+            // This should be called first.
+            vm.initReportMap();
             vm.initUserGroups();
-            vm.initDescription();
-            vm.initOption();
+            
+            vm.adjustBizCoveUI();
             vm.selected = _.assign({}, vm.orgSelected);
+
             $('#reportFilter').attr('aria-busy', 'false');
 
-            vm.requestTypes = vm.getOptions(vm._requestTypes);
-            vm.appointmentTypes = vm.getOptions(vm._appointmentTypes);
-            vm.scheduleATypes = vm.getOptions(vm._scheduleATypes);
-            vm.volunteerTypes = vm.getOptions(vm._volunteerTypes);
-            vm.components = vm.getOptions(vm._components);
-            vm.includeSubOrgs = vm.getOptions(vm._includeSubOrgs);
+            vm.requestTypes = vm.getSelectizeOptions(vm._requestTypes);
+            vm.appointmentTypes = vm.getSelectizeOptions(vm._appointmentTypes);
+            vm.scheduleATypes = vm.getSelectizeOptions(vm._scheduleATypes);
+            vm.volunteerTypes = vm.getSelectizeOptions(vm._volunteerTypes);
+            vm.components = vm.getSelectizeOptions(vm._components);
+            vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
         };
 
         vm.$onDestroy = function () {
