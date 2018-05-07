@@ -9,7 +9,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h1 class="panel-title">
-                    <small>{{$ctrl.reportDescription}}</small>
+                    <small>{{$ctrl.report.description}}</small>
                 </h1>
             </div>
             <div class="panel-body">
@@ -24,7 +24,10 @@
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="adminCodeLabel" for="adminCodeInput" class="control-label">Administrative Code</label>
-                        <input id="adminCodeInput" aria-labelledby="adminCodeLabel" ng-model="$ctrl.selected.adminCode" class="form-control" type="text" placeholder="Enter Administrative Code..." required aria-label="Administrative Code">
+                        <input id="adminCodeInput" aria-labelledby="adminCodeLabel" 
+                               ng-model="$ctrl.selected.adminCode" class="form-control" type="text" 
+                               ng-minlength="3"
+                               placeholder="Enter Administrative Code..." required aria-label="Administrative Code">
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="subOrgLabel" for="subOrgSelect" class="control-label">Include Requests for Sub-Orgs?</label>
@@ -36,7 +39,7 @@
                 </div>
                 <div class="row container-fluid">
                     <div class="form-group col-md-3 required">
-                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput dateRCompletedFromButton" class="control-label">Date Request Completed (From)</label>
+                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput dateRCompletedFromButton" class="control-label">{{$ctrl.dateFromLabel}}</label>
                         <p class="input-group">
                             <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate" 
                                 is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="true" 
@@ -49,7 +52,7 @@
                         </p>
                     </div>
                     <div class="form-group col-md-3 required">
-                        <label id="dateRCompletedToLabel" for="dateRCompletedToInput dateRCompletedToButton" class="control-label">Date Request Completed (To)</label>
+                        <label id="dateRCompletedToLabel" for="dateRCompletedToInput dateRCompletedToButton" class="control-label">{{$ctrl.dateToLabel}}</label>
                         <p class="input-group">
                             <input id="dateRCompletedToInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.toDate" 
                                 is-open="$ctrl.toDateOpened" datepicker-options="$ctrl.dateOptionTo" ng-required="true" 
