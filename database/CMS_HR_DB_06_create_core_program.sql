@@ -2000,7 +2000,7 @@ BEGIN
 	--TODO: actual value for POS_SUPERVISORY is numeric ID to lookup table.  Need to change data type to NUMBER(20)
 							, POS_SUPERVISORY                   NVARCHAR2(50)   PATH 'POS_SUPERVISORY'
 							, POS_SKILL                         NVARCHAR2(200)  PATH 'POS_SKILL'
-							, POS_LOCATION                      NVARCHAR2(200)  PATH 'POS_LOCATION'
+							, POS_LOCATION                      NVARCHAR2(2000) PATH 'POS_LOCATION'
 							, POS_VACANCIES                     NUMBER(9)       PATH 'POS_VACANCIES'
 							, POS_REPORT_SUPERVISOR             NVARCHAR2(10)   PATH 'POS_REPORT_SUPERVISOR'
 							, POS_CAN                           NVARCHAR2(8)    PATH 'POS_CAN'
@@ -4749,7 +4749,7 @@ BEGIN
 							, PERFORMANCE_LEVEL             NVARCHAR2(2)    PATH 'POSITION/PERFORMANCE_LEVEL'
 							, SUPERVISORY                   NUMBER(20)      PATH 'POSITION/SUPERVISORY'
 							, SKILL                         NVARCHAR2(200)  PATH 'POSITION/SKILL'
-							, LOCATION                      NVARCHAR2(200)  PATH 'POSITION/LOCATION'
+							, LOCATION                      NVARCHAR2(2000) PATH 'POSITION/LOCATION'
 							, VACANCIES                     NUMBER(9)       PATH 'POSITION/VACANCIES'
 							, REPORT_SUPERVISOR             NVARCHAR2(10)   PATH 'POSITION/REPORT_SUPERVISOR'
 							, CAN                           NVARCHAR2(8)    PATH 'POSITION/CAN'
