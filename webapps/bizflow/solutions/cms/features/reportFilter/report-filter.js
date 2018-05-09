@@ -44,14 +44,12 @@
                 'name': 'Time to Staff Report', 
                 'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
                 'requestType': ["Recruitment"],
-                'dateFromLabel': 'Date Make and Return Selection Completed (From)',
-                'dateToLabel': 'Date Make and Return Selection Completed (To)'
+                'dateLabel': 'Date Make & Return Selection Completed',
             },{
                 'name': 'Time to Offer Report', 
                 'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
                 'requestType': ['All', 'Appointment', 'Recruitment'],
-                'dateFromLabel': 'Date Send Official Offer Completed (From)',
-                'dateToLabel': 'Date Send Official Offer Completed (To)'
+                'dateLabel': 'Date Send Official Offer Completed',
             }
         ];
         
@@ -77,8 +75,7 @@
         vm.selected = {};
 
         // Date From - To
-        vm.dateFromLabel = "Date Request Completed (From)";
-        vm.dateToLabel = "Date Request Completed (To)";
+        vm.dateLabel = "Date Request Completed";
 
         vm.fromDateOpened = false;
         vm.toDateOpened = false;
@@ -317,13 +314,9 @@
                         }
                     }
 
-                    if (foundReportMap.dateFromLabel && foundReportMap.dateFromLabel.length > 0) {
-                        vm.dateFromLabel = foundReportMap.dateFromLabel
+                    if (foundReportMap.dateLabel && foundReportMap.dateLabel.length > 0) {
+                        vm.dateLabel = foundReportMap.dateLabel
                     }
-                    if (foundReportMap.dateToLabel && foundReportMap.dateToLabel.length > 0) {
-                        vm.dateToLabel = foundReportMap.dateToLabel
-                    }
-                    
                 } else {
                     $log.info('No report found from report map. [' + CMS_REPORT_FILTER.REPORTNAME + ']');
                 }
