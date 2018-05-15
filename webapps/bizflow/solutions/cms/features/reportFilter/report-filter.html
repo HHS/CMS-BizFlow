@@ -3,6 +3,23 @@
         padding: 10px 10px 10px 10px;
     }
 
+    .field-message {
+        color: red;
+        margin: -5px 0px 0px 12px;
+    }
+
+
+    .admin-code-message {
+        color: red;
+        padding: 0px 12px 0px 12px;
+    }
+
+    .date-message {
+        color: red;
+        margin: -10px 0px 0px 12px;
+        /* padding: -10px 12px 6px 12px; */
+    }    
+
 </style>
 
 <div id="reportFilter" ng-form="fReportSection" aria-busy="true">
@@ -21,14 +38,22 @@
                                     ng-model="$ctrl.selected.component" 
                                     options="$ctrl.components"
                                     config="$ctrl.simpleConfig"
-                                    placeholder="Select One..."></selectize>
+                                    placeholder="Select One..."
+                                    name="components"></selectize>
+                        <div class="field-message" ng-messages="fReportSection.components.$error" ng-clock>
+                            <div ng-message="required">Select a value from the component filter</div>
+                        </div>                                      
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="adminCodeLabel" for="adminCodeInput" class="control-label">Administrative Code</label>
-                        <input id="adminCodeInput" aria-labelledby="adminCodeLabel" 
+                        <input name="adminCode" id="adminCodeInput" aria-labelledby="adminCodeLabel" 
                                ng-model="$ctrl.selected.adminCode" class="form-control" type="text" 
                                ng-minlength="3"
                                placeholder="Enter Administrative Code..." required aria-label="Administrative Code">
+                        <div class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
+                            <div ng-message="required">Type the administrative code for the report</div>
+                            <div ng-message="minlength">Enter a minimum of three characters for the administrative code</div>
+                        </div>
                     </div>
                     <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="subOrgLabel" for="subOrgSelect" class="control-label">Include Requests for Sub-Orgs?</label>
@@ -49,26 +74,36 @@
                         <p class="input-group">
                             <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate" 
                                 is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="true" 
-                                close-text="Close" ng-change="$ctrl.changeFromOption()" required aria-labelledby="dateRCompletedFromLabel"/>
+                                close-text="Close" ng-change="$ctrl.changeFromOption()" required aria-labelledby="dateRCompletedFromLabel"
+                                placeholder="MM/DD/YYYY" name="dateFrom"/>
                             <span class="input-group-btn">
                                 <button id="dateRCompletedFromButton" type="button" class="btn btn-default" ng-click="$ctrl.openFromDate($event)" required aria-labelledby="dateRCompletedFromLabel">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
                             </span>
                         </p>
+                        <div class="date-message" ng-messages="fReportSection.dateFrom.$error" ng-clock>
+                            <div ng-message="required">Set the date from range for the report</div>
+                            <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
+                        </div>                        
                     </div>
                     <div class="form-group col-md-3 required">
                         <label id="dateRCompletedToLabel" for="dateRCompletedToInput dateRCompletedToButton" class="control-label">To</label>
 						<p class="input-group">
                             <input id="dateRCompletedToInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.toDate" 
                                 is-open="$ctrl.toDateOpened" datepicker-options="$ctrl.dateOptionTo" ng-required="true" 
-                                close-text="Close" ng-change="$ctrl.changeToOption()" required aria-labelledby="dateRCompletedToLabel"/>
+                                close-text="Close" ng-change="$ctrl.changeToOption()" required aria-labelledby="dateRCompletedToLabel"
+                                placeholder="MM/DD/YYYY" name="dateTo"/>
                             <span class="input-group-btn">
                                 <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
                             </span>
-                        </p>                        
+                        </p>
+                        <div class="date-message" ng-messages="fReportSection.dateTo.$error" ng-clock>
+                            <div ng-message="required">Set the date to range for the report</div>
+                            <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
+                        </div>                        
                     </div>
                 </div>
             </div>
