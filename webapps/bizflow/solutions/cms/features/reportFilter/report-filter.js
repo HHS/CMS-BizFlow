@@ -27,27 +27,27 @@
 
         vm.reportMap = [
             {
-                'name': 'Time of Possession - Classification Only Report', 
-                'description': 'This report calculates the number of days each request resides with HR vs Component users in NEIL for Classification Only request types. It includes the number of days spent in Strategic Consultation and Classification, and produces an average number of days the request resides in HR and the average number of days the request resides with the Component.',
+                'name': 'CMS Time of Possession - Classification Only Report - Completed', 
+                'description': 'Calculates the time HR and Component users held a request. This report only displays data for "Classification Only" requests.',
                 'requestType': ["Classification Only"]
             },{
-                'name': 'Time to Consult Report', 
-                'description': 'This report lists the number of days it takes for each request to proceed from start to end in Strategic Consultation.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'
+                'name': 'CMS Time to Consult Report - Completed', 
+                'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.'
             },{
-                'name': 'Time to Classify Report', 
-                'description': 'This report lists the number of days it takes for each request to proceed from start to end in Classification.  It includes requests from all three request types - Classification Only, Recruitment, and Appointment.'
+                'name': 'CMS Time to Classify Report - Completed', 
+                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
             },{
-                'name': 'Time to Appoint Report', 
-                'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
+                'name': 'CMS Time to Appoint Report - Completed', 
+                'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
                 'requestType': ["Appointment"]
             },{
-                'name': 'Time to Staff Report', 
-                'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
+                'name': 'CMS Time to Staff Report - Completed', 
+                'description': 'Calculates the number of business days it took for a recruitment request to go through the staffing process in USA Staffing. Time starts when a request is approved in USA Staffing, and tracks it through the Make and Return Selection date.',
                 'requestType': ["Recruitment"],
                 'dateLabel': 'Date Make & Return Selection Completed',
             },{
-                'name': 'Time to Offer Report', 
-                'description': 'This report lists the number of days it takes to complete eligibility and qualification reviews for appointment only requests (i.e. Schedule A, 30% or more disabled veteran and veteran recruitment adjustment (VRA)). It only includes Appointment request types.',
+                'name': 'CMS Time to Offer Report - Completed', 
+                'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the USA Staffing offer process. Time starts when a new hire request is created in USA Staffing, and tracks through the Send Official Offer Complete date.',
                 'requestType': ['All', 'Appointment', 'Recruitment'],
                 'dateLabel': 'Date Send Official Offer Completed',
             }
