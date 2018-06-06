@@ -1362,9 +1362,16 @@ ALTER TABLE RECRUIT_INCENTIVES ADD CONSTRAINT RECRUIT_INCENTIVES_CK1 CHECK ( RI_
 
 
 --------------------------------------------------------
+--  DDL for Index REQUEST_N01
+--------------------------------------------------------
+
+CREATE INDEX HHS_CMS_HR.REQUEST_N01 ON HHS_CMS_HR.REQUEST (REQ_JOB_REQ_NUMBER);
+
+--------------------------------------------------------
 --  Constraints for Table REQUEST
 --------------------------------------------------------
 ALTER TABLE REQUEST ADD CONSTRAINT REQUEST_PK PRIMARY KEY (REQ_ID);
+
 
 --------------------------------------------------------
 --  Constraints for Table SME_INFO
