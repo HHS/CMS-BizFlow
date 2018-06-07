@@ -42,9 +42,9 @@
                 'requestType': ["Appointment"]
             },{
                 'name': 'CMS Time to Staff Report - Completed', 
-                'description': 'Calculates the number of business days it took for a recruitment request to go through the staffing process in USA Staffing. Time starts when a request is approved in USA Staffing, and tracks it through the Make and Return Selection date.',
+                'description': 'Calculates the number of business days it took for a recruitment request to go through the staffing process in USA Staffing. Time starts when a request is approved in USA Staffing, and tracks it through the Certificate Review Return Date.',
                 'requestType': ["Recruitment"],
-                'dateLabel': 'Date Make & Return Selection Completed',
+                'dateLabel': 'Date Certificate Review Return Completed',
             },{
                 'name': 'CMS Time to Offer Report - Completed', 
                 'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the USA Staffing offer process. Time starts when a new hire request is created in USA Staffing, and tracks through the Send Official Offer Complete date.',
