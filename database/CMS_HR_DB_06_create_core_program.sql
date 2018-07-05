@@ -3189,7 +3189,7 @@ BEGIN
 						COLUMNS
 							PD_CLS_STANDARDS                    NVARCHAR2(100)  PATH 'string-join(PD_CLS_STANDARDS/text(), ",")'
 							, PD_ACQ_CODE                       NUMBER(20)      PATH 'PD_ACQ_CODE'
-							, PD_CYB_SEC_CD                     NUMBER(20)      PATH 'PD_CYB_SEC_CD'
+							, PD_CYB_SEC_CD                     NVARCHAR2(100)  PATH 'string-join(PD_CYB_SEC_CD/text(), ",")'
 							, PD_COMPET_LVL_CD                  NVARCHAR2(10)   PATH 'PD_COMPET_LVL_CD'
 							, PD_BUS_CD                         NUMBER(20)      PATH 'PD_BUS_CD'
 							, BYPASS_DWC_FL                     NVARCHAR2(10)   PATH 'BYPASS_DWC_FL'
