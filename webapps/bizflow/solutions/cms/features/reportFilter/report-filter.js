@@ -126,7 +126,7 @@
         vm.classTypesForAppointment = [];
         vm.classTypesForOther = [];
 
-        vm.allClassificationTypes = ['All', 'Audit Position', 'Conduct 5-year Recertification','Create New Position Description', 'Reorganization for Existing Position',
+        vm.allClassificationTypes = ['All', 'Audit Position', 'Conduct 5-year Recertification','Create New Position Description', 'Reorganization Pen & Ink',
                                     'Reorganization for New Position', 'Review Existing Position Description','Update Coversheet', 'Update Major Duties'];
         vm.recruitmentClassificationTypes = ['All', 'Conduct 5-year Recertification','Create New Position Description', 'Review Existing Position Description',
                                 'Reorganization for New Position','Update Coversheet', 'Update Major Duties'];
@@ -149,7 +149,7 @@
                 return vm.classTypesForRecruitment;
             } else if (vm.selected.requestType === 'Appointment') {
                 if (vm.classTypesForAppointment.length == 0) {
-                    vm.classTypesForAppointment = vm.classTypesForAppointment.concat(vm.recruitmentClassificationTypes, ['Reorganization for Existing Position']);
+                    vm.classTypesForAppointment = vm.classTypesForAppointment.concat(vm.recruitmentClassificationTypes, ['Reorganization Pen & Ink']);
                     vm.classTypesForAppointment.sort();
                     vm.classTypesForAppointment = vm.getSelectizeOptions(vm.classTypesForAppointment);
                 }
