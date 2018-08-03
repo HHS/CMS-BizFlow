@@ -301,6 +301,16 @@ public class CMSUtility
 
 		try
 		{
+			// Classification form has 2 variations of PD_CLS_STANDARDS
+			//
+			// #1. Multiple Node with single value - Old version
+			//      <PD_CLS_STANDARDS>565</PD_CLS_STANDARDS>
+            //      <PD_CLS_STANDARDS>567</PD_CLS_STANDARDS>
+			//
+			// #2. Single Node with multiple values - New version
+			//      <PD_CLS_STANDARDS>572,594,631</PD_CLS_STANDARDS>
+			//
+
 			XPathFactory xPathFactory = XPathFactory.newInstance();
 			XPath xpath = xPathFactory.newXPath();
 
@@ -312,9 +322,19 @@ public class CMSUtility
 			for (int index = 0; index < nodeCount; index++) {
 				Node node = nodeSet.item(index);
 				String value = node.getTextContent();
-				String translatedValue = LookupUtility.getLabel(value); // LookupUtility.getMap().get(value).label;
-
-				standards.add(translatedValue);
+				if (value != null && value.length() > 0) {
+					if (value.contains(",") == true) {
+						String[] tokens = value.split(",");
+						int tokenCount = tokens.length;
+						for (int tokenIndex = 0; tokenIndex < tokenCount; tokenIndex++) {
+							String translatedValue = LookupUtility.getLabel(tokens[tokenIndex]); // LookupUtility.getMap().get(value).label;
+							standards.add(translatedValue);
+						}
+					} else {
+						String translatedValue = LookupUtility.getLabel(value); // LookupUtility.getMap().get(value).label;
+						standards.add(translatedValue);
+					}
+				}
 			}
 		}
 		catch(XPathExpressionException e)

@@ -35,7 +35,7 @@
                 'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.'
             },{
                 'name': 'CMS Time to Classify Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
             },{
                 'name': 'CMS Time to Appoint Report - Completed', 
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
