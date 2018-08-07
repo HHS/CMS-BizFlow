@@ -65,20 +65,20 @@ prepareDir()
 copyFile()
 {
 
-	if [ "$APPPROP" == "appprop" ] 
+	if [ "$APPPROP" == "incappprop" ] 
 	then
 		cp /hrts/$ENV/biis/application.properties $TRG_DIR/$ENV/biis
 	fi
 	cp /hrts/$ENV/biis/logs/* $TRG_DIR/$ENV/biis/logs
 
-	if [ "$APPPROP" == "appprop" ] 
+	if [ "$APPPROP" == "incappprop" ] 
 	then
 		cp /hrts/$ENV/usas/application.properties $TRG_DIR/$ENV/usas
 	fi
 	cp /hrts/$ENV/usas/report.properties $TRG_DIR/$ENV/usas
 	cp /hrts/$ENV/usas/logs/* $TRG_DIR/$ENV/usas/logs
 
-	if [ "$APPPROP" == "appprop" ] 
+	if [ "$APPPROP" == "incappprop" ] 
 	then
 		cp /hrts/$ENV/caphr/application.properties $TRG_DIR/$ENV/caphr
 	fi
@@ -90,7 +90,7 @@ zipFile()
 {
 	#cd $TRG_DIR
 	
-	if [ "$APPPROP" == "appprop" ] 
+	if [ "$APPPROP" == "incappprop" ] 
 	then
 		zip -r integinfo-appprop-$ENV.zip $TRG_DIR
 	else
