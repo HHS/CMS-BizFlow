@@ -57,6 +57,7 @@ prepareDir()
 
 	mkdir -p $TRG_DIR/$ENV/biis/logs
 	mkdir -p $TRG_DIR/$ENV/usas/logs
+	mkdir -p $TRG_DIR/$ENV/caphr/logs
 
 }
 
@@ -77,6 +78,11 @@ copyFile()
 	cp /hrts/$ENV/usas/report.properties $TRG_DIR/$ENV/usas
 	cp /hrts/$ENV/usas/logs/* $TRG_DIR/$ENV/usas/logs
 
+	if [ "$APPPROP" == "appprop" ] 
+	then
+		cp /hrts/$ENV/caphr/application.properties $TRG_DIR/$ENV/caphr
+	fi
+	cp /hrts/$ENV/caphr/logs/* $TRG_DIR/$ENV/caphr/logs
 }
 
 
