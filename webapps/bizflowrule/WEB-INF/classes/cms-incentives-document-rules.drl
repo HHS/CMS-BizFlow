@@ -1,0 +1,92 @@
+package com.bizflow.drools.document.rules;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map
+import java.util.Iterator
+import java.util.Arrays
+
+import com.bizflow.ps.drools.document.model.WorkflowDocument;
+import com.bizflow.ps.drools.document.model.WorkflowRuleSearch;
+import com.bizflow.ps.drools.document.model.WorkflowField;
+
+dialect "mvel"
+
+function void addDocument(ArrayList bizflowDocument, String documentName, boolean required) {
+    bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, required));
+}
+
+function void addDocumentEx(ArrayList bizflowDocument, String documentName, String actName, String[] actNames, boolean required) {
+    boolean isRequiredDocument = false;
+    for (String act: actNames) {
+        if (act.equals(actName)) {
+            isRequiredDocument = required;
+            break;
+        }
+    }
+    bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, isRequiredDocument));
+}
+
+
+rule "Incentives / PCA Required Documents "
+    when
+        $docSearch: WorkflowRuleSearch (
+                            procName == "Incentives Request"
+                            , actName == "Start New"
+                            , $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents >> " + $docSearch);
+        addDocument($workflowDocuments, "Classified PD & signed OF8", true);
+        addDocument($workflowDocuments, "Current Qualifications Statement or Curriculum Vitae", true);
+        addDocument($workflowDocuments, "PCA Justification Worksheet", true);
+        addDocument($workflowDocuments, "Proof of active medical licensure and board certification", true);
+        addDocument($workflowDocuments, "Service Agreement", true);
+end
+
+rule "Incentives / PCA Required Documents / New Recruitment"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            procName == "Incentives Request"
+                            , actName == "Start New"
+                            , $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+         $field3: WorkflowField ( fieldId == "requestType", fieldValue == "Recruitment" ) from $fields
+         $field4: WorkflowField ( fieldId == "pcaType", fieldValue == "New" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents  / New Recruitment >> " + $docSearch);
+        addDocument($workflowDocuments, "Attestation for Licensure Policy", true);
+        addDocument($workflowDocuments, "Copy of vacancy announcement", true);
+end
+
+//------------------------------
+// DEFAULT DOCUMENT
+//------------------------------
+rule "Incentives / Default"
+    when
+        $docSearch  :   WorkflowRuleSearch
+                        (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                        )
+        $workflowDocuments : ArrayList()
+    then
+        System.out.println("INCENTIVES-DOCUMENT-RULE: Default >> " + $docSearch);
+        addDocument($workflowDocuments, "Other", false);
+end
