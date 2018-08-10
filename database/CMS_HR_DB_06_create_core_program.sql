@@ -190,6 +190,53 @@ END;
 /
 
 --------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_PV_ERLR
+--------------------------------------------------------
+
+/**
+ * Parses the form data xml to retrieve process variable values,
+ * and updates process variable table (BIZFLOW.RLVNTDATA) records for the respective
+ * the ER/LR Case Initiation process instance identified by the Process ID.
+ *
+ * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
+ * @param I_FIELD_DATA - Form data xml.
+ */
+
+create or replace PROCEDURE SP_UPDATE_PV_ERLR
+(
+	I_PROCID            IN      NUMBER
+	, I_FIELD_DATA      IN      XMLTYPE
+)
+IS
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_PROCID           = ' || TO_CHAR(I_PROCID));
+	--DBMS_OUTPUT.PUT_LINE('    I_FIELD_DATA       = ' || I_FIELD_DATA.GETCLOBVAL());
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+		--DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
+
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''contactName'']/value/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''empName'']/value/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate', '/formData/items/item[id=''date_customer_contacted'']/value/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization', '/formData/items/item[id=''empOrg'']/value/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''case_type'']/value/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''case_category'']/value/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''case_status'']/value/text()');
+	
+		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
+
+	END IF;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_ERLR -------------------');
+END;
+
+--------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_PV_STRATCON
 --------------------------------------------------------
 
@@ -5500,6 +5547,8 @@ BEGIN
 		SP_UPDATE_ELIGQUAL_TABLE(V_PROCID);
 	ELSIF V_FORM_TYPE = 'CMSINCENTIVES' THEN
 		SP_UPDATE_PV_INCENTIVES(V_PROCID, V_XMLDOC);
+	ELSIF V_FORM_TYPE = 'CMSERLR' THEN
+		SP_UPDATE_PV_ERLR(V_PROCID, V_XMLDOC);
 	END IF;
 
 	COMMIT;
