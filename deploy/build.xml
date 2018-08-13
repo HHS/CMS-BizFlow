@@ -47,7 +47,7 @@
 		<include name="classification_main/doc/morphyc.xml" />
 		<include name="eligqual/doc/morphyc.xml" />
 
-		<include name="cms_*/doc/morphyc.xml" />*
+		<include name="cms_*/doc/morphyc.xml" />
 
 		<include name="erlr_*/doc/morphyc.xml" />
 		<include name="ERLR_*/doc/morphyc.xml" />
