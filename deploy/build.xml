@@ -29,14 +29,10 @@
 		<include name="classification_main/**" />
 		<include name="eligqual/**" />
 
-		<include name="cms_common/**" />
-		<include name="cms_incentives_*/**" />
+		<include name="cms_*/**" />
 
-		<include name="erlr_common/**" />
-		<include name="ERLR_Main/**" />
-		<include name="ERLR_General/**" />
-		<include name="ERLR_Appeal/**" />
-		<include name="erlr_AutoCompleteService/**" />
+		<include name="erlr_*/**" />
+		<include name="ERLR_*/**" />
 
 		<exclude name="**/morphyc.xml" />
 		<exclude name="**/*log.txt" />
@@ -51,14 +47,10 @@
 		<include name="classification_main/doc/morphyc.xml" />
 		<include name="eligqual/doc/morphyc.xml" />
 
-		<include name="cms_common/doc/morphyc.xml" />
-		<include name="cms_incentives_*/doc/morphyc.xml" />
+		<include name="cms_*/doc/morphyc.xml" />*
 
-		<include name="erlr_common/doc/morphyc.xml" />
-		<include name="ERLR_Main*/doc/morphyc.xml" />
-		<include name="ERLR_General*/doc/morphyc.xml" />
-		<include name="ERLR_Appeal*/doc/morphyc.xml" />
-		<include name="erlr_AutoCompleteService*/doc/morphyc.xml" />
+		<include name="erlr_*/doc/morphyc.xml" />
+		<include name="ERLR_*/doc/morphyc.xml" />
 	</patternset>
 
 	<!-- patters for web application files for blastcache -->
