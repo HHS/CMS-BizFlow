@@ -201,6 +201,13 @@
 				<include name="PDF_Configuration/**" />
 			</fileset>
 		</copy>
+
+		<delete dir="${deploy.webapps.dir}/bizflowrule" />
+		<copy todir="${deploy.webapps.dir}/bizflowrule/WEB-INF">
+			<fileset dir="${webserver.dir}/webapps/bizflowrule/WEB-INF">
+				<include name="classes/cms-*.drl" />
+			</fileset>
+		</copy>
 	</target>
 
 
