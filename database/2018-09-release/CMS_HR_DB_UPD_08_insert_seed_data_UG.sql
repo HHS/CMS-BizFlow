@@ -25,10 +25,4 @@ BEGIN
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Office of the Administrators', 'Office of the Administrators', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DGO Directors', 'DGO Directors', parent_mem_id);
 
-  COMMIT;
-
-  EXCEPTION WHEN OTHERS THEN
-  ROLLBACK;
-  RAISE;
-
 END;
