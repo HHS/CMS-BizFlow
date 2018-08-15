@@ -3071,6 +3071,17 @@ BEGIN
 					, XG.CS_SUPERVISORY
 					, XG.CS_AC_ID
 					, XG.CS_ADMIN_CD
+					, XG.SO_ID
+					, XG.SO_TITLE
+					, XG.SO_ORG
+					, XG.XO_ID
+					, XG.XO_TITLE
+					, XG.XO_ORG
+					, XG.HRL_ID
+					, XG.HRL_TITLE
+					, XG.HRL_ORG
+					, XG.SS_ID
+					, XG.CS_ID
 					, XC.CS_FIN_STMT_REQ_ID
 					, XC.CS_SEC_ID
 				FROM TBL_FORM_DTL FD
@@ -3110,6 +3121,17 @@ BEGIN
 							, CS_SUPERVISORY                    NUMBER(20)      PATH 'CS_SUPERVISORY'
 							, CS_AC_ID                          NUMBER(20)      PATH 'CS_AC_ID'
 							, CS_ADMIN_CD                       NVARCHAR2(8)    PATH 'CS_ADMIN_CD'
+							, SO_ID                             NVARCHAR2(10)   PATH 'SO_ID'
+							, SO_TITLE                          NVARCHAR2(50)   PATH 'SO_TITLE'
+							, SO_ORG                            NVARCHAR2(50)   PATH 'SO_ORG'
+							, XO_ID                             NVARCHAR2(10)   PATH 'XO_ID'
+							, XO_TITLE                          NVARCHAR2(50)   PATH 'XO_TITLE'
+							, XO_ORG                            NVARCHAR2(50)   PATH 'XO_ORG'
+							, HRL_ID                            NVARCHAR2(10)   PATH 'HRL_ID'
+							, HRL_TITLE                         NVARCHAR2(50)   PATH 'HRL_TITLE'
+							, HRL_ORG                           NVARCHAR2(50)   PATH 'HRL_ORG'
+							, SS_ID                             NVARCHAR2(10)   PATH 'SS_ID'
+							, CS_ID                             NVARCHAR2(10)   PATH 'CS_ID'
 					) XG
 					, XMLTABLE('/DOCUMENT/CLASSIFICATION_CODE'
 						PASSING FD.FIELD_DATA
@@ -3147,6 +3169,17 @@ BEGIN
 				, TRG.CS_SUPERVISORY            = SRC.CS_SUPERVISORY
 				, TRG.CS_AC_ID                  = SRC.CS_AC_ID
 				, TRG.CS_ADMIN_CD               = SRC.CS_ADMIN_CD
+				, TRG.SO_ID                     = SRC.SO_ID
+				, TRG.SO_TITLE                  = SRC.SO_TITLE
+				, TRG.SO_ORG                    = SRC.SO_ORG
+				, TRG.XO_ID                     = SRC.XO_ID
+				, TRG.XO_TITLE                  = SRC.XO_TITLE
+				, TRG.XO_ORG                    = SRC.XO_ORG
+				, TRG.HRL_ID                    = SRC.HRL_ID
+				, TRG.HRL_TITLE                 = SRC.HRL_TITLE
+				, TRG.HRL_ORG                   = SRC.HRL_ORG
+				, TRG.SS_ID                     = SRC.SS_ID
+				, TRG.CS_ID                     = SRC.CS_ID
 				, TRG.CS_FIN_STMT_REQ_ID        = SRC.CS_FIN_STMT_REQ_ID
 				, TRG.CS_SEC_ID                 = SRC.CS_SEC_ID
 			WHEN NOT MATCHED THEN INSERT
@@ -3179,6 +3212,17 @@ BEGIN
 				, TRG.CS_SUPERVISORY
 				, TRG.CS_AC_ID
 				, TRG.CS_ADMIN_CD
+				, TRG.SO_ID
+				, TRG.SO_TITLE
+				, TRG.SO_ORG
+				, TRG.XO_ID
+				, TRG.XO_TITLE
+				, TRG.XO_ORG
+				, TRG.HRL_ID
+				, TRG.HRL_TITLE
+				, TRG.HRL_ORG
+				, TRG.SS_ID
+				, TRG.CS_ID
 				, TRG.CS_FIN_STMT_REQ_ID
 				, TRG.CS_SEC_ID
 			)
@@ -3212,6 +3256,17 @@ BEGIN
 				, SRC.CS_SUPERVISORY
 				, SRC.CS_AC_ID
 				, SRC.CS_ADMIN_CD
+				, SRC.SO_ID
+				, SRC.SO_TITLE
+				, SRC.SO_ORG
+				, SRC.XO_ID
+				, SRC.XO_TITLE
+				, SRC.XO_ORG
+				, SRC.HRL_ID
+				, SRC.HRL_TITLE
+				, SRC.HRL_ORG
+				, SRC.SS_ID
+				, SRC.CS_ID
 				, SRC.CS_FIN_STMT_REQ_ID
 				, SRC.CS_SEC_ID
 			)
@@ -3641,6 +3696,21 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
+		V_RLVNTDATANAME := 'classSpecialist';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/CS_ID/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			-------------------------------
+			-- participant prefix
+			-------------------------------
+			V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
 		V_RLVNTDATANAME := 'coversheetApprovedBySO';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/PROCESS_VARIABLE/coversheetApprovedBySO/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
@@ -3653,10 +3723,40 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
+		V_RLVNTDATANAME := 'execOfficer';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/XO_ID/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			-------------------------------
+			-- participant prefix
+			-------------------------------
+			V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
 		V_RLVNTDATANAME := 'finalPackageApprovedSO';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/PROCESS_VARIABLE/finalPackageApprovedSO/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
 			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
+		V_RLVNTDATANAME := 'hrLiaison';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/HRL_ID/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			-------------------------------
+			-- participant prefix
+			-------------------------------
+			V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
 		ELSE
 			V_VALUE := NULL;
 		END IF;
@@ -3879,6 +3979,51 @@ BEGIN
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/PROCESS_VARIABLE/returnToSO/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
 			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
+		V_RLVNTDATANAME := 'selectOfficial';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SO_ID/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			-------------------------------
+			-- participant prefix
+			-------------------------------
+			V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
+		V_RLVNTDATANAME := 'staffSpecialist';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SS_ID/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			-------------------------------
+			-- participant prefix
+			-------------------------------
+			--V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+			-- If the Job Request is for Special Program, SS_ID may point to User Group,
+			-- rather than individual user.  Therefore, lookup
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			BEGIN
+				SELECT TYPE INTO V_VALUE_LOOKUP FROM BIZFLOW.MEMBER WHERE MEMBERID = V_VALUE;
+			EXCEPTION
+				WHEN OTHERS THEN
+					V_VALUE_LOOKUP := NULL;
+			END;
+
+			IF V_VALUE_LOOKUP IS NOT NULL THEN
+				V_VALUE := '[' || V_VALUE_LOOKUP || ']' || V_XMLVALUE.GETSTRINGVAL();
+			ELSE
+				V_VALUE := NULL;
+			END IF;
 		ELSE
 			V_VALUE := NULL;
 		END IF;
