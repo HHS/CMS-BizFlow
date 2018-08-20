@@ -151,6 +151,8 @@ zipFile()
 	else
 		zip -r log-$ENV-$CURDATE2.zip $TRG_DIR
 	fi
+	chmod 666 log-appprop-$ENV-$CURDATE2.zip
+	chmod 666 log-$ENV-$CURDATE2.zip
 }
 
 
