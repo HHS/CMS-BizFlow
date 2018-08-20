@@ -138,9 +138,9 @@ zipFile()
 	
 	if [ "$APPPROP" == "incappprop" ] 
 	then
-		zip -r log-appprop-$ENV.zip $TRG_DIR
+		zip -r log-appprop-$ENV-$CURDATE2.zip $TRG_DIR
 	else
-		zip -r log-$ENV.zip $TRG_DIR
+		zip -r log-$ENV-$CURDATE2.zip $TRG_DIR
 	fi
 }
 
