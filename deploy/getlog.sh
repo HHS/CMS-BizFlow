@@ -7,8 +7,8 @@ ENV=
 APPPROP=noappprop
 BASEDIR=$(cd `dirname $0` && pwd)
 TRG_DIR=$BASEDIR/log
-BF_DIR=/bizflow/$ENV
-WS_DIR=/hrts/$ENV/tomcat8/apache-tomcat-8.0.37
+BF_DIR=
+WS_DIR=
 CURDATE1=$(date +%Y%m%d)
 CURDATE2=$(date +%Y-%m-%d)
 DATEDLOG=
@@ -30,7 +30,11 @@ setEnv()
 		exit 1
 	fi
 	
+	BF_DIR=/bizflow/$ENV
+	WS_DIR=/hrts/$ENV/tomcat8/apache-tomcat-8.0.37
 	echo "ENV = $ENV"
+	echo "BF_DIR = $BF_DIR"
+	echo "WS_DIR = $WS_DIR"
 }
 
 
