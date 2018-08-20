@@ -87,7 +87,12 @@ copyFile()
 		cp /hrts/$ENV/usas/application.properties $TRG_DIR/$ENV/usas
 	fi
 	cp /hrts/$ENV/usas/report.properties $TRG_DIR/$ENV/usas
-	cp /hrts/$ENV/usas/logs/* $TRG_DIR/$ENV/usas/logs
+	if [ "$DATEDLOG" == "dated" ] 
+	then
+		cp /hrts/$ENV/usas/logs/*-$CURDATE2.log $TRG_DIR/$ENV/usas/logs
+	else
+		cp /hrts/$ENV/usas/logs/* $TRG_DIR/$ENV/usas/logs
+	fi
 
 	if [ "$APPPROP" == "incappprop" ] 
 	then
