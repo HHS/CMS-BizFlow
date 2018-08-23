@@ -31,9 +31,6 @@
 
 		<include name="cms_*/**" />
 
-		<include name="erlr_*/**" />
-		<include name="ERLR_*/**" />
-
 		<exclude name="**/morphyc.xml" />
 		<exclude name="**/*log.txt" />
 		<exclude name="**/*log.txt.**" />
@@ -48,9 +45,6 @@
 		<include name="eligqual/doc/morphyc.xml" />
 
 		<include name="cms_*/doc/morphyc.xml" />
-
-		<include name="erlr_*/doc/morphyc.xml" />
-		<include name="ERLR_*/doc/morphyc.xml" />
 	</patternset>
 
 	<!-- patters for web application files for blastcache -->
