@@ -188,6 +188,7 @@ BEGIN
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'positionTitle', '/formData/items/item[id=''positionTitle'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'relatedUserIds', '/formData/items/item[id=''relatedUserIds'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficial', '/formData/items/item[id=''selectingOfficial'']/value/id/text()', '/formData/items/item[id=''selectingOfficial'']/value/name/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'pcaType', '/formData/items/item[id=''pcaType'']/value/text()');
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
