@@ -110,13 +110,17 @@ CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_BY_XPATH
 	, I_FIELD_DATA      IN      XMLTYPE
 	, I_RLVNTDATANAME   IN     VARCHAR2
 	, I_XPATH        IN VARCHAR2
+  , I_DISPXPATH        IN VARCHAR2 DEFAULT NULL
 )
 IS
 	V_XMLVALUE             XMLTYPE;
 	V_VALUE                NVARCHAR2(2000);
+	V_DISPVALUE                NVARCHAR2(100);
 BEGIN
 
 	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+
+		V_DISPVALUE := NULL;
 
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT(I_XPATH);
 		IF V_XMLVALUE IS NOT NULL THEN
@@ -124,16 +128,24 @@ BEGIN
 		ELSE
 			V_VALUE := NULL;
 		END IF;
-		--DBMS_OUTPUT.PUT_LINE('    I_RLVNTDATANAME = ' || I_RLVNTDATANAME);
-		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = I_RLVNTDATANAME AND PROCID = I_PROCID;
+
+		IF I_DISPXPATH IS NOT NULL THEN
+		  V_XMLVALUE := I_FIELD_DATA.EXTRACT(I_DISPXPATH);
+			IF V_XMLVALUE IS NOT NULL THEN
+				V_DISPVALUE := V_XMLVALUE.GETSTRINGVAL();
+			ELSE
+				V_DISPVALUE := NULL;
+			END IF;
+
+		END IF;
+
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE, DISPVALUE = V_DISPVALUE WHERE RLVNTDATANAME = I_RLVNTDATANAME AND PROCID = I_PROCID;
 
 	END IF;
 
 EXCEPTION
 	WHEN OTHERS THEN
 		SP_ERROR_LOG();
-		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV -------------------');
 END;
 
 /
@@ -170,12 +182,12 @@ BEGIN
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'administrativeCode', '/formData/items/item[id=''administrativeCode'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'associatedIncentives', '/formData/items/item[id=''associatedIncentives'']/value/requestNumber/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateName', '/formData/items/item[id=''candidateName'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrSpecialist', '/formData/items/item[id=''hrSpecialist'']/value/name/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrSpecialist', '/formData/items/item[id=''hrSpecialist'']/value/id/text()', '/formData/items/item[id=''hrSpecialist'']/value/name/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'incentiveType', '/formData/items/item[id=''incentiveType'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'payPlanSeriesGrade', '/formData/items/item[id=''payPlanSeriesGrade'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'positionTitle', '/formData/items/item[id=''positionTitle'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'relatedUserIds', '/formData/items/item[id=''relatedUserIds'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficial', '/formData/items/item[id=''selectingOfficial'']/value/name/text()');
+	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficial', '/formData/items/item[id=''selectingOfficial'']/value/id/text()', '/formData/items/item[id=''selectingOfficial'']/value/name/text()');
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
@@ -227,7 +239,7 @@ BEGIN
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''case_type'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''case_category'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''case_status'']/value/text()');
-	
+
 	--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
 	END IF;
@@ -279,7 +291,7 @@ BEGIN
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''case_type'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''case_category'']/value/text()');
 	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''case_status'']/value/text()');
-	
+
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
 	END IF;
@@ -1200,7 +1212,7 @@ BEGIN
 	----------------------------------
 	-- APPROVAL
 	----------------------------------
-	-- If there are multiple work items for one approval activity, and they are being approved at the same time, 
+	-- If there are multiple work items for one approval activity, and they are being approved at the same time,
 	-- the signature data of the other will be overwritten (blanked out).  Prevent such overwrite.
 	SELECT
 		X.SCA_CLASS_SPEC_SIG_PREV
@@ -1211,7 +1223,7 @@ BEGIN
 		, X.SCA_CLASS_SPEC_SIG_DT
 		, X.SCA_STAFF_SIG
 		, X.SCA_STAFF_SIG_DT
-	INTO 
+	INTO
 		V_SCA_CLASS_SPEC_SIG_PREV
 		, V_SCA_CLASS_SPEC_SIG_DT_PREV
 		, V_SCA_STAFF_SIG_PREV
@@ -1220,7 +1232,7 @@ BEGIN
 		, V_SCA_CLASS_SPEC_SIG_DT
 		, V_SCA_STAFF_SIG
 		, V_SCA_STAFF_SIG_DT
-	FROM 
+	FROM
 		XMLTABLE('/DOCUMENT/APPROVAL'
 			PASSING I_XMLDOC_PREV
 			COLUMNS
@@ -1246,10 +1258,10 @@ BEGIN
 	--DBMS_OUTPUT.PUT_LINE('    V_SCA_CLASS_SPEC_SIG_DT    = ' || V_SCA_CLASS_SPEC_SIG_DT);
 	--DBMS_OUTPUT.PUT_LINE('    V_SCA_STAFF_SIG            = ' || V_SCA_STAFF_SIG);
 	--DBMS_OUTPUT.PUT_LINE('    V_SCA_STAFF_SIG_DT         = ' || V_SCA_STAFF_SIG_DT);
-	--IF V_SCA_CLASS_SPEC_SIG IS NULL THEN 
+	--IF V_SCA_CLASS_SPEC_SIG IS NULL THEN
 	--	DBMS_OUTPUT.PUT_LINE('V_SCA_CLASS_SPEC_SIG IS DETECTED AS NULL');
 	--END IF;
-	--IF V_SCA_STAFF_SIG IS NULL THEN 
+	--IF V_SCA_STAFF_SIG IS NULL THEN
 	--	DBMS_OUTPUT.PUT_LINE('V_SCA_STAFF_SIG IS DETECTED AS NULL');
 	--END IF;
 
@@ -1282,15 +1294,15 @@ BEGIN
 		--INTO IO_XMLDOC
 		--FROM DUAL;
 
-		SELECT 
+		SELECT
 			XMLQUERY('
 				declare function local:retain-sig($elem as element()) {
 					if (
 						local-name($elem) = "SCA_CLASS_SPEC_SIG" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()
-						and 
+						and
 						not (
 							($elem/../SCA_STAFF_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text())
-							or 
+							or
 							(not($elem/../SCA_STAFF_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()))
 						)
 					) then
@@ -1300,10 +1312,10 @@ BEGIN
 							}
 					else if (
 						local-name($elem) = "SCA_CLASS_SPEC_SIG_DT" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG_DT/text()
-						and 
+						and
 						not (
 							($elem/../SCA_STAFF_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text())
-							or 
+							or
 							(not($elem/../SCA_STAFF_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()))
 						)
 					) then
@@ -1313,10 +1325,10 @@ BEGIN
 							}
 					else if (
 						local-name($elem) = "SCA_STAFF_SIG" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG/text()
-						and 
+						and
 						not (
 							($elem/../SCA_CLASS_SPEC_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text())
-							or 
+							or
 							(not($elem/../SCA_CLASS_SPEC_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()))
 						)
 					) then
@@ -1326,10 +1338,10 @@ BEGIN
 							}
 					else if (
 						local-name($elem) = "SCA_STAFF_SIG_DT" and not($elem/text()) and $xpre/DOCUMENT/APPROVAL/SCA_STAFF_SIG_DT/text()
-						and 
+						and
 						not (
 							($elem/../SCA_CLASS_SPEC_SIG/text() and $xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text())
-							or 
+							or
 							(not($elem/../SCA_CLASS_SPEC_SIG/text()) and not($xpre/DOCUMENT/APPROVAL/SCA_CLASS_SPEC_SIG/text()))
 						)
 					) then
@@ -1341,7 +1353,7 @@ BEGIN
 						element {node-name($elem)}
 							{
 								for $child in $elem/node()
-								return 
+								return
 									if ($child instance of element()) then local:retain-sig($child)
 									else $child
 							}
@@ -4951,7 +4963,7 @@ BEGIN
 					, X.CS_ID
 					, X.SO_AGREE
 					, X.OTHER_CERT
-					
+
 					, X.CNDT_LAST_NM
 					, X.CNDT_FIRST_NM
 					, X.CNDT_MIDDLE_NM
@@ -5026,14 +5038,14 @@ BEGIN
 					, X.GA_13
 					, X.GA_14
 					, X.GA_15
-					
+
 					, X.CNDT_ELIGIBLE
 					, X.INELIG_REASON
 					, X.CNDT_QUALIFIED
 					, X.DISQUAL_REASON
 
 					, X.SEL_DETERM
-					
+
 					, X.DCO_CERT
 					, X.DCO_NAME
 					, X.DCO_SIG
@@ -5043,7 +5055,7 @@ BEGIN
 					, XMLTABLE('/DOCUMENT'
 						PASSING FD.FIELD_DATA
 						COLUMNS
-						
+
 							ADMIN_CD                        NVARCHAR2(8)    PATH 'GENERAL/ADMIN_CD'
 							, RT_ID                         NUMBER(20)      PATH 'GENERAL/RT_ID'
 							, AT_ID                         NUMBER(20)      PATH 'GENERAL/AT_ID'
@@ -5063,7 +5075,7 @@ BEGIN
 							, CS_ID                         NVARCHAR2(10)   PATH 'GENERAL/CS_ID'
 							, SO_AGREE                      CHAR(1)         PATH 'if (GENERAL/SO_AGREE/text() = "true") then 1 else 0'
 							, OTHER_CERT                    NVARCHAR2(200)  PATH 'GENERAL/OTHER_CERT'
-							
+
 							, CNDT_LAST_NM                  NVARCHAR2(50)   PATH 'POSITION/CNDT_LAST_NM'
 							, CNDT_FIRST_NM                 NVARCHAR2(50)   PATH 'POSITION/CNDT_FIRST_NM'
 							, CNDT_MIDDLE_NM                NVARCHAR2(50)   PATH 'POSITION/CNDT_MIDDLE_NM'
@@ -5145,7 +5157,7 @@ BEGIN
 							, DISQUAL_REASON                NUMBER(20,0)    PATH 'REVIEW/DISQUAL_REASON'
 
 							, SEL_DETERM                    NUMBER(20,0)    PATH 'SELECTION/SEL_DETERM'
-							
+
 							, DCO_CERT                      NVARCHAR2(10)   PATH 'APPROVAL/DCO_CERT'
 							, DCO_NAME                      NVARCHAR2(100)  PATH 'APPROVAL/DCO_NAME'
 							, DCO_SIG                       NVARCHAR2(100)  PATH 'APPROVAL/DCO_SIG'
@@ -5250,14 +5262,14 @@ BEGIN
 				, TRG.GA_13                 = SRC.GA_13
 				, TRG.GA_14                 = SRC.GA_14
 				, TRG.GA_15                 = SRC.GA_15
-				
+
 				, TRG.CNDT_ELIGIBLE         = SRC.CNDT_ELIGIBLE
 				, TRG.INELIG_REASON         = SRC.INELIG_REASON
 				, TRG.CNDT_QUALIFIED        = SRC.CNDT_QUALIFIED
 				, TRG.DISQUAL_REASON        = SRC.DISQUAL_REASON
 
 				, TRG.SEL_DETERM            = SRC.SEL_DETERM
-				
+
 				, TRG.DCO_CERT              = SRC.DCO_CERT
 				, TRG.DCO_NAME              = SRC.DCO_NAME
 				, TRG.DCO_SIG               = SRC.DCO_SIG
@@ -5287,7 +5299,7 @@ BEGIN
 				, TRG.CS_ID
 				, TRG.SO_AGREE
 				, TRG.OTHER_CERT
-				
+
 				, TRG.CNDT_LAST_NM
 				, TRG.CNDT_FIRST_NM
 				, TRG.CNDT_MIDDLE_NM
@@ -5362,14 +5374,14 @@ BEGIN
 				, TRG.GA_13
 				, TRG.GA_14
 				, TRG.GA_15
-				
+
 				, TRG.CNDT_ELIGIBLE
 				, TRG.INELIG_REASON
 				, TRG.CNDT_QUALIFIED
 				, TRG.DISQUAL_REASON
 
 				, TRG.SEL_DETERM
-				
+
 				, TRG.DCO_CERT
 				, TRG.DCO_NAME
 				, TRG.DCO_SIG
@@ -5474,14 +5486,14 @@ BEGIN
 				, SRC.GA_13
 				, SRC.GA_14
 				, SRC.GA_15
-				
+
 				, SRC.CNDT_ELIGIBLE
 				, SRC.INELIG_REASON
 				, SRC.CNDT_QUALIFIED
 				, SRC.DISQUAL_REASON
 
 				, SRC.SEL_DETERM
-				
+
 				, SRC.DCO_CERT
 				, SRC.DCO_NAME
 				, SRC.DCO_SIG
@@ -5566,7 +5578,7 @@ IS
 	V_XMLDOC                XMLTYPE;
 	V_XMLDOC_PREV           XMLTYPE;
 	V_REQ_FORM_FIELD_XPATH  VARCHAR2(100);
-	V_REQ_FORM_FIELD_PREV	VARCHAR2(500);	
+	V_REQ_FORM_FIELD_PREV	VARCHAR2(500);
 	V_REQ_FORM_FIELD        VARCHAR2(500);
 BEGIN
 	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
@@ -5579,7 +5591,7 @@ BEGIN
 	--DBMS_OUTPUT.PUT_LINE('    I_ACTSEQ     = ' || TO_CHAR(I_ACTSEQ));
 	--DBMS_OUTPUT.PUT_LINE('    I_WITEMSEQ   = ' || TO_CHAR(I_WITEMSEQ));
 	--DBMS_OUTPUT.PUT_LINE(' ----------------');
-	
+
 	-- sanity check: ignore and exit if form data xml is null or empty
 	IF I_FIELD_DATA IS NULL OR LENGTH(I_FIELD_DATA) <= 0 THEN
 		RETURN;
@@ -5618,9 +5630,9 @@ BEGIN
 	-- Make sure the existing form data xml is not wiped out by erroneous input
 	-- Compare the required field value from the previous form data
 	-- with the new one.  If the previous one is not empty but the new one
-	-- is empty, then, ignore the update and exit. 
+	-- is empty, then, ignore the update and exit.
 	IF V_REC_CNT > 0 THEN
-		
+
 		IF V_FORM_TYPE = 'CMSSTRATCON' THEN
 			V_REQ_FORM_FIELD_XPATH := '/DOCUMENT/POSITION/POS_TITLE/text()';
 		ELSIF V_FORM_TYPE = 'CMSCLSF' THEN
@@ -5632,14 +5644,14 @@ BEGIN
 		END IF;
 		BEGIN
 			SELECT
-				FIELD_DATA 
+				FIELD_DATA
 				, XMLQUERY(V_REQ_FORM_FIELD_XPATH PASSING FIELD_DATA RETURNING CONTENT).GETSTRINGVAL()
 				, XMLQUERY(V_REQ_FORM_FIELD_XPATH PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL()
-			INTO 
+			INTO
 				V_XMLDOC_PREV
 				, V_REQ_FORM_FIELD_PREV
 				, V_REQ_FORM_FIELD
-			FROM TBL_FORM_DTL 
+			FROM TBL_FORM_DTL
 			WHERE ID = V_ID;
 		EXCEPTION
 			WHEN NO_DATA_FOUND THEN
@@ -5650,7 +5662,7 @@ BEGIN
 		END;
 		--DBMS_OUTPUT.PUT_LINE('    V_REQ_FORM_FIELD_PREV  = ' || V_REQ_FORM_FIELD_PREV);
 		--DBMS_OUTPUT.PUT_LINE('    V_REQ_FORM_FIELD       = ' || V_REQ_FORM_FIELD);
-		IF (V_REQ_FORM_FIELD_PREV IS NOT NULL AND LENGTH(V_REQ_FORM_FIELD_PREV) > 0) 
+		IF (V_REQ_FORM_FIELD_PREV IS NOT NULL AND LENGTH(V_REQ_FORM_FIELD_PREV) > 0)
 			AND (V_REQ_FORM_FIELD IS NULL OR LENGTH(V_REQ_FORM_FIELD) <= 0)
 		THEN
 			RETURN;
