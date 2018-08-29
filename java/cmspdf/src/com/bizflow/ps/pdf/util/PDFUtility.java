@@ -96,6 +96,36 @@ public class PDFUtility
 		return fontSize;
 	}
 
+
+	static private boolean isCharacterEncodable (PDFont font, char character) throws IOException {
+		StopWatch watch = new StopWatch(PDFUtility.class, "isCharacterEncodable");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("isCharacterEncodable START");
+			logger.debug(" - font [" + font.getName() + "]");
+
+//			Character charObject = new Character(character);
+//			Integer charValue = (int)charObject.charValue();
+//			logger.debug(" - character [0x" + Integer.toHexString(charValue)+ "]");
+		}
+
+		Boolean result = true;
+		try {
+			font.encode(Character.toString(character));
+		} catch (IllegalArgumentException iae) {
+			logger.debug("Character cannot be encoded. This character is excluded. Below stack trace can be ignored.", iae);
+			result = false;
+		}
+
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("isCharacterEncodable END [" + result + "]");
+		}
+		watch.check();
+
+		return result;
+	}
+
 	static public void drawText(PDPageContentStream contentStream, float x, float y, float width,
 								String fontName, float fontSize, float maxFontSize, String text) throws IOException
 	{
@@ -129,11 +159,22 @@ public class PDFUtility
 				finalFontSize = PDFUtility.getMaxFontSize(font, text, fontSize, maxFontSize, width);
 			}
 
+			StringBuilder printableBuffer = new StringBuilder();
+			for (char character: text.toCharArray()) {
+				if (PDFUtility.isCharacterEncodable(font, character)) {
+					printableBuffer.append(character);
+				} else {
+					printableBuffer.append(" ");
+				}
+			}
+
+			String printableString = printableBuffer.toString();
+
 			contentStream.setFont(font, finalFontSize);
 			contentStream.setNonStrokingColor(0);
 			contentStream.beginText();
 			contentStream.newLineAtOffset(x, y);
-			contentStream.showText(text);
+			contentStream.showText(printableString);
 			contentStream.endText();
 		}
 
