@@ -7,6 +7,7 @@
  * @param I_FIELD_DATA - Form data xml.
  * @param I_RLVNTDATANAME - the name of a process variable to be updated
  * @param I_XPATH - the xpath of the value of a process variable
+ * @param I_DISPXPATH - (optional) the xpath of the display value of a process variable
  */
 CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_BY_XPATH
   (
