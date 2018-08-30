@@ -405,16 +405,16 @@ public class WMConnector
 		watch.check();
 	}
 
-/*
-	public static void main3(String[] args) throws IOException, Exception
+
+	public static void main(String[] args) throws IOException, Exception
 	{
-		File xmlFile = new File("/Users/syang/Desktop/work/proj/HHS/dev/java/cmspdf/PDF_Configuration/map/TEST_DATA.xml");
+		File xmlFile = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_DATA.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = dbFactory.newDocumentBuilder();
 		Document document = builder.parse(xmlFile);
 		document.getDocumentElement().normalize();
 
-		File xmlFile2 = new File("/Users/syang/Desktop/work/proj/HHS/dev/java/cmspdf/PDF_Configuration/map/TEST_LOOKUP.xml");
+		File xmlFile2 = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_LOOKUP.xml");
 		DocumentBuilderFactory dbFactory2 = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder2 = dbFactory2.newDocumentBuilder();
 		Document document2 = builder2.parse(xmlFile2);
@@ -428,6 +428,7 @@ public class WMConnector
 
 		StopWatch.printArchive();
 	}
+/*
 
 	public static void main2(String[] args) throws IOException, Exception
 	{
