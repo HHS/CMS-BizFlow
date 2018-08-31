@@ -96,8 +96,8 @@ public class PDFOverlay
 					text = valueMap.get(item.text);
 				}
 
-				String tmpText = text.replaceAll("[\\u000d\\u000a\\u00a0]", " ");
-				text = tmpText;
+//				String tmpText = text.replaceAll("[\\u000d\\u000a\\u00a0]", " ");
+//				text = tmpText;
 
 				if ("true".compareToIgnoreCase(item.multipleLine) == 0)
 				{

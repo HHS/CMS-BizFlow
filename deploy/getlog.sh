@@ -127,16 +127,16 @@ copyFile()
 		cp $WS_DIR/logs/cmspdf_performance.log             $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/logs/host-manager.$CURDATE2.log         $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/logs/localhost.$CURDATE2.log            $TRG_DIR/$ENV/ws/logs
-		cp $WS_DIR/logs/localhost_access_log.$CURDATE2.log $TRG_DIR/$ENV/ws/logs
+		cp $WS_DIR/logs/localhost_access_log.$CURDATE2.txt $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/logs/manager.$CURDATE2.log              $TRG_DIR/$ENV/ws/logs
 		
 		cp $WS_DIR/webapps/bizflowadvreport/WEB-INF/logs/jasperserver.log   $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/webapps/bizflowadvreport/WEB-INF/logs/jasperserver.log.1 $TRG_DIR/$ENV/ws/logs
 	else
-		cp $BF_DIR/logs/*.log $TRG_DIR/$ENV/bf/logs
-		cp $BF_DIR/bizflowera/log/*.log $TRG_DIR/$ENV/bf/logs
-		cp $WS_DIR/logs/*.log $TRG_DIR/$ENV/ws/logs
-		cp $WS_DIR/webapps/bizflowadvreport/WEB-INF/logs/*.log $TRG_DIR/$ENV/ws/logs
+		cp $BF_DIR/logs/* $TRG_DIR/$ENV/bf/logs
+		cp $BF_DIR/bizflowera/log/* $TRG_DIR/$ENV/bf/logs
+		cp $WS_DIR/logs/* $TRG_DIR/$ENV/ws/logs
+		cp $WS_DIR/webapps/bizflowadvreport/WEB-INF/logs/* $TRG_DIR/$ENV/ws/logs
 	fi
 }
 
