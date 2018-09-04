@@ -14,7 +14,19 @@ import com.bizflow.ps.drools.document.model.WorkflowField;
 dialect "mvel"
 
 function void addDocument(ArrayList bizflowDocument, String documentName, boolean required) {
-    bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, required));
+    boolean exist = false;
+    int len = bizflowDocument.size();
+    for (int i=0; i < len; i++) {
+        WorkflowDocument doc = (WorkflowDocument) bizflowDocument.get(i);
+        if(documentName.equalsIgnoreCase(doc.getName())) {
+            exist = true;
+            break;
+        }
+    }
+
+    if(!exist) {
+        bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, required));
+    }
 }
 
 function void addDocumentEx(ArrayList bizflowDocument, String documentName, String actName, String[] actNames, boolean required) {
@@ -45,14 +57,14 @@ rule "Incentives / PCA Required Documents "
 
     then
         System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents >> " + $docSearch);
-        addDocument($workflowDocuments, "Classified PD & signed OF8", true);
-        addDocument($workflowDocuments, "Current Qualifications Statement or Curriculum Vitae", true);
-        addDocument($workflowDocuments, "PCA Justification Worksheet", true);
-        addDocument($workflowDocuments, "Proof of active medical licensure and board certification", true);
-        addDocument($workflowDocuments, "Service Agreement", true);
+        addDocument($workflowDocuments, "Justification Narrative", true);
+        addDocument($workflowDocuments, "Medical License", true);
+        addDocument($workflowDocuments, "PD Coversheet/OF-8", true);
+        addDocument($workflowDocuments, "Position Description", true);
+        addDocument($workflowDocuments, "Resume/Curriculum Vitae", true);
 end
 
-rule "Incentives / PCA Required Documents / New Recruitment"
+rule "Incentives / PCA Required Documents / New / Recruitment"
     when
         $docSearch: WorkflowRuleSearch (
                             procName == "Incentives Request"
@@ -69,9 +81,28 @@ rule "Incentives / PCA Required Documents / New Recruitment"
         $workflowDocuments : ArrayList()
 
     then
-        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents  / New Recruitment >> " + $docSearch);
-        addDocument($workflowDocuments, "Attestation for Licensure Policy", true);
-        addDocument($workflowDocuments, "Copy of vacancy announcement", true);
+        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents  / New / Recruitment >> " + $docSearch);
+        addDocument($workflowDocuments, "Vacancy Announcement", true);
+end
+
+rule "Incentives / PCA Required Documents / RequireBoardCert"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            procName == "Incentives Request"
+                            , actName == "Start New"
+                            , $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+         $field4: WorkflowField ( fieldId == "requireBoardCert", fieldValue == "Yes" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents  / RequireBoardCert >> " + $docSearch);
+        addDocument($workflowDocuments, "Board Certification", true);
 end
 
 //------------------------------
@@ -88,5 +119,15 @@ rule "Incentives / Default"
         $workflowDocuments : ArrayList()
     then
         System.out.println("INCENTIVES-DOCUMENT-RULE: Default >> " + $docSearch);
+        addDocument($workflowDocuments, "Board Certification", false);
+        addDocument($workflowDocuments, "Final Position Description Package", false);
+        addDocument($workflowDocuments, "Justification Narrative", false);
+        addDocument($workflowDocuments, "Medical License", false);
+        addDocument($workflowDocuments, "PD Coversheet/OF-8", false);
+        addDocument($workflowDocuments, "Position Description", false);
+        addDocument($workflowDocuments, "Resume/Curriculum Vitae", false);
+        addDocument($workflowDocuments, "Service Agreement", false);
+        addDocument($workflowDocuments, "Supporting Documents", false);
+        addDocument($workflowDocuments, "Vacancy Announcement", false);
         addDocument($workflowDocuments, "Other", false);
 end
