@@ -40,30 +40,6 @@ function void addDocumentEx(ArrayList bizflowDocument, String documentName, Stri
     bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, isRequiredDocument));
 }
 
-
-rule "Incentives / PCA Required Documents "
-    when
-        $docSearch: WorkflowRuleSearch (
-                            procName == "Incentives Request"
-                            , actName == "Start New"
-                            , $procName: procName
-                            , $actName: actName
-                            , $fields : fields
-                            )
-         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
-         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
-
-        $workflowDocuments : ArrayList()
-
-    then
-        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents >> " + $docSearch);
-        addDocument($workflowDocuments, "Justification Narrative", true);
-        addDocument($workflowDocuments, "Medical License", true);
-        addDocument($workflowDocuments, "PD Coversheet/OF-8", true);
-        addDocument($workflowDocuments, "Position Description", true);
-        addDocument($workflowDocuments, "Resume/Curriculum Vitae", true);
-end
-
 rule "Incentives / PCA Required Documents / New / Recruitment"
     when
         $docSearch: WorkflowRuleSearch (
@@ -105,6 +81,37 @@ rule "Incentives / PCA Required Documents / RequireBoardCert"
         addDocument($workflowDocuments, "Board Certification", true);
 end
 
+
+rule "Incentives / PCA Required Documents "
+    when
+        $docSearch: WorkflowRuleSearch (
+                            procName == "Incentives Request"
+                            , actName == "Start New"
+                            , $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents >> " + $docSearch);
+        addDocument($workflowDocuments, "Board Certification", false);
+        addDocument($workflowDocuments, "Candidate Declination", false);
+        addDocument($workflowDocuments, "Final Position Description Package", false);
+        addDocument($workflowDocuments, "Justification Narrative", true);
+        addDocument($workflowDocuments, "Medical License", true);
+        addDocument($workflowDocuments, "PD Coversheet/OF-8", true);
+        addDocument($workflowDocuments, "Position Description", true);
+        addDocument($workflowDocuments, "Request to Fill", false);
+        addDocument($workflowDocuments, "Resume/Curriculum Vitae", true);
+        addDocument($workflowDocuments, "Service Agreement", false);
+        addDocument($workflowDocuments, "Supporting Documents", false);
+        addDocument($workflowDocuments, "Vacancy Announcement", false);
+end
+
 //------------------------------
 // DEFAULT DOCUMENT
 //------------------------------
@@ -119,15 +126,5 @@ rule "Incentives / Default"
         $workflowDocuments : ArrayList()
     then
         System.out.println("INCENTIVES-DOCUMENT-RULE: Default >> " + $docSearch);
-        addDocument($workflowDocuments, "Board Certification", false);
-        addDocument($workflowDocuments, "Final Position Description Package", false);
-        addDocument($workflowDocuments, "Justification Narrative", false);
-        addDocument($workflowDocuments, "Medical License", false);
-        addDocument($workflowDocuments, "PD Coversheet/OF-8", false);
-        addDocument($workflowDocuments, "Position Description", false);
-        addDocument($workflowDocuments, "Resume/Curriculum Vitae", false);
-        addDocument($workflowDocuments, "Service Agreement", false);
-        addDocument($workflowDocuments, "Supporting Documents", false);
-        addDocument($workflowDocuments, "Vacancy Announcement", false);
         addDocument($workflowDocuments, "Other", false);
 end
