@@ -1666,136 +1666,142 @@ CREATE OR REPLACE VIEW VW_UNIFIED_REQUESTS
 --------------------------------------------------------
 CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 	AS
-		SELECT FD.PROCID, X.requestNumber, to_timestamp(X.requestDate, 'yyyy/mm/dd hh24:mi:ss') requestDate
-			, X.requestStatus , X.incentiveType , X.pcaType , X.organizationName
+		SELECT FD.PROCID PROC_ID, X.REQ_NUM, to_timestamp(X.REQ_DATE, 'yyyy/mm/dd hh24:mi:ss') REQ_DATE
+			, X.REQ_STATUS, X.INCEN_TYPE , X.PCA_TYPE
+			-- associatedNEILRequest
+			, X.NEIL_REQ_NUM,  X.NEIL_REQ_TYPE, X.ADMIN_CODE, X.ORG_NAME
 			-- candidate
-			, X.candidateName , X.candiFirstName , X.candiMiddleName , X.candiLastName , X.administrativeCode , X.requestType
+			, X.CANDI_NAME, X.CANDI_FIRST, X.CANDI_MIDDLE, X.CANDI_LAST
 			-- selectingOfficial
-			, X.selectingOfficialName , X.selectingOfficialEmail , X.selectingOfficialID
+			, X.SO_NAME, X.SO_EMAIL, X.SO_ID
 			-- executiveOfficers
-			, X.executiveOfficers1Name , X.executiveOfficers1Email , X.executiveOfficers1ID
-			, X.executiveOfficers2Name , X.executiveOfficers2Email , X.executiveOfficers2ID
-			, X.executiveOfficers3Name , X.executiveOfficers3Email , X.executiveOfficers3ID
+			, X.XO1_NAME, X.XO1_EMAIL, X.XO1_ID
+			, X.XO2_NAME, X.XO2_EMAIL, X.XO2_ID
+			, X.XO3_NAME, X.XO3_EMAIL, X.XO3_ID
 			-- hrLiaisons
-			, X.hrLiaisons1Name , X.hrLiaisons1Email , X.hrLiaisons1ID
-			, X.hrLiaisons2Name , X.hrLiaisons2Email , X.hrLiaisons2ID
-			, X.hrLiaisons3Name , X.hrLiaisons3Email , X.hrLiaisons3ID
+			, X.HRL1_NAME, X.HRL1_EMAIL, X.HRL1_ID
+			, X.HRL2_NAME, X.HRL2_EMAIL, X.HRL2_ID
+			, X.HRL3_NAME, X.HRL3_EMAIL, X.HRL3_ID
 			-- hrSpecialist
-			, X.hrSpecialistName , X.hrSpecialistEmail , X.hrSpecialistID
+			, X.HRS1_NAME, X.HRS1_EMAIL, X.HRS1_ID
 			-- hrSpecialist2
-			, X.hrSpecialist2Name , X.hrSpecialist2Email , X.hrSpecialist2ID
+			, X.HRS2_NAME, X.HRS2_EMAIL, X.HRS2_ID
 			-- position
-			, X.positionTitle , X.payPlan , X.series , X.grade , X.posDescNumber
+			, X.POS_TITLE, X.PAY_PLAN, X.SERIES, X.GRADE, X.POS_DESC_NUM
 			-- dutyStation
-			, X.dutyStation1State , X.dutyStation1City
-			, X.dutyStation2State , X.dutyStation2City
+			, X.DS1_STATE, X.DS1_CITY
+			, X.DS2_STATE, X.DS2_CITY
 			-- PCA Details
-			, X.typeOfAppointment , X.notToExceedDate , X.workSchedule , X.hoursPerWeek , X.requireBoardCert , X.licenseInfo , X.requireAdminApproval
+			, X.TYPE_OF_APPT, X.NOT_TO_EXDATE, X.WORK_SCHEDULE , X.HOURS_PER_WEEK , X.REQ_BD_CERT , X.LIC_INFO , X.REQ_ADMIN_APPROVAL
 			-- licenseState
-			, X.licenseState1State , to_date(X.licenseState1ExpDate, 'mm/dd/yyyy') licenseState1ExpDate
-			, X.licenseState2State , to_date(X.licenseState2ExpDate, 'mm/dd/yyyy') licenseState2ExpDate
+			, X.LIC_STATE1_STATE, to_date(X.LIC_STATE1_EXP_DATE, 'mm/dd/yyyy') LIC_STATE1_EXP_DATE
+			, X.LIC_STATE2_STATE, to_date(X.LIC_STATE2_EXP_DATE, 'mm/dd/yyyy') LIC_STATE2_EXP_DATE
 			-- boardCertSpecialty
-			, X.boardCertSpecialty1 , X.boardCertSpecialty2 , X.boardCertSpecialty3 , X.boardCertSpecialty4
-			, X.boardCertSpecialty5 , X.boardCertSpecialty6 , X.boardCertSpecialty7 , X.boardCertSpecialty8
-			, X.boardCertSpecialty9 , X.otherSpeciality
+			, X.BD_CERT_SPEC1, X.BD_CERT_SPEC2, X.BD_CERT_SPEC3, X.BD_CERT_SPEC4
+			, X.BD_CERT_SPEC5, X.BD_CERT_SPEC6, X.BD_CERT_SPEC7, X.BD_CERT_SPEC8
+			, X.BD_CERT_SPEC9, X.BD_CERT_SPEC_OTHER
 			-- allowance
-			, X.lengthOfServed , X.lengthOfService
-			, X.allowanceCategory , X.allowanceBoardCertification , X.allowanceMultiYearAgreement , X.allowanceMissionSpecCriteria
-			, X.allowanceTotal , X.totalPayablePCACalculation
+			, X.LEN_SERVED, X.LEN_SERVICE
+			, X.ALW_CATEGORY , X.ALW_BD_CERT, X.ALW_MULTI_YEAR_AGMT, X.ALW_MISSION_SC
+			, X.ALW_TOTAL, X.TOTAL_PAYABLE
 		FROM TBL_FORM_DTL FD, XMLTABLE('/formData/items'
 		                               PASSING FD.FIELD_DATA
 		                               COLUMNS
-			                               requestNumber  NVARCHAR2(15)   PATH './item[id="requestNumber"]/value'
-			                               ,   requestDate  NVARCHAR2(20)   PATH './item[id="requestDate"]/value'
-			                               ,   requestStatus  NVARCHAR2(20)   PATH './item[id="requestStatus"]/value'
-			                               ,   incentiveType  NVARCHAR2(10)   PATH './item[id="incentiveType"]/value'
-			                               ,   pcaType NVARCHAR2(10)   PATH './item[id="pcaType"]/value'
-			                               ,   organizationName NVARCHAR2(100)   PATH './item[id="organizationName"]/value'
+			                               REQ_NUM  NVARCHAR2(15)   PATH './item[id="requestNumber"]/value'
+			                               ,   REQ_DATE  NVARCHAR2(20)   PATH './item[id="requestDate"]/value'
+			                               ,   REQ_STATUS  NVARCHAR2(20)   PATH './item[id="requestStatus"]/value'
+			                               ,   INCEN_TYPE  NVARCHAR2(10)   PATH './item[id="incentiveType"]/value'
+			                               ,   PCA_TYPE NVARCHAR2(10)   PATH './item[id="pcaType"]/value'
+			                               -- associatedNEILRequest
+			                               ,   NEIL_REQ_NUM NVARCHAR2(20)   PATH './item[id="associatedNEILRequest"]/value/requestNumber'
+			                               ,   NEIL_REQ_TYPE NVARCHAR2(20)   PATH './item[id="requestType"]/value'
+			                               ,   ADMIN_CODE NVARCHAR2(10)   PATH './item[id="administrativeCode"]/value'
+			                               ,   ORG_NAME NVARCHAR2(100)   PATH './item[id="organizationName"]/value'
+			                               -- associatedIncentives
+			                               ,   ASSOC_INCEN_REQ_NUM NVARCHAR2(20)   PATH './item[id="associatedIncentives"]/value/requestNumber'
+			                               ,   ASSOC_INCEN_TYPE NVARCHAR2(20)   PATH './item[id="associatedIncentives"]/value/incentiveType'
 			                               -- candidate
-			                               ,   candidateName NVARCHAR2(150)   PATH './item[id="candidateName"]/value'
-			                               ,   candiFirstName NVARCHAR2(50)   PATH './item[id="candiFirstName"]/value'
-			                               ,   candiMiddleName NVARCHAR2(50)   PATH './item[id="candiMiddleName"]/value'
-			                               ,   candiLastName NVARCHAR2(50)   PATH './item[id="candiLastName"]/value'
-			                               ,   administrativeCode NVARCHAR2(10)   PATH './item[id="administrativeCode"]/value'
-			                               ,   requestType NVARCHAR2(20)   PATH './item[id="requestType"]/value'
+			                               ,   CANDI_NAME NVARCHAR2(150)   PATH './item[id="candidateName"]/value'
+			                               ,   CANDI_FIRST NVARCHAR2(50)   PATH './item[id="candiFirstName"]/value'
+			                               ,   CANDI_MIDDLE NVARCHAR2(50)   PATH './item[id="candiMiddleName"]/value'
+			                               ,   CANDI_LAST NVARCHAR2(50)   PATH './item[id="candiLastName"]/value'
 			                               -- selectingOfficial
-			                               ,   selectingOfficialName NVARCHAR2(100)   PATH './item[id="selectingOfficial"]/value/name'
-			                               ,   selectingOfficialEmail NVARCHAR2(100)   PATH './item[id="selectingOfficial"]/value/email'
-			                               ,   selectingOfficialID NVARCHAR2(10)   PATH './item[id="selectingOfficial"]/value/id'
+			                               ,   SO_NAME NVARCHAR2(100)   PATH './item[id="selectingOfficial"]/value/name'
+			                               ,   SO_EMAIL NVARCHAR2(100)   PATH './item[id="selectingOfficial"]/value/email'
+			                               ,   SO_ID NVARCHAR2(10)   PATH './item[id="selectingOfficial"]/value/id'
 			                               -- executiveOfficers
-			                               ,   executiveOfficers1Name NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[1]/name'
-			                               ,   executiveOfficers1Email NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[1]/email'
-			                               ,   executiveOfficers1ID NVARCHAR2(10)   PATH './item[id="executiveOfficers"]/value[1]/id'
-			                               ,   executiveOfficers2Name NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[2]/name'
-			                               ,   executiveOfficers2Email NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[2]/email'
-			                               ,   executiveOfficers2ID NVARCHAR2(10)   PATH './item[id="executiveOfficers"]/value[2]/id'
-			                               ,   executiveOfficers3Name NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[3]/name'
-			                               ,   executiveOfficers3Email NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[3]/email'
-			                               ,   executiveOfficers3ID NVARCHAR2(10)   PATH './item[id="executiveOfficers"]/value[3]/id'
+			                               ,   XO1_NAME NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[1]/name'
+			                               ,   XO1_EMAIL NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[1]/email'
+			                               ,   XO1_ID NVARCHAR2(10)   PATH './item[id="executiveOfficers"]/value[1]/id'
+			                               ,   XO2_NAME NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[2]/name'
+			                               ,   XO2_EMAIL NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[2]/email'
+			                               ,   XO2_ID NVARCHAR2(10)   PATH './item[id="executiveOfficers"]/value[2]/id'
+			                               ,   XO3_NAME NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[3]/name'
+			                               ,   XO3_EMAIL NVARCHAR2(100)   PATH './item[id="executiveOfficers"]/value[3]/email'
+			                               ,   XO3_ID NVARCHAR2(10)   PATH './item[id="executiveOfficers"]/value[3]/id'
 			                               -- hrLiaisons
-			                               ,   hrLiaisons1Name NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[1]/name'
-			                               ,   hrLiaisons1Email NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[1]/email'
-			                               ,   hrLiaisons1ID NVARCHAR2(10)   PATH './item[id="hrLiaisons"]/value[1]/id'
-			                               ,   hrLiaisons2Name NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[2]/name'
-			                               ,   hrLiaisons2Email NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[2]/email'
-			                               ,   hrLiaisons2ID NVARCHAR2(10)   PATH './item[id="hrLiaisons"]/value[2]/id'
-			                               ,   hrLiaisons3Name NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[3]/name'
-			                               ,   hrLiaisons3Email NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[3]/email'
-			                               ,   hrLiaisons3ID NVARCHAR2(10)   PATH './item[id="hrLiaisons"]/value[3]/id'
+			                               ,   HRL1_NAME NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[1]/name'
+			                               ,   HRL1_EMAIL NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[1]/email'
+			                               ,   HRL1_ID NVARCHAR2(10)   PATH './item[id="hrLiaisons"]/value[1]/id'
+			                               ,   HRL2_NAME NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[2]/name'
+			                               ,   HRL2_EMAIL NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[2]/email'
+			                               ,   HRL2_ID NVARCHAR2(10)   PATH './item[id="hrLiaisons"]/value[2]/id'
+			                               ,   HRL3_NAME NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[3]/name'
+			                               ,   HRL3_EMAIL NVARCHAR2(100)   PATH './item[id="hrLiaisons"]/value[3]/email'
+			                               ,   HRL3_ID NVARCHAR2(10)   PATH './item[id="hrLiaisons"]/value[3]/id'
 			                               -- hrSpecialist
-			                               ,   hrSpecialistName NVARCHAR2(100)   PATH './item[id="hrSpecialist"]/value/name'
-			                               ,   hrSpecialistEmail NVARCHAR2(100)   PATH './item[id="hrSpecialist"]/value/email'
-			                               ,   hrSpecialistID NVARCHAR2(10)   PATH './item[id="hrSpecialist"]/value/id'
+			                               ,   HRS1_NAME NVARCHAR2(100)   PATH './item[id="hrSpecialist"]/value/name'
+			                               ,   HRS1_EMAIL NVARCHAR2(100)   PATH './item[id="hrSpecialist"]/value/email'
+			                               ,   HRS1_ID NVARCHAR2(10)   PATH './item[id="hrSpecialist"]/value/id'
 			                               -- hrSpecialist2
-			                               ,   hrSpecialist2Name NVARCHAR2(100)   PATH './item[id="hrSpecialist2"]/value/name'
-			                               ,   hrSpecialist2Email NVARCHAR2(100)   PATH './item[id="hrSpecialist2"]/value/email'
-			                               ,   hrSpecialist2ID NVARCHAR2(10)   PATH './item[id="hrSpecialist2"]/value/id'
+			                               ,   HRS2_NAME NVARCHAR2(100)   PATH './item[id="hrSpecialist2"]/value/name'
+			                               ,   HRS2_EMAIL NVARCHAR2(100)   PATH './item[id="hrSpecialist2"]/value/email'
+			                               ,   HRS2_ID NVARCHAR2(10)   PATH './item[id="hrSpecialist2"]/value/id'
 			                               -- position
-			                               ,   positionTitle NVARCHAR2(140)   PATH './item[id="positionTitle"]/value'
-			                               ,   payPlan NVARCHAR2(5)   PATH './item[id="payPlan"]/value'
-			                               ,   series NVARCHAR2(140)   PATH './item[id="series"]/value'
-			                               ,   grade NVARCHAR2(5)   PATH './item[id="grade"]/value'
-			                               ,   posDescNumber NVARCHAR2(20)   PATH './item[id="posDescNumber"]/value'
+			                               ,   POS_TITLE NVARCHAR2(140)   PATH './item[id="positionTitle"]/value'
+			                               ,   PAY_PLAN NVARCHAR2(5)   PATH './item[id="payPlan"]/value'
+			                               ,   SERIES NVARCHAR2(140)   PATH './item[id="series"]/value'
+			                               ,   GRADE NVARCHAR2(5)   PATH './item[id="grade"]/value'
+			                               ,   POS_DESC_NUM NVARCHAR2(20)   PATH './item[id="posDescNumber"]/value'
 			                               -- dutyStation
-			                               ,   dutyStation1State NVARCHAR2(2)   PATH './item[id="dutyStation"]/value[1]/state'
-			                               ,   dutyStation1City NVARCHAR2(50)   PATH './item[id="dutyStation"]/value[1]/city'
-			                               ,   dutyStation2State NVARCHAR2(2)   PATH './item[id="dutyStation"]/value[2]/state'
-			                               ,   dutyStation2City NVARCHAR2(50)   PATH './item[id="dutyStation"]/value[2]/city'
+			                               ,   DS1_STATE NVARCHAR2(2)   PATH './item[id="dutyStation"]/value[1]/state'
+			                               ,   DS1_CITY NVARCHAR2(50)   PATH './item[id="dutyStation"]/value[1]/city'
+			                               ,   DS2_STATE NVARCHAR2(2)   PATH './item[id="dutyStation"]/value[2]/state'
+			                               ,   DS2_CITY NVARCHAR2(50)   PATH './item[id="dutyStation"]/value[2]/city'
 			                               -- PCA Details
-			                               ,   typeOfAppointment NVARCHAR2(20)   PATH './item[id="typeOfAppointment"]/value'
-			                               ,   notToExceedDate NVARCHAR2(50)   PATH './item[id="notToExceedDate"]/value'
-			                               ,   workSchedule NVARCHAR2(15)   PATH './item[id="workSchedule"]/value'
-			                               ,   hoursPerWeek NVARCHAR2(5)   PATH './item[id="hoursPerWeek"]/value'
-			                               ,   requireBoardCert NVARCHAR2(5)   PATH './item[id="requireBoardCert"]/value'
-			                               ,   licenseInfo NVARCHAR2(140)   PATH './item[id="licenseInfo"]/value'
-			                               ,   requireAdminApproval NVARCHAR2(5)   PATH './item[id="requireAdminApproval"]/value'
+			                               ,   TYPE_OF_APPT NVARCHAR2(20)   PATH './item[id="typeOfAppointment"]/value'
+			                               ,   NOT_TO_EXDATE NVARCHAR2(50)   PATH './item[id="notToExceedDate"]/value'
+			                               ,   WORK_SCHEDULE NVARCHAR2(15)   PATH './item[id="workSchedule"]/value'
+			                               ,   HOURS_PER_WEEK NVARCHAR2(5)   PATH './item[id="hoursPerWeek"]/value'
+			                               ,   REQ_BD_CERT NVARCHAR2(5)   PATH './item[id="requireBoardCert"]/value'
+			                               ,   LIC_INFO NVARCHAR2(140)   PATH './item[id="licenseInfo"]/value'
+			                               ,   REQ_ADMIN_APPROVAL NVARCHAR2(5)   PATH './item[id="requireAdminApproval"]/value'
 			                               -- licenseState
-			                               ,   licenseState1State NVARCHAR2(2)   PATH './item[id="licenseState"]/value[1]/state'
-			                               ,   licenseState1ExpDate NVARCHAR2(10)   PATH './item[id="licenseState"]/value[1]/expDate'
-			                               ,   licenseState2State NVARCHAR2(2)   PATH './item[id="licenseState"]/value[2]/state'
-			                               ,   licenseState2ExpDate NVARCHAR2(10)   PATH './item[id="licenseState"]/value[2]/expDate'
+			                               ,   LIC_STATE1_STATE NVARCHAR2(2)   PATH './item[id="licenseState"]/value[1]/state'
+			                               ,   LIC_STATE1_EXP_DATE NVARCHAR2(10)   PATH './item[id="licenseState"]/value[1]/expDate'
+			                               ,   LIC_STATE2_STATE NVARCHAR2(2)   PATH './item[id="licenseState"]/value[2]/state'
+			                               ,   LIC_STATE2_EXP_DATE NVARCHAR2(10)   PATH './item[id="licenseState"]/value[2]/expDate'
 			                               -- boardCertSpecialty
-			                               ,   boardCertSpecialty1 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][1]/text'
-			                               ,   boardCertSpecialty2 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][2]/text'
-			                               ,   boardCertSpecialty3 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][3]/text'
-			                               ,   boardCertSpecialty4 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][4]/text'
-			                               ,   boardCertSpecialty5 NVARCHAR2(20)   PATH './item[contains(id, "boardCertSpecialty")][5]/text'
-			                               ,   boardCertSpecialty6 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][6]/text'
-			                               ,   boardCertSpecialty7 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][7]/text'
-			                               ,   boardCertSpecialty8 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][8]/text'
-			                               ,   boardCertSpecialty9 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][9]/text'
-			                               ,   otherSpeciality NVARCHAR2(140)   PATH './item[id="otherSpeciality"]/value'
+			                               ,   BD_CERT_SPEC1 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][1]/text'
+			                               ,   BD_CERT_SPEC2 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][2]/text'
+			                               ,   BD_CERT_SPEC3 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][3]/text'
+			                               ,   BD_CERT_SPEC4 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][4]/text'
+			                               ,   BD_CERT_SPEC5 NVARCHAR2(20)   PATH './item[contains(id, "boardCertSpecialty")][5]/text'
+			                               ,   BD_CERT_SPEC6 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][6]/text'
+			                               ,   BD_CERT_SPEC7 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][7]/text'
+			                               ,   BD_CERT_SPEC8 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][8]/text'
+			                               ,   BD_CERT_SPEC9 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][9]/text'
+			                               ,   BD_CERT_SPEC_OTHER NVARCHAR2(140)   PATH './item[id="otherSpeciality"]/value'
 			                               -- allowance
-			                               ,   lengthOfServed NVARCHAR2(25)   PATH './item[id="lengthOfServed"]/value'
-			                               ,   lengthOfService NVARCHAR2(2)   PATH './item[id="lengthOfService"]/value'
-			                               ,   allowanceCategory NVARCHAR2(15)   PATH './item[id="allowanceCategory"]/value'
-			                               ,   allowanceBoardCertification NVARCHAR2(15)   PATH './item[id="allowanceBoardCertification"]/value'
-			                               ,   allowanceMultiYearAgreement NVARCHAR2(15)   PATH './item[id="allowanceMultiYearAgreement"]/value'
-			                               ,   allowanceMissionSpecCriteria NVARCHAR2(15)   PATH './item[id="allowanceMissionSpecificCriteria"]/value'
-			                               ,   allowanceTotal NVARCHAR2(15)   PATH './item[id="allowanceTotal"]/value'
-			                               ,   totalPayablePCACalculation NVARCHAR2(15)   PATH './item[id="totalPayablePCACalculation"]/value'
+			                               ,   LEN_SERVED NVARCHAR2(25)   PATH './item[id="lengthOfServed"]/value'
+			                               ,   LEN_SERVICE NVARCHAR2(2)   PATH './item[id="lengthOfService"]/value'
+			                               ,   ALW_CATEGORY NVARCHAR2(15)   PATH './item[id="allowanceCategory"]/value'
+			                               ,   ALW_BD_CERT NVARCHAR2(15)   PATH './item[id="allowanceBoardCertification"]/value'
+			                               ,   ALW_MULTI_YEAR_AGMT NVARCHAR2(15)   PATH './item[id="allowanceMultiYearAgreement"]/value'
+			                               ,   ALW_MISSION_SC NVARCHAR2(15)   PATH './item[id="allowanceMissionSpecificCriteria"]/value'
+			                               ,   ALW_TOTAL NVARCHAR2(15)   PATH './item[id="allowanceTotal"]/value'
+			                               ,   TOTAL_PAYABLE NVARCHAR2(15)   PATH './item[id="totalPayablePCACalculation"]/value'
 			) X
 		WHERE FD.FORM_TYPE='CMSINCENTIVES'
 ;
 /
-
