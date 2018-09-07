@@ -3,6 +3,8 @@ SET DEFINE OFF;
 DECLARE parent_mem_id VARCHAR(10);
 BEGIN
 
+  DELETE FROM UG_MAPPING;
+
   SELECT memberid INTO parent_mem_id FROM BIZFLOW.MEMBER WHERE type='H' and name='CMS';
 
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('HR Classification Specialists', 'HR Classification Specialists', parent_mem_id);
@@ -21,8 +23,8 @@ BEGIN
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('TABG Directors', 'TABG Directors', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('OHC Directors', 'OHC Directors', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('OFM Directors', 'OFM Directors', parent_mem_id);
-  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Chief Medical Officers', 'Chief Medical Officers', parent_mem_id);
+  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Chief Physicians', 'Chief Physicians', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Office of the Administrators', 'Office of the Administrators', parent_mem_id);
-  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DGO Directors', 'DGO Directors', parent_mem_id);
+  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DGHO Directors', 'DGHO Directors', parent_mem_id);
 
 END;
