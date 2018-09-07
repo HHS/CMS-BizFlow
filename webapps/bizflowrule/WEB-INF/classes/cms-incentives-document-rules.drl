@@ -43,9 +43,7 @@ function void addDocumentEx(ArrayList bizflowDocument, String documentName, Stri
 rule "Incentives / PCA Required Documents / New / Recruitment"
     when
         $docSearch: WorkflowRuleSearch (
-                            procName == "Incentives Request"
-                            , actName == "Start New"
-                            , $procName: procName
+                            $procName: procName
                             , $actName: actName
                             , $fields : fields
                             )
@@ -64,9 +62,7 @@ end
 rule "Incentives / PCA Required Documents / RequireBoardCert"
     when
         $docSearch: WorkflowRuleSearch (
-                            procName == "Incentives Request"
-                            , actName == "Start New"
-                            , $procName: procName
+                            $procName: procName
                             , $actName: actName
                             , $fields : fields
                             )
@@ -85,9 +81,7 @@ end
 rule "Incentives / PCA Required Documents "
     when
         $docSearch: WorkflowRuleSearch (
-                            procName == "Incentives Request"
-                            , actName == "Start New"
-                            , $procName: procName
+                            $procName: procName
                             , $actName: actName
                             , $fields : fields
                             )
