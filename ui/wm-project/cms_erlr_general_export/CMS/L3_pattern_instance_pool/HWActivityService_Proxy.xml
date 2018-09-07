@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern base="" desc="" image="" name="HWActivityService_Proxy.xml" pattern_id="HWActivityService_Proxy" version="" xmlns="http://www.hyfinity.com/xfactory">
+	<nodes>
+		<node desc="Please enter description here" image="" name="HWActivity" node_id="HWActivity" protocol="java" runtime_instance="" runtime_location="" type="xagent">
+			<actions>
+				<action alias="complete" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getWorkitems" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getComments" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getAttachments" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getParticipants" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="setParticipants" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getWorkitemCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getCustomAttributes" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessVariables" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getActivity" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="modifyInfo" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getAttachmentFiles" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getAttachmentFile" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+			</actions>
+			<engine desc="no engine required" name="XGate Proxy" runtime_instance="com.hyfinity.xgate" type="http">
+				<logicsheet desc="" logicsheet_ref="" name="" />
+				<other_resources />
+			</engine>
+		</node>
+	</nodes>
+</pattern>

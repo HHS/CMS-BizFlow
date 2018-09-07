@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hy:rulebase cache="false" context="/" disable="true" forward_chain="false" return="/" xmlns:hy="http://www.hyfinity.com/xengine" xmlns:mvc="http://www.hyfinity.com/mvc" xmlns:xg="http://www.hyfinity.com/xgate" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<hy:rule base="pattern" desc="Writes the page xsl information to be used for screen display" disable="false" id="write_targetPage_initialResponse_rule" priority="30">
+		<hy:head>
+			<hy:result disable="false" id="write_data">
+				<hy:operator>Write</hy:operator>
+				<hy:target action="write" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="value" type="java.lang.String">initialResponse.xsl</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Page</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="check_data" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="" disable="true" id="contactInfo" priority="15">
+		<hy:head>
+			<hy:result disable="false" id="contactDetail">
+				<hy:operator>SQL</hy:operator>
+				<hy:target action="Query" name="mvc-cms_erlr_general-workflowdb-Database" update="append">
+					<hy:params>
+						<hy:param name="sql_statement" type="java.lang.String">SELECT name,email FROM BIZFLOW.MEMBER 
+WHERE (UPPER(name) LIKE CONCAT(UPPER($searchString), '%') OR
+   UPPER(email) LIKE CONCAT(UPPER($searchString), '%')
+    AND ROWNUM &lt; 11
+ORDER BY name ASC, email ASC</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+						<hy:param name="$searchString" type="string">/mvc:eForm/mvc:Control/mvc:contact</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="renameContactDetail">
+				<hy:operator>Rename</hy:operator>
+				<hy:target action="rename" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/statement</hy:param>
+						<hy:param name="new_name" type="java.lang.String">contactDetail</hy:param>
+						<hy:param name="new_namespace" type="java.lang.String" />
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="moveContactDetail">
+				<hy:operator>Move</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/contactInfo</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="check_contact" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:contact</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="" disable="true" id="empInfo" priority="15">
+		<hy:head>
+			<hy:result disable="false" id="empDetail">
+				<hy:operator>SQL</hy:operator>
+				<hy:target action="Query" name="mvc-cms_erlr_general-workflowdb-Database" update="append">
+					<hy:params>
+						<hy:param name="sql_statement" type="java.lang.String">SELECT name,email FROM BIZFLOW.MEMBER 
+WHERE (UPPER(name) LIKE CONCAT(UPPER($emp), '%') OR
+   UPPER(email) LIKE CONCAT(UPPER($emp), '%')
+    AND ROWNUM &lt; 11
+ORDER BY name ASC, email ASC</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+						<hy:param name="$emp" type="string">/mvc:eForm/mvc:Control/mvc:emp</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="renameEmpDetail">
+				<hy:operator>Rename</hy:operator>
+				<hy:target action="rename" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/statement</hy:param>
+						<hy:param name="new_name" type="java.lang.String">empDetail</hy:param>
+						<hy:param name="new_namespace" type="java.lang.String" />
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="moveEmpDetail">
+				<hy:operator>Move</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/empInfo</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="check_emp" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:emp</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="" disable="false" id="Get_Member_Data" priority="23">
+		<hy:head>
+			<hy:result disable="false" id="getDWCMembers">
+				<hy:operator>SQL</hy:operator>
+				<hy:target action="Query" name="mvc-cms_erlr_general-workflowdb-Database" update="append">
+					<hy:params>
+						<hy:param name="sql_statement" type="java.lang.String">SELECT MEMBERID, NAME, EMAIL FROM BIZFLOW.MEMBER m
+INNER JOIN BIZFLOW.USRGRPPRTCP u ON m.MEMBERID = u.PRTCP
+WHERE u.USRGRPID = (SELECT MEMBERID FROM MEMBER WHERE NAME = 'DWC')
+ORDER BY m.NAME</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="renameDWC">
+				<hy:operator>Rename</hy:operator>
+				<hy:target action="rename" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/statement</hy:param>
+						<hy:param name="new_name" type="java.lang.String">DWC</hy:param>
+						<hy:param name="new_namespace" type="java.lang.String" />
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="moveDWC">
+				<hy:operator>Move</hy:operator>
+				<hy:target action="add" name="factbase" update="correct_replace">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/DWC</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body />
+	</hy:rule>
+	<hy:rule base="custom" desc="" disable="false" id="Get_Lookup_Data" priority="23">
+		<hy:head>
+			<hy:result disable="false" id="getLookup">
+				<hy:operator>SQL</hy:operator>
+				<hy:target action="Query" name="mvc-cms_erlr_general-workflowdb-Database" update="append">
+					<hy:params>
+						<hy:param name="sql_statement" type="java.lang.String">SELECT TBL_ID ID, TBL_NAME NAME, TBL_PARENT_ID PARENTID, TBL_LTYPE LTYPE, TBL_LABEL LABEL, TBL_ACTIVE ACTIVE, TBL_DISP_ORDER DISPORDER
+FROM HHS_CMS_HR.TBL_LOOKUP WHERE TBL_ACTIVE = '1' ORDER BY TBL_ID,TBL_LTYPE</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="renameLookup">
+				<hy:operator>Rename</hy:operator>
+				<hy:target action="rename" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/statement</hy:param>
+						<hy:param name="new_name" type="java.lang.String">lookup</hy:param>
+						<hy:param name="new_namespace" type="java.lang.String" />
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="moveLookup">
+				<hy:operator>Move</hy:operator>
+				<hy:target action="add" name="factbase" update="correct_replace">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]/lookup</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/sql_result[last()]</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="Cache lookup">
+				<hy:operator>Cache</hy:operator>
+				<hy:target action="cache" name="cache" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/lookup</hy:param>
+						<hy:param name="cache_id" type="java.lang.String">cdc_lookupCache</hy:param>
+						<hy:param name="scope" type="java.lang.String">application</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="check_lookup" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Data/lookup)</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+</hy:rulebase>

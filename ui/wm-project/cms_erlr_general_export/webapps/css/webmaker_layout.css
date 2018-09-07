@@ -1,0 +1,528 @@
+/**
+ * Ideally use the new flex box layout approach, but fall back to
+ * table based styling for older browsers.
+ */
+.layoutContainer
+{
+    display: table-cell;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+
+    /* Overflow auto to force a scroll bar if a fixed size has been set, and the content is too big. */
+    overflow : auto;
+}
+
+/** Overflow auto is not supported by table cells, so cant use that option for our fallback display. */
+.noFlexBox .layoutContainer,
+.layoutContainer.forceNoFlex
+{
+    display: table-cell;
+    overflow : visible;
+    white-space : nowrap;
+}
+.noFlexBox .layoutContainer.wrapContent,
+.layoutContainer.forceNoFlex.wrapContent
+{
+    white-space : normal;
+}
+
+/** For the cases where the main group styling (sizing etc) gets placed on the element containing
+ * the layoutContainer div, then we need to make sure the layoutContainer is the same size as the parent.
+ * We don't need to worry about width, as divs stretch by default.
+ * This situation occurs when a fieldset is being used, or the layout group is placed within a grid for example. */
+.layoutContainerWrapper > .layoutContainer
+{
+    height : 100%;
+}
+/** If the group was set to fit height to content though we dont want to do this, as the content should be setting the height
+ * (In this case, if the layoutContainerWrapper is a td, then it will actually get height 1px [set later in this file] and so
+ * the height 100% setting would actually make the contents invisible[actually 1px high] ) */
+.layoutContainerWrapper.fitHeight > .layoutContainer
+{
+    height : auto;
+}
+
+.layoutContainer.wrapContent
+{
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.layoutContainerSep,
+.adjacentGroupSep
+{
+    display : none;
+}
+
+/* When not using flex box display, we only want to remove the layoutContainerSep elements when horizontal distribution
+ * For vertical distribution we need these to force each child component onto a new line. */
+.noFlexBox .layoutContainer.alignVertical > .layoutContainerSep,
+.layoutContainer.forceNoFlex.alignVertical > .layoutContainerSep,
+.noFlexBox .adjacentGroupSep
+{
+    display : block;
+}
+
+/** Stop flex items from being able to grow or shrink by default.
+ *  If the expand to fill space options have been selected, then the flex-grow
+ *  setting will be applied if needed below. */
+.layoutContainerContent
+{
+    -webkit-box-flex: 0;
+    -moz-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+}
+
+.noFlexBox .layoutContainerContent,
+.layoutContainer.forceNoFlex > .layoutContainerContent
+{
+    display : inline-block;
+}
+
+.alignVertical
+{
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+.alignHorizontal
+{
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.alignVertical.alignTop,
+.alignHorizontal.alignLeft
+{
+    -webkit-box-pack: start;
+    -moz-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+}
+.alignVertical.alignMiddle,
+.alignHorizontal.alignCenter
+{
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.alignVertical.alignBottom,
+.alignHorizontal.alignRight
+{
+    -webkit-box-pack: end;
+    -moz-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+.alignVertical.alignLeft,
+.alignHorizontal.alignTop
+{
+    -webkit-box-align: start;
+    -moz-box-align: start;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+}
+.alignVertical.alignCenter,
+.alignHorizontal.alignMiddle
+{
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    -webkit-align-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+}
+.alignVertical.alignRight,
+.alignHorizontal.alignBottom
+{
+    -webkit-box-align: end;
+    -moz-box-align: end;
+    -webkit-align-items: flex-end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+
+    -webkit-align-content: flex-end;
+    -ms-flex-line-pack: end;
+    align-content: flex-end;
+}
+
+
+/** New styling for the controlContainer structures to give us table alignment
+ * for each control and label grouping.  This is needed to get the alignment etc
+ * options to work correctly.  This is the equivalent of the old formElement
+ * structure we have for the old style groups. */
+.controlContainer
+{
+    display : table;
+}
+.controlRow
+{
+    display : table-row;
+}
+.controlContainer > .controlRow > span,
+.controlContainer > .controlRow > div
+{
+    display : table-cell;
+}
+
+/** For the old style and non layout container groups the formElement structure remains
+ * and we need to ensure inline-block display for the contents. (label and control containers) */
+.formElement > span
+{
+    display : inline-block;
+}
+
+/** Special handling for group labels for top level groups
+ * These will be in a div, but in order for our alignment stuff to work, need to have table-cell
+ * display instead of normal block approach.
+ * For all other scenarios, eg within layout groups/grids the group label container should already
+ * be in a table cell element.
+ * This special handling is also applied when the group label is set to be within the group container, and
+ * so is within a layoutContainerContent HTML element*/
+/*.main_body .form > * > div[id$='_label_container'],
+.layoutContainerContent > div[id$='_label_container'] */
+
+.main_body .form > * > div[id$='_label_container'].alignTop,
+.main_body .form > * > div[id$='_label_container'].alignMiddle,
+.main_body .form > * > div[id$='_label_container'].alignBottom,
+.layoutContainerContent > div[id$='_label_container'].alignTop,
+.layoutContainerContent > div[id$='_label_container'].alignMiddle,
+.layoutContainerContent > div[id$='_label_container'].alignBottom
+{
+    display : table-cell;
+}
+
+
+
+/* Horizontal alignment settings (used for control and label containers, and groups containers in non flex box mode) */
+.alignLeft
+{
+    text-align : left !important;
+}
+.alignRight
+{
+    text-align : right !important;
+}
+.alignCenter
+{
+    text-align : center !important;
+}
+
+/* Switch round the alignment directions if using an RTL language so that the layout is still correct. */
+.direction_rtl .alignLeft
+{
+    text-align : right !important;
+}
+.direction_rtl .alignRight
+{
+    text-align : left !important;
+}
+
+/* Vertical alignment settings (used for control and label containers, and groups containers in non flex box mode) */
+.alignTop
+{
+    vertical-align : top !important;
+}
+.alignMiddle
+{
+    vertical-align : middle !important;
+}
+.alignBottom
+{
+    vertical-align : bottom !important;
+}
+
+/** When horizontally distributed in non flex box mode, we need to apply the same vertical alignment settings
+ * to the content blockss as we do to the containing cell.
+ * Otherwise, for example if align top, all the contents will be moved to the top, but the bottom
+ * edge of each will be aligned so that shorter components wont actually appear completely top aligned.
+ */
+.noFlexBox .layoutContainer.alignHorizontal.alignTop > .layoutContainerContent,
+.layoutContainer.forceNoFlex.alignHorizontal.alignTop > .layoutContainerContent
+{
+    vertical-align : top;
+}
+.noFlexBox .layoutContainer.alignHorizontal.alignMiddle > .layoutContainerContent,
+.layoutContainer.forceNoFlex.alignHorizontal.alignMiddle > .layoutContainerContent
+{
+    vertical-align : middle;
+}
+.noFlexBox .layoutContainer.alignHorizontal.alignBottom > .layoutContainerContent,
+.layoutContainer.forceNoFlex.alignHorizontal.alignBottom > .layoutContainerContent
+{
+    vertical-align : bottom;
+}
+
+
+
+/** Styles for the expand to fill space, and fit to content width and height settings. */
+
+
+.layoutContainer.alignHorizontal > .layoutContainerContent.expandHeight,
+.layoutContainer.alignVertical > .layoutContainerContent.expandWidth
+{
+    -moz-flex-item-align: stretch;
+    -webkit-flex-item-align: stretch;
+    -webkit-align-self: stretch;
+    -ms-flex-item-align: stretch;
+    align-self : stretch;
+}
+
+.layoutContainer.alignHorizontal > .layoutContainerContent.expandWidth,
+.layoutContainer.alignVertical > .layoutContainerContent.expandHeight
+{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex-grow: 1;
+    flex-grow : 1;
+}
+
+
+
+.noFlexBox .alignHorizontal > .layoutContainerContent.expandHeight,
+.forceNoFlex.alignHorizontal > .layoutContainerContent.expandHeight
+{
+    height : 100%;
+}
+
+.layoutContainerContent.expandHeight > .expandHeight,
+.controlContainer.expandHeight,
+.controlContainer > .controlRow > * > .expandHeight
+{
+    height : 100%;
+}
+
+.controlContainer > .controlRow > .expandHeight,
+td.expandHeight,
+th.expandHeight
+{
+    height : auto !important;
+}
+
+table.expandWidth,
+.controlContainer.expandWidth
+{
+    width : 100%;
+    width : -webkit-fill-available;
+    width : -moz-available;
+    width : fill-available;
+    width : fill;
+}
+
+.controlContainer > .controlRow > .expandWidth,
+td.expandWidth,
+th.expandWidth
+{
+    width : auto !important;
+}
+
+.fitWidth
+{
+    width : auto !important;
+    width : -moz-fit-content !important;
+    width : -webkit-fit-content !important;
+    width : fit-content !important;
+}
+.fitHeight
+{
+    height : auto !important;
+}
+
+
+/* In table structures, the width setting is actually taken as min-width,
+ * so we set it to a very small value, which the browser should then grow
+ * as needed to fit the width of the content. */
+.controlContainer > .controlRow > .fitWidth,
+td.fitWidth,
+th.fitWidth
+{
+    width : 1px !important;
+    white-space : nowrap;
+}
+/* As above but for height */
+.controlContainer > .controlRow > .fitHeight,
+td.fitHeight,
+th.fitHeight
+{
+    height : 1px !important;
+}
+
+
+
+
+/* The following styles are used on output fields and labels to control the overflow of text */
+.truncateText
+{
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    width: inherit;
+    height: inherit;
+}
+.clipText
+{
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+    width: inherit;
+    height: inherit;
+}
+.wrapText
+{
+    white-space:pre-wrap !important;
+    overflow:visible !important;
+    width: inherit;
+    height: auto !important;
+}
+
+
+/*
+ * -------------------------------------------------------------------------------------------------
+ * General additional styles used for display or supression of groups/controls on different devices.
+ * -------------------------------------------------------------------------------------------------
+ */
+ /* All Devices */
+/* This will hide an element and remove the space it takes up on the page */
+.hide, .hidden
+{
+    visibility: hidden !important;
+    display: none  !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    border: none !important;
+}
+/* show will make the element visible for All Devices */
+.show
+{
+    visibility: visible !important;
+}
+/* This will hide an element, but preserve the space it takes up on the page */
+.invisible
+{
+    visibility: hidden !important;
+}
+
+/* Print Only classes */
+@media only print
+{
+    /* hideOnPrint removes/collapses the space that is taken by an element that should not be shown for PRINT mode */
+    .hideOnPrint
+    {
+        visibility: hidden !important;
+        display: none !important;
+    }
+    /* showOnPrint will make the element visible for PRINT mode */
+    .showOnPrint
+    {
+        visibility: visible !important;
+    }
+    /* invisibleOnPrint retains the space that is taken by an element that should not be shown for PRINT mode */
+    .invisibleOnPrint
+    {
+        visibility: hidden !important;
+    }
+
+    /* pageBreakOnPrint ensures that the next content is moved onto the next page */
+    .pageBreakOnPrint
+    {
+        page-break-after: always;
+        visibility: none !important;
+    }
+}
+
+/* TABLET Only - Specific styling for Tablet size displays such as iPad, Andriod Tablets and others.
+ * The tablet styles below are designed for both Landscape and Portrait mode.
+ * Larger than 1024 width is assumed to be desktop size.
+ * Some useful notes on other @media uses - For iPad Retina: @media only screen and (-webkit-min-device-pixel-ratio: 2)
+ */
+@media only screen and (max-width: 768px) and (orientation: portrait), only screen and (max-width: 800px), only handheld and (max-width: 800px)
+{
+    .hideOnPortraitTablet
+    {
+        visibility: hidden !important;
+        display: none  !important;
+        margin: 0px !important;
+        padding: 0px !important;
+        border: none !important;
+    }
+    .invisibleOnPortraitTablet
+    {
+        visibility: hidden !important;
+    }
+    .showOnPortraitTablet
+    {
+        visibility: visible !important;
+        display: block !important;
+    }
+}
+@media only screen and (max-width: 1024px) and (orientation: landscape), only screen and (max-width: 1024px), only handheld and (max-width: 1024px)
+{
+    .hideOnLandscapeTablet
+    {
+        visibility: hidden !important;
+        display: none  !important;
+        margin: 0px !important;
+        padding: 0px !important;
+        border: none !important;
+    }
+    .invisibleOnLandscapeTablet
+    {
+        visibility: hidden !important;
+    }
+    .showOnLandscapeTablet
+    {
+        visibility: visible !important;
+        display: block !important;
+    }
+}
+
+/* PHONE Only - Specific styling for Smart Phones such as iPhone, Android and Windows Phone */
+@media only screen and (max-width: 500px), only handheld and (max-width: 500px)
+{
+    .hideOnPhone
+    {
+        visibility: hidden !important;
+        display: none  !important;
+        margin: 0px !important;
+        padding: 0px !important;
+        border: none !important;
+    }
+    .invisibleOnPhone
+    {
+        visibility: hidden !important;
+    }
+    .showOnPhone
+    {
+        visibility: visible !important;
+        display: block !important;
+    }
+}

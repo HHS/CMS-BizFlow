@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern base="hsg/mvc/WIC/L2_pattern_instance_pool/Controller_1.xml" desc="The Controller pattern orchestrates the server-side interaction between the application screens and the services used by the application" image="" name="GetWICDetails.xml" pattern_id="GetWICDetails" version="" xmlns="http://www.hyfinity.com/xfactory" xmlns:xg="http://www.hyfinity.com/xgate">
+	<nodes>
+		<node desc="The Controller node processes incoming requests and data from the View layer, makes service calls to services or nodes in the Model layer, and performs various conditional operations on the data ." name="Controller" node_id="Controller" protocol="" runtime_instance="" runtime_location="" type="" xpos="173" ypos="116">
+			<actions>
+				<action alias="Invoke" content_type="xml" desc="Invoke Service" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+			</actions>
+			<engine desc="Engine" name="Engine" runtime_instance="com.hyfinity.xengine.XEngine" type="xengine">
+				<logicsheet desc="Controller rules" logicsheet_ref="cms_erlr_general_Logicsheet_pool" name="Controller_1_Controller_rules" />
+				<other_resources>
+					<m:other_resource name="RepurposePVsForWebMaker" resource_ref="cms_erlr_general_XSL_pool" type="xsl" xmlns:m="http://www.hyfinity.com/xfactory" />
+					<m:other_resource name="CreateBizFlowDetails" resource_ref="cms_erlr_general_XSL_pool" type="xsl" xmlns:m="http://www.hyfinity.com/xfactory" />
+					<m:other_resource name="GetWICReq" resource_ref="cms_erlr_general_XSL_pool" type="xsl" xmlns:m="http://www.hyfinity.com/xfactory" />
+					<m:other_resource name="ExpandPVsForStructures" resource_ref="cms_erlr_general_XSL_pool" type="xsl" xmlns:m="http://www.hyfinity.com/xfactory" />
+				</other_resources>
+			</engine>
+			<m:partner_nodes xmlns:m="http://www.hyfinity.com/xfactory" />
+		</node>
+	</nodes>
+</pattern>

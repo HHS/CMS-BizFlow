@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:publication_environments xmlns="http://www.hyfinity.com/xstore" xmlns:ns1="http://www.hyfinity.com/xfactory">
+	<ns1:environment default="false" name="Publish to CMS.BIZFLOW.COM">
+		<ns1:selected_type>
+			<ns1:name>BizFlow</ns1:name>
+			<ns1:params>
+				<ns1:param name="application.name" value="cms_erlr_general" />
+				<ns1:param name="fallback.server.url" value="http://cms.bizflow.com/bizflowwebmaker" />
+				<ns1:param name="force.fallback" value="true" />
+			</ns1:params>
+		</ns1:selected_type>
+		<ns1:included_projects>
+			<ns1:project name="cms_erlr_general" type="mvc" workspace="CMS" />
+		</ns1:included_projects>
+		<ns1:morphyc>
+			<xfact:xplatform mode="static" xmlns:xfact="http://www.hyfinity.com/xfactory">
+				<platform_cleanup enabled="false" run_interval="" xmlns="http://www.hyfinity.com/xfactory">
+					<engine_cleardown min_idle_time="" />
+				</platform_cleanup>
+				<pooling max="5" min="1" pooled="true" xmlns="http://www.hyfinity.com/xfactory" />
+				<development_logging check_log_overrides="false" log="false" output_to_screen="false" xmlns="http://www.hyfinity.com/xfactory">
+					<log_destination>log.txt</log_destination>
+					<archive_previous_log max_backup_index="1" max_file_size="10485760">false</archive_previous_log>
+					<log_agent_messages>false</log_agent_messages>
+					<log_rule_messages>false</log_rule_messages>
+					<log_rule_result_messages>false</log_rule_result_messages>
+					<log_rule_checking>false</log_rule_checking>
+				</development_logging>
+				<administration_logging log="false" output_to_screen="false" xmlns="http://www.hyfinity.com/xfactory">
+					<log_destination>admin_log.txt</log_destination>
+					<archive_previous_log max_backup_index="1" max_file_size="10485760">false</archive_previous_log>
+					<log_session_activity>false</log_session_activity>
+					<log_cache_activity>false</log_cache_activity>
+					<log_asset_activity>false</log_asset_activity>
+					<log_engine_activity>false</log_engine_activity>
+				</administration_logging>
+				<platform_logging check_log_overrides="false" log="true" output_to_screen="false" xmlns="http://www.hyfinity.com/xfactory">
+					<log_level>error</log_level>
+					<log_destination>log.txt</log_destination>
+					<archive_previous_log max_backup_index="1" max_file_size="10485760">false</archive_previous_log>
+				</platform_logging>
+				<xfact:agent_configuration>
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWActivityService_Proxy-HWActivity" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWActivity.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWApplicationsService_Proxy-HWApplications" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWApplications.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWProcessService_Proxy-HWProcess" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWProcess.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWProcessDefinitionService_Proxy-HWProcessDefinition" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWProcessDefinition.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWSessionService_Proxy-HWSession" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWSession.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWUserService_Proxy-HWUser" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWUser.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWWorkitemService_Proxy-HWWorkitem" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWWorkitem.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" http_hdr="false" instance="http://cms.bizflow.com/bizflow/webservice/HWWorkitemData.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-workflowdb-Database" driver="" instance="jdbc/workflowdb" isolation_level="TRANSACTION_READ_UNCOMMITTED" protocol="jndi" pwd="" type="rdbms" uid="" />
+				</xfact:agent_configuration>
+			</xfact:xplatform>
+		</ns1:morphyc>
+	</ns1:environment>
+	<environment default="true" name="Publish to localhost" xmlns="http://www.hyfinity.com/xfactory">
+		<selected_type>
+			<name>BizFlow</name>
+			<params>
+				<param name="application.name" value="cms_erlr_general" />
+				<param name="fallback.server.url" value="http://localhost:8080/bizflowwebmaker" />
+				<param name="force.fallback" value="true" />
+			</params>
+		</selected_type>
+		<included_projects>
+			<project name="cms_erlr_general" type="mvc" workspace="CMS" />
+		</included_projects>
+		<morphyc>
+			<xfact:xplatform mode="static" xmlns:xfact="http://www.hyfinity.com/xfactory">
+				<platform_cleanup enabled="false" run_interval="">
+					<engine_cleardown min_idle_time="" />
+				</platform_cleanup>
+				<pooling max="20" min="10" pooled="true" />
+				<development_logging check_log_overrides="false" log="true" output_to_screen="false">
+					<log_destination>log.txt</log_destination>
+					<archive_previous_log max_backup_index="1" max_file_size="10485760">false</archive_previous_log>
+					<log_agent_messages>true</log_agent_messages>
+					<log_rule_messages>true</log_rule_messages>
+					<log_rule_result_messages>true</log_rule_result_messages>
+					<log_rule_checking>true</log_rule_checking>
+				</development_logging>
+				<administration_logging log="false" output_to_screen="false">
+					<log_destination>admin_log.txt</log_destination>
+					<archive_previous_log max_backup_index="1" max_file_size="10485760">false</archive_previous_log>
+					<log_session_activity>false</log_session_activity>
+					<log_cache_activity>false</log_cache_activity>
+					<log_asset_activity>false</log_asset_activity>
+					<log_engine_activity>false</log_engine_activity>
+				</administration_logging>
+				<platform_logging check_log_overrides="false" log="true" output_to_screen="false">
+					<log_level>error</log_level>
+					<log_destination>log.txt</log_destination>
+					<archive_previous_log max_backup_index="1" max_file_size="10485760">false</archive_previous_log>
+				</platform_logging>
+				<xfact:agent_configuration>
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWActivityService_Proxy-HWActivity" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWApplicationsService_Proxy-HWApplications" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWApplications.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWProcessService_Proxy-HWProcess" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWProcess.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWProcessDefinitionService_Proxy-HWProcessDefinition" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWSessionService_Proxy-HWSession" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWSession.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWUserService_Proxy-HWUser" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWUser.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWWorkitemService_Proxy-HWWorkitem" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWWorkitem.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" http_hdr="false" instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" protocol="http" type="soap_service" />
+					<xfact:agent agent_id="mvc-cms_erlr_general-workflowdb-Database" driver="" instance="jdbc/workflowdb" isolation_level="TRANSACTION_READ_UNCOMMITTED" protocol="jndi" pwd="" type="rdbms" uid="" />
+				</xfact:agent_configuration>
+			</xfact:xplatform>
+		</morphyc>
+	</environment>
+</ns1:publication_environments>

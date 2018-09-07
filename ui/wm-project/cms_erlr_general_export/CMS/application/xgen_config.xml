@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xfact:config xmlns:fm="http://www.hyfinity.com/formmaker" xmlns:xfact="http://www.hyfinity.com/xfactory" xmlns:xstore="http://www.hyfinity.com/xstore">
+	<xfact:runtime_location>${user-test-location}/CMS</xfact:runtime_location>
+	<xfact:morphyc_location>${user-test-morphyc-location}/cms_erlr_general_morphyc.xml</xfact:morphyc_location>
+	<xfact:webserver_location>${user-test-webserver-location}/cms_erlr_general</xfact:webserver_location>
+	<xfact:webserver_url>${user-test-url}/cms_erlr_general</xfact:webserver_url>
+</xfact:config>

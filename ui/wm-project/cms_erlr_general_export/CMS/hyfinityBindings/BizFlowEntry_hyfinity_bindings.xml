@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xforms xmlns="http://www.hyfinity.com/formmaker" xmlns:impl="http://handysoft.com/webservice/HWWorkitem" xmlns:mvc="http://www.hyfinity.com/mvc" xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="http://service.je.wf.bf.hs.com" xmlns:tns="http://handysoft.com/webservice/ServiceConstructor" xmlns:xg="http://www.hyfinity.com/xgate">
+	<instance_configuration />
+	<group name="incomingBizFlowParams" />
+	<page />
+	<element name="wicAdmin">
+		<description />
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:wicAdmin</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:wicAdmin</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="sessioninfo">
+		<transform_xpath>/mvc:eForm/mvc:Control/mvc:session_string</transform_xpath>
+		<description />
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:sessioninfo</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:sessioninfo</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="procid">
+		<transform_xpath>enter_xpath_here</transform_xpath>
+		<description />
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:procid</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:procid</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="actseq">
+		<description />
+		<fm:transform_xpath xmlns:fm="http://www.hyfinity.com/formmaker">/mvc:eForm/mvc:Data/mvc:formData/mvc:actseq</fm:transform_xpath>
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:actseq</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:actseq</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="workseq">
+		<description />
+		<transform_xpath>enter_xpath_here</transform_xpath>
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:workseq</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:workseq</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="appseq">
+		<description />
+		<fm:transform_xpath xmlns:fm="http://www.hyfinity.com/formmaker">/mvc:eForm/mvc:Data/mvc:formData/mvc:appseq</fm:transform_xpath>
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:appseq</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:appseq</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="isarchive">
+		<description />
+		<fm:transform_xpath xmlns:fm="http://www.hyfinity.com/formmaker">/mvc:eForm/mvc:Data/mvc:formData/mvc:isarchive</fm:transform_xpath>
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:isarchive</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:isarchive</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="readOnly">
+		<transform_xpath>/mvc:eForm/mvc:Control/mvc:readOnly</transform_xpath>
+		<description />
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:readOnly</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:readOnly</fm:xform_xpath>
+		</fm:action>
+	</element>
+	<element name="showWebMakerApp">
+		<fm:transform_xpath xmlns:fm="http://www.hyfinity.com/formmaker">/mvc:eForm/mvc:Data/mvc:formData/mvc:showWebMakerApp</fm:transform_xpath>
+		<fm:action name="initial_response" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:showWebMakerApp</fm:xform_xpath>
+		</fm:action>
+		<fm:action name="case_completedX" xmlns:fm="http://www.hyfinity.com/formmaker">
+			<fm:xform_xpath>/mvc:eForm/mvc:Data/mvc:formData/mvc:showWebMakerApp</fm:xform_xpath>
+		</fm:action>
+	</element>
+</xforms>

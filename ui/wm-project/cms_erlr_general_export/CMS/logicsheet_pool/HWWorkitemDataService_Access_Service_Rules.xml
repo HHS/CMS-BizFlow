@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hy:rulebase cache="false" context="/" disable="true" forward_chain="false" return="$return" xmlns="http://www.hyfinity.com/xengine" xmlns:bind-act="http://handysoft.com/webservice/HWActivity" xmlns:bind-apps="http://handysoft.com/webservice/HWApplications" xmlns:bind-pd="http://handysoft.com/webservice/HWProcessDefinition" xmlns:bind-proc="http://handysoft.com/webservice/HWProcess" xmlns:bind-ses="http://handysoft.com/webservice/HWSession" xmlns:bind-usr="http://handysoft.com/webservice/HWUser" xmlns:bind-wi="http://handysoft.com/webservice/HWWorkitem" xmlns:bind-wid="http://handysoft.com/webservice/HWWorkitemData" xmlns:changePassword="http://service.je.wf.bf.hs.com" xmlns:changeState="http://service.je.wf.bf.hs.com" xmlns:checkInApplication="http://service.je.wf.bf.hs.com" xmlns:checkInFolder="http://service.je.wf.bf.hs.com" xmlns:checkInGroups="http://service.je.wf.bf.hs.com" xmlns:checkInObject="http://service.je.wf.bf.hs.com" xmlns:checkInOrg="http://service.je.wf.bf.hs.com" xmlns:checkInProcess="http://service.je.wf.bf.hs.com" xmlns:checkInWorkitem="http://service.je.wf.bf.hs.com" xmlns:checkOutFolder="http://service.je.wf.bf.hs.com" xmlns:checkOutGroups="http://service.je.wf.bf.hs.com" xmlns:checkOutObject="http://service.je.wf.bf.hs.com" xmlns:checkOutOrg="http://service.je.wf.bf.hs.com" xmlns:checkOutProcess="http://service.je.wf.bf.hs.com" xmlns:checkOutWorkitem="http://service.je.wf.bf.hs.com" xmlns:checkPassword="http://service.je.wf.bf.hs.com" xmlns:checkUserPassword="http://service.je.wf.bf.hs.com" xmlns:complete="http://service.je.wf.bf.hs.com" xmlns:copy="http://service.je.wf.bf.hs.com" xmlns:createInstance="http://service.je.wf.bf.hs.com" xmlns:downloadDMDocument="http://service.je.wf.bf.hs.com" xmlns:downloadMetaDataFile="http://service.je.wf.bf.hs.com" xmlns:encryptString="http://service.je.wf.bf.hs.com" xmlns:getActivities="http://service.je.wf.bf.hs.com" xmlns:getActivity="http://service.je.wf.bf.hs.com" xmlns:getApplicationFile="http://service.je.wf.bf.hs.com" xmlns:getApplicationFiles="http://service.je.wf.bf.hs.com" xmlns:getApplications="http://service.je.wf.bf.hs.com" xmlns:getAttachmentFile="http://service.je.wf.bf.hs.com" xmlns:getAttachmentFiles="http://service.je.wf.bf.hs.com" xmlns:getAttachments="http://service.je.wf.bf.hs.com" xmlns:getAuthorityGroupPaticipants="http://service.je.wf.bf.hs.com" xmlns:getAuthorityGroups="http://service.je.wf.bf.hs.com" xmlns:getCalendars="http://service.je.wf.bf.hs.com" xmlns:getComments="http://service.je.wf.bf.hs.com" xmlns:getCompleted="http://service.je.wf.bf.hs.com" xmlns:getConnected="http://service.je.wf.bf.hs.com" xmlns:getCurrentServerTime="http://service.je.wf.bf.hs.com" xmlns:getCurrentUser="http://service.je.wf.bf.hs.com" xmlns:getCustomAttributeDefinitions="http://service.je.wf.bf.hs.com" xmlns:getCustomAttributes="http://service.je.wf.bf.hs.com" xmlns:getDMSSOInfos="http://service.je.wf.bf.hs.com" xmlns:getDelegator="http://service.je.wf.bf.hs.com" xmlns:getDependencyList="http://service.je.wf.bf.hs.com" xmlns:getExpiredUserInfo="http://service.je.wf.bf.hs.com" xmlns:getExtServers="http://service.je.wf.bf.hs.com" xmlns:getFolderAuthority="http://service.je.wf.bf.hs.com" xmlns:getFolders="http://service.je.wf.bf.hs.com" xmlns:getFunctionAuthority="http://service.je.wf.bf.hs.com" xmlns:getGlobalVariableHistorys="http://service.je.wf.bf.hs.com" xmlns:getJobTitles="http://service.je.wf.bf.hs.com" xmlns:getLicenseType="http://service.je.wf.bf.hs.com" xmlns:getOrgUnit="http://service.je.wf.bf.hs.com" xmlns:getOrgUnits="http://service.je.wf.bf.hs.com" xmlns:getOrgUnitsByName="http://service.je.wf.bf.hs.com" xmlns:getParentActivity="http://service.je.wf.bf.hs.com" xmlns:getParentProcess="http://service.je.wf.bf.hs.com" xmlns:getParticipants="http://service.je.wf.bf.hs.com" xmlns:getProcess="http://service.je.wf.bf.hs.com" xmlns:getProcessApplications="http://service.je.wf.bf.hs.com" xmlns:getProcessArchiveCount="http://service.je.wf.bf.hs.com" xmlns:getProcessArchives="http://service.je.wf.bf.hs.com" xmlns:getProcessCount="http://service.je.wf.bf.hs.com" xmlns:getProcessDefinition="http://service.je.wf.bf.hs.com" xmlns:getProcessDefinitionById="http://service.je.wf.bf.hs.com" xmlns:getProcessDefinitionCount="http://service.je.wf.bf.hs.com" xmlns:getProcessDefinitions="http://service.je.wf.bf.hs.com" xmlns:getProcessDefinitionsByName="http://service.je.wf.bf.hs.com" xmlns:getProcessInstanceCount="http://service.je.wf.bf.hs.com" xmlns:getProcessInstances="http://service.je.wf.bf.hs.com" xmlns:getProcessVariables="http://service.je.wf.bf.hs.com" xmlns:getProcesses="http://service.je.wf.bf.hs.com" xmlns:getResponses="http://service.je.wf.bf.hs.com" xmlns:getServerID="http://service.je.wf.bf.hs.com" xmlns:getServerIP="http://service.je.wf.bf.hs.com" xmlns:getServerPort="http://service.je.wf.bf.hs.com" xmlns:getSessionInfoXML="http://service.je.wf.bf.hs.com" xmlns:getSigns="http://service.je.wf.bf.hs.com" xmlns:getSoapURL="http://service.je.wf.bf.hs.com" xmlns:getSurrogaters="http://service.je.wf.bf.hs.com" xmlns:getSystemFile="http://service.je.wf.bf.hs.com" xmlns:getTerminology="http://service.je.wf.bf.hs.com" xmlns:getUser="http://service.je.wf.bf.hs.com" xmlns:getUserByID="http://service.je.wf.bf.hs.com" xmlns:getUserByLoginID="http://service.je.wf.bf.hs.com" xmlns:getUserGroupHierarchies="http://service.je.wf.bf.hs.com" xmlns:getUserGroups="http://service.je.wf.bf.hs.com" xmlns:getUserID="http://service.je.wf.bf.hs.com" xmlns:getUsers="http://service.je.wf.bf.hs.com" xmlns:getUsersByName="http://service.je.wf.bf.hs.com" xmlns:getUsersByOrgUnitID="http://service.je.wf.bf.hs.com" xmlns:getVariables="http://service.je.wf.bf.hs.com" xmlns:getWorkitem="http://service.je.wf.bf.hs.com" xmlns:getWorkitemContext="http://service.je.wf.bf.hs.com" xmlns:getWorkitemCount="http://service.je.wf.bf.hs.com" xmlns:getWorkitemData="http://service.je.wf.bf.hs.com" xmlns:getWorkitems="http://service.je.wf.bf.hs.com" xmlns:hy="http://www.hyfinity.com/xengine" xmlns:impl="http://handysoft.com/webservice/BizFlowService" xmlns:isPublished="http://service.je.wf.bf.hs.com" xmlns:login="http://service.je.wf.bf.hs.com" xmlns:loginWeb="http://service.je.wf.bf.hs.com" xmlns:logout="http://service.je.wf.bf.hs.com" xmlns:modifyActivityInfo="http://service.je.wf.bf.hs.com" xmlns:modifyInfo="http://service.je.wf.bf.hs.com" xmlns:modifyProcess="http://service.je.wf.bf.hs.com" xmlns:modifyProcessInfo="http://service.je.wf.bf.hs.com" xmlns:modifyWorkitemInfo="http://service.je.wf.bf.hs.com" xmlns:move="http://service.je.wf.bf.hs.com" xmlns:moveObjects="http://service.je.wf.bf.hs.com" xmlns:purgeFolder="http://service.je.wf.bf.hs.com" xmlns:reassign="http://service.je.wf.bf.hs.com" xmlns:recallWorkitem="http://service.je.wf.bf.hs.com" xmlns:rejectWorkitem="http://service.je.wf.bf.hs.com" xmlns:resume="http://service.je.wf.bf.hs.com" xmlns:setParticipants="http://service.je.wf.bf.hs.com" xmlns:setPublicationState="http://service.je.wf.bf.hs.com" xmlns:setServerIP="http://service.je.wf.bf.hs.com" xmlns:setServerPort="http://service.je.wf.bf.hs.com" xmlns:setSessionInfoXML="http://service.je.wf.bf.hs.com" xmlns:setSoapURL="http://service.je.wf.bf.hs.com" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:start="http://service.je.wf.bf.hs.com" xmlns:startProcessInstance="http://service.je.wf.bf.hs.com" xmlns:suspend="http://service.je.wf.bf.hs.com" xmlns:synchronizeLDAP="http://service.je.wf.bf.hs.com" xmlns:tns="http://handysoft.com/webservice/ServiceConstructor" xmlns:update="http://service.je.wf.bf.hs.com" xmlns:updateComments="http://service.je.wf.bf.hs.com" xmlns:updateOrg="http://service.je.wf.bf.hs.com" xmlns:updateProcessVariables="http://service.je.wf.bf.hs.com" xmlns:updateSSO="http://service.je.wf.bf.hs.com" xmlns:updateUserGroup="http://service.je.wf.bf.hs.com" xmlns:updateUserGroupHierarchy="http://service.je.wf.bf.hs.com" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsd-comp="http://handysoft.com/webservice/BizFlowSchema" xmlns:xsd-elmt="http://element.je.wf.bf.hs.com" xmlns:xsd-jo="http://jo.wf.bf.hs.com" xmlns:xsd-svc-elmt="http://element.service.je.wf.bf.hs.com">
+	<soap:dummy xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+	<workspace name="return" />
+	<hy:rule desc="This rule allows the user to optionally add a soap wrapper to the message" disable="false" id="Apply_Soap_Wrapper" priority="10">
+		<hy:head>
+			<hy:result id="Add_Soap_Wrapper">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">Soap_Wrapper.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Wrapper" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope)</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getWorkitemData_getWorkitemDataRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getWorkitemData:getWorkitemData</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getWorkitemData_getWorkitemDataRequest1_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getWorkitemData:getWorkitemData</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest1_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest2_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest3_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest4_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest5_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest6_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_complete_completeRequest7_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/complete:complete</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getComments_getCommentsRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getComments:getComments</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getAttachments_getAttachmentsRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getAttachments:getAttachments</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getApplications_getApplicationsRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getApplications:getApplications</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getResponses_getResponsesRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getResponses:getResponses</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_recallWorkitem_recallWorkitemRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/recallWorkitem:recallWorkitem</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_rejectWorkitem_rejectWorkitemRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/rejectWorkitem:rejectWorkitem</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_rejectWorkitem_rejectWorkitemRequest1_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/rejectWorkitem:rejectWorkitem</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getActivity_getActivityRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getActivity:getActivity</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_modifyInfo_modifyInfoRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/modifyInfo:modifyInfo</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getAttachmentFiles_getAttachmentFilesRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getAttachmentFiles:getAttachmentFiles</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getAttachmentFile_getAttachmentFileRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getAttachmentFile:getAttachmentFile</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getApplicationFile_getApplicationFileRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getApplicationFile:getApplicationFile</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getApplicationFiles_getApplicationFilesRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getApplicationFiles:getApplicationFiles</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getWorkitem_getWorkitemRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getWorkitem:getWorkitem</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getParentActivity_getParentActivityRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getParentActivity:getParentActivity</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getParentProcess_getParentProcessRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getParentProcess:getParentProcess</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getCompleted_getCompletedRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getCompleted:getCompleted</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getProcessApplications_getProcessApplicationsRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getProcessApplications:getProcessApplications</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getSigns_getSignsRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getSigns:getSigns</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getVariables_getVariablesRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getVariables:getVariables</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_reassign_reassignRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/reassign:reassign</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="Calls the  service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="HWWorkitemDataService_getProcess_getProcessRequest_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="" name="mvc-cms_erlr_general-HWWorkitemDataService_Proxy-HWWorkitemData" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Message_Root_Element" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/getProcess:getProcess</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="This is the fault or failure case for a service response" disable="false" id="Handle_Fault_Response" priority="30">
+		<hy:head>
+			<hy:result id="Remove_Soap_Wrapper">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/*</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<clause id="Check_for_Fault" multiple="false">
+				<operator>Read</operator>
+				<target action="eval" name="factbase">
+					<params>
+						<param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/soap:Fault</param>
+					</params>
+				</target>
+			</clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="This is the success case for a service response, where the response only contains information in the SOAP Body.  This information is stripped out and returned" disable="false" id="Handle_Success_Response_no_Header" priority="30" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+		<hy:head>
+			<hy:result id="Remove_Soap_Wrapper">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/*</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_for_Success" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope/soap:Body/soap:Fault)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_no_header_content" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope/soap:Header/*)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+	<hy:rule desc="This is the success case for a service response, where the response contains information in both the SOAP Header and Body.  This just returns the full SOAP Envelope recieved" disable="false" id="Handle_Success_Response_with_Header" priority="30" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+		<hy:head>
+			<hy:result id="Return_Soap_Wrapper">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/soap:Envelope</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_for_Success" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope/soap:Body/soap:Fault)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_header_content" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Header/*</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+</hy:rulebase>

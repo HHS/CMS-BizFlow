@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index desc="user 1 collection index file" id="collection_index" name="user1 collection index" xmlns="http://www.hyfinity.com/xstore">
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/xsd_pool" id="CMS/mvc/cms_erlr_general/xsd_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/logicsheet_pool" id="CMS/mvc/cms_erlr_general/logicsheet_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/message_pool" id="CMS/mvc/cms_erlr_general/message_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/other_resources_pool" id="CMS/mvc/cms_erlr_general/other_resources_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/application" id="CMS/mvc/cms_erlr_general/application" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/formStructure" id="CMS/mvc/cms_erlr_general/formStructure" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/hyfinityBindings" id="CMS/mvc/cms_erlr_general/hyfinityBindings" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/xsl_pool" id="CMS/mvc/cms_erlr_general/xsl_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/genDefaults" id="CMS/mvc/cms_erlr_general/genDefaults" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/L1_pattern_pool" id="CMS/mvc/cms_erlr_general/L1_pattern_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/L1_pattern_instance_pool" id="CMS/mvc/cms_erlr_general/L1_pattern_instance_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/L2_pattern_pool" id="CMS/mvc/cms_erlr_general/L2_pattern_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/L2_pattern_instance_pool" id="CMS/mvc/cms_erlr_general/L2_pattern_instance_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/L3_pattern_pool" id="CMS/mvc/cms_erlr_general/L3_pattern_pool" timestamp="" />
+	<entry desc="" docname="CMS/mvc/cms_erlr_general/L3_pattern_instance_pool" id="CMS/mvc/cms_erlr_general/L3_pattern_instance_pool" timestamp="" />
+</index>

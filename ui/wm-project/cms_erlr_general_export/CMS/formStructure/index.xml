@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index desc="hsguser/mvc/BizFlow/formStructure_pool" name="hsguser/mvc/BizFlow/formStructure_pool" xmlns="http://www.hyfinity.com/xstore">
+	<entry desc="" docname="BizFlowEntry_structure.xml" id="BizFlowEntry_structure" timestamp="" />
+	<entry desc="" docname="initialResponse_structure.xml" id="initialResponse_structure" timestamp="" />
+	<entry desc="" docname="case_completed_structure.xml" id="case_completed_structure" timestamp="" />
+</index>

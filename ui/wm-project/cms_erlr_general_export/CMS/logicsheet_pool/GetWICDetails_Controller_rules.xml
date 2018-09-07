@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hy:rulebase cache="false" context="/" disable="true" forward_chain="false" return="/" xmlns="http://www.hyfinity.com/xstore" xmlns:bzf="http://www.handysoft.com/bizflow" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:demo="http://www.hyfinity.com/schemas" xmlns:fm="http://www.hyfinity.com/formmaker" xmlns:hy="http://www.hyfinity.com/xengine" xmlns:m0="http://www.handysoft.com/webservice/ServiceConstructor" xmlns:mvc="http://www.hyfinity.com/mvc" xmlns:ns10="http://element.je.wf.bf.hs.com" xmlns:ns11="http://xml.apache.org/axis/" xmlns:ns2="http://www.hyfinity.com/xgate" xmlns:ns3="http://www.hyfinity.com/xstore" xmlns:ns4="http://handysoft.com/webservice/ServiceConstructor" xmlns:ns5="http://service.je.wf.bf.hs.com" xmlns:ns6="http://handysoft.com/webservice/HWSession" xmlns:ns7="http://handysoft.com/webservice/HWProcessDefinition" xmlns:ns8="http://www.hyfinity.com/xplatform" xmlns:ns9="http://www.hyfinity.com/xfactory" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ts="http://www.hyfinity.com/teamserver" xmlns:vs="http://www.hyfinity.com/versioning" xmlns:xform="http://www.w3.org/2001/08/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<hy:workspace name="xstoreResponse" />
+	<hy:workspace name="bizflow_details" />
+	<hy:rule base="modified" desc="Call service to get WIC because nothing was found in the cache." disable="false" id="get_BizFlowService-Access_Service_from_GetWICDetails-Controller_rule" priority="12">
+		<hy:head>
+			<hy:result disable="false" id="CreateBizFlowDetails">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">CreateBizFlowDetails.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="ConvertSessionInfoToXML">
+				<hy:operator>XMLStringConverter</hy:operator>
+				<hy:target action="update" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/bizflow_details/SessionInfoXML</hy:param>
+						<hy:param name="mode" type="java.lang.String">string_to_xml</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="CacheBizFlowDetails">
+				<hy:operator>Cache</hy:operator>
+				<hy:target action="cache" name="cache" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/bizflow_details</hy:param>
+						<hy:param name="cache_id" type="java.lang.String">bizflow_details</hy:param>
+						<hy:param name="scope" type="java.lang.String">session</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="Remove old WIC Details Cache">
+				<hy:operator>ClearCache</hy:operator>
+				<hy:target action="cache" name="cache" update="">
+					<hy:params>
+						<hy:param name="cache_id" type="java.lang.String">workitem_context</hy:param>
+						<hy:param name="scope" type="java.lang.String">session</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="CreateRequestStructure">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">GetWICReq.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="ConvertSessionInfoToString">
+				<hy:operator>XMLStringConverter</hy:operator>
+				<hy:target action="update" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/soap:Envelope/soap:Header/ns4:serviceConstructor/sessionInfoXML/*</hy:param>
+						<hy:param name="mode" type="java.lang.String">xml_to_string</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="call_service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="Invoke" name="mvc-cms_erlr_general-HWWorkitemService-Access_Service" parallel="false" update="correct_replace">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/soap:Envelope</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/soap:Envelope</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="CreateXML">
+				<hy:operator>XMLStringConverter</hy:operator>
+				<hy:target action="update" name="factbase" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/ns5:getWorkitemContextResponse/getWorkitemContextReturn</hy:param>
+						<hy:param name="mode" type="java.lang.String">string_to_xml</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="UnwrapWIC">
+				<hy:operator>Move</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/ns5:getWorkitemContextResponse/getWorkitemContextReturn/WorkitemContext</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="RemoveBizFlowResponseWrapper">
+				<hy:operator>Delete</hy:operator>
+				<hy:target action="remove" name="factbase" update="">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/ns5:getWorkitemContextResponse</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="ExpandProcessVariables">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="correct_replace">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">ExpandPVsForStructures.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="CacheWICDetails">
+				<hy:operator>Cache</hy:operator>
+				<hy:target action="cache" name="cache" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext</hy:param>
+						<hy:param name="cache_id" type="java.lang.String">workitem_context</hy:param>
+						<hy:param name="scope" type="java.lang.String">session</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_for_SessionInfoXML" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:sessioninfo</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_ProcessId" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:procid</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_ActSeq" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:actseq</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_WitemSeq" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:workseq</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_AppSeq" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:appseq</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_archive" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:isarchive</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="" disable="false" id="ConvertPVsForWebMaker" priority="20">
+		<hy:head>
+			<hy:result disable="false" id="TransformProcessVariables">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="correct_replace">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">RepurposePVsForWebMaker.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext/Process/ProcessVariables</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext/Process/ProcessVariables</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="CheckForValidResponse" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="Assume WIC is cached." disable="false" id="retrieve_workitemContext_Info_from_Cache" priority="15">
+		<hy:head>
+			<hy:result disable="false" id="retrieve_info_from_cache">
+				<hy:operator>Retrieve</hy:operator>
+				<hy:target action="retireve" name="retireve" update="">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data</hy:param>
+						<hy:param name="cache_id" type="java.lang.String">workitem_context</hy:param>
+						<hy:param name="scope" type="java.lang.String">session</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="retrieve_bizflow_details_from_cache">
+				<hy:operator>Retrieve</hy:operator>
+				<hy:target action="retireve" name="retireve" update="append">
+					<hy:params>
+						<hy:param name="location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control</hy:param>
+						<hy:param name="cache_id" type="java.lang.String">bizflow_details</hy:param>
+						<hy:param name="scope" type="java.lang.String">session</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="Copy read only to the control block">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/bizflow_details/mvc:readOnly</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="Remove bizflow details">
+				<hy:operator>Delete</hy:operator>
+				<hy:target action="remove" name="factbase" update="">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/bizflow_details</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="check_if_info_received_from_client" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Data/WorkitemContext)</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="" disable="false" id="check_if_session_expired" priority="18">
+		<hy:head>
+			<hy:result disable="false" id="set error details for display to user">
+				<hy:operator>Parse</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control</hy:param>
+						<hy:param name="fragment" type="org.w3c.dom.Node">
+							<error category="Fatal" desc="Unfortunately your session has expired.  Please log in to BizFlow again and restart this workitem. Ref:1002" xmlns="">1002</error>
+						</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="set requested WIH to error">
+				<hy:operator>Write</hy:operator>
+				<hy:target action="write" name="factbase" update="">
+					<hy:params>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/mvc:formData/mvc:*[starts-with(local-name(), 'WIH_') and contains(local-name(), '_requested') and . = 'true']</hy:param>
+						<hy:param name="value" type="java.lang.String">error</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="reset controller to stop further processing">
+				<hy:operator>Write</hy:operator>
+				<hy:target action="write" name="factbase" update="">
+					<hy:params>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Controller</hy:param>
+						<hy:param name="value" type="java.lang.String" />
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="stop procesing">
+				<hy:operator>Return</hy:operator>
+				<hy:target action="return" name="factbase" update="">
+					<hy:params />
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="check if cached session contents lost" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Data/WorkitemContext)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="check that it is not the BizFlow Entryscreen" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Page[. != 'BizFlowEntry.xsl']</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+</hy:rulebase>

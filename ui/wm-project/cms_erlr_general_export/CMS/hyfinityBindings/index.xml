@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index desc="hsguser/mvc/BizFlow/hyfinityBindings_pool" name="hsguser/mvc/BizFlow/hyfinityBindings_pool" xmlns="http://www.hyfinity.com/xstore">
+	<entry desc="" docname="BizFlowEntry_hyfinity_bindings.xml" id="BizFlowEntry_hyfinity_bindings" timestamp="" />
+	<entry desc="" docname="initialResponse_hyfinity_bindings.xml" id="initialResponse_hyfinity_bindings" timestamp="" />
+	<entry desc="" docname="case_completed_hyfinity_bindings.xml" id="case_completed_hyfinity_bindings" timestamp="" />
+</index>

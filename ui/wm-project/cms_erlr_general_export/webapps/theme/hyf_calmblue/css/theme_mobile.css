@@ -1,0 +1,104 @@
+/* ===================================================================================================
+* WARNING - This file is part of the base implementation for WebMaker, so it should not be edited or changed for any project.
+* These files are replaced if a project is re-imported to the WebMaker Studio or migrated to a new version of the product.
+* For guidance on 'How do I override or clone Hyfinity webapp files such as CSS & javascript?', please read the following relevant FAQ entry:
+* http://www.hyfinity.net/faq/index/solution_id/1113
+==================================================================================================== */
+
+
+/* PHONE Only - Specific styling for Smart Phones such as iPhone, Android and Windows Phone */
+@media only screen and (max-width: 500px), only handheld and (max-width: 500px)
+{
+
+    /* This style gridColumnsBelowOnPhone allows the column of a two column grid to be floated underneath the first column.*/
+    TABLE.gridColumnsBelowOnPhone TBODY TR TD
+    {
+        clear:left !IMPORTANT;
+        float: left !IMPORTANT;
+        display: block !IMPORTANT;
+        width: 100% !IMPORTANT;
+    }
+
+    /* Google Maps should be set to 100% for devices with width less than 600px. */
+    .mapCanvas
+    {
+        width:100%;
+    }
+
+    /* Convert label left control layouts to labels above to better fit small screen width */
+    .controlContainer.labelLeft,
+    .controlContainer.labelLeft > .controlRow,
+    .controlContainer.labelLeft > .controlRow > *
+    {
+        display : block;
+    }
+    .controlContainer.labelLeft .labelControl .label
+    {
+        margin-bottom : 0px;
+    }
+
+
+    /* If a table has the wrapRowsOnPhone class applied to it,
+     * then we convert the table on phones so that eech cell is on a separate row. */
+    table.wrapRowsOnPhone > TBODY
+    {
+        display : block;
+    }
+    table.wrapRowsOnPhone > TBODY > TR
+    {
+        display : block;
+        clear : both;
+    }
+    table.wrapRowsOnPhone > TBODY > TR.table > TD
+    {
+        display : block;
+    }
+    table.wrapRowsOnPhone > TBODY > TR.table > TD.defaultBackground
+    {
+        border-style: none;
+        padding-left : 35%;
+        position: relative;
+    }
+    table.wrapRowsOnPhone > TBODY > TR.table > TD.defaultBackground:first-child
+    {
+        border-top-style: solid;
+    }
+    table.wrapRowsOnPhone > THEAD
+    {
+        display  : none;
+    }
+    table.wrapRowsOnPhone > TBODY > TR.table > TD.defaultBackground:before
+    {
+        content: attr(data-wm-title);
+        position: absolute;
+        left : 6px;
+        top : 16px;
+        width : 32%;
+        color: #555;
+        font-weight: bold;
+        font-size : 1.2em;
+    }
+
+    /** Special handling for the editable table buttons on a wrapped table. */
+    table.wrapRowsOnPhone > TBODY > TR.table > TD.editabletable_btn_background
+    {
+        float : left;
+        padding-left : 6px;
+        width : auto;
+        position : static;
+    }
+    table.wrapRowsOnPhone > TBODY > TR.table > TD.editabletable_btn_background:last-child
+    {
+        float : none;
+        text-align : left;
+    }
+    table.wrapRowsOnPhone .editabletable_btn_background:before, table.wrapRowsOnPhone .editabletable_insert_btn_background:before
+    {
+        display : none;
+    }
+    table.wrapRowsOnPhone > TBODY > TR > TD.editabletable_insert_btn_background
+    {
+        padding-left : 0;
+        border-top-style: none;
+    }
+}

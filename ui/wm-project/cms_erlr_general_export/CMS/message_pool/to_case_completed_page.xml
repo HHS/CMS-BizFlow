@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eForm xmlns="http://www.hyfinity.com/mvc" xmlns:mvc="http://www.hyfinity.com/mvc">
+	<Control>
+		<action />
+		<Page />
+		<Controller />
+	</Control>
+	<Data>
+		<formData>
+			<contact />
+			<emp_name />
+			<org_assign />
+			<case_desc />
+			<doc_log />
+			<case_status />
+			<length_of_suspension_proposed />
+			<suspension_days />
+			<desc_of_final_action />
+			<completed_dt />
+		</formData>
+	</Data>
+</eForm>

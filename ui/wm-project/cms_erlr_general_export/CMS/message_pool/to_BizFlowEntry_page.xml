@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eForm xmlns="http://www.hyfinity.com/mvc" xmlns:mvc="http://www.hyfinity.com/mvc">
+    <Control>
+        <action />
+        <Page />
+        <Controller />
+        <session_string />
+        <readOnly/>
+    </Control>
+    <Data>
+        <formData/>
+    </Data>
+</eForm>

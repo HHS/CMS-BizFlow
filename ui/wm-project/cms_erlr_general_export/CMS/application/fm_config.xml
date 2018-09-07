@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fm:formmaker xmlns="http://www.hyfinity.com/xstore" xmlns:fm="http://www.hyfinity.com/formmaker" xmlns:xfact="http://www.hyfinity.com/xfactory" xmlns:xg="http://www.hyfinity.com/xgate">
+	<fm:xstore type="formMap">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/application</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="schema">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/xsd_pool</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="output">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/xsl_pool</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="config">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/formStructure</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="hyfinityBindings">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/hyfinityBindings</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="instances">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/message_pool</fm:collection>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/other_resources_pool</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="formTemplates">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">generic/mvc/generic/formTemplates</fm:collection>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">generic/mvc/generic/paletteTemplates</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="formTemplateBindings">
+		<fm:name>blueprints</fm:name>
+	</fm:xstore>
+	<fm:xstore type="controllerPatterns">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/L2_pattern_instance_pool</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="viewPatterns">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/L1_pattern_instance_pool</fm:collection>
+	</fm:xstore>
+	<fm:xstore type="modelPatterns">
+		<fm:name>blueprints</fm:name>
+		<fm:collection xmlns:xstore="http://www.hyfinity.com/xstore">CMS/mvc/cms_erlr_general/L3_pattern_instance_pool</fm:collection>
+		<fm:layer>L3</fm:layer>
+	</fm:xstore>
+</fm:formmaker>

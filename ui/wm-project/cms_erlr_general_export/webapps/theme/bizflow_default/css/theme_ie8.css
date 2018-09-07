@@ -1,0 +1,35 @@
+
+/* show a line for vertical separator lines in IE8.
+ * This pus a line to the right of the words, instead of throught he middle. */
+.layoutContainer.alignHorizontal > .layoutContainerContent  > .separator
+{
+    padding-right : 0.2em;
+}
+.layoutContainer.alignHorizontal > .layoutContainerContent  > .separator:after
+{
+    top : -90%;
+    height : 180%;
+    right : 0;
+    left : auto;
+}
+
+
+/* use PIE to apply the rounded corners to controls
+ * This seems to cause issues with selecting entries in select controls so is not applied to them.
+ * Also seems to cause the year entry control in the calendar to not always be visible, so not applied to this either
+ * */
+.buttonControl .button, .enhancedButtonControl .button, .textboxControl .textbox, /*.selectControl .select,*/ .dateControl .textbox, .multiSelectControl .select, .textareaControl .textbox, .secretControl .textbox,
+.currencyControl .dijitTextBox, .filteringSelectControl .dijitTextBox, .numberControl .dijitTextBox, .spinnerControl .dijitTextBox,
+.pagingTableContainer .tablesorterPager .pagesize, .pagingTableContainer .tablesorterPager .pagedisplay,
+.editableTableContainer .editabletable_insert_btn /*, #calendarDiv .cpYearNavigation > input.cpYearNavigation*/
+{
+    behavior: url(js/PIE/PIE.htc);
+    position : relative;
+}
+
+
+.shadowBox
+{
+    behavior: url(js/PIE/PIE.htc);
+}
+

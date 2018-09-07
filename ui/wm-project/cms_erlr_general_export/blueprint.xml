@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint desc="Model View Controller" name="mvc" xmlns="http://www.hyfinity.com/xfactory" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:hy="http://www.hyfinity.com/xengine" xmlns:xg="http://www.hyfinity.com/xgate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!--
+    layer definitions
+    -->
+	<layer desc="XDE views Layer" layer_id="L1" layer_image="images/mvc/view.gif" name="views" node_image="images/mvc/view.gif" type="concrete" />
+	<layer desc="XDE controllers Layer" layer_id="L2" layer_image="images/mvc/controller.gif" name="controllers" node_image="images/mvc/controller.gif" type="concrete" />
+	<layer desc="XDE models Layer" layer_id="L3" layer_image="images/mvc/model.gif" name="models" node_image="images/mvc/model.gif" type="concrete" />
+	<resource_pools>
+		<resource_pool clone_from="generic/mvc/generic/XSL_pool" content="xsl_pool" display_type="normal" name="XSL pool" type="XSL" />
+		<resource_pool content="xsd_pool" display_type="normal" name="XSD pool" type="XSD" />
+		<resource_pool content="logicsheet_pool" display_type="normal" name="Logicsheet pool" type="Logicsheet" />
+		<resource_pool content="message_pool" display_type="normal" name="Message pool" type="Message" />
+		<resource_pool content="other_resources_pool" display_type="normal" name="Other Resources pool" type="Other Resources" />
+		<resource_pool content="application" display_type="hidden" name="FM application pool" type="fm_application" />
+		<resource_pool content="formStructure" display_type="hidden" name="FM form structure pool" type="fm_formStructure" />
+		<resource_pool content="hyfinityBindings" display_type="hidden" name="FM hyfinity bindings pool" type="fm_hyfinityBindings" />
+		<resource_pool clone_from="generic/mvc/generic/genDefaults" content="genDefaults" display_type="hidden" name="FM generation defaults pool" type="fm_defaults" />
+	</resource_pools>
+	<plugins>
+		<plugin type="FormMaker" />
+		<plugin type="WSDLImport" />
+	</plugins>
+	<!--
+    generic mvc project
+    -->
+	<instance desc="Generic MVC Project" id="generic" name="Generic MVC Patterns">
+		<pattern_instance_pool content="generic/mvc/generic/L1_pattern_instance_pool" desc="generic views runtime pattern category" name="views" pool_id="generic_L1_pattern_instance_pool" />
+		<pattern_instance_pool content="generic/mvc/generic/L2_pattern_instance_pool" desc="generic controllers runtime pattern category" name="controllers" pool_id="generic_L2_pattern_instance_pool" />
+		<pattern_instance_pool content="generic/mvc/generic/L3_pattern_instance_pool" desc="generic models runtime pattern category" name="models" pool_id="generic_L3_pattern_instance_pool" />
+		<pattern_pool content="generic/mvc/generic/L1_pattern_pool" desc="generic views pattern category" name="views" pool_id="generic_L1_pattern_pool" />
+		<pattern_pool content="generic/mvc/generic/L2_pattern_pool" desc="generic controllers pattern category" name="controllers" pool_id="generic_L2_pattern_pool" />
+		<pattern_pool content="generic/mvc/generic/L3_pattern_pool" desc="generic models pattern category" name="models" pool_id="generic_L3_pattern_pool" />
+		<resource_pool content="generic/mvc/generic/formTemplates" desc="This pool holds all form templates required by this application" name="formTemplates" pool_id="generic_form_templates_pool" type="fm_formTemplates" />
+		<resource_pool content="generic/mvc/generic/genDefaults" desc="This pool holds the generation defaults file needed by FM" name="genDefaults" pool_id="generic_gen_defaults_pool" type="fm_defaults" />
+		<resource_pool content="generic/mvc/generic/Logicsheet_pool" desc="generic Logicsheet category" name="Logicsheet category" pool_id="generic_Logicsheet_pool" type="Logicsheet" />
+		<resource_pool content="generic/mvc/generic/Message_pool" desc="generic Message category" name="Message category" pool_id="generic_Message_pool" type="Message" />
+		<resource_pool content="generic/mvc/generic/Other Resources_pool" desc="generic Other Resources category" name="Other Resources category" pool_id="generic_Other Resources_pool" type="Other Resources" />
+		<resource_pool content="generic/mvc/generic/XSD_pool" desc="generic XSD category" name="XSD category" pool_id="generic_XSD_pool" type="XSD" />
+		<resource_pool content="generic/mvc/generic/XSL_pool" desc="generic XSL category" name="XSL category" pool_id="generic_XSL_pool" type="XSL" />
+	</instance>
+	<instance id="cms_erlr_general" metadata_version="8" name="cms_erlr_general">
+		<resource_pool content="CMS/mvc/cms_erlr_general/xsd_pool" desc="cms_erlr_general XSD" name="XSD" pool_id="cms_erlr_general_XSD_pool" type="XSD" />
+		<resource_pool content="CMS/mvc/cms_erlr_general/logicsheet_pool" desc="cms_erlr_general Logicsheet" name="Logicsheet" pool_id="cms_erlr_general_Logicsheet_pool" type="Logicsheet" />
+		<resource_pool content="CMS/mvc/cms_erlr_general/message_pool" desc="cms_erlr_general Message" name="Message" pool_id="cms_erlr_general_Message_pool" type="Message" />
+		<resource_pool content="CMS/mvc/cms_erlr_general/other_resources_pool" desc="cms_erlr_general Other Resources" name="Other Resources" pool_id="cms_erlr_general_Other Resources_pool" type="Other Resources" />
+		<resource_pool content="CMS/mvc/cms_erlr_general/xsl_pool" desc="cms_erlr_general XSL" name="XSL" pool_id="cms_erlr_general_XSL_pool" type="XSL" />
+		<pattern_pool content="CMS/mvc/cms_erlr_general/L1_pattern_pool" desc="cms_erlr_general views pattern category" name="views" pool_id="cms_erlr_general_L1_pattern_pool" />
+		<pattern_pool content="CMS/mvc/cms_erlr_general/L2_pattern_pool" desc="cms_erlr_general controllers pattern category" name="controllers" pool_id="cms_erlr_general_L2_pattern_pool" />
+		<pattern_pool content="CMS/mvc/cms_erlr_general/L3_pattern_pool" desc="cms_erlr_general models pattern category" name="models" pool_id="cms_erlr_general_L3_pattern_pool" />
+		<pattern_instance_pool content="CMS/mvc/cms_erlr_general/L1_pattern_instance_pool" desc="cms_erlr_general views runtime pattern category" name="views" pool_id="cms_erlr_general_L1_pattern_instance_pool" />
+		<pattern_instance_pool content="CMS/mvc/cms_erlr_general/L2_pattern_instance_pool" desc="cms_erlr_general controllers runtime pattern category" name="controllers" pool_id="cms_erlr_general_L2_pattern_instance_pool" />
+		<pattern_instance_pool content="CMS/mvc/cms_erlr_general/L3_pattern_instance_pool" desc="cms_erlr_general models runtime pattern category" name="models" pool_id="cms_erlr_general_L3_pattern_instance_pool" />
+		<pattern_instance image="160" layer_ref="L1" pattern_instance_ref="view" pool_ref="cms_erlr_general_L1_pattern_instance_pool" runtime_filename="">
+			<pattern_splice desc="" name="view-Page_Painter-GetWICDetails-Controller-Invoke">
+				<source node_ref="Page_Painter" />
+				<sink action_ref="Invoke" node_ref="Controller" pattern_instance_ref="GetWICDetails" runtime_scope="local" />
+			</pattern_splice>
+			<pattern_splice desc="Please Enter a Description Here!" name="view-Page_Painter-SaveWICDetails-Controller-invoke">
+				<source node_ref="Page_Painter" />
+				<sink action_ref="Invoke" node_ref="Controller" pattern_instance_ref="SaveWICDetails" runtime_scope="local" />
+			</pattern_splice>
+			<pattern_splice desc="" name="view-Page_Painter-initialResponse-Controller-invoke">
+				<source node_ref="Page_Painter" />
+				<sink action_ref="invoke" node_ref="Controller" pattern_instance_ref="initialResponse" runtime_scope="local" />
+			</pattern_splice>
+			<pattern_splice desc="" name="view-Page_Painter-Case_Completed-Controller-invoke">
+				<source node_ref="Page_Painter" />
+				<sink action_ref="invoke" node_ref="Controller" pattern_instance_ref="case_completed" runtime_scope="local" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="170" layer_ref="L2" pattern_instance_ref="SaveWICDetails" pool_ref="cms_erlr_general_L2_pattern_instance_pool" runtime_filename="">
+			<pattern_splice desc="" name="SaveWICDetails-UpdateBizFlow-HWProcessService-Access_Service-Invoke">
+				<source node_ref="UpdateBizFlow" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWProcessService" runtime_scope="local" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="170" layer_ref="L2" pattern_instance_ref="GetWICDetails" pool_ref="cms_erlr_general_L2_pattern_instance_pool" runtime_filename="">
+			<pattern_splice desc="" name="GetWICDetails-Controller-HWWorkitemService-Access_Service-Invoke">
+				<source node_ref="Controller" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWWorkitemService" runtime_scope="local" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWActivityService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWActivityService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWActivityService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the complete operation on the remote service" name="complete_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="complete" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitems operation on the remote service" name="getWorkitems_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitems" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getComments operation on the remote service" name="getComments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getComments" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachments operation on the remote service" name="getAttachments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachments" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getParticipants operation on the remote service" name="getParticipants_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getParticipants" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the setParticipants operation on the remote service" name="setParticipants_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="setParticipants" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitemCount operation on the remote service" name="getWorkitemCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitemCount" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCustomAttributes operation on the remote service" name="getCustomAttributes_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCustomAttributes" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessVariables operation on the remote service" name="getProcessVariables_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessVariables" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getActivity operation on the remote service" name="getActivity_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getActivity" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyInfo operation on the remote service" name="modifyInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyInfo" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFiles operation on the remote service" name="getAttachmentFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFiles" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFile operation on the remote service" name="getAttachmentFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFile" node_ref="HWActivity" pattern_instance_ref="HWActivityService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWActivity.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWApplicationsService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWApplicationsService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWApplicationsService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplications operation on the remote service" name="getApplications_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplications" node_ref="HWApplications" pattern_instance_ref="HWApplicationsService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWApplications.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplicationFile operation on the remote service" name="getApplicationFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplicationFile" node_ref="HWApplications" pattern_instance_ref="HWApplicationsService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWApplications.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplicationFiles operation on the remote service" name="getApplicationFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplicationFiles" node_ref="HWApplications" pattern_instance_ref="HWApplicationsService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWApplications.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWProcessService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWProcessService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWProcessService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the start operation on the remote service" name="start_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="start" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the suspend operation on the remote service" name="suspend_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="suspend" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitems operation on the remote service" name="getWorkitems_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitems" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getActivities operation on the remote service" name="getActivities_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getActivities" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getComments operation on the remote service" name="getComments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getComments" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachments operation on the remote service" name="getAttachments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachments" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitemCount operation on the remote service" name="getWorkitemCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitemCount" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCustomAttributes operation on the remote service" name="getCustomAttributes_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCustomAttributes" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessVariables operation on the remote service" name="getProcessVariables_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessVariables" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyInfo operation on the remote service" name="modifyInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyInfo" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFiles operation on the remote service" name="getAttachmentFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFiles" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFile operation on the remote service" name="getAttachmentFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFile" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the move operation on the remote service" name="move_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="move" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the changeState operation on the remote service" name="changeState_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="changeState" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcess operation on the remote service" name="getProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcess" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the updateComments operation on the remote service" name="updateComments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="updateComments" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the updateProcessVariables operation on the remote service" name="updateProcessVariables_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="updateProcessVariables" node_ref="HWProcess" pattern_instance_ref="HWProcessService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWProcess.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWProcessDefinitionService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWProcessDefinitionService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWProcessDefinitionService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the resume operation on the remote service" name="resume_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="resume" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the suspend operation on the remote service" name="suspend_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="suspend" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the copy operation on the remote service" name="copy_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="copy" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getDependencyList operation on the remote service" name="getDependencyList_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getDependencyList" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessVariables operation on the remote service" name="getProcessVariables_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessVariables" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the createInstance operation on the remote service" name="createInstance_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="createInstance" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessDefinition operation on the remote service" name="getProcessDefinition_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessDefinition" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the setPublicationState operation on the remote service" name="setPublicationState_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="setPublicationState" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCustomAttributeDefinitions operation on the remote service" name="getCustomAttributeDefinitions_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCustomAttributeDefinitions" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessInstances operation on the remote service" name="getProcessInstances_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessInstances" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessInstanceCount operation on the remote service" name="getProcessInstanceCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessInstanceCount" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessArchives operation on the remote service" name="getProcessArchives_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessArchives" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessArchiveCount operation on the remote service" name="getProcessArchiveCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessArchiveCount" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the move operation on the remote service" name="move_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="move" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the isPublished operation on the remote service" name="isPublished_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="isPublished" node_ref="HWProcessDefinition" pattern_instance_ref="HWProcessDefinitionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWProcessDefinition.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWSessionService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWSessionService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWSessionService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUsers operation on the remote service" name="getUsers_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUsers" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the setServerPort operation on the remote service" name="setServerPort_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="setServerPort" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getServerPort operation on the remote service" name="getServerPort_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getServerPort" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcesses operation on the remote service" name="getProcesses_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcesses" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSurrogaters operation on the remote service" name="getSurrogaters_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSurrogaters" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getFolders operation on the remote service" name="getFolders_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getFolders" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessDefinitions operation on the remote service" name="getProcessDefinitions_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessDefinitions" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitems operation on the remote service" name="getWorkitems_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitems" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkOutWorkitem operation on the remote service" name="checkOutWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkOutWorkitem" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInWorkitem operation on the remote service" name="checkInWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInWorkitem" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkOutOrg operation on the remote service" name="checkOutOrg_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkOutOrg" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInOrg operation on the remote service" name="checkInOrg_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInOrg" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCurrentServerTime operation on the remote service" name="getCurrentServerTime_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCurrentServerTime" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getJobTitles operation on the remote service" name="getJobTitles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getJobTitles" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkUserPassword operation on the remote service" name="checkUserPassword_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkUserPassword" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCalendars operation on the remote service" name="getCalendars_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCalendars" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkOutProcess operation on the remote service" name="checkOutProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkOutProcess" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInProcess operation on the remote service" name="checkInProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInProcess" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyProcess operation on the remote service" name="modifyProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyProcess" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInApplication operation on the remote service" name="checkInApplication_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInApplication" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitemCount operation on the remote service" name="getWorkitemCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitemCount" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the updateOrg operation on the remote service" name="updateOrg_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="updateOrg" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the changePassword operation on the remote service" name="changePassword_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="changePassword" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the encryptString operation on the remote service" name="encryptString_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="encryptString" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the downloadDMDocument operation on the remote service" name="downloadDMDocument_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="downloadDMDocument" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkOutGroups operation on the remote service" name="checkOutGroups_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkOutGroups" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInGroups operation on the remote service" name="checkInGroups_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInGroups" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkOutFolder operation on the remote service" name="checkOutFolder_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkOutFolder" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInFolder operation on the remote service" name="checkInFolder_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInFolder" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyProcessInfo operation on the remote service" name="modifyProcessInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyProcessInfo" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the startProcessInstance operation on the remote service" name="startProcessInstance_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="startProcessInstance" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkOutObject operation on the remote service" name="checkOutObject_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkOutObject" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkInObject operation on the remote service" name="checkInObject_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkInObject" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the moveObjects operation on the remote service" name="moveObjects_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="moveObjects" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the synchronizeLDAP operation on the remote service" name="synchronizeLDAP_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="synchronizeLDAP" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the updateUserGroupHierarchy operation on the remote service" name="updateUserGroupHierarchy_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="updateUserGroupHierarchy" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the updateUserGroup operation on the remote service" name="updateUserGroup_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="updateUserGroup" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getTerminology operation on the remote service" name="getTerminology_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getTerminology" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the purgeFolder operation on the remote service" name="purgeFolder_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="purgeFolder" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyActivityInfo operation on the remote service" name="modifyActivityInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyActivityInfo" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyWorkitemInfo operation on the remote service" name="modifyWorkitemInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyWorkitemInfo" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getExtServers operation on the remote service" name="getExtServers_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getExtServers" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the downloadMetaDataFile operation on the remote service" name="downloadMetaDataFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="downloadMetaDataFile" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the login operation on the remote service" name="login_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="login" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUserGroupHierarchies operation on the remote service" name="getUserGroupHierarchies_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUserGroupHierarchies" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUserGroups operation on the remote service" name="getUserGroups_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUserGroups" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAuthorityGroups operation on the remote service" name="getAuthorityGroups_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAuthorityGroups" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getOrgUnits operation on the remote service" name="getOrgUnits_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getOrgUnits" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUserID operation on the remote service" name="getUserID_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUserID" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSessionInfoXML operation on the remote service" name="getSessionInfoXML_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSessionInfoXML" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the setSessionInfoXML operation on the remote service" name="setSessionInfoXML_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="setSessionInfoXML" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getConnected operation on the remote service" name="getConnected_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getConnected" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCurrentUser operation on the remote service" name="getCurrentUser_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCurrentUser" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getServerID operation on the remote service" name="getServerID_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getServerID" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getServerIP operation on the remote service" name="getServerIP_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getServerIP" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the setServerIP operation on the remote service" name="setServerIP_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="setServerIP" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSoapURL operation on the remote service" name="getSoapURL_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSoapURL" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the setSoapURL operation on the remote service" name="setSoapURL_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="setSoapURL" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the loginWeb operation on the remote service" name="loginWeb_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="loginWeb" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the logout operation on the remote service" name="logout_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="logout" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getOrgUnitsByName operation on the remote service" name="getOrgUnitsByName_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getOrgUnitsByName" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessDefinitionCount operation on the remote service" name="getProcessDefinitionCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessDefinitionCount" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessCount operation on the remote service" name="getProcessCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessCount" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessInstances operation on the remote service" name="getProcessInstances_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessInstances" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessInstanceCount operation on the remote service" name="getProcessInstanceCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessInstanceCount" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessArchives operation on the remote service" name="getProcessArchives_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessArchives" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessArchiveCount operation on the remote service" name="getProcessArchiveCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessArchiveCount" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUsersByName operation on the remote service" name="getUsersByName_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUsersByName" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUsersByOrgUnitID operation on the remote service" name="getUsersByOrgUnitID_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUsersByOrgUnitID" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUserByID operation on the remote service" name="getUserByID_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUserByID" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUserByLoginID operation on the remote service" name="getUserByLoginID_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUserByLoginID" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitem operation on the remote service" name="getWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitem" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getGlobalVariableHistorys operation on the remote service" name="getGlobalVariableHistorys_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getGlobalVariableHistorys" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getFolderAuthority operation on the remote service" name="getFolderAuthority_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getFolderAuthority" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getExpiredUserInfo operation on the remote service" name="getExpiredUserInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getExpiredUserInfo" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessDefinitionById operation on the remote service" name="getProcessDefinitionById_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessDefinitionById" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSystemFile operation on the remote service" name="getSystemFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSystemFile" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessDefinitionsByName operation on the remote service" name="getProcessDefinitionsByName_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessDefinitionsByName" node_ref="HWSession" pattern_instance_ref="HWSessionService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWSession.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWUserService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWUserService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWUserService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the update operation on the remote service" name="update_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="update" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitems operation on the remote service" name="getWorkitems_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitems" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitemCount operation on the remote service" name="getWorkitemCount_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitemCount" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the updateSSO operation on the remote service" name="updateSSO_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="updateSSO" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUserGroups operation on the remote service" name="getUserGroups_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUserGroups" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAuthorityGroups operation on the remote service" name="getAuthorityGroups_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAuthorityGroups" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getUser operation on the remote service" name="getUser_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getUser" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSigns operation on the remote service" name="getSigns_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSigns" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAuthorityGroupPaticipants operation on the remote service" name="getAuthorityGroupPaticipants_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAuthorityGroupPaticipants" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getDelegator operation on the remote service" name="getDelegator_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getDelegator" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getOrgUnit operation on the remote service" name="getOrgUnit_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getOrgUnit" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getLicenseType operation on the remote service" name="getLicenseType_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getLicenseType" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the checkPassword operation on the remote service" name="checkPassword_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="checkPassword" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getDMSSOInfos operation on the remote service" name="getDMSSOInfos_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getDMSSOInfos" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getFunctionAuthority operation on the remote service" name="getFunctionAuthority_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getFunctionAuthority" node_ref="HWUser" pattern_instance_ref="HWUserService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWUser.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWWorkitemService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWWorkitemService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWWorkitemService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the complete operation on the remote service" name="complete_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="complete" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getComments operation on the remote service" name="getComments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getComments" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachments operation on the remote service" name="getAttachments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachments" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplications operation on the remote service" name="getApplications_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplications" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getResponses operation on the remote service" name="getResponses_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getResponses" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the recallWorkitem operation on the remote service" name="recallWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="recallWorkitem" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the rejectWorkitem operation on the remote service" name="rejectWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="rejectWorkitem" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getActivity operation on the remote service" name="getActivity_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getActivity" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyInfo operation on the remote service" name="modifyInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyInfo" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFiles operation on the remote service" name="getAttachmentFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFiles" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFile operation on the remote service" name="getAttachmentFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFile" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplicationFile operation on the remote service" name="getApplicationFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplicationFile" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplicationFiles operation on the remote service" name="getApplicationFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplicationFiles" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitem operation on the remote service" name="getWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitem" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getParentActivity operation on the remote service" name="getParentActivity_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getParentActivity" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getParentProcess operation on the remote service" name="getParentProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getParentProcess" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCompleted operation on the remote service" name="getCompleted_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCompleted" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessApplications operation on the remote service" name="getProcessApplications_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessApplications" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSigns operation on the remote service" name="getSigns_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSigns" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getVariables operation on the remote service" name="getVariables_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getVariables" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the reassign operation on the remote service" name="reassign_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="reassign" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcess operation on the remote service" name="getProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcess" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitemContext operation on the remote service" name="getWorkitemContext_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitemContext" node_ref="HWWorkitem" pattern_instance_ref="HWWorkitemService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:7080/bizflow/webservice/HWWorkitem.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWWorkitemDataService" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice name="access_service_configuration">
+				<source node_ref="Access_Service" />
+				<sink action_ref="Invoke" node_ref="Access_Service" pattern_instance_ref="HWWorkitemDataService" runtime_driver="BizFlowService.wsdl" runtime_instance="HWWorkitemDataService" runtime_type="wsdl_access_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitemData operation on the remote service" name="getWorkitemData_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitemData" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the complete operation on the remote service" name="complete_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="complete" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getComments operation on the remote service" name="getComments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getComments" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachments operation on the remote service" name="getAttachments_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachments" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplications operation on the remote service" name="getApplications_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplications" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getResponses operation on the remote service" name="getResponses_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getResponses" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the recallWorkitem operation on the remote service" name="recallWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="recallWorkitem" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the rejectWorkitem operation on the remote service" name="rejectWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="rejectWorkitem" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getActivity operation on the remote service" name="getActivity_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getActivity" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the modifyInfo operation on the remote service" name="modifyInfo_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="modifyInfo" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFiles operation on the remote service" name="getAttachmentFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFiles" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getAttachmentFile operation on the remote service" name="getAttachmentFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getAttachmentFile" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplicationFile operation on the remote service" name="getApplicationFile_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplicationFile" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getApplicationFiles operation on the remote service" name="getApplicationFiles_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getApplicationFiles" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getWorkitem operation on the remote service" name="getWorkitem_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getWorkitem" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getParentActivity operation on the remote service" name="getParentActivity_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getParentActivity" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getParentProcess operation on the remote service" name="getParentProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getParentProcess" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getCompleted operation on the remote service" name="getCompleted_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getCompleted" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcessApplications operation on the remote service" name="getProcessApplications_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcessApplications" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getSigns operation on the remote service" name="getSigns_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getSigns" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getVariables operation on the remote service" name="getVariables_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getVariables" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the reassign operation on the remote service" name="reassign_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="reassign" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+			<pattern_splice desc="Calls the getProcess operation on the remote service" name="getProcess_Splice_1">
+				<source node_ref="Access_Service" />
+				<sink action_ref="getProcess" node_ref="HWWorkitemData" pattern_instance_ref="HWWorkitemDataService_Proxy" runtime_http_hdr="false" runtime_instance="http://localhost:8080/bizflow/webservice/HWWorkitemData.hws" runtime_protocol="http" runtime_type="soap_service" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWActivityService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWApplicationsService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWProcessService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWProcessDefinitionService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWSessionService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWUserService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWWorkitemService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="120" layer_ref="L3" pattern_instance_ref="HWWorkitemDataService_Proxy" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="" />
+		<pattern_instance image="260" layer_ref="L3" pattern_instance_ref="workflowdb" pool_ref="cms_erlr_general_L3_pattern_instance_pool" runtime_filename="">
+			<pattern_splice>
+				<source node_ref="Database" />
+				<sink action_ref="requestInboundService" node_ref="Database" pattern_instance_ref="workflowdb" runtime_driver="oracle.jdbc.OracleDriver" runtime_instance="jdbc:oracle:thin:@cms.bizflow.com:1521:orcl" runtime_isolation_level="TRANSACTION_READ_UNCOMMITTED" runtime_protocol="java" runtime_pwd="bizflow" runtime_type="rdbms" runtime_uid="bizflow" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="170" layer_ref="L2" pattern_instance_ref="initialResponse" pool_ref="cms_erlr_general_L2_pattern_instance_pool" runtime_filename="">
+			<pattern_splice desc="" name="initialResponse-Controller-workflowdb-Database-Query">
+				<source node_ref="Controller" />
+				<sink action_ref="Query" node_ref="Database" pattern_instance_ref="workflowdb" runtime_scope="local" />
+			</pattern_splice>
+		</pattern_instance>
+		<pattern_instance image="170" layer_ref="L2" pattern_instance_ref="case_completed" pool_ref="cms_erlr_general_L2_pattern_instance_pool" runtime_filename="" />
+	</instance>
+</blueprint>

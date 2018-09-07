@@ -1,0 +1,29 @@
+
+/* show a line for vertical separator lines in IE8.
+ * This pus a line to the right of the words, instead of throught he middle. */
+.layoutContainer.alignHorizontal > .layoutContainerContent  > .separator
+{
+    padding-right : 0.2em;
+}
+.layoutContainer.alignHorizontal > .layoutContainerContent  > .separator:after
+{
+    top : -90%;
+    height : 180%;
+    right : 0;
+    left : auto;
+}
+
+/* Use PIE to apply the rounded corners to controls.
+ * Unfortunately this seems to cause issues with the :focus drop-shadow used on input controls,
+ * so we only apply this to buttons.
+ * */
+.buttonControl .button, .enhancedButtonControl .button
+{
+    behavior: url(js/PIE/PIE.htc);
+    position : relative;
+}
+
+.groupLabelBackground.groupLabelOutside, .borderedGroup, .shadowBox
+{
+    behavior: url(js/PIE/PIE.htc);
+}

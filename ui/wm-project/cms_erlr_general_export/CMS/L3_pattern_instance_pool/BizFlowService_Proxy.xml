@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern base="" desc="" image="" name="BizFlowService_Proxy.xml" pattern_id="BizFlowService_Proxy" version="" xmlns="http://www.hyfinity.com/xfactory">
+	<nodes>
+		<node desc="Please enter description here" image="" name="WorkitemContext" node_id="WorkitemContext" protocol="java" runtime_instance="" runtime_location="" type="xagent">
+			<actions>
+				<action alias="GetWorkitemContext" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="SaveWorkitemContext" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+			</actions>
+			<engine desc="no engine required" name="XGate Proxy" runtime_instance="com.hyfinity.xgate" type="http">
+				<logicsheet desc="" logicsheet_ref="" name="" />
+				<other_resources />
+			</engine>
+		</node>
+	</nodes>
+</pattern>

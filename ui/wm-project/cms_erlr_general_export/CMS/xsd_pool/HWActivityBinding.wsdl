@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://handysoft.com/webservice/HWActivity" xmlns:impl="http://handysoft.com/webservice/HWActivity" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://handysoft.com/webservice/ServiceConstructor" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsd-comp="http://handysoft.com/webservice/BizFlowSchema" xmlns:xsd-elmt="http://element.je.wf.bf.hs.com" xmlns:xsd-jo="http://jo.wf.bf.hs.com" xmlns:xsd-svc-elmt="http://element.service.je.wf.bf.hs.com">
+	<wsdl:import location="BizFlowSchema-comp.xsd" namespace="http://handysoft.com/webservice/BizFlowSchema" />
+	<wsdl:import location="BizFlowSchema-jo.xsd" namespace="http://jo.wf.bf.hs.com" />
+	<wsdl:import location="BizFlowSchema-je.xsd" namespace="http://je.wf.bf.hs.com" />
+	<wsdl:import location="BizFlowSchema-elmt.xsd" namespace="http://element.je.wf.bf.hs.com" />
+	<wsdl:import location="BizFlowSchema-svc-elmt.xsd" namespace="http://element.service.je.wf.bf.hs.com" />
+	<wsdl:types>
+		<schema targetNamespace="http://handysoft.com/webservice/ServiceConstructor" xmlns="http://www.w3.org/2001/XMLSchema">
+			<complexType name="HWActivityServiceConstructor">
+				<sequence>
+					<element name="sessionInfoXML" type="xsd:string" />
+					<element name="serverId" type="xsd:string" />
+					<element name="processId" type="xsd:int" />
+					<element name="activitySequence" type="xsd:int" />
+					<element name="archive" type="xsd:boolean" />
+				</sequence>
+			</complexType>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="HWActivityServiceConstructor">
+		<wsdl:part name="serviceConstructor" type="tns:HWActivityServiceConstructor" />
+	</wsdl:message>
+	<wsdl:message name="getCommentsRequest">
+	</wsdl:message>
+	<wsdl:message name="getActivityRequest">
+	</wsdl:message>
+	<wsdl:message name="getActivityResponse">
+		<wsdl:part name="getActivityReturn" type="xsd-elmt:HWActivity" />
+	</wsdl:message>
+	<wsdl:message name="getProcessVariablesResponse">
+		<wsdl:part name="getProcessVariablesReturn" type="xsd-comp:ArrayOf_HWProcessVariable" />
+	</wsdl:message>
+	<wsdl:message name="getAttachmentFileRequest">
+		<wsdl:part name="id" type="xsd:int" />
+	</wsdl:message>
+	<wsdl:message name="completeResponse">
+	</wsdl:message>
+	<wsdl:message name="getAttachmentFilesResponse">
+		<wsdl:part name="getAttachmentFilesReturn" type="xsd-comp:ArrayOf_HWAttachmentFile" />
+	</wsdl:message>
+	<wsdl:message name="setParticipantsRequest">
+		<wsdl:part name="participants" type="xsd-comp:ArrayOf_HWParticipant" />
+	</wsdl:message>
+	<wsdl:message name="getAttachmentsResponse">
+		<wsdl:part name="getAttachmentsReturn" type="xsd-comp:ArrayOf_HWAttachment" />
+	</wsdl:message>
+	<wsdl:message name="modifyInfoRequest">
+		<wsdl:part name="activity" type="xsd-elmt:HWActivity" />
+	</wsdl:message>
+	<wsdl:message name="getWorkitemsRequest1">
+	</wsdl:message>
+	<wsdl:message name="getAttachmentFileResponse">
+		<wsdl:part name="getAttachmentFileReturn" type="xsd-svc-elmt:HWAttachmentFile" />
+	</wsdl:message>
+	<wsdl:message name="getParticipantsResponse">
+		<wsdl:part name="getParticipantsReturn" type="xsd-comp:ArrayOf_HWParticipant" />
+	</wsdl:message>
+	<wsdl:message name="getWorkitemsRequest">
+		<wsdl:part name="startIndex" type="xsd:int" />
+		<wsdl:part name="size" type="xsd:int" />
+	</wsdl:message>
+	<wsdl:message name="getAttachmentsRequest">
+	</wsdl:message>
+	<wsdl:message name="modifyInfoResponse">
+	</wsdl:message>
+	<wsdl:message name="getParticipantsRequest">
+	</wsdl:message>
+	<wsdl:message name="getCustomAttributesRequest">
+	</wsdl:message>
+	<wsdl:message name="getAttachmentFilesRequest">
+		<wsdl:part name="includeContent" type="xsd:boolean" />
+	</wsdl:message>
+	<wsdl:message name="HWException">
+		<wsdl:part element="xsd-jo:HWException" name="fault" />
+	</wsdl:message>
+	<wsdl:message name="getCustomAttributesRequest1">
+		<wsdl:part name="name" type="xsd:string" />
+	</wsdl:message>
+	<wsdl:message name="getWorkitemCountResponse">
+		<wsdl:part name="getWorkitemCountReturn" type="xsd:int" />
+	</wsdl:message>
+	<wsdl:message name="getProcessVariablesRequest">
+	</wsdl:message>
+	<wsdl:message name="getWorkitemsResponse">
+		<wsdl:part name="getWorkitemsReturn" type="xsd-comp:ArrayOf_HWWorkitem" />
+	</wsdl:message>
+	<wsdl:message name="setParticipantsResponse">
+	</wsdl:message>
+	<wsdl:message name="getCustomAttributesResponse">
+		<wsdl:part name="getCustomAttributesReturn" type="xsd-comp:ArrayOf_HWCustomAttribute" />
+	</wsdl:message>
+	<wsdl:message name="getWorkitemCountRequest">
+	</wsdl:message>
+	<wsdl:message name="getCommentsResponse">
+		<wsdl:part name="getCommentsReturn" type="xsd-comp:ArrayOf_HWComment" />
+	</wsdl:message>
+	<wsdl:message name="completeRequest">
+		<wsdl:part name="activity" type="xsd-elmt:HWActivity" />
+		<wsdl:part name="attachments" type="xsd-comp:ArrayOf_HWAttachmentFile" />
+		<wsdl:part name="variables" type="xsd-comp:ArrayOf_HWProcessVariable" />
+		<wsdl:part name="comments" type="xsd-comp:ArrayOf_HWComment" />
+	</wsdl:message>
+	<wsdl:portType name="HWActivity">
+		<wsdl:operation name="complete" parameterOrder="activity attachments variables comments">
+			<wsdl:input message="impl:completeRequest" name="completeRequest" />
+			<wsdl:output message="impl:completeResponse" name="completeResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getWorkitems" parameterOrder="startIndex size">
+			<wsdl:input message="impl:getWorkitemsRequest" name="getWorkitemsRequest" />
+			<wsdl:output message="impl:getWorkitemsResponse" name="getWorkitemsResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getWorkitems">
+			<wsdl:input message="impl:getWorkitemsRequest1" name="getWorkitemsRequest1" />
+			<wsdl:output message="impl:getWorkitemsResponse" name="getWorkitemsResponse1" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getComments">
+			<wsdl:input message="impl:getCommentsRequest" name="getCommentsRequest" />
+			<wsdl:output message="impl:getCommentsResponse" name="getCommentsResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getAttachments">
+			<wsdl:input message="impl:getAttachmentsRequest" name="getAttachmentsRequest" />
+			<wsdl:output message="impl:getAttachmentsResponse" name="getAttachmentsResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getParticipants">
+			<wsdl:input message="impl:getParticipantsRequest" name="getParticipantsRequest" />
+			<wsdl:output message="impl:getParticipantsResponse" name="getParticipantsResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="setParticipants" parameterOrder="participants">
+			<wsdl:input message="impl:setParticipantsRequest" name="setParticipantsRequest" />
+			<wsdl:output message="impl:setParticipantsResponse" name="setParticipantsResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getWorkitemCount">
+			<wsdl:input message="impl:getWorkitemCountRequest" name="getWorkitemCountRequest" />
+			<wsdl:output message="impl:getWorkitemCountResponse" name="getWorkitemCountResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getCustomAttributes">
+			<wsdl:input message="impl:getCustomAttributesRequest" name="getCustomAttributesRequest" />
+			<wsdl:output message="impl:getCustomAttributesResponse" name="getCustomAttributesResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getCustomAttributes" parameterOrder="name">
+			<wsdl:input message="impl:getCustomAttributesRequest1" name="getCustomAttributesRequest1" />
+			<wsdl:output message="impl:getCustomAttributesResponse" name="getCustomAttributesResponse1" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getProcessVariables">
+			<wsdl:input message="impl:getProcessVariablesRequest" name="getProcessVariablesRequest" />
+			<wsdl:output message="impl:getProcessVariablesResponse" name="getProcessVariablesResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getActivity">
+			<wsdl:input message="impl:getActivityRequest" name="getActivityRequest" />
+			<wsdl:output message="impl:getActivityResponse" name="getActivityResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="modifyInfo" parameterOrder="activity">
+			<wsdl:input message="impl:modifyInfoRequest" name="modifyInfoRequest" />
+			<wsdl:output message="impl:modifyInfoResponse" name="modifyInfoResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentFiles" parameterOrder="includeContent">
+			<wsdl:input message="impl:getAttachmentFilesRequest" name="getAttachmentFilesRequest" />
+			<wsdl:output message="impl:getAttachmentFilesResponse" name="getAttachmentFilesResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentFile" parameterOrder="id">
+			<wsdl:input message="impl:getAttachmentFileRequest" name="getAttachmentFileRequest" />
+			<wsdl:output message="impl:getAttachmentFileResponse" name="getAttachmentFileResponse" />
+			<wsdl:fault message="impl:HWException" name="HWException" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="HWActivityService" type="impl:HWActivity">
+		<wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="complete">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="completeRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="completeResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getWorkitems">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getWorkitemsRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getWorkitemsResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getWorkitems">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getWorkitemsRequest1">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getWorkitemsResponse1">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getComments">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getCommentsRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getCommentsResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachments">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getAttachmentsRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getAttachmentsResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getParticipants">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getParticipantsRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getParticipantsResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="setParticipants">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="setParticipantsRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="setParticipantsResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getWorkitemCount">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getWorkitemCountRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getWorkitemCountResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getCustomAttributes">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getCustomAttributesRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getCustomAttributesResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getCustomAttributes">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getCustomAttributesRequest1">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getCustomAttributesResponse1">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getProcessVariables">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getProcessVariablesRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getProcessVariablesResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getActivity">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getActivityRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getActivityResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="modifyInfo">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="modifyInfoRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="modifyInfoResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentFiles">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getAttachmentFilesRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getAttachmentFilesResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentFile">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getAttachmentFileRequest">
+				<wsdlsoap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="impl:HWActivityServiceConstructor" namespace="http://handysoft.com/webservice/ServiceConstructor" part="serviceConstructor" use="encoded" wsdl:required="true" />
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:input>
+			<wsdl:output name="getAttachmentFileResponse">
+				<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.je.wf.bf.hs.com" use="encoded" />
+			</wsdl:output>
+			<wsdl:fault name="HWException">
+				<wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="HWException" namespace="http://handysoft.com/webservice/HWActivity" use="encoded" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+</wsdl:definitions>

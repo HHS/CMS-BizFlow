@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hy:rulebase cache="false" context="/" disable="true" forward_chain="false" return="$return" xmlns="http://www.hyfinity.com/xstore" xmlns:bzf="http://www.handysoft.com/bizflow" xmlns:hy="http://www.hyfinity.com/xengine" xmlns:mvc="http://www.hyfinity.com/mvc" xmlns:ns1="http://www.hyfinity.com/xplatform" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xg="http://www.hyfinity.com/xgate" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<hy:workspace name="return" />
+	<hy:rule base="pattern" desc="This rule allows the user to optionally add a soap wrapper to the message" disable="false" id="Apply_Soap_Wrapper" priority="10">
+		<hy:head>
+			<hy:result id="Add_Soap_Wrapper">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">Soap_Wrapper.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="Check_for_Wrapper" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope)</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="modified" desc="Calls the SaveWorkitemContext service. Be warned that this may fire off with other rules if it is not the only one enabled" disable="false" id="WorkItemContextBinding_SaveWorkitemContext_SaveWorkitemContextMessage_Rule" priority="20">
+		<hy:head>
+			<hy:result id="Call_Proxy_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="SaveWorkitemContext" name="mvc-BizFlowWebMakerBaseApp-BizFlowService_Proxy-WorkitemContext" parallel="false" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="Check_for_Message_Root_Element" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/SaveWorkitemContext</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="pattern" desc="This is the fault or failure case for a service response" disable="false" id="Handle_Fault_Response" priority="30">
+		<hy:head>
+			<hy:result id="Remove_Soap_Wrapper">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/*</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="Check_for_Fault" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/soap:Fault</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="pattern" desc="This is the success case for a service response, where the response only contains information in the SOAP Body.  This information is stripped out and returned" disable="false" id="Handle_Success_Response_no_Header" priority="30">
+		<hy:head>
+			<hy:result id="Remove_Soap_Wrapper">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Body/*</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_for_Success" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope/soap:Body/soap:Fault)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_no_header_content" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope/soap:Header/*)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="pattern" desc="This is the success case for a service response, where the response contains information in both the SOAP Header and Body.  This just returns the full SOAP Envelope recieved" disable="false" id="Handle_Success_Response_with_Header" priority="30">
+		<hy:head>
+			<hy:result id="Return_Soap_Wrapper">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/soap:Envelope</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_for_Success" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/soap:Envelope/soap:Body/soap:Fault)</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_for_header_content" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/soap:Envelope/soap:Header/*</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+</hy:rulebase>

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern base="" desc="" image="" name="HWSessionService_Proxy.xml" pattern_id="HWSessionService_Proxy" version="" xmlns="http://www.hyfinity.com/xfactory">
+	<nodes>
+		<node desc="Please enter description here" image="" name="HWSession" node_id="HWSession" protocol="java" runtime_instance="" runtime_location="" type="xagent">
+			<actions>
+				<action alias="getUsers" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="setServerPort" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getServerPort" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcesses" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getSurrogaters" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getFolders" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessDefinitions" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getWorkitems" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkOutWorkitem" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInWorkitem" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkOutOrg" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInOrg" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getCurrentServerTime" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getJobTitles" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkUserPassword" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getCalendars" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkOutProcess" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInProcess" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="modifyProcess" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInApplication" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getWorkitemCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="updateOrg" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="changePassword" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="encryptString" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="downloadDMDocument" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkOutGroups" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInGroups" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkOutFolder" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInFolder" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="modifyProcessInfo" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="startProcessInstance" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkOutObject" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="checkInObject" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="moveObjects" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="synchronizeLDAP" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="updateUserGroupHierarchy" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="updateUserGroup" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getTerminology" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="purgeFolder" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="modifyActivityInfo" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="modifyWorkitemInfo" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getExtServers" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="downloadMetaDataFile" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="login" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUserGroupHierarchies" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUserGroups" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getAuthorityGroups" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getOrgUnits" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUserID" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getSessionInfoXML" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="setSessionInfoXML" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getConnected" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getCurrentUser" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getServerID" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getServerIP" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="setServerIP" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getSoapURL" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="setSoapURL" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="loginWeb" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="logout" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getOrgUnitsByName" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessDefinitionCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessInstances" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessInstanceCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessArchives" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessArchiveCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUsersByName" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUsersByOrgUnitID" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUserByID" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getUserByLoginID" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getWorkitem" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getGlobalVariableHistorys" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getFolderAuthority" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getExpiredUserInfo" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessDefinitionById" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getSystemFile" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessDefinitionsByName" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+			</actions>
+			<engine desc="no engine required" name="XGate Proxy" runtime_instance="com.hyfinity.xgate" type="http">
+				<logicsheet desc="" logicsheet_ref="" name="" />
+				<other_resources />
+			</engine>
+		</node>
+	</nodes>
+</pattern>

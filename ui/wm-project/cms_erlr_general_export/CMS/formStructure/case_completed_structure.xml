@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fm:structure xmlns:fm="http://www.hyfinity.com/formmaker">
+	<form_details xmlns="http://www.hyfinity.com/formmaker">
+		<error_highlight_method alert="false" as_you_type="true" validation_mode="all">bubble</error_highlight_method>
+		<hint_display_method>tooltip</hint_display_method>
+		<top_level_message class="topLevelMessage" required="false" style="" />
+		<mark_mandatory class="mandatory" location="after_label" required="true" style=""> * </mark_mandatory>
+		<description>Enter a description.</description>
+		<page_background_style class="" style="" />
+		<page_content_style class="" style="" />
+	</form_details>
+	<fm:group border_styling="false" compatability="false" fieldset="false" gen_method="layout" hide="false" label_position="left" name="erlr_initial_response_body" submit_if_hidden="true">
+		<label class="label" options="static" position="outside_group" position_override="top" required="false" style="" type="static" value="Layout Group" xmlns="http://www.hyfinity.com/formmaker">
+			<container class="groupLabelBackground" options="static" style="">
+				<content_alignment distribution="vertical" />
+			</container>
+		</label>
+		<style class="" options="static" style="" xmlns="http://www.hyfinity.com/formmaker" />
+		<fm:content_alignment distribution="vertical" halign="left" valign="top" />
+		<fm:sizing height="fit_to_content" width="fully_expand" />
+		<palette_ref control="Layout Group" xmlns="http://www.hyfinity.com/formmaker" />
+		<fm:group border_styling="false" compatability="false" fieldset="false" gen_method="layout" hide="false" label_position="left" name="common_fields_group" submit_if_hidden="true">
+			<label class="label" options="static" position="outside_group" position_override="top" required="false" style="" type="static" value="Layout Group" xmlns="http://www.hyfinity.com/formmaker">
+				<container class="groupLabelBackground" options="static" style="">
+					<content_alignment distribution="vertical" />
+				</container>
+			</label>
+			<style class="" options="static" style="" xmlns="http://www.hyfinity.com/formmaker" />
+			<fm:content_alignment distribution="vertical" halign="left" valign="top" />
+			<fm:sizing height="fit_to_content" width="fully_expand" />
+			<palette_ref control="Layout Group" xmlns="http://www.hyfinity.com/formmaker" />
+			<fm:group border_styling="false" compatability="false" fieldset="false" gen_method="grid" hide="false" label_position="left" name="one_column_grid" submit_if_hidden="true">
+				<label class="label" options="static" position="outside_group" position_override="top" required="false" style="" type="static" value="Layout Grid" xmlns="http://www.hyfinity.com/formmaker">
+					<container class="groupLabelBackground" options="static" style="">
+						<content_alignment distribution="vertical" halign="left" valign="middle" />
+						<sizing height="custom" width="fully_expand" />
+					</container>
+				</label>
+				<style class="" options="static" style="" xmlns="http://www.hyfinity.com/formmaker" />
+				<fm:grid_structure cols="1" rows="1">
+					<fm:grid_component col="1" name="one_column_1" row="1" />
+				</fm:grid_structure>
+				<fm:palette_ref control="One Column" />
+				<fm:sizing height="fit_to_content" width="fully_expand" />
+				<fm:group border_styling="false" compatability="false" fieldset="false" gen_method="layout" hide="false" label_position="left" name="one_column_1" submit_if_hidden="true">
+					<label class="label" options="static" position="outside_group" position_override="top" required="false" style="" type="static" value="Container Group" xmlns="http://www.hyfinity.com/formmaker">
+						<container class="groupLabelBackground" options="static" style="">
+							<content_alignment distribution="vertical" />
+						</container>
+					</label>
+					<style class="" options="static" style="width:100%;" xmlns="http://www.hyfinity.com/formmaker" />
+					<fm:palette_ref control="Layout Group" />
+					<fm:content_alignment distribution="vertical" halign="left" valign="top" />
+					<fm:sizing height="fit_to_content" width="custom" />
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="casefile_num">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input caption="12345" options="static">output</input>
+							<style class="defaultBackground outputControl" options="static" style="" />
+							<element_style class="output" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" position_override="left" required="true" style="" type="static" value="EWITS Casefile Number:">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<container />
+						</field>
+						<constraints validate="false" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Output" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="contact">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input options="dynamic">text</input>
+							<style class="defaultBackground textboxControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" position_override="left" required="true" style="" type="static" value="Contact Name: ">
+								<container class="labelBackground labelControl" options="static">
+									<content_alignment halign="left" valign="middle" />
+								</container>
+							</label>
+							<container />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="emp_name">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input options="dynamic">text</input>
+							<style class="defaultBackground textboxControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" position_override="left" required="true" style="" type="static" value="Employee Name:">
+								<container class="labelBackground labelControl" options="static">
+									<content_alignment halign="left" valign="middle" />
+								</container>
+							</label>
+							<container />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="disabled" generate="true" hide="false" name="org_assign">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input options="static">select</input>
+							<style class="defaultBackground selectControl" options="static" style="" />
+							<element_style class="select" options="static" style="" />
+							<date_picker class="" content="" required="false" type="normal" />
+							<label class="label" options="static" position_override="left" required="true" style="" type="static" value="Organization Assignment:">
+								<container class="labelBackground labelControl" options="static">
+									<content_alignment halign="left" valign="middle" />
+								</container>
+							</label>
+							<container />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false">
+								<include value="ListItem1">List Item 1</include>
+								<include value="ListItem2">List Item 2</include>
+								<include value="ListItem3">List Item 3</include>
+							</enumeration>
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Select Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="case_desc">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input expandable="true" max="10" min="2" options="dynamic" size="40">textarea</input>
+							<style class="defaultBackground textareaControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" position_override="left" required="true" style="" type="static" value="Case Description:">
+								<container class="labelBackground labelControl" options="static">
+									<content_alignment halign="left" valign="middle" />
+								</container>
+							</label>
+							<container />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Area" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="doc_log">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input expandable="true" max="10" min="2" options="dynamic" size="40">textarea</input>
+							<style class="defaultBackground textareaControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" position_override="left" required="true" style="" type="static" value="Document Log">
+								<container class="labelBackground labelControl" options="static">
+									<content_alignment halign="left" valign="middle" />
+								</container>
+							</label>
+							<container />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Area" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="case_status">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input options="dynamic">text</input>
+							<style class="defaultBackground textboxControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" required="true" style="" type="static" value="Case Status: ">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<container />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="disabled" generate="true" hide="false" name="desc_of_final_action">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input default="" options="static">select</input>
+							<style class="defaultBackground selectControl" options="static" style="" />
+							<element_style class="select" options="static" style="" />
+							<disabled_style class="disabled" options="static" style="" />
+							<label class="label" options="static" required="true" style="" type="static" value="Description of Final action:">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<date_picker class="" content="" popup="false" required="false" type="normal" />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false">
+								<include value="ListItem1">List Item 1</include>
+								<include value="ListItem2">List Item 2</include>
+								<include value="ListItem3">List Item 3</include>
+							</enumeration>
+						</constraints>
+						<error create_container="true" xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Select Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="length_of_suspension_proposed">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input default="" options="dynamic">text</input>
+							<style class="defaultBackground textboxControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<disabled_style class="disabled" options="static" style="" />
+							<label class="label" options="static" required="true" style="" type="static" value="Propose length of suspension in Days: ">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error create_container="true" xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="suspension_days">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input default="" options="dynamic">text</input>
+							<style class="defaultBackground textboxControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<disabled_style class="disabled" options="static" style="" />
+							<label class="label" options="static" required="true" style="" type="static" value="Length of Suspension in Days:">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error create_container="true" xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Text Box" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="completed_dt">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input options="dynamic" size="10">text</input>
+							<style class="defaultBackground dateControl" options="static" style="" />
+							<element_style class="textbox" options="static" style="" />
+							<disabled_style class="disabled" options="static" style="" />
+							<label class="label" options="static" required="true" style="" type="static" value="Date Case completed: ">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<date_picker class="datePickerIcon" content="" popup="false" required="true" type="normal" />
+						</field>
+						<constraints validate="true" xmlns="http://www.hyfinity.com/formmaker">
+							<type>date</type>
+							<required>false</required>
+							<enumeration use_for_output="false" />
+						</constraints>
+						<error create_container="true" xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<data_formats xmlns="http://www.hyfinity.com/formmaker">
+							<date data="yyyy-MM-dd" display="MM/dd/yyyy" />
+						</data_formats>
+						<palette_ref control="Date" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+					<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="note_txt">
+						<field xmlns="http://www.hyfinity.com/formmaker">
+							<input caption="This is the last step for this case. After this step is completed the case will be moved to archive and no further modification will be possible. Are you sure?" options="static">output</input>
+							<style class="defaultBackground outputControl" options="static" style="" />
+							<element_style class="output" options="static" style="" />
+							<date_picker class="datePickerIcon" content="" required="false" type="normal" />
+							<label class="label" options="static" required="true" style="" type="static" value="PLEASE NOTE:">
+								<container class="labelBackground labelControl" options="static" />
+							</label>
+							<container />
+						</field>
+						<constraints validate="false" xmlns="http://www.hyfinity.com/formmaker">
+							<type>string</type>
+							<required>false</required>
+							<enumeration use_for_output="true">
+								<include value="" />
+							</enumeration>
+						</constraints>
+						<error xmlns="http://www.hyfinity.com/formmaker">
+							<hint class="hintIcon" style="" use="false">Enter a hint here.</hint>
+							<server class="errorIcon" retain="false" style="" use="false" />
+						</error>
+						<palette_ref control="Output" xmlns="http://www.hyfinity.com/formmaker" />
+					</fm:element>
+				</fm:group>
+				<content_alignment distribution="vertical" halign="left" valign="top" xmlns="http://www.hyfinity.com/formmaker" />
+			</fm:group>
+		</fm:group>
+	</fm:group>
+</fm:structure>

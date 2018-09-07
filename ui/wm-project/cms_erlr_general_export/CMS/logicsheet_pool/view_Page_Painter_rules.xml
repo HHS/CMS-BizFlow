@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hy:rulebase cache="false" context="/" disable="true" forward_chain="false" return="$return" xmlns="http://www.hyfinity.com/xstore" xmlns:bzf="http://www.handysoft.com/bizflow" xmlns:demo="http://www.hyfinity.com/schemas" xmlns:fm="http://www.hyfinity.com/formmaker" xmlns:hy="http://www.hyfinity.com/xengine" xmlns:mvc="http://www.hyfinity.com/mvc" xmlns:ns1="http://www.hyfinity.com/xstore" xmlns:ns2="http://www.hyfinity.com/xplatform" xmlns:ns3="http://handysoft.com/webservice/ServiceConstructor" xmlns:ns4="http://service.je.wf.bf.hs.com" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xform="http://www.w3.org/2001/08/xforms" xmlns:xg="http://www.hyfinity.com/xgate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<hy:workspace name="return" />
+	<hy:rule base="pattern" desc="Call the relevant Controller based on the value set by Link Action." disable="false" id="Call_Controller" priority="20">
+		<hy:head>
+			<hy:result disable="false" id="Call_Controller_Service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="Invoke" name="/mvc:eForm/mvc:Control/mvc:Controller" parallel="false" type="com.hyfinity.xpath.XPath" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="Check_Controller_Name_Set" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Controller[. != '']</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="modified" desc="Check Page name set and performs transform to Render Web Page. This creates the base HTML content, that can then be translated or made read only by the following rules." disable="false" id="Render_Web_Page" priority="30">
+		<hy:head>
+			<hy:result disable="false" id="Transform_Web_Page">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="replace">
+					<hy:params>
+						<hy:param name="xpath_to_stylesheet" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Page</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_Page_Name_Set" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Page[. != '']</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_Language_Field_Not_Specified" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Control/mvc:Language[. != ''])</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="modified" desc="If a page name and a language value has been set, then this rule will be used to apply the appropriate language translations to the rendered web page." disable="false" id="Render_Translated_Web_Page" priority="35">
+		<hy:head>
+			<hy:result disable="false" id="insert_container">
+				<hy:operator>Parse</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+						<hy:param name="fragment" type="org.w3c.dom.Node">
+							<mvc:eForm />
+						</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="copy_control_info">
+				<hy:operator>Copy</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return/mvc:eForm</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="Transform_Web_Page">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="xpath_to_stylesheet" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Page</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return/mvc:eForm</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+			<hy:result disable="false" id="perform_translation_transform">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="replace">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">apply_translations.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:clause id="Check_Page_Name_Set" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Page[. != '']</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+				<hy:clause id="Check_Language_Field_Specified" multiple="false">
+					<hy:operator>Read</hy:operator>
+					<hy:target action="eval" name="factbase">
+						<hy:params>
+							<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:Language[. != '']</hy:param>
+						</hy:params>
+					</hy:target>
+				</hy:clause>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="modified" desc="Call service to get WIC because nothing was found in the cache." disable="false" id="Call_getWICDetails" priority="10">
+		<hy:head>
+			<hy:result disable="false" id="call_service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="Invoke" name="mvc-cms_erlr_general-GetWICDetails-Controller" parallel="false" update="replace">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="checkForWIC" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Data/WorkitemContext)</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="modified" desc="Call service to save WIC because new information was supplied." disable="false" id="Call_saveWICDetails" priority="5">
+		<hy:head>
+			<hy:result disable="false" id="call_service">
+				<hy:operator>Service</hy:operator>
+				<hy:target action="Use" name="mvc-cms_erlr_general-SaveWICDetails-Controller" parallel="false" update="replace">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="if_workitem_context_info_was_supplied" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="If a page has been rendered, but the read only flag is set, then this rule processes the generated HTML to make the page read only." disable="false" id="Process_Read_Only" priority="40">
+		<hy:head>
+			<hy:result disable="false" id="apply_transformation">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">make_page_read_only.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:and>
+				<hy:or>
+					<hy:clause id="check_page_html_generated" multiple="false">
+						<hy:operator>Read</hy:operator>
+						<hy:target action="eval" name="factbase">
+							<hy:params>
+								<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">$return/html</hy:param>
+							</hy:params>
+						</hy:target>
+					</hy:clause>
+					<hy:clause id="check_partial_page_html_generated" multiple="false">
+						<hy:operator>Read</hy:operator>
+						<hy:target action="eval" name="factbase">
+							<hy:params>
+								<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">$return/div</hy:param>
+							</hy:params>
+						</hy:target>
+					</hy:clause>
+				</hy:or>
+				<hy:or>
+					<hy:clause id="check_readOnly_flag" multiple="false">
+						<hy:operator>Read</hy:operator>
+						<hy:target action="eval" name="factbase">
+							<hy:params>
+								<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/mvc:readOnly[. = 'y' or . = 'true']</hy:param>
+							</hy:params>
+						</hy:target>
+					</hy:clause>
+					<hy:clause id="check_updatable_WIC_value" multiple="false">
+						<hy:operator>Read</hy:operator>
+						<hy:target action="eval" name="factbase">
+							<hy:params>
+								<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Data/WorkitemContext/Application/Updatable[. != 'U']</hy:param>
+							</hy:params>
+						</hy:target>
+					</hy:clause>
+				</hy:or>
+			</hy:and>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="If no page has been specified to render, then we just want to return the current XML content, so we copy it to the return variable." disable="false" id="Handle_No_Page" priority="30">
+		<hy:head>
+			<hy:result disable="false" id="move_data_to_return">
+				<hy:operator>Move</hy:operator>
+				<hy:target action="add" name="factbase" update="append">
+					<hy:params>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/*</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">$return</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="Check_Page_Name_Not_Set" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Control/mvc:Page[. != ''])</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+	<hy:rule base="custom" desc="This rule uses a transform to insert the current date and time into the control block of the message. This can then be used to default any form fields to the current date." disable="false" id="Insert_Current_Date_Header" priority="15">
+		<hy:head>
+			<hy:result disable="false" id="perform_transform">
+				<hy:operator>Transform</hy:operator>
+				<hy:target action="transform" name="XSLT" update="append">
+					<hy:params>
+						<hy:param name="stylesheet" type="java.io.File">getDate.xsl</hy:param>
+						<hy:param name="from_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control/*</hy:param>
+						<hy:param name="to_location" type="com.hyfinity.xpath.XPath">/mvc:eForm/mvc:Control</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:result>
+		</hy:head>
+		<hy:body>
+			<hy:clause id="check_not_already_present" multiple="false">
+				<hy:operator>Read</hy:operator>
+				<hy:target action="eval" name="factbase">
+					<hy:params>
+						<hy:param name="xpath_expression" type="com.hyfinity.xpath.XPath">not(/mvc:eForm/mvc:Control/mvc:CurrerntDate)</hy:param>
+					</hy:params>
+				</hy:target>
+			</hy:clause>
+		</hy:body>
+	</hy:rule>
+</hy:rulebase>

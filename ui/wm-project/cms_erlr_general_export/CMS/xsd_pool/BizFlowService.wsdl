@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://handysoft.com/webservice/BizFlowService" xmlns="http://www.hyfinity.com/xstore" xmlns:bind-act="http://handysoft.com/webservice/HWActivity" xmlns:bind-apps="http://handysoft.com/webservice/HWApplications" xmlns:bind-pd="http://handysoft.com/webservice/HWProcessDefinition" xmlns:bind-proc="http://handysoft.com/webservice/HWProcess" xmlns:bind-ses="http://handysoft.com/webservice/HWSession" xmlns:bind-usr="http://handysoft.com/webservice/HWUser" xmlns:bind-wi="http://handysoft.com/webservice/HWWorkitem" xmlns:bind-wid="http://handysoft.com/webservice/HWWorkitemData" xmlns:impl="http://handysoft.com/webservice/BizFlowService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:import location="HWActivityBinding.wsdl" namespace="http://handysoft.com/webservice/HWActivity" />
+	<wsdl:import location="HWApplicationsBinding.wsdl" namespace="http://handysoft.com/webservice/HWApplications" />
+	<wsdl:import location="HWProcessBinding.wsdl" namespace="http://handysoft.com/webservice/HWProcess" />
+	<wsdl:import location="HWProcessDefinitionBinding.wsdl" namespace="http://handysoft.com/webservice/HWProcessDefinition" />
+	<wsdl:import location="HWSessionBinding.wsdl" namespace="http://handysoft.com/webservice/HWSession" />
+	<wsdl:import location="HWUserBinding.wsdl" namespace="http://handysoft.com/webservice/HWUser" />
+	<wsdl:import location="HWWorkitemBinding.wsdl" namespace="http://handysoft.com/webservice/HWWorkitem" />
+	<wsdl:import location="HWWorkitemDataBinding.wsdl" namespace="http://handysoft.com/webservice/HWWorkitemData" />
+	<wsdl:service name="HWActivityService">
+		<wsdl:port binding="bind-act:HWActivityService" name="HWActivity">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWActivity.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWApplicationsService">
+		<wsdl:port binding="bind-apps:HWApplicationsService" name="HWApplications">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWApplications.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWProcessService">
+		<wsdl:port binding="bind-proc:HWProcessService" name="HWProcess">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWProcess.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWProcessDefinitionService">
+		<wsdl:port binding="bind-pd:HWProcessDefinitionService" name="HWProcessDefinition">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWProcessDefinition.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWSessionService">
+		<wsdl:port binding="bind-ses:HWSessionService" name="HWSession">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWSession.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWUserService">
+		<wsdl:port binding="bind-usr:HWUserService" name="HWUser">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWUser.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWWorkitemService">
+		<wsdl:port binding="bind-wi:HWWorkitemService" name="HWWorkitem">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWWorkitem.hws" />
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="HWWorkitemDataService">
+		<wsdl:port binding="bind-wid:HWWorkitemDataService" name="HWWorkitemData">
+			<wsdlsoap:address location="http://bizflow_server:8080/bizflow/webservice/HWWorkitemData.hws" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

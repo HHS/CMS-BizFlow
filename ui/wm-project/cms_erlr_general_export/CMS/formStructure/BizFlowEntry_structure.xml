@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fm:structure xmlns="http://www.hyfinity.com/xstore" xmlns:fm="http://www.hyfinity.com/formmaker" xmlns:xg="http://www.hyfinity.com/xgate">
+	<fm:element disable="false" generate="true" hide="false" name="wicAdmin">
+		<field xmlns="http://www.hyfinity.com/formmaker">
+			<input caption="Workitem Context Administration ..." options="static">button</input>
+			<style class="defaultBackground hyperlinkControl" options="static" style="" />
+			<element_style class="hyperlink" options="static" style="" />
+			<disabled_style class="disabled" options="static" style="" />
+			<label class="label" options="static" required="false" style="" type="static" value="Button">
+				<container class="labelBackground labelControl" options="static" style="" />
+			</label>
+			<date_picker class="" content="" popup="false" required="false" type="normal" />
+		</field>
+		<constraints validate="false" xmlns="http://www.hyfinity.com/formmaker">
+			<type>string</type>
+			<required>false</required>
+			<enumeration use_for_output="false" />
+		</constraints>
+		<error create_container="true" xmlns="http://www.hyfinity.com/formmaker">
+			<hint class="hintIcon " style="" use="true">This link allows the user to launch a maintenance screen in a separate Browser Tab to change example data for Workitem Context values before calling the WebMaker Application in local test mode.   </hint>
+		</error>
+		<fm:events>
+			<event id="anchorActivated" xmlns="http://www.hyfinity.com/formmaker">
+				<action id="targetLocation">
+					<param name="Target" option="Static" value="http://localhost:7080/WIC/getWICDetails.do" />
+				</action>
+			</event>
+		</fm:events>
+		<palette_ref control="Hyperlink" xmlns="http://www.hyfinity.com/formmaker" />
+		<custom_attributes xmlns="http://www.hyfinity.com/formmaker">
+			<attribute name="target" type="custom" value="_blank" />
+		</custom_attributes>
+	</fm:element>
+	<fm:group border_styling="false" compatability="false" fieldset="false" gen_method="layout" hide="false" label_position="left" name="incomingBizFlowParams" submit_if_hidden="true">
+		<fm:path>
+			<fm:ancestor name="Envelope">
+				<fm:ancestor name="Header">
+					<fm:element name="serviceConstructor" />
+				</fm:ancestor>
+			</fm:ancestor>
+		</fm:path>
+		<label class="label" options="static" position="outside_group" required="true" style="" type="static" value="BizFlow to WebMaker Application Workitem Context Parameters" xmlns="http://www.hyfinity.com/formmaker">
+			<container class="groupLabelBackground" options="static" style="">
+				<content_alignment distribution="vertical" />
+			</container>
+		</label>
+		<style class="borderedGroup" options="static" style="" xmlns="http://www.hyfinity.com/formmaker" />
+		<fm:palette_ref control="Bordered Group" />
+		<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="sessioninfo">
+			<fm:path>
+				<fm:ancestor name="Envelope">
+					<fm:ancestor name="Header">
+						<fm:ancestor name="serviceConstructor">
+							<fm:element name="sessionInfoXML" />
+						</fm:ancestor>
+					</fm:ancestor>
+				</fm:ancestor>
+			</fm:path>
+			<fm:field>
+				<fm:input caption="&lt;SESSIONINFO KEY=&quot;2656_1247504463&quot; USERID=&quot;0000000101&quot; SERVERID=&quot;0000001001&quot; IP=&quot;SERVER&quot; PORT=&quot;7201&quot; DEPTID=&quot;9000000000&quot; USERTYPE=&quot;U&quot; /&gt;" default="&lt;SESSIONINFO KEY=&quot;1234_1234567890&quot; USERID=&quot;0000000101&quot; SERVERID=&quot;0000001001&quot; IP=&quot;192.168.0.100&quot; PORT=&quot;7201&quot; DEPTID=&quot;9000000000&quot; USERTYPE=&quot;U&quot; /&gt;" options="dynamic" size="100">text</fm:input>
+				<fm:style class="defaultBackground textboxControl" options="static" style="" />
+				<fm:element_style class="textbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Session Info - XML">
+					<fm:container class="labelBackground labelControl" options="static" style="" />
+				</fm:label>
+				<fm:date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>string</fm:type>
+				<fm:required>true</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Text Box" />
+		</fm:element>
+		<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="procid">
+			<fm:path>
+				<fm:ancestor name="Envelope">
+					<fm:ancestor name="Header">
+						<fm:ancestor name="serviceConstructor">
+							<fm:element name="processId" />
+						</fm:ancestor>
+					</fm:ancestor>
+				</fm:ancestor>
+			</fm:path>
+			<fm:field>
+				<fm:input caption="1001" default="1001" options="static">text</fm:input>
+				<fm:style class="defaultBackground textboxControl" options="static" style="" />
+				<fm:element_style class="textbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Process Id">
+					<fm:container class="labelBackground labelControl" options="static" style="" />
+				</fm:label>
+				<fm:date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>number</fm:type>
+				<fm:required>true</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Text Box" />
+		</fm:element>
+		<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="actseq">
+			<fm:path>
+				<fm:ancestor name="Envelope">
+					<fm:ancestor name="Header">
+						<fm:ancestor name="serviceConstructor">
+							<fm:element name="sequence" />
+						</fm:ancestor>
+					</fm:ancestor>
+				</fm:ancestor>
+			</fm:path>
+			<fm:field>
+				<fm:input caption="101" default="101" options="static">text</fm:input>
+				<fm:style class="defaultBackground textboxControl" options="static" style="" />
+				<fm:element_style class="textbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Activity Sequence">
+					<fm:container class="labelBackground labelControl" options="static" style="" />
+				</fm:label>
+				<fm:date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>number</fm:type>
+				<fm:required>true</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Text Box" />
+		</fm:element>
+		<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="workseq">
+			<fm:path>
+				<fm:ancestor name="Envelope">
+					<fm:ancestor name="Header">
+						<fm:ancestor name="serviceConstructor">
+							<fm:element name="serverId" />
+						</fm:ancestor>
+					</fm:ancestor>
+				</fm:ancestor>
+			</fm:path>
+			<fm:field>
+				<fm:input caption="101" default="101" options="static">text</fm:input>
+				<fm:style class="defaultBackground textboxControl" options="static" style="" />
+				<fm:element_style class="textbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Workitem Sequence">
+					<fm:container class="labelBackground labelControl" options="static" style="" />
+				</fm:label>
+				<fm:date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>string</fm:type>
+				<fm:required>true</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Text Box" />
+		</fm:element>
+		<fm:element disable="false" disable_method="read_only" generate="true" hide="false" name="appseq">
+			<fm:field>
+				<fm:input caption="0" default="0" options="static">text</fm:input>
+				<fm:style class="defaultBackground textboxControl" options="static" style="" />
+				<fm:element_style class="textbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Application Sequence">
+					<fm:container class="labelBackground labelControl" options="static" style="" />
+				</fm:label>
+				<fm:date_picker class="datePickerIcon" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>string</fm:type>
+				<fm:required>false</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Text Box" />
+		</fm:element>
+		<fm:element disable="false" generate="true" hide="false" name="isarchive">
+			<fm:path>
+				<fm:ancestor name="Envelope">
+					<fm:ancestor name="Header">
+						<fm:ancestor name="serviceConstructor">
+							<fm:element name="archive" />
+						</fm:ancestor>
+					</fm:ancestor>
+				</fm:ancestor>
+			</fm:path>
+			<fm:field>
+				<fm:input caption="true" default="false" options="static" unchecked_value="false">checkbox</fm:input>
+				<fm:style class="defaultBackground checkboxControl" options="static" style="" />
+				<fm:element_style class="checkbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Archive">
+					<fm:container class="labelBackground labelControl" options="static" />
+				</fm:label>
+				<fm:date_picker class="" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>boolean</fm:type>
+				<fm:required>true</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Checkbox" />
+		</fm:element>
+		<fm:element disable="false" generate="true" hide="false" name="readOnly">
+			<fm:path>
+				<fm:ancestor name="Envelope">
+					<fm:ancestor name="Header">
+						<fm:ancestor name="serviceConstructor">
+							<fm:element name="archive" />
+						</fm:ancestor>
+					</fm:ancestor>
+				</fm:ancestor>
+			</fm:path>
+			<fm:field>
+				<fm:input caption="true" default="false" options="static" unchecked_value="false">checkbox</fm:input>
+				<fm:style class="defaultBackground checkboxControl" options="static" style="" />
+				<fm:element_style class="checkbox" options="static" style="" />
+				<fm:disabled_style class="disabled" options="static" style="" />
+				<fm:date_picker class="" content="" popup="false" required="false" type="normal" />
+				<fm:label class="label" options="static" required="true" style="" type="static" value="Read Only">
+					<fm:container class="labelBackground labelControl" options="static" />
+				</fm:label>
+				<fm:container />
+			</fm:field>
+			<fm:constraints validate="true">
+				<fm:type>boolean</fm:type>
+				<fm:required>true</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true" />
+			<fm:palette_ref control="Checkbox" />
+		</fm:element>
+		<fm:element disable="false" generate="true" hide="false" name="showWebMakerApp">
+			<fm:field>
+				<fm:input caption="Call WebMaker Application" options="static">htmlButton</fm:input>
+				<fm:style class="defaultBackground buttonControl" options="static" style="" />
+				<fm:element_style class="button" options="static" style="" />
+				<fm:disabled_style class="disabledButton" options="static" style="" />
+				<fm:label class="label" options="static" required="false" style="" type="static" value="Button">
+					<fm:container class="labelBackground labelControl" options="static" style="" />
+				</fm:label>
+				<fm:date_picker class="" content="" popup="false" required="false" type="normal" />
+			</fm:field>
+			<fm:constraints validate="false">
+				<fm:type>string</fm:type>
+				<fm:required>false</fm:required>
+				<fm:enumeration use_for_output="false" />
+			</fm:constraints>
+			<fm:error create_container="true">
+				<fm:hint class="hintIcon " style="" use="true">This button will activate a call to the WebMaker Application in local test mode. It will be presented based on the Process / Workitem key details specified above, and example data defined via the Workitem Context Adminstration screen. This screen is not seen at runtime on BizFlow, as the details above are passed from BizFlow directly.  </fm:hint>
+			</fm:error>
+			<fm:events>
+				<fm:event id="onclick">
+					<fm:action id="formSubmission">
+						<fm:param name="Action" option="Action" value="bizflowEntry" />
+						<fm:param name="Validate" option="Static" value="false" />
+					</fm:action>
+				</fm:event>
+			</fm:events>
+			<fm:palette_ref control="Button (Standard)" />
+		</fm:element>
+		<fm:content_alignment distribution="vertical" halign="left" valign="top" />
+	</fm:group>
+	<form_details xmlns="http://www.hyfinity.com/formmaker">
+		<error_highlight_method alert="true" validation_mode="all">tooltip</error_highlight_method>
+		<hint_display_method>tooltip</hint_display_method>
+		<top_level_message class="" required="false" style="" />
+		<mark_mandatory class="" location="after_label" required="false" style=""> * </mark_mandatory>
+		<description>Enter a description.</description>
+		<page_background_style class="" style="" />
+		<page_content_style class="" style="" />
+		<page_events />
+		<external_events />
+	</form_details>
+</fm:structure>

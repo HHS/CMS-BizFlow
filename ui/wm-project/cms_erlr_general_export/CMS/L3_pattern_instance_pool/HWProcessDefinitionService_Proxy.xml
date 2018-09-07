@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern base="" desc="" image="" name="HWProcessDefinitionService_Proxy.xml" pattern_id="HWProcessDefinitionService_Proxy" version="" xmlns="http://www.hyfinity.com/xfactory">
+	<nodes>
+		<node desc="Please enter description here" image="" name="HWProcessDefinition" node_id="HWProcessDefinition" protocol="java" runtime_instance="" runtime_location="" type="xagent">
+			<actions>
+				<action alias="resume" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="suspend" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="copy" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getDependencyList" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessVariables" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="createInstance" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessDefinition" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="setPublicationState" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getCustomAttributeDefinitions" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessInstances" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessInstanceCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessArchives" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="getProcessArchiveCount" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="move" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+				<action alias="isPublished" content_type="xml" desc="" name="requestInboundService">
+					<input desc="" message_name="" message_ref="" name="request" type="org.w3c.dom.Node" />
+					<output desc="" message_name="" message_ref="" name="response" type="org.w3c.dom.Node" />
+				</action>
+			</actions>
+			<engine desc="no engine required" name="XGate Proxy" runtime_instance="com.hyfinity.xgate" type="http">
+				<logicsheet desc="" logicsheet_ref="" name="" />
+				<other_resources />
+			</engine>
+		</node>
+	</nodes>
+</pattern>

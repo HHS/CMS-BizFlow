@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index desc="hsguser/mvc/BizFlow/logicsheet_pool_pool" name="hsguser/mvc/BizFlow/logicsheet_pool_pool" xmlns="http://www.hyfinity.com/xstore">
+	<entry desc="" docname="view_Page_Painter_rules.xml" id="view_Page_Painter_rules" timestamp="" />
+	<entry desc="" docname="SaveWICDetails_Controller_rules.xml" id="BizFlowTestService_Controller_rules" timestamp="" />
+	<entry desc="" docname="GetWICDetails_Controller_rules.xml" id="Controller_1_Controller_rules" timestamp="" />
+	<entry desc="" docname="HWActivityService_Access_Service_Rules.xml" id="HWActivityService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWApplicationsService_Access_Service_Rules.xml" id="HWApplicationsService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWProcessService_Access_Service_Rules.xml" id="HWProcessService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWProcessDefinitionService_Access_Service_Rules.xml" id="HWProcessDefinitionService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWSessionService_Access_Service_Rules.xml" id="HWSessionService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWUserService_Access_Service_Rules.xml" id="HWUserService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWWorkitemService_Access_Service_Rules.xml" id="HWWorkitemService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="HWWorkitemDataService_Access_Service_Rules.xml" id="HWWorkitemDataService_Access_Service_Rules" timestamp="" />
+	<entry desc="" docname="SaveWICDetails_UpdateBizFlow_rules.xml" id="SaveWICDetails_UpdateBizFlow_rules" timestamp="" />
+	<entry desc="" docname="workflowdb_Database_rules.xml" id="workflowdb_Database_rules.xml" timestamp="" />
+	<entry desc="" docname="initialResponse_Controller_rules.xml" id="PartialPage_1_Controller_rules" timestamp="" />
+	<entry desc="" docname="Case_Completed_Controller_rules.xml" id="PartialPage_1_Controller_rules2" timestamp="" />
+</index>
