@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema targetNamespace="http://je.wf.bf.hs.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsd-comp="http://handysoft.com/webservice/BizFlowSchema" xmlns:xsd-je="http://je.wf.bf.hs.com">
-	<xsd:import namespace="http://handysoft.com/webservice/BizFlowSchema" schemaLocation="BizFlowSchema-comp.xsd" />
-	<xsd:complexType abstract="true" name="HWElement">
-		<xsd:sequence>
-			<xsd:element name="dirtyFlag" nillable="true" type="xsd:string" />
-		</xsd:sequence>
-	</xsd:complexType>
-</xsd:schema>

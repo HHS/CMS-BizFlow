@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<index desc="hsguser/mvc/BizFlow/message_pool_pool" name="hsguser/mvc/BizFlow/message_pool_pool" xmlns="http://www.hyfinity.com/xstore">
-	<entry desc="" docname="to_BizFlowEntry_page.xml" id="to_DummyStart_page" timestamp="" />
-	<entry desc="" docname="calling_initial_response_action.xml" id="calling_saveInitial_respone_action" timestamp="" />
-	<entry desc="" docname="to_initialResponse_page.xml" id="to_initialResponse_page" timestamp="" />
-	<entry desc="" docname="calling_case_completedX_action.xml" id="calling_case_completed_action" timestamp="" />
-	<entry desc="" docname="to_case_completed_page.xml" id="to_case_completed_page" timestamp="" />
-</index>

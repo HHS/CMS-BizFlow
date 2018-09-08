@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<index desc="hsguser/mvc/BizFlow/L2_pattern_instance_pool_pool" name="hsguser/mvc/BizFlow/L2_pattern_instance_pool_pool" xmlns="http://www.hyfinity.com/xstore">
-	<entry desc="" docname="GetWICDetails.xml" id="GetWICDetails" timestamp="" />
-	<entry desc="" docname="SaveWICDetails.xml" id="SaveWICDetails" timestamp="" />
-	<entry desc="" docname="initialResponse.xml" id="initialResponse" timestamp="" />
-	<entry desc="" docname="case_completed.xml" id="case_completed" timestamp="" />
-</index>

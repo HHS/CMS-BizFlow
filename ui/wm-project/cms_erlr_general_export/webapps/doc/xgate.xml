@@ -1,9 +1,0 @@
-<xgate>
-    <product>mvc</product>
-    <plugins>
-        <sxforms delete_bound="true" mark_unbound="true" mark_bound="/mvc:eForm/mvc:Data/WorkitemContext">true</sxforms>
-        <ensure_html_response>false</ensure_html_response>
-        <output_doctype doctype_public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype_system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">true</output_doctype>
-        <set_locale>false</set_locale>
-    </plugins>
-</xgate>
