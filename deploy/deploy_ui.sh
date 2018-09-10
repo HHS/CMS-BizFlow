@@ -8,7 +8,12 @@ INPUT2=$2
 ENV=
 DEBUG_OPTION="debug"
 DIR_TEST="success"
+CURDATE1=$(date +%Y%m%d)
+CURDATE2=$(date +%Y-%m-%d)
+CURDATETIME=$(date +%Y%m%d_%H%M%S)
 
+# script error logging
+LOG_FILE=
 
 
 
@@ -25,11 +30,9 @@ setEnv()
 	then
 		ENV=prod
 	else
-		echo "You must specify environment (dev, qa, prod)"
+		echo "ERROR: You must specify environment (dev, qa, prod)" 1>&3
 		exit 1
 	fi
-	
-	#echo "ENV = $ENV"
 
 }
 
@@ -49,59 +52,68 @@ setVar(){
 	DIR_TOMCAT="/hrts/$ENV/tomcat8/apache-tomcat-8.0.37"
 	SRC_WEBAPPS="$DIR_DEPLOY/ui/runtime/webapps"
 	TRG_WEBAPPS="$DIR_TOMCAT/webapps"
+	setupLog
+}
 
+
+setupLog()
+{
+	LOG_FILE="ui-deploy-$ENV-$CURDATETIME.log"
+	exec 3>&1 4>&2
+	trap 'exec 2>&4 1>&3' 0 1 2 3
+	exec 1>${LOG_FILE} 2>&1
 }
 
 
 showVar(){
 
-	echo "-------------------------------------"
-	echo "ENV     = $ENV"
-	echo "ISDEBUG = $ISDEBUG"
+	echo "-------------------------------------"            | tee /dev/fd/3
+	echo "ENV     = $ENV"                                   | tee /dev/fd/3
+	echo "ISDEBUG = $ISDEBUG"                               | tee /dev/fd/3
 	if [ "$ISDEBUG" == "true" ]
 	then
 		echo "*** NOTE: In order to run as non-debug mode, use -nodebug option."
 		echo
 	fi
-	echo "DIR_DEBUGSRC = " $DIR_DEBUGSRC
-	echo "ISTEMPFIX    = " $ISTEMPFIX
-	echo "DIR_DEPLOY   = " $DIR_DEPLOY
-	echo "DIR_TOMCAT   = " $DIR_TOMCAT
-	echo "SRC_WEBAPPS  = " $SRC_WEBAPPS
-	echo "TRG_WEBAPPS  = " $TRG_WEBAPPS
-	echo "Timestamp    = " $(date +"%Y-%m-%d %H:%M:%S %z")
-	echo "-------------------------------------"
+	echo "DIR_DEBUGSRC = " $DIR_DEBUGSRC                    | tee /dev/fd/3
+	echo "ISTEMPFIX    = " $ISTEMPFIX                       | tee /dev/fd/3
+	echo "DIR_DEPLOY   = " $DIR_DEPLOY                      | tee /dev/fd/3
+	echo "DIR_TOMCAT   = " $DIR_TOMCAT                      | tee /dev/fd/3
+	echo "SRC_WEBAPPS  = " $SRC_WEBAPPS                     | tee /dev/fd/3
+	echo "TRG_WEBAPPS  = " $TRG_WEBAPPS                     | tee /dev/fd/3
+	echo "Timestamp    = " $(date +"%Y-%m-%d %H:%M:%S %z")  | tee /dev/fd/3
+	echo "-------------------------------------"            | tee /dev/fd/3
 	if [ ! -d "$DIR_DEPLOY" ]
 	then
-		echo "*** ERROR: $DIR_DEPLOY does not exist."
+		echo "*** ERROR: $DIR_DEPLOY does not exist."       | tee /dev/fd/3
 		DIR_TEST="fail"
 	fi
 	if [ ! -d "$DIR_TOMCAT" ]
 	then
-		echo "*** ERROR: $DIR_TOMCAT does not exist."
+		echo "*** ERROR: $DIR_TOMCAT does not exist."       | tee /dev/fd/3
 		DIR_TEST="fail"
 	fi
 	if [ ! -d "$SRC_WEBAPPS" ]
 	then
-		echo "*** ERROR: $SRC_WEBAPPS does not exist."
+		echo "*** ERROR: $SRC_WEBAPPS does not exist."      | tee /dev/fd/3
 		DIR_TEST="fail"
 	fi
 	if [ ! -d "$TRG_WEBAPPS" ]
 	then
-		echo "*** ERROR: $TRG_WEBAPPS does not exist."
+		echo "*** ERROR: $TRG_WEBAPPS does not exist."      | tee /dev/fd/3
 		DIR_TEST="fail"
 	fi
 
-	echo "DIR_TEST  = " $DIR_TEST
-	echo "-------------------------------------"
+	echo "DIR_TEST  = " $DIR_TEST                           | tee /dev/fd/3
+	echo "-------------------------------------"            | tee /dev/fd/3
 
 }
 
 
 startTomcat(){
 
-	echo "----------"
-	echo "Starting tomcat ..."
+	echo "----------"           | tee /dev/fd/3
+	echo "Starting tomcat ..."  | tee /dev/fd/3
 	if [ "$ISDEBUG" == "true" ]
 	then
 		$DIR_DEBUGSRC/script1.sh
@@ -115,18 +127,18 @@ startTomcat(){
 
 stopTomcat(){
 
-	echo "----------"
-	echo "Stopping tomcat ..."
+	echo "----------"           | tee /dev/fd/3
+	echo "Stopping tomcat ..."  | tee /dev/fd/3
 	if [ "$ISDEBUG" == "true" ]
 	then
 		$DIR_DEBUGSRC/script1.sh
 		echo
-		echo "sleeping for 3 seconds..."
+		echo "sleeping for 3 seconds..."  | tee /dev/fd/3
 		sleep 3s
 	else
 		$DIR_TOMCAT/bin/hrts-shutdown.sh
 		echo
-		echo "sleeping for 1 minute..."
+		echo "sleeping for 1 minute..."   | tee /dev/fd/3
 		sleep 1m
 	fi
 	echo
@@ -136,8 +148,8 @@ stopTomcat(){
 
 copyBfCustom(){
 
-	echo "----------"
-	echo "Coping BizFlow customization files ..."
+	echo "----------"                              | tee /dev/fd/3
+	echo "Coping BizFlow customization files ..."  | tee /dev/fd/3
 	if [ "$ISDEBUG" == "true" ]
 	then
 		$DIR_DEBUGSRC/script1.sh
@@ -146,6 +158,8 @@ copyBfCustom(){
 		cp -rf $SRC_WEBAPPS/bizflow $TRG_WEBAPPS
 		# bizflow web customization configuration deploy
 		cp -rf $SRC_WEBAPPS/../configuration/$INPUT1/tomcat/webapps/bizflow $TRG_WEBAPPS
+		# bizflowrule web file deploy
+		cp -rf $SRC_WEBAPPS/bizflowrule $TRG_WEBAPPS
 	fi
 	echo
 
@@ -154,8 +168,8 @@ copyBfCustom(){
 
 copyWmRuntime(){
 
-	echo "----------"
-	echo "Coping WebMaker runtime files ..."
+	echo "----------"                         | tee /dev/fd/3
+	echo "Coping WebMaker runtime files ..."  | tee /dev/fd/3
 	if [ "$ISDEBUG" == "true" ]
 	then
 		$DIR_DEBUGSRC/script1.sh
@@ -172,8 +186,8 @@ copyWmRuntime(){
 
 copyTempfix(){
 
-	echo "----------"
-	echo "Coping temporary fix runtime files ..."
+	echo "----------"                              | tee /dev/fd/3
+	echo "Coping temporary fix runtime files ..."  | tee /dev/fd/3
 	if [ "$ISDEBUG" == "true" ]
 	then
 		$DIR_DEBUGSRC/script1.sh
