@@ -30,7 +30,7 @@ setEnv()
 	then
 		ENV=prod
 	else
-		echo "ERROR: You must specify environment (dev, qa, prod)" 1>&3
+		echo "ERROR: You must specify environment (dev, qa, prod)"
 		exit 1
 	fi
 
