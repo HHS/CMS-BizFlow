@@ -22,7 +22,8 @@
 <bf:parameter id="processid" name="pid" value="" valuePattern="NoRiskyValue"/><%--madatory--%>
 <bf:parameter id="activityid" name="aseq" value="" valuePattern="NoRiskyValue"/><%--madatory--%>
 <bf:parameter id="workitemseq" name="wseq" value="" valuePattern="NoRiskyValue"/><%--madatory--%>
-<bf:parameter id="reqNum" name="rn" value="" valuePattern="NoRiskyValue"/><%--madatory--%>
+<bf:parameter id="param1" name="p1" value="" valuePattern="NoRiskyValue"/><%--madatory--%>
+<bf:parameter id="overwrite" name="ow" value="true" valuePattern="NoRiskyValue"/><%--madatory--%>
 
 <%@ include file="./sslinit.jsp" %>
 
@@ -32,7 +33,7 @@
     static final String RUNNING_PROCESS_STATE = "R";
     static Properties properties = null;
 
-    static final String REPORT_URL = "{REPORTSERVERURL}/rest_v2/reports{PATH}.{FILEFORMAT}?j_memberid={J_MEMBERID}&j_username={J_USERNAME}&reqNum={REQ_NUM}";
+    static final String REPORT_URL = "{REPORTSERVERURL}/rest_v2/reports{PATH}.{FILEFORMAT}?j_memberid={J_MEMBERID}&j_username={J_USERNAME}&param1={PARAM1}";
 
     static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger("JSP");
 
@@ -46,7 +47,7 @@
         }
     }
 
-    File downloadWorksheet(HttpServletRequest request, String reportServerURL, String path, String fileFormat, String jMemberId, String jUserName, String reqNum) {
+    File downloadWorksheet(HttpServletRequest request, String reportServerURL, String path, String fileFormat, String jMemberId, String jUserName, String param1) {
         File fp = null;
         try {
             initSSLEx(request, reportServerURL);
@@ -57,7 +58,7 @@
             url = StringUtils.replace(url, "{FILEFORMAT}", fileFormat);
             url = StringUtils.replace(url, "{J_MEMBERID}", jMemberId);
             url = StringUtils.replace(url, "{J_USERNAME}", jUserName);
-            url = StringUtils.replace(url, "{REQ_NUM}", reqNum);
+            url = StringUtils.replace(url, "{PARAM1}", param1);
 
             java.net.URL agent = new java.net.URL(url);
 
@@ -118,7 +119,7 @@
     String reportPath = null;
     String fileFormat = "pdf";
     String reportServerURL = null;
-    boolean overwrite = !"false".equalsIgnoreCase(request.getParameter("ow"));
+    boolean isOverwrite = !"false".equalsIgnoreCase(overwrite);
 
     try {
         loadProperties(application);
@@ -145,7 +146,7 @@
             for (int i = 0; i < count; i++) {
                 HWAttachment attachment = attachments.getItem(i);
                 if (documentType.equalsIgnoreCase(attachment.getCategory())) {
-                    if (overwrite) {
+                    if (isOverwrite) {
                         attachments.remove(i);
                         attachments.update();
                     } else {
@@ -168,7 +169,7 @@
             // download Worksheet report file
             String jMemberID = loginUser.getFieldValueAt(0, "ID");
             String jUserName = loginUser.getFieldValueAt(0, "LOGINID");
-            File worksheetFile = downloadWorksheet(request, reportServerURL, reportPath, fileFormat, jMemberID, jUserName, reqNum);
+            File worksheetFile = downloadWorksheet(request, reportServerURL, reportPath, fileFormat, jMemberID, jUserName, param1);
             if (worksheetFile != null && 0 < worksheetFile.length()) {
                 // Attach to process
                 XMLResultSet xrs = new XMLResultSetImpl();
