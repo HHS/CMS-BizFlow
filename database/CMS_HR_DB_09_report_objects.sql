@@ -1692,7 +1692,7 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			, X.DS1_STATE, X.DS1_CITY
 			, X.DS2_STATE, X.DS2_CITY
 			-- PCA Details
-			, X.TYPE_OF_APPT, X.NOT_TO_EXDATE, X.WORK_SCHEDULE , X.HOURS_PER_WEEK , X.REQ_BD_CERT , X.LIC_INFO , X.REQ_ADMIN_APPROVAL
+			, X.TYPE_OF_APPT, X.NOT_TO_EXDATE, X.WORK_SCHEDULE , X.HOURS_PER_WEEK , X.BD_CERT_REQ , X.LIC_INFO , X.REQ_ADMIN_APPROVAL
 			-- licenseState
 			, X.LIC_STATE1_STATE, to_date(X.LIC_STATE1_EXP_DATE, 'mm/dd/yyyy') LIC_STATE1_EXP_DATE
 			, X.LIC_STATE2_STATE, to_date(X.LIC_STATE2_EXP_DATE, 'mm/dd/yyyy') LIC_STATE2_EXP_DATE
@@ -1702,8 +1702,12 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			, X.BD_CERT_SPEC9, X.BD_CERT_SPEC_OTHER
 			-- allowance
 			, X.LEN_SERVED, X.LEN_SERVICE
-			, X.ALW_CATEGORY , X.ALW_BD_CERT, X.ALW_MULTI_YEAR_AGMT, X.ALW_MISSION_SC
-			, X.ALW_TOTAL, X.TOTAL_PAYABLE
+			, X.ALW_CATEGORY, TO_NUMBER(SUBSTR(X.ALW_CATEGORY, 2), '999999999.99') ALW_CATEGORY_NUM
+			, X.ALW_BD_CERT, TO_NUMBER(SUBSTR(X.ALW_BD_CERT, 2), '999999999.99') ALW_BD_CERT_NUM
+			, X.ALW_MULTI_YEAR_AGMT, TO_NUMBER(SUBSTR(X.ALW_MULTI_YEAR_AGMT, 2), '999999999.99') ALW_MULTI_YEAR_AGMT_NUM
+			, X.ALW_MISSION_SC, TO_NUMBER(SUBSTR(X.ALW_MISSION_SC, 2), '999999999.99') ALW_MISSION_SC_NUM
+			, X.ALW_TOTAL, TO_NUMBER(SUBSTR(X.ALW_TOTAL, 2 ), '999999999.99') ALW_TOTAL_NUM
+			, X.TOTAL_PAYABLE, TO_NUMBER(SUBSTR(X.TOTAL_PAYABLE, 2), '999999999.99') TOTAL_PAYABLE_NUM
 		FROM TBL_FORM_DTL FD, XMLTABLE('/formData/items'
 		                               PASSING FD.FIELD_DATA
 		                               COLUMNS
@@ -1773,7 +1777,7 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			                               ,   NOT_TO_EXDATE NVARCHAR2(50)   PATH './item[id="notToExceedDate"]/value'
 			                               ,   WORK_SCHEDULE NVARCHAR2(15)   PATH './item[id="workSchedule"]/value'
 			                               ,   HOURS_PER_WEEK NVARCHAR2(5)   PATH './item[id="hoursPerWeek"]/value'
-			                               ,   REQ_BD_CERT NVARCHAR2(5)   PATH './item[id="requireBoardCert"]/value'
+			                               ,   BD_CERT_REQ NVARCHAR2(5)   PATH './item[id="requireBoardCert"]/value'
 			                               ,   LIC_INFO NVARCHAR2(140)   PATH './item[id="licenseInfo"]/value'
 			                               ,   REQ_ADMIN_APPROVAL NVARCHAR2(5)   PATH './item[id="requireAdminApproval"]/value'
 			                               -- licenseState
@@ -1805,3 +1809,4 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 		WHERE FD.FORM_TYPE='CMSINCENTIVES'
 ;
 /
+
