@@ -260,9 +260,9 @@ BEGIN
 	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
 		--DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
 
-		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory',           '/formData/items/item[id=''CASE_CATEGORY'']/value/text()');
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''CASE_CATEGORY'']/value/text()');
 		V_RLVNTDATANAME := 'caseCategory';
-		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''CASE_CATEGORY'']/value/text()');
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_CATEGORY'']/value/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
 			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
 			---------------------------------
@@ -287,43 +287,70 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseNumber',             '/formData/items/item[id=''CASE_NUMBER'']/value/text()');
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus',             '/formData/items/item[id=''CASE_STATUS'']/value/text()');
-
-
-		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType',               '/formData/items/item[id=''CASE_TYPE'']/value/text()');
-		V_RLVNTDATANAME := 'caseType';
-		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''CASE_TYPE'']/value/text()');
-		IF V_XMLVALUE IS NOT NULL THEN
-			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-			---------------------------------
-			-- replace with lookup value
-			---------------------------------
-			BEGIN
-				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
-				FROM TBL_LOOKUP
-				WHERE TBL_ID = TO_NUMBER(V_VALUE);
-			EXCEPTION
-				WHEN NO_DATA_FOUND THEN
-					V_VALUE_LOOKUP := NULL;
-				WHEN OTHERS THEN
-					V_VALUE_LOOKUP := NULL;
-			END;
-			V_VALUE := V_VALUE_LOOKUP;
-		ELSE
-			V_VALUE := NULL;
-		END IF;
-		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
-
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName',            '/formData/items/item[id=''CONTACT_NAME'']/value/text()');
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName',           '/formData/items/item[id=''EMP_NAME'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseNumber', '/formData/items/item[id=''CASE_NUMBER'']/value/text()');
 		
-		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate',     '/formData/items/item[id=''CUSTOMER_CONTACT_DT'']/value/text()');
+		
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''CASE_STATUS'']/value/text()');
+		V_RLVNTDATANAME := 'caseStatus';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_STATUS'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			---------------------------------
+			-- replace with lookup value
+			---------------------------------
+			BEGIN
+				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+				FROM TBL_LOOKUP
+				WHERE TBL_ID = TO_NUMBER(V_VALUE);
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					V_VALUE_LOOKUP := NULL;
+				WHEN OTHERS THEN
+					V_VALUE_LOOKUP := NULL;
+			END;
+			V_VALUE := V_VALUE_LOOKUP;
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''CASE_TYPE'']/value/text()');
+		V_RLVNTDATANAME := 'caseType';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_TYPE'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			---------------------------------
+			-- replace with lookup value
+			---------------------------------
+			BEGIN
+				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+				FROM TBL_LOOKUP
+				WHERE TBL_ID = TO_NUMBER(V_VALUE);
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					V_VALUE_LOOKUP := NULL;
+				WHEN OTHERS THEN
+					V_VALUE_LOOKUP := NULL;
+			END;
+			V_VALUE := V_VALUE_LOOKUP;
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''GEN_CUSTCONTACT'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''GEN_EMPCONTACT'']/value/text()');
+		
+
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate', '/formData/items/item[id=''CUSTOMER_CONTACT_DT'']/value/text()');
 		V_RLVNTDATANAME := 'initialContactDate';
-		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''CUSTOMER_CONTACT_DT'']/value/text()');
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CUST_INITIAL_CONTACT'']/value/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
 			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
 			-------------------------------------
@@ -338,7 +365,7 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
-		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'lastModifiedDate',       '/formData/items/item[id=''LAST_MOD_DT'']/value/text()');
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'lastModifiedDate', '/formData/items/item[id=''LAST_MOD_DT'']/value/text()');
 		V_RLVNTDATANAME := 'lastModifiedDate';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''LAST_MOD_DT'']/value/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
@@ -356,10 +383,10 @@ BEGIN
 
 
 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization',           '/formData/items/item[id=''EMP_ORG'']/value/text()');
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'primaryDWCSpecialist',   '/formData/items/item[id=''PRIM_SPECIALIST'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'primaryDWCSpecialist',   '/formData/items/item[id=''GEN_DWC_SPECIALIST'']/value/text()');
 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum',             '/formData/items/item[id=''REQ_NUMBER'']/value/text()');
 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestStatusDate',      '/formData/items/item[id=''REQ_STATUS_DT'']/value/text()');
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'secondaryDWCSpecialist', '/formData/items/item[id=''PRIM_SPECIALIST'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'secondaryDWCSpecialist', '/formData/items/item[id=''GEN_SECONDARY_SPECIALIST'']/value/text()');
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
