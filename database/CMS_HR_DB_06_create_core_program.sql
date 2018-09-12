@@ -165,46 +165,64 @@ END;
  * @param I_FIELD_DATA - Form data xml.
  */
 CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_INCENTIVES
-(
-	I_PROCID            IN      NUMBER
-	, I_FIELD_DATA      IN      XMLTYPE
-)
+	(
+		  I_PROCID            IN      NUMBER
+		, I_FIELD_DATA      IN      XMLTYPE
+	)
 IS
-BEGIN
-	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
-	--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
-	--DBMS_OUTPUT.PUT_LINE('    I_PROCID           = ' || TO_CHAR(I_PROCID));
-	--DBMS_OUTPUT.PUT_LINE('    I_FIELD_DATA       = ' || I_FIELD_DATA.GETCLOBVAL());
-	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+	V_XMLVALUE             XMLTYPE;
+	V_VALUE                NVARCHAR2(2000);
 
-	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
-		--DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
+	BEGIN
+		--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+		--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
+		--DBMS_OUTPUT.PUT_LINE('    I_PROCID           = ' || TO_CHAR(I_PROCID));
+		--DBMS_OUTPUT.PUT_LINE('    I_FIELD_DATA       = ' || I_FIELD_DATA.GETCLOBVAL());
+		--DBMS_OUTPUT.PUT_LINE(' ----------------');
 
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'administrativeCode', '/formData/items/item[id=''administrativeCode'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'associatedIncentives', '/formData/items/item[id=''associatedIncentives'']/value/requestNumber/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateName', '/formData/items/item[id=''candidateName'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrSpecialist', '/formData/items/item[id=''hrSpecialist'']/value/id/text()', '/formData/items/item[id=''hrSpecialist'']/value/name/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'incentiveType', '/formData/items/item[id=''incentiveType'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'payPlanSeriesGrade', '/formData/items/item[id=''payPlanSeriesGrade'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'positionTitle', '/formData/items/item[id=''positionTitle'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'relatedUserIds', '/formData/items/item[id=''relatedUserIds'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficial', '/formData/items/item[id=''selectingOfficial'']/value/id/text()', '/formData/items/item[id=''selectingOfficial'']/value/name/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'pcaType', '/formData/items/item[id=''pcaType'']/value/text()');
+		IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+			--DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
+
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'administrativeCode', '/formData/items/item[id="administrativeCode"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'associatedIncentives', '/formData/items/item[id="associatedIncentives"]/value/requestNumber/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateName', '/formData/items/item[id="candidateName"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrSpecialist', '/formData/items/item[id="hrSpecialist"]/value/participantId/text()', '/formData/items/item[id="hrSpecialist"]/value/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'incentiveType', '/formData/items/item[id="incentiveType"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'payPlanSeriesGrade', '/formData/items/item[id="payPlanSeriesGrade"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'positionTitle', '/formData/items/item[id="positionTitle"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'relatedUserIds', '/formData/items/item[id="relatedUserIds"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficial', '/formData/items/item[id="selectingOfficial"]/value/participantId/text()', '/formData/items/item[id="selectingOfficial"]/value/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'pcaType', '/formData/items/item[id="pcaType"]/value/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateAccept', '/formData/items/item[id="candiAgreeRenewal"]/value/text()');
+
+			V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="processName"]/value/text()');
+			IF V_XMLVALUE IS NOT NULL THEN
+				V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			ELSE
+				V_VALUE := NULL;
+			END IF;
+
+			IF 'PCA Incentives' = V_VALUE THEN
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'oaApprovalReq', '/formData/items/item[id="requireAdminApproval"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'dgoDirector', '/formData/items/item[id="dghoDirector"]/value/participantId/text()', '/formData/items/item[id="dghoDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'chiefMedicalOfficer', '/formData/items/item[id="chiefPhysician"]/value/participantId/text()', '/formData/items/item[id="chiefPhysician"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ofmDirector', '/formData/items/item[id="ofmDirector"]/value/participantId/text()', '/formData/items/item[id="ofmDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgDirector', '/formData/items/item[id="tabgDirector"]/value/participantId/text()', '/formData/items/item[id="tabgDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="ohcDirector"]/value/participantId/text()', '/formData/items/item[id="ohcDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ofcAdmin', '/formData/items/item[id="offAdmin"]/value/participantId/text()', '/formData/items/item[id="offAdmin"]/value/name/text()');
+			END IF;
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
-	END IF;
+		END IF;
 
-EXCEPTION
-	WHEN OTHERS THEN
+		EXCEPTION
+		WHEN OTHERS THEN
 		SP_ERROR_LOG();
 		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_INCENTIVES -------------------');
-END;
+	END;
 
 /
-
-
-
 
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_PV_ERLR
@@ -224,6 +242,14 @@ CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_ERLR
 	, I_FIELD_DATA      IN      XMLTYPE
 )
 IS
+	V_RLVNTDATANAME        VARCHAR2(100);
+	V_VALUE                NVARCHAR2(2000);
+	V_VALUE_LOOKUP         NVARCHAR2(2000);
+	V_CURRENTDATE          DATE;
+	V_CURRENTDATESTR       NVARCHAR2(30);
+	V_VALUE_DATE           DATE;
+	V_VALUE_DATESTR        NVARCHAR2(30);
+	V_XMLVALUE             XMLTYPE;
 BEGIN
 	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
 	--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -234,65 +260,133 @@ BEGIN
 	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
 		--DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
 
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''contactName'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''empName'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate', '/formData/items/item[id=''date_customer_contacted'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization', '/formData/items/item[id=''empOrg'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''case_type'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''case_category'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''case_status'']/value/text()');
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''CASE_CATEGORY'']/value/text()');
+		V_RLVNTDATANAME := 'caseCategory';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_CATEGORY'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			---------------------------------
+			-- replace with lookup value
+			---------------------------------
+			BEGIN
+				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+				FROM TBL_LOOKUP
+				WHERE TBL_ID = TO_NUMBER(V_VALUE);
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					V_VALUE_LOOKUP := NULL;
+				WHEN OTHERS THEN
+					V_VALUE_LOOKUP := NULL;
+			END;
+			V_VALUE := V_VALUE_LOOKUP;
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
-	--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
-	END IF;
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseNumber', '/formData/items/item[id=''CASE_NUMBER'']/value/text()');
+		
+		
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''CASE_STATUS'']/value/text()');
+		V_RLVNTDATANAME := 'caseStatus';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_STATUS'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			---------------------------------
+			-- replace with lookup value
+			---------------------------------
+			BEGIN
+				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+				FROM TBL_LOOKUP
+				WHERE TBL_ID = TO_NUMBER(V_VALUE);
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					V_VALUE_LOOKUP := NULL;
+				WHEN OTHERS THEN
+					V_VALUE_LOOKUP := NULL;
+			END;
+			V_VALUE := V_VALUE_LOOKUP;
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
-EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_INCENTIVES -------------------');
-END;
 
-/
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''CASE_TYPE'']/value/text()');
+		V_RLVNTDATANAME := 'caseType';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_TYPE'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			---------------------------------
+			-- replace with lookup value
+			---------------------------------
+			BEGIN
+				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+				FROM TBL_LOOKUP
+				WHERE TBL_ID = TO_NUMBER(V_VALUE);
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					V_VALUE_LOOKUP := NULL;
+				WHEN OTHERS THEN
+					V_VALUE_LOOKUP := NULL;
+			END;
+			V_VALUE := V_VALUE_LOOKUP;
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''GEN_CUSTCONTACT'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''GEN_EMPCONTACT'']/value/text()');
+		
+
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate', '/formData/items/item[id=''CUSTOMER_CONTACT_DT'']/value/text()');
+		V_RLVNTDATANAME := 'initialContactDate';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CUST_INIT_CONTACT_DT'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			-------------------------------------
+			-- date format and GMT conversion
+			-------------------------------------
+			V_VALUE := TO_CHAR(SYS_EXTRACT_UTC(TO_DATE(V_VALUE, 'MM/DD/YYYY')), 'YYYY/MM/DD HH24:MI:SS');
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
---------------------------------------------------------
---  DDL for Procedure SP_UPDATE_PV_ERLR
---------------------------------------------------------
+		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'lastModifiedDate', '/formData/items/item[id=''LAST_MOD_DT'']/value/text()');
+		V_RLVNTDATANAME := 'lastModifiedDate';
+		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''LAST_MOD_DT'']/value/text()');
+		IF V_XMLVALUE IS NOT NULL THEN
+			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			-------------------------------------
+			-- date format and GMT conversion
+			-------------------------------------
+			V_VALUE := TO_CHAR(SYS_EXTRACT_UTC(TO_DATE(V_VALUE, 'YYYY-MM-DD')), 'YYYY/MM/DD HH24:MI:SS');
+		ELSE
+			V_VALUE := NULL;
+		END IF;
+		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
-/**
- * Parses the form data xml to retrieve process variable values,
- * and updates process variable table (BIZFLOW.RLVNTDATA) records for the respective
- * the ER/LR Case Initiation process instance identified by the Process ID.
- *
- * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
- * @param I_FIELD_DATA - Form data xml.
- */
 
-create or replace PROCEDURE SP_UPDATE_PV_ERLR
-(
-	I_PROCID            IN      NUMBER
-	, I_FIELD_DATA      IN      XMLTYPE
-)
-IS
-BEGIN
-	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
-	--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
-	--DBMS_OUTPUT.PUT_LINE('    I_PROCID           = ' || TO_CHAR(I_PROCID));
-	--DBMS_OUTPUT.PUT_LINE('    I_FIELD_DATA       = ' || I_FIELD_DATA.GETCLOBVAL());
-	--DBMS_OUTPUT.PUT_LINE(' ----------------');
-
-	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
-		--DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
-
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''contactName'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''empName'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate', '/formData/items/item[id=''date_customer_contacted'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization', '/formData/items/item[id=''empOrg'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseType', '/formData/items/item[id=''case_type'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseCategory', '/formData/items/item[id=''case_category'']/value/text()');
-	SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''case_status'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization',           '/formData/items/item[id=''EMP_ORG'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'primaryDWCSpecialist',   '/formData/items/item[id=''GEN_PRIMARY_SPECIALIST'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum',             '/formData/items/item[id=''REQ_NUMBER'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestStatusDate',      '/formData/items/item[id=''REQ_STATUS_DT'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'secondaryDWCSpecialist', '/formData/items/item[id=''GEN_SECONDARY_SPECIALIST'']/value/text()');
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
@@ -303,6 +397,11 @@ EXCEPTION
 		SP_ERROR_LOG();
 		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_ERLR -------------------');
 END;
+
+/
+
+
+
 
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_PV_STRATCON
@@ -2029,9 +2128,9 @@ BEGIN
 							, SG_SO_ID                          NVARCHAR2(10)   PATH 'SG_SO_ID'
 							, SG_SO_TITLE                       NVARCHAR2(50)   PATH 'SG_SO_TITLE'
 							, SG_SO_ORG                         NVARCHAR2(50)   PATH 'SG_SO_ORG'
-							, SG_XO_ID                          NVARCHAR2(10)   PATH 'SG_XO_ID'
-							, SG_XO_TITLE                       NVARCHAR2(50)   PATH 'SG_XO_TITLE'
-							, SG_XO_ORG                         NVARCHAR2(50)   PATH 'SG_XO_ORG'
+							, SG_XO_ID                          NVARCHAR2(32)   PATH 'SG_XO_ID'
+							, SG_XO_TITLE                       NVARCHAR2(200)   PATH 'SG_XO_TITLE'
+							, SG_XO_ORG                         NVARCHAR2(200)   PATH 'SG_XO_ORG'
 							, SG_HRL_ID                         NVARCHAR2(10)   PATH 'SG_HRL_ID'
 							, SG_HRL_TITLE                      NVARCHAR2(50)   PATH 'SG_HRL_TITLE'
 							, SG_HRL_ORG                        NVARCHAR2(50)   PATH 'SG_HRL_ORG'
@@ -3274,9 +3373,9 @@ BEGIN
 							, SO_ID                             NVARCHAR2(10)   PATH 'SO_ID'
 							, SO_TITLE                          NVARCHAR2(50)   PATH 'SO_TITLE'
 							, SO_ORG                            NVARCHAR2(50)   PATH 'SO_ORG'
-							, XO_ID                             NVARCHAR2(10)   PATH 'XO_ID'
-							, XO_TITLE                          NVARCHAR2(50)   PATH 'XO_TITLE'
-							, XO_ORG                            NVARCHAR2(50)   PATH 'XO_ORG'
+							, XO_ID                             NVARCHAR2(32)   PATH 'XO_ID'
+							, XO_TITLE                          NVARCHAR2(200)   PATH 'XO_TITLE'
+							, XO_ORG                            NVARCHAR2(200)   PATH 'XO_ORG'
 							, HRL_ID                            NVARCHAR2(10)   PATH 'HRL_ID'
 							, HRL_TITLE                         NVARCHAR2(50)   PATH 'HRL_TITLE'
 							, HRL_ORG                           NVARCHAR2(50)   PATH 'HRL_ORG'
@@ -3779,7 +3878,7 @@ END;
  * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
  * @param I_FIELD_DATA - Form data xml.
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_CLSF
+create or replace PROCEDURE SP_UPDATE_PV_CLSF
 (
 	I_PROCID            IN      NUMBER
 	, I_FIELD_DATA      IN      XMLTYPE
@@ -3791,6 +3890,9 @@ IS
 	V_REC_CNT NUMBER(10);
 	V_XMLDOC XMLTYPE;
 	V_XMLVALUE XMLTYPE;
+    V_VALUE1	NVARCHAR2(2000);
+    V_VALUE2	NVARCHAR2(2000);
+    V_VALUE3	NVARCHAR2(2000);
 BEGIN
 	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
 	--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -3873,20 +3975,62 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
-		V_RLVNTDATANAME := 'execOfficer';
+		--V_RLVNTDATANAME := 'execOfficer';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/XO_ID/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
-			-------------------------------
-			-- participant prefix
-			-------------------------------
-			V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-		ELSE
-			V_VALUE := NULL;
-		END IF;
-		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 1) INTO V_VALUE1 FROM DUAL;      
+            SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 2) INTO V_VALUE2 FROM DUAL;
+            SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 3) INTO V_VALUE3 FROM DUAL;
+                    
+            V_RLVNTDATANAME := 'memIdExecOff';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE1 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            IF V_VALUE1 IS NOT NULL THEN
+                V_VALUE1 := '[U]' || V_VALUE1;
+            END IF;  
+            V_RLVNTDATANAME := 'execOfficer';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE1 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE2 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            IF V_VALUE2 IS NOT NULL THEN
+                V_VALUE2 := '[U]' || V_VALUE2;
+            END IF;  
+            V_RLVNTDATANAME := 'execOfficer2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE2 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE3 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            IF V_VALUE3 IS NOT NULL THEN
+                V_VALUE3 := '[U]' || V_VALUE3;
+            END IF;
+            V_RLVNTDATANAME := 'execOfficer3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE3 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+        ELSE
+            V_VALUE := NULL;
+            
+            V_RLVNTDATANAME := 'memIdExecOff';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'execOfficer';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'execOfficer2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'execOfficer3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+        END IF;
 
 		V_RLVNTDATANAME := 'finalPackageApprovedSO';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/PROCESS_VARIABLE/finalPackageApprovedSO/text()');
@@ -4194,8 +4338,6 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_CLSF -------------------');
 END;
 
-/
-
 
 
 
@@ -4211,7 +4353,7 @@ END;
  * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
  * @param I_FIELD_DATA - Form data xml.
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_ELIGQUAL
+create or replace PROCEDURE SP_UPDATE_PV_ELIGQUAL
 (
 	I_PROCID            IN      NUMBER
 	, I_FIELD_DATA      IN      XMLTYPE
@@ -4227,6 +4369,9 @@ IS
 	V_REC_CNT              NUMBER(10);
 	V_XMLDOC               XMLTYPE;
 	V_XMLVALUE             XMLTYPE;
+    V_VALUE1               NVARCHAR2(2000);
+    V_VALUE2               NVARCHAR2(2000);
+    V_VALUE3               NVARCHAR2(2000);
 BEGIN
 	--DBMS_OUTPUT.PUT_LINE('==== SP_UPDATE_PV_ELIGQUAL ==============================');
 	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
@@ -4410,21 +4555,6 @@ BEGIN
 		END IF;
 
 
-		V_RLVNTDATANAME := 'execOfficer';
-		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/XO_ID/text()');
-		IF V_XMLVALUE IS NOT NULL THEN
-			-------------------------------
-			-- participant prefix
-			-------------------------------
-			V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-		ELSE
-			V_VALUE := NULL;
-		END IF;
-		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
-
 		V_RLVNTDATANAME := 'feedbackDCO';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/PROCESS_VARIABLE/feedbackDCO/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
@@ -4513,16 +4643,62 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
-		V_RLVNTDATANAME := 'memIdExecOff';
+		--V_RLVNTDATANAME := 'memIdExecOff';
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/XO_ID/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
-			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-		ELSE
-			V_VALUE := NULL;
-		END IF;
-		--DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+			SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 1) INTO V_VALUE1 FROM DUAL;      
+            SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 2) INTO V_VALUE2 FROM DUAL;
+            SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 3) INTO V_VALUE3 FROM DUAL;
+                    
+            V_RLVNTDATANAME := 'memIdExecOff';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE1 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            IF V_VALUE1 IS NOT NULL THEN
+                V_VALUE1 := '[U]' || V_VALUE1;
+            END IF;  
+            V_RLVNTDATANAME := 'execOfficer';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE1 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE2 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            IF V_VALUE2 IS NOT NULL THEN
+                V_VALUE2 := '[U]' || V_VALUE2;
+            END IF;  
+            V_RLVNTDATANAME := 'execOfficer2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE2 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE3 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            IF V_VALUE3 IS NOT NULL THEN
+                V_VALUE3 := '[U]' || V_VALUE3;
+            END IF;
+            V_RLVNTDATANAME := 'execOfficer3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE3 WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+        ELSE
+            V_VALUE := NULL;
+            
+            V_RLVNTDATANAME := 'memIdExecOff';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'memIdExecOff3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'execOfficer';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'execOfficer2';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+            
+            V_RLVNTDATANAME := 'execOfficer3';
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+        END IF;
 
 
 		V_RLVNTDATANAME := 'memIdHrLiaison';
@@ -4827,9 +5003,6 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_ELIGQUAL -------------------');
 END;
 
-/
-
-
 
 
 --------------------------------------------------------
@@ -5102,9 +5275,9 @@ BEGIN
 							, SO_ID                         NVARCHAR2(10)   PATH 'GENERAL/SO_ID'
 							, SO_TITLE                      NVARCHAR2(50)   PATH 'GENERAL/SO_TITLE'
 							, SO_ORG                        NVARCHAR2(50)   PATH 'GENERAL/SO_ORG'
-							, XO_ID                         NVARCHAR2(10)   PATH 'GENERAL/XO_ID'
-							, XO_TITLE                      NVARCHAR2(50)   PATH 'GENERAL/XO_TITLE'
-							, XO_ORG                        NVARCHAR2(50)   PATH 'GENERAL/XO_ORG'
+							, XO_ID                         NVARCHAR2(32)   PATH 'GENERAL/XO_ID'
+							, XO_TITLE                      NVARCHAR2(200)   PATH 'GENERAL/XO_TITLE'
+							, XO_ORG                        NVARCHAR2(200)   PATH 'GENERAL/XO_ORG'
 							, HRL_ID                        NVARCHAR2(10)   PATH 'GENERAL/HRL_ID'
 							, HRL_TITLE                     NVARCHAR2(50)   PATH 'GENERAL/HRL_TITLE'
 							, HRL_ORG                       NVARCHAR2(50)   PATH 'GENERAL/HRL_ORG'
@@ -6586,6 +6759,4 @@ IS
 		RETURN L_KEY;
 	END;
 /
-
-
 
