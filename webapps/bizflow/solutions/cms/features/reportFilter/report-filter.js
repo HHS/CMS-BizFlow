@@ -25,8 +25,7 @@
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
 
-        vm.reportMap = [
-            {
+        vm.reportMap = [{
                 'name': 'CMS Time of Possession - Classification Only Report - Completed', 
                 'description': 'Calculates the time HR and Component users held a request. This report only displays data for "Classification Only" requests.',
                 'requestType': ["Classification Only"]
@@ -35,7 +34,7 @@
                 'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.'
             },{
                 'name': 'CMS Time to Classify Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
             },{
                 'name': 'CMS Time to Appoint Report - Completed', 
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
@@ -79,14 +78,8 @@
 
         vm.fromDateOpened = false;
         vm.toDateOpened = false;
-        vm.dateOptionFrom = {
-            showWeeks: false,
-            maxDate: new Date()
-        };
-        vm.dateOptionTo = {
-            showWeeks: false,
-            maxDate: new Date()
-        };
+        vm.dateOptionFrom = { showWeeks: false, maxDate: new Date() };
+        vm.dateOptionTo = { showWeeks: false, maxDate: new Date() };
 
         // Selectize configuration for members in User Group
         vm.membersInGroupConfig = {
@@ -126,10 +119,10 @@
         vm.classTypesForAppointment = [];
         vm.classTypesForOther = [];
 
-        vm.allClassificationTypes = ['All', 'Audit Position', 'Conduct 5-year Recertification','Create New Position Description', 'Reorganization Pen & Ink',
+        vm.allClassificationTypes = ['All', 'Audit Position', 'Create New Position Description', 'Reorganization Pen & Ink',
                                     'Reorganization for New Position', 'Review Existing Position Description','Update Coversheet', 'Update Major Duties'];
-        vm.recruitmentClassificationTypes = ['All', 'Conduct 5-year Recertification','Create New Position Description', 'Review Existing Position Description',
-                                'Reorganization for New Position','Update Coversheet', 'Update Major Duties'];
+        vm.recruitmentClassificationTypes = ['All','Create New Position Description', 'Reorganization Pen & Ink', 
+                                'Reorganization for New Position', 'Review Existing Position Description', 'Update Coversheet', 'Update Major Duties'];
 
         // Functions
         vm.getClassificationTypes = function () {
@@ -149,7 +142,7 @@
                 return vm.classTypesForRecruitment;
             } else if (vm.selected.requestType === 'Appointment') {
                 if (vm.classTypesForAppointment.length == 0) {
-                    vm.classTypesForAppointment = vm.classTypesForAppointment.concat(vm.recruitmentClassificationTypes, ['Reorganization Pen & Ink']);
+                    vm.classTypesForAppointment = vm.classTypesForAppointment.concat(vm.recruitmentClassificationTypes);
                     vm.classTypesForAppointment.sort();
                     vm.classTypesForAppointment = vm.getSelectizeOptions(vm.classTypesForAppointment);
                 }
@@ -215,7 +208,6 @@
             var day = when.getDate();
             day = day < 10 ? ('0' + day) : day;
             var year = when.getFullYear();
-
             var dateString = year + '-' + month + '-' + day;
             return dateString;
         };
