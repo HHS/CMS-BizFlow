@@ -224,6 +224,9 @@ IS
 
 /
 
+
+
+
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_PV_ERLR
 --------------------------------------------------------
@@ -295,20 +298,23 @@ BEGIN
 		V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_STATUS'']/value/text()');
 		IF V_XMLVALUE IS NOT NULL THEN
 			V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-			---------------------------------
-			-- replace with lookup value
-			---------------------------------
-			BEGIN
-				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
-				FROM TBL_LOOKUP
-				WHERE TBL_ID = TO_NUMBER(V_VALUE);
-			EXCEPTION
-				WHEN NO_DATA_FOUND THEN
-					V_VALUE_LOOKUP := NULL;
-				WHEN OTHERS THEN
-					V_VALUE_LOOKUP := NULL;
-			END;
-			V_VALUE := V_VALUE_LOOKUP;
+			-- skip looking up hard-coded value for case cancellation
+			IF  V_VALUE <> 'Case Created' AND V_VALUE <> 'closeNow' THEN 
+				---------------------------------
+				-- replace with lookup value
+				---------------------------------
+				BEGIN
+					SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+					FROM TBL_LOOKUP
+					WHERE TBL_ID = TO_NUMBER(V_VALUE);
+				EXCEPTION
+					WHEN NO_DATA_FOUND THEN
+						V_VALUE_LOOKUP := NULL;
+					WHEN OTHERS THEN
+						V_VALUE_LOOKUP := NULL;
+				END;
+				V_VALUE := V_VALUE_LOOKUP;
+			END IF;
 		ELSE
 			V_VALUE := NULL;
 		END IF;
@@ -344,8 +350,8 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''GEN_CUSTCONTACT'']/value/text()');
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''GEN_EMPCONTACT'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'contactName', '/formData/items/item[id=''GEN_CUSTOMER_NAME'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'employeeName', '/formData/items/item[id=''GEN_EMPLOYEE_NAME'']/value/text()');
 		
 
 		--SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'initialContactDate', '/formData/items/item[id=''CUSTOMER_CONTACT_DT'']/value/text()');
@@ -382,7 +388,7 @@ BEGIN
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
 
-		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization',           '/formData/items/item[id=''EMP_ORG'']/value/text()');
+		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization',           '/formData/items/item[id=''GEN_EMPLOYEE_ADMIN_CD'']/value/text()');
 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'primaryDWCSpecialist',   '/formData/items/item[id=''GEN_PRIMARY_SPECIALIST'']/value/text()');
 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum',             '/formData/items/item[id=''REQ_NUMBER'']/value/text()');
 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestStatusDate',      '/formData/items/item[id=''REQ_STATUS_DT'']/value/text()');
