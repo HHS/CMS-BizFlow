@@ -106,7 +106,7 @@
         return xrs;
     }
 
-    public static String getReportServerUrl(ServletRequest request) {
+    String getReportServerUrl(ServletRequest request) {
         StringBuilder sb = new StringBuilder(50);
         sb.append(request.getScheme()).append("://");
         sb.append(request.getServerName());
@@ -134,7 +134,6 @@
     String fileFormat = "pdf";
     String reportServerURL = getReportServerUrl(request);
     boolean isOverwrite = !"false".equalsIgnoreCase(overwrite);
-
 
     try {
         loadProperties(application);
