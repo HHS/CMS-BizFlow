@@ -105,6 +105,20 @@
         xrs.parse(hwSession.getProcesses(hwSessionInfo.toString(), filter.toByteArray()));
         return xrs;
     }
+
+    public static String getReportServerUrl(ServletRequest request) {
+        StringBuilder sb = new StringBuilder(50);
+        sb.append(request.getScheme()).append("://");
+        sb.append(request.getServerName());
+        int port = request.getServerPort();
+        if (80 != port) {
+            sb.append(":").append(port);
+        }
+
+        sb.append("/bizflowadvreport");
+
+        return sb.toString();
+    }
 %>
 <%
     String errorMsg = null;
@@ -118,8 +132,9 @@
     String fileName = null;
     String reportPath = null;
     String fileFormat = "pdf";
-    String reportServerURL = null;
+    String reportServerURL = getReportServerUrl(request);
     boolean isOverwrite = !"false".equalsIgnoreCase(overwrite);
+
 
     try {
         loadProperties(application);
@@ -128,7 +143,7 @@
         loginUser = (XMLResultSet) session.getAttribute("LoginUser");
         nProcessId = Integer.parseInt(processid);
         nActivityId = Integer.parseInt(activityid);
-        reportServerURL = properties.getProperty("report.server.url", "https://localhost/bizflowadvreport");
+        reportServerURL = properties.getProperty("report.server.url", reportServerURL);
         documentType = properties.getProperty("report.PCAJustificationWorksheet.documentType", DEFAULT_DOCUMENT_TYPE);
         fileName = properties.getProperty("report.PCAJustificationWorksheet.fileName", DEFAULT_FILE_NAME);
         reportPath = properties.getProperty("report.PCAJustificationWorksheet.path");
