@@ -26,7 +26,10 @@ setEnv()
 	then
 		ENV=prod
 	else
-		echo "You must specify environment (dev, qa, prd)"
+		echo "USAGE: $0 [env] [appprop/dated]"
+		echo "env: You must specify environment (dev, qa, prd)"
+		echo "appprop: capture application properties files"
+		echo "dated: capture only today's log files"
 		exit 1
 	fi
 	
@@ -129,6 +132,7 @@ copyFile()
 		cp $WS_DIR/logs/localhost.$CURDATE2.log            $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/logs/localhost_access_log.$CURDATE2.txt $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/logs/manager.$CURDATE2.log              $TRG_DIR/$ENV/ws/logs
+		cp $WS_DIR/logs/usa_staffing.log                   $TRG_DIR/$ENV/ws/logs
 		
 		cp $WS_DIR/webapps/bizflowadvreport/WEB-INF/logs/jasperserver.log   $TRG_DIR/$ENV/ws/logs
 		cp $WS_DIR/webapps/bizflowadvreport/WEB-INF/logs/jasperserver.log.1 $TRG_DIR/$ENV/ws/logs
