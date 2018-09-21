@@ -12,12 +12,15 @@
 	<property name="deploy.runtime.dir" value="${deploy.dir}/ui/runtime" />
 	<property name="deploy.conf.dir" value="${deploy.runtime.dir}/configuration" />
 	<property name="deploy.webapps.dir" value="${deploy.runtime.dir}/webapps" />
+
 	<property name="token.bf.base.url" value="http://cms.bizflow.com" />
+	<property name="token.bf.local.url" value="http://localhost" />
 	<property name="replace.bf.url.dev" value="http://localhost:8080" />
 	<property name="replace.bf.url.qa" value="http://localhost:9080" />
 	<property name="replace.bf.url.trn" value="http://localhost:8080" />
 	<property name="replace.bf.url.stg" value="http://localhost:8080" />
 	<property name="replace.bf.url.prd" value="http://localhost:8080" />
+
 	<!-- Note: comment out blastcache.set property if cache blasting should be disabled. -->
 	<property name="blastcache.set" value="true"/>
 
@@ -54,6 +57,22 @@
 		<include name="**/views/view/Page_Painter/SaveTabContentsForm.xsl" />
 	</patternset>
 
+	<!-- patters for bizflow custom module files to be captured, excluding config -->
+	<patternset id="bf.web.include.noconf">
+		<include name="bizindex.jsp" />
+		<include name="bizindex.org.before.disclaimer.jsp" />
+		<include name="bizindex.org.after.disclaimer.jsp" />
+		<include name="solutions/disclaimer/**" />
+		<include name="solutions/cms/**" />
+
+		<exclude name="solutions/cms/incentives/incentives.properties" />
+	</patternset>
+
+	<!-- patters for bizflow custom module config files to be captured -->
+	<patternset id="bf.web.include.conf">
+		<include name="solutions/cms/incentives/incentives.properties" />
+	</patternset>
+
 
 
 
@@ -85,6 +104,7 @@
 		<antcall target="package.form.addon" />
 		<antcall target="package.bizflow.custom" />
 		<antcall target="package.bizflow.custom.blastcache" />
+		<antcall target="package.bizflow.custom.conf" />
 		<antcall target="zip.package" />
 	</target>
 
@@ -122,14 +142,14 @@
 			depends="init"
 			description="capture and package form configuration">
 
-		<delete dir="${deploy.conf.dir}" />
+		<delete dir="${deploy.conf.dir}/**/bizflowwebmaker" />
 		<copy todir="${deploy.conf.dir}/template/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
 				<patternset refid="wm.proj.include.conf" />
 			</fileset>
 		</copy>
 
-		<!-- prepare DEV config -->
+		<!-- prepare DEV wm form config -->
 		<copy todir="${deploy.conf.dir}/dev/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
 				<patternset refid="wm.proj.include.conf" />
@@ -140,7 +160,7 @@
 			<replacefilter token="${token.bf.base.url}" value="${replace.bf.url.dev}" />
 		</replace>
 
-		<!-- prepare QA config -->
+		<!-- prepare QA wm form config -->
 		<copy todir="${deploy.conf.dir}/qa/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
 				<patternset refid="wm.proj.include.conf" />
@@ -151,7 +171,7 @@
 			<replacefilter token="${token.bf.base.url}" value="${replace.bf.url.qa}" />
 		</replace>
 
-		<!-- prepare PROD config -->
+		<!-- prepare PROD wm form config -->
 		<copy todir="${deploy.conf.dir}/prod/tomcat/webapps/bizflowwebmaker">
 			<fileset dir="${src.wmruntime.dir}">
 				<patternset refid="wm.proj.include.conf" />
@@ -212,11 +232,7 @@
 		<delete dir="${deploy.webapps.dir}/bizflow" />
 		<copy todir="${deploy.webapps.dir}/bizflow">
 			<fileset dir="${src.web.bizflow.dir}">
-				<include name="bizindex.jsp" />
-				<include name="bizindex.org.before.disclaimer.jsp" />
-				<include name="bizindex.org.after.disclaimer.jsp" />
-				<include name="solutions/disclaimer/**" />
-				<include name="solutions/cms/**" />
+				<patternset refid="bf.web.include.noconf" />
 			</fileset>
 		</copy>
 	</target>
@@ -234,6 +250,52 @@
 			includes="index.jsp">
 			<replacefilter token=".css" value=".css?rev=${blockcachesfx2}" />
 			<replacefilter token=".js" value=".js?rev=${blockcachesfx2}" />
+		</replace>
+	</target>
+
+
+	<target name="package.bizflow.custom.conf"
+			depends="init"
+			description="capture and package bizflow custom module configuration">
+
+		<delete dir="${deploy.conf.dir}/**/bizflow" />
+		<copy todir="${deploy.conf.dir}/template/tomcat/webapps/bizflow">
+			<fileset dir="${src.web.bizflow.dir}">
+				<patternset refid="bf.web.include.conf" />
+			</fileset>
+		</copy>
+
+		<!-- prepare DEV bizflow custom config -->
+		<copy todir="${deploy.conf.dir}/dev/tomcat/webapps/bizflow">
+			<fileset dir="${src.web.bizflow.dir}">
+				<patternset refid="bf.web.include.conf" />
+			</fileset>
+		</copy>
+		<replace dir="${deploy.conf.dir}/dev/tomcat/webapps/bizflow"
+				includes="**/*.properties">
+			<replacefilter token="${token.bf.local.url}" value="${replace.bf.url.dev}" />
+		</replace>
+
+		<!-- prepare QA bizflow custom config -->
+		<copy todir="${deploy.conf.dir}/qa/tomcat/webapps/bizflow">
+			<fileset dir="${src.web.bizflow.dir}">
+				<patternset refid="bf.web.include.conf" />
+			</fileset>
+		</copy>
+		<replace dir="${deploy.conf.dir}/qa/tomcat/webapps/bizflow"
+				includes="**/*.properties">
+			<replacefilter token="${token.bf.local.url}" value="${replace.bf.url.qa}" />
+		</replace>
+
+		<!-- prepare PRD bizflow custom config -->
+		<copy todir="${deploy.conf.dir}/prod/tomcat/webapps/bizflow">
+			<fileset dir="${src.web.bizflow.dir}">
+				<patternset refid="bf.web.include.conf" />
+			</fileset>
+		</copy>
+		<replace dir="${deploy.conf.dir}/prod/tomcat/webapps/bizflow"
+				includes="**/*.properties">
+			<replacefilter token="${token.bf.local.url}" value="${replace.bf.url.prd}" />
 		</replace>
 	</target>
 
