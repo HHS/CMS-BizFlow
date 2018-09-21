@@ -94,18 +94,10 @@ rule "Incentives / PCA Required Documents "
 
     then
         System.out.println("INCENTIVES-DOCUMENT-RULE: PCA Required Documents >> " + $docSearch);
-        addDocument($workflowDocuments, "Board Certification", false);
-        addDocument($workflowDocuments, "Candidate Declination", false);
-        addDocument($workflowDocuments, "Final Position Description Package", false);
-        addDocument($workflowDocuments, "Justification Narrative", true);
-        addDocument($workflowDocuments, "Medical License", true);
-        addDocument($workflowDocuments, "PD Coversheet/OF-8", true);
-        addDocument($workflowDocuments, "Position Description", true);
-        addDocument($workflowDocuments, "Request to Fill", false);
-        addDocument($workflowDocuments, "Resume/Curriculum Vitae", true);
-        addDocument($workflowDocuments, "Service Agreement", false);
-        addDocument($workflowDocuments, "Supporting Documents", false);
-        addDocument($workflowDocuments, "Vacancy Announcement", false);
+        addDocument($workflowDocuments,"Final Position Description Package", true);
+        addDocument($workflowDocuments,"Resume/Curriculum Vitae", true);
+        addDocument($workflowDocuments,"Justification Narrative", true);
+        addDocument($workflowDocuments,"Medical License", true);
 end
 
 rule "Incentives / PCA Required Documents / candiAgreeRenewal No"
