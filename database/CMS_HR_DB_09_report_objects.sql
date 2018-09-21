@@ -1694,8 +1694,8 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			-- PCA Details
 			, X.TYPE_OF_APPT, X.NOT_TO_EXDATE, X.WORK_SCHEDULE , X.HOURS_PER_WEEK , X.BD_CERT_REQ , X.LIC_INFO , X.REQ_ADMIN_APPROVAL
 			-- licenseState
-			, X.LIC_STATE1_STATE, to_date(X.LIC_STATE1_EXP_DATE, 'mm/dd/yyyy') LIC_STATE1_EXP_DATE
-			, X.LIC_STATE2_STATE, to_date(X.LIC_STATE2_EXP_DATE, 'mm/dd/yyyy') LIC_STATE2_EXP_DATE
+			, X.LIC_STATE1_STATE, X.LIC_STATE1_NAME, to_date(X.LIC_STATE1_EXP_DATE, 'mm/dd/yyyy') LIC_STATE1_EXP_DATE
+			, X.LIC_STATE2_STATE, X.LIC_STATE2_NAME, to_date(X.LIC_STATE2_EXP_DATE, 'mm/dd/yyyy') LIC_STATE2_EXP_DATE
 			-- boardCertSpecialty
 			, X.BD_CERT_SPEC1, X.BD_CERT_SPEC2, X.BD_CERT_SPEC3, X.BD_CERT_SPEC4
 			, X.BD_CERT_SPEC5, X.BD_CERT_SPEC6, X.BD_CERT_SPEC7, X.BD_CERT_SPEC8
@@ -1782,19 +1782,21 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			                               ,   REQ_ADMIN_APPROVAL NVARCHAR2(5)   PATH './item[id="requireAdminApproval"]/value'
 			                               -- licenseState
 			                               ,   LIC_STATE1_STATE NVARCHAR2(2)   PATH './item[id="licenseState"]/value[1]/state'
+			                               ,   LIC_STATE1_NAME NVARCHAR2(50)   PATH './item[id="licenseState"]/value[1]/name'
 			                               ,   LIC_STATE1_EXP_DATE NVARCHAR2(10)   PATH './item[id="licenseState"]/value[1]/expDate'
 			                               ,   LIC_STATE2_STATE NVARCHAR2(2)   PATH './item[id="licenseState"]/value[2]/state'
+			                               ,   LIC_STATE2_NAME NVARCHAR2(50)   PATH './item[id="licenseState"]/value[2]/name'
 			                               ,   LIC_STATE2_EXP_DATE NVARCHAR2(10)   PATH './item[id="licenseState"]/value[2]/expDate'
 			                               -- boardCertSpecialty
-			                               ,   BD_CERT_SPEC1 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][1]/text'
-			                               ,   BD_CERT_SPEC2 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][2]/text'
-			                               ,   BD_CERT_SPEC3 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][3]/text'
-			                               ,   BD_CERT_SPEC4 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][4]/text'
-			                               ,   BD_CERT_SPEC5 NVARCHAR2(20)   PATH './item[contains(id, "boardCertSpecialty")][5]/text'
-			                               ,   BD_CERT_SPEC6 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][6]/text'
-			                               ,   BD_CERT_SPEC7 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][7]/text'
-			                               ,   BD_CERT_SPEC8 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][8]/text'
-			                               ,   BD_CERT_SPEC9 NVARCHAR2(30)   PATH './item[contains(id, "boardCertSpecialty")][9]/text'
+			                               ,   BD_CERT_SPEC1 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[1]/text'
+			                               ,   BD_CERT_SPEC2 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[2]/text'
+			                               ,   BD_CERT_SPEC3 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[3]/text'
+			                               ,   BD_CERT_SPEC4 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[4]/text'
+			                               ,   BD_CERT_SPEC5 NVARCHAR2(20)   PATH './item[id="boardCertSpecialty"]/value[5]/text'
+			                               ,   BD_CERT_SPEC6 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[6]/text'
+			                               ,   BD_CERT_SPEC7 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[7]/text'
+			                               ,   BD_CERT_SPEC8 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[8]/text'
+			                               ,   BD_CERT_SPEC9 NVARCHAR2(30)   PATH './item[id="boardCertSpecialty"]/value[9]/text'
 			                               ,   BD_CERT_SPEC_OTHER NVARCHAR2(140)   PATH './item[id="otherSpeciality"]/value'
 			                               -- allowance
 			                               ,   LEN_SERVED NVARCHAR2(25)   PATH './item[id="lengthOfServed"]/value'
