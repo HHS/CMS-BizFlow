@@ -36,7 +36,7 @@
     int nSourceProcessId = -1;
     int nProcessId = -1;
     int nActivityId = -1;
-    Map<String, HWAttachment> attachMap = new HashMap();
+    Map<String, List<HWAttachment>> attachMap = new HashMap();
     String[] attachFiles = null;
     boolean bDeleteAll = "true".equalsIgnoreCase(deleteall);
 
@@ -61,7 +61,12 @@
                     HWAttachment attachment = attachments.getItem(i);
                     String toCategory = categoryMap.get(attachment.getCategory());
                     if (null != toCategory) {
-                        attachMap.put(toCategory, attachment);
+                        List<HWAttachment> attachmentList = attachMap.get(toCategory);
+                        if (null == attachmentList) {
+                            attachmentList = new ArrayList();
+                            attachMap.put(toCategory, attachmentList);
+                        }
+                        attachmentList.add(attachment);
                     }
                 }
             }
@@ -108,27 +113,31 @@
 
             while (iterator.hasNext()) {
                 String category = iterator.next();
-                HWAttachment attachment = attachMap.get(category);
-                attachment.download();
+                List<HWAttachment> attachmentList = attachMap.get(category);
+                int size = attachmentList.size();
+                for (int a = 0; a < size; a++) {
+                    HWAttachment attachment = attachmentList.get(a);
+                    attachment.download();
 
-                int r = xrs.add();
-                xrs.setFieldValueAt(r, "SERVERID", hwSessionInfo.getServerID());
-                xrs.setFieldValueAt(r, "PROCESSID", processid);
-                xrs.setFieldValueAt(r, "ACTIVITYSEQUENCE", activityid);
-                xrs.setFieldValueAt(r, "ID", String.valueOf(r));
-                xrs.setFieldValueAt(r, "WORKITEMSEQUENCE", workitemseq);
-                xrs.setFieldValueAt(r, "TYPE", "G");
-                xrs.setFieldValueAt(r, "OUTTYPE", "B");
-                xrs.setFieldValueAt(r, "INTYPE", "C");
-                xrs.setFieldValueAt(r, "DIGITALSIGNATURE", "N");
-                xrs.setFieldValueAt(r, "MAPID", String.valueOf(r));
-                xrs.setFieldValueAt(r, "DMDOCRTYPE", "N");
-                xrs.setFieldValueAt(r, "CATEGORY", category);
-                xrs.setFieldValueAt(r, "DISPLAYNAME", attachment.getDisplayName());
-                xrs.setFieldValueAt(r, "FILENAME", attachment.getFileName());
-                xrs.setFieldValueAt(r, "SIZE", String.valueOf(attachment.getSize()));
+                    int r = xrs.add();
+                    xrs.setFieldValueAt(r, "SERVERID", hwSessionInfo.getServerID());
+                    xrs.setFieldValueAt(r, "PROCESSID", processid);
+                    xrs.setFieldValueAt(r, "ACTIVITYSEQUENCE", activityid);
+                    xrs.setFieldValueAt(r, "ID", String.valueOf(r));
+                    xrs.setFieldValueAt(r, "WORKITEMSEQUENCE", workitemseq);
+                    xrs.setFieldValueAt(r, "TYPE", "G");
+                    xrs.setFieldValueAt(r, "OUTTYPE", "B");
+                    xrs.setFieldValueAt(r, "INTYPE", "C");
+                    xrs.setFieldValueAt(r, "DIGITALSIGNATURE", "N");
+                    xrs.setFieldValueAt(r, "MAPID", String.valueOf(r));
+                    xrs.setFieldValueAt(r, "DMDOCRTYPE", "N");
+                    xrs.setFieldValueAt(r, "CATEGORY", category);
+                    xrs.setFieldValueAt(r, "DISPLAYNAME", attachment.getDisplayName());
+                    xrs.setFieldValueAt(r, "FILENAME", attachment.getFileName());
+                    xrs.setFieldValueAt(r, "SIZE", String.valueOf(attachment.getSize()));
 
-                fileList.add(attachment.getFilePath());
+                    fileList.add(attachment.getFilePath());
+                }
             }
 
             attachFiles = fileList.toArray(new String[fileList.size()]);
