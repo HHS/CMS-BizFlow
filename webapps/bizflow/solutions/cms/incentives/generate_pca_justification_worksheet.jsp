@@ -127,7 +127,6 @@
     XMLResultSet loginUser = null;
     int nProcessId = -1;
     int nActivityId = -1;
-    boolean success = true;
     String documentType = null;
     String fileName = null;
     String reportPath = null;
@@ -150,11 +149,10 @@
         XMLResultSet xrsProcess = getProcess(hwSession, hwSessionInfo, nProcessId);
         int cnt = xrsProcess.getRowCount();
         if (cnt == 0 || !RUNNING_PROCESS_STATE.equals(xrsProcess.getFieldValueAt(0, "STATE"))) {
-            success = false;
             errorMsg = "Invalid Request.";
         }
 
-        if (success) {
+        if (null == errorMsg) {
             HWAttachments attachments = new HWAttachmentsImpl(hwSessionInfo.toString(), nProcessId, false);
             int count = attachments.getCount();
             for (int i = 0; i < count; i++) {
@@ -165,20 +163,17 @@
                         attachments.update();
                     } else {
                         errorMsg = "Requested document type (" + documentType + ") has already been attached.";
-                        success = false;
                     }
                     break;
                 }
             }
         }
     } catch (Exception e) {
-        e.printStackTrace();
         log.error(e);
-        errorMsg = "Invalid parameters.";
-        success = false;
+        errorMsg = getOriginalExceptionMessage(e);
     }
 
-    if (success) {
+    if (null == errorMsg) {
         try {
             // download Worksheet report file
             String jMemberID = loginUser.getFieldValueAt(0, "ID");
@@ -219,8 +214,8 @@
             }
 
         } catch (Exception e) {
-            errorMsg = "[Internal Error] " + e.getMessage();
             log.error(e);
+            errorMsg = getOriginalExceptionMessage(e);
         }
     }
 
