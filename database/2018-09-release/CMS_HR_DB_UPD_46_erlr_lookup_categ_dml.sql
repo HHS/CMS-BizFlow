@@ -1,6 +1,12 @@
 
 SET DEFINE OFF;
 
+-- fix typo
+UPDATE TBL_LOOKUP 
+SET TBL_LTYPE = 'ERLRInitialResponseCaseType'
+WHERE TBL_LTYPE = 'ERLRInitialResponseCaseTpe'
+;
+
 -- delete obsolete entries
 DELETE TBL_LOOKUP WHERE TBL_ID BETWEEN 791 AND 795;
 
