@@ -46,6 +46,91 @@ END;
 
 
 
+--------------------------------------------------------
+--  DDL for Function FN_GET_LOOKUP_DSCR
+--------------------------------------------------------
+
+/**
+ * Gets LOOKUP descriptions.
+ *
+ * @param I_LOOKUP_IDS - Selected item IDs, comma separated.
+ *
+ * @return NVARCHAR2 - Description of the selected items, comma separated.
+ */
+CREATE OR REPLACE FUNCTION FN_GET_LOOKUP_DSCR
+(
+	I_LOOKUP_IDS                IN  VARCHAR2
+)
+RETURN NVARCHAR2
+IS
+	V_RETURN_VAL                NVARCHAR2(4000);
+	V_SQL                       VARCHAR2(4000);
+
+	V_IDX                       NUMBER(10);
+	V_LOOP_CNT                  NUMBER(10);
+	TYPE LOOKUP_TYPE IS REF CURSOR;
+	CUR_LOOKUP                  LOOKUP_TYPE;
+	REC_LOOKUP                  TBL_LOOKUP%ROWTYPE;
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('------- START: FN_GET_LOOKUP_DSCR -------');
+	--DBMS_OUTPUT.PUT_LINE('-- PARAMETERS --');
+	--DBMS_OUTPUT.PUT_LINE('    I_LOOKUP_IDS = ' || I_LOOKUP_IDS );
+
+	-- input validation
+	IF I_LOOKUP_IDS IS NULL OR LENGTH(TRIM(I_LOOKUP_IDS)) <= 0
+	THEN
+		RETURN NULL;
+	END IF;
+
+	V_RETURN_VAL := '';
+
+	V_SQL := 'SELECT * FROM TBL_LOOKUP WHERE TBL_ID IN (' || I_LOOKUP_IDS || ') ';
+	--DBMS_OUTPUT.PUT_LINE('    V_SQL = ' || V_SQL );
+
+	-- Loop through to look up description of each
+	-- and concatenate descriptions delimitted by comma.
+	--DBMS_OUTPUT.PUT_LINE('Before open cursor for TBL_LOOKUP');
+	OPEN CUR_LOOKUP FOR V_SQL;
+	--DBMS_OUTPUT.PUT_LINE('After open cursor for TBL_LOOKUP');
+
+	V_LOOP_CNT := 0;
+	LOOP
+		FETCH CUR_LOOKUP INTO REC_LOOKUP;
+		EXIT WHEN CUR_LOOKUP%NOTFOUND;
+		V_LOOP_CNT := V_LOOP_CNT + 1;
+		V_RETURN_VAL := V_RETURN_VAL || REC_LOOKUP.TBL_LABEL || ', ';
+		--DBMS_OUTPUT.PUT_LINE('Fetched record, loop count = ' || TO_CHAR(V_LOOP_CNT) || ' V_RETURN_VAL = ' || V_RETURN_VAL);
+	END LOOP;
+	CLOSE CUR_LOOKUP;
+
+	-- clear trailing comma if exists
+	IF V_RETURN_VAL IS NOT NULL AND LENGTH(V_RETURN_VAL) > 0
+	THEN
+		V_IDX := INSTR(V_RETURN_VAL, ', ', -1);
+		IF V_IDX > 0 AND V_IDX = (LENGTH(V_RETURN_VAL) - 1)
+		THEN
+			V_RETURN_VAL := SUBSTR(V_RETURN_VAL, 0, (LENGTH(V_RETURN_VAL) - 2));
+		END IF;
+	END IF;
+
+	--DBMS_OUTPUT.PUT_LINE('    V_RETURN_VAL = ' || V_RETURN_VAL);
+	--DBMS_OUTPUT.PUT_LINE('------- END: FN_GET_LOOKUP_DSCR -------');
+	RETURN V_RETURN_VAL;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing FN_GET_LOOKUP_DSCR -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || SQLCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || SQLERRM);
+		RETURN NULL;
+END;
+
+/
+
+
+
+
 
 --------------------------------------------------------
 --  DDL for Procedure GET_REQUEST_NUM
@@ -274,9 +359,12 @@ BEGIN
 			-- replace with lookup value
 			---------------------------------
 			BEGIN
-				SELECT TBL_LABEL INTO V_VALUE_LOOKUP
-				FROM TBL_LOOKUP
-				WHERE TBL_ID = TO_NUMBER(V_VALUE);
+				-- Case Category is multi-select value, thus multi-value concatenation required
+				--SELECT TBL_LABEL INTO V_VALUE_LOOKUP
+				--FROM TBL_LOOKUP
+				--WHERE TBL_ID = TO_NUMBER(V_VALUE);
+				SELECT FN_GET_LOOKUP_DSCR(V_VALUE) INTO V_VALUE_LOOKUP
+				FROM DUAL;
 			EXCEPTION
 				WHEN NO_DATA_FOUND THEN
 					V_VALUE_LOOKUP := NULL;
