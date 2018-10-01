@@ -1623,6 +1623,8 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			, X.ALW_MISSION_SC, TO_NUMBER(SUBSTR(X.ALW_MISSION_SC, 2), '999999999.99') ALW_MISSION_SC_NUM
 			, X.ALW_TOTAL, TO_NUMBER(SUBSTR(X.ALW_TOTAL, 2 ), '999999999.99') ALW_TOTAL_NUM
 			, X.TOTAL_PAYABLE, TO_NUMBER(SUBSTR(X.TOTAL_PAYABLE, 2), '999999999.99') TOTAL_PAYABLE_NUM
+			-- cancellation
+			, X.CANCEL_RESAON
 		FROM TBL_FORM_DTL FD, XMLTABLE('/formData/items'
 		                               PASSING FD.FIELD_DATA
 		                               COLUMNS
@@ -1722,6 +1724,8 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 			                               ,   ALW_MISSION_SC NVARCHAR2(15)   PATH './item[id="allowanceMissionSpecificCriteria"]/value'
 			                               ,   ALW_TOTAL NVARCHAR2(15)   PATH './item[id="allowanceTotal"]/value'
 			                               ,   TOTAL_PAYABLE NVARCHAR2(15)   PATH './item[id="totalPayablePCACalculation"]/value'
+			                               -- cancellation
+			                               ,   CANCEL_RESAON NVARCHAR2(25)   PATH './item[id="cancellationReason"]/value'
 			) X
 		WHERE FD.FORM_TYPE='CMSINCENTIVES'
 ;
