@@ -98,22 +98,22 @@ rule "Incentives / PCA Required Documents "
         addDocument($workflowDocuments,"Medical License", true);
 end
 
-rule "Incentives / PCA Required Documents / candiAgreeRenewal No"
-    when
-        $docSearch: WorkflowRuleSearch (
-                            $procName: procName
-                            , $actName: actName
-                            , $fields : fields
-                            )
-         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
-         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
-         $field3: WorkflowField ( fieldId == "candiAgreeRenewal", fieldValue == "No" ) from $fields
-
-        $workflowDocuments : ArrayList()
-
-    then
-        addDocument($workflowDocuments, "Candidate Declination", true);
-end
+//rule "Incentives / PCA Required Documents / candiAgreeRenewal No"
+//    when
+//        $docSearch: WorkflowRuleSearch (
+//                            $procName: procName
+//                            , $actName: actName
+//                            , $fields : fields
+//                            )
+//         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+//         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+//         $field3: WorkflowField ( fieldId == "candiAgreeRenewal", fieldValue == "No" ) from $fields
+//
+//        $workflowDocuments : ArrayList()
+//
+//    then
+//        addDocument($workflowDocuments, "Candidate Declination", true);
+//end
 
 //------------------------------
 // DEFAULT DOCUMENT
