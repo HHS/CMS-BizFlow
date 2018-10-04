@@ -25,6 +25,6 @@ BEGIN
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('OFM Directors', 'OFM Directors', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Chief Physicians', 'Chief Physicians', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Office of the Administrators', 'Office of the Administrators', parent_mem_id);
-  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DGHO Directors', 'DGHO Directors', parent_mem_id);
+  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DGHO Directors', 'TABG Division Director', parent_mem_id);
 
 END;
