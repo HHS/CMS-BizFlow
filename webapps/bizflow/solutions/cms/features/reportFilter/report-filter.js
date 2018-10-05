@@ -49,6 +49,9 @@
                 'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the USA Staffing offer process. Time starts when a new hire request is created in USA Staffing, and tracks through the Send Official Offer Complete date.',
                 'requestType': ['All', 'Appointment', 'Recruitment'],
                 'dateLabel': 'Date Send Official Offer Completed',
+            },{
+                'name': 'CMS Time of Possession - Strategic Consultation and Classification Report - Completed', 
+                'description': 'Calculates the time HR and Component users held a request. This report displays data for the Strategic Consultation and Classification processes.'
             }
         ];
         
