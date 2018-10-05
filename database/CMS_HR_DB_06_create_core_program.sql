@@ -256,7 +256,7 @@ CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_INCENTIVES
 	)
 IS
 	V_XMLVALUE             XMLTYPE;
-	V_VALUE                NVARCHAR2(2000);
+	V_INCENTIVE_TYPE     NVARCHAR2(50);
 
 	BEGIN
 		--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
@@ -282,11 +282,11 @@ IS
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'pcaType', '/formData/items/item[id="pcaType"]/value/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateAccept', '/formData/items/item[id="candiAgreeRenewal"]/value/text()');
 
-			V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="processName"]/value/text()');
+			V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="incentiveType"]/value/text()');
 			IF V_XMLVALUE IS NOT NULL THEN
-				V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+				V_INCENTIVE_TYPE := V_XMLVALUE.GETSTRINGVAL();
 			ELSE
-				V_VALUE := NULL;
+				V_INCENTIVE_TYPE := NULL;
 			END IF;
 
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'oaApprovalReq', '/formData/items/item[id="requireAdminApproval"]/value/text()');
@@ -295,8 +295,13 @@ IS
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'chiefMedicalOfficer', '/formData/items/item[id="chiefPhysician"]/value/participantId/text()', '/formData/items/item[id="chiefPhysician"]/value/name/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ofmDirector', '/formData/items/item[id="ofmDirector"]/value/participantId/text()', '/formData/items/item[id="ofmDirector"]/value/name/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgDirector', '/formData/items/item[id="tabgDirector"]/value/participantId/text()', '/formData/items/item[id="tabgDirector"]/value/name/text()');
-			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="ohcDirector"]/value/participantId/text()', '/formData/items/item[id="ohcDirector"]/value/name/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ofcAdmin', '/formData/items/item[id="offAdmin"]/value/participantId/text()', '/formData/items/item[id="offAdmin"]/value/name/text()');
+
+			IF 'PCA' = V_INCENTIVE_TYPE THEN
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="ohcDirector"]/value/participantId/text()', '/formData/items/item[id="ohcDirector"]/value/name/text()');
+			ELSIF 'SAM' = V_INCENTIVE_TYPE THEN
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/participantId/text()', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/name/text()');
+			END IF;
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
 
