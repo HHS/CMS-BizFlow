@@ -1,0 +1,233 @@
+<style>
+    body {
+        padding: 10px 10px 10px 10px;
+    }
+
+    .field-message {
+        color: red;
+        margin: -5px 0px 0px 12px;
+    }
+
+    .admin-code-message {
+        color: red;
+        padding: 0px 12px 0px 12px;
+    }
+
+    .date-message {
+        color: red;
+        margin: -10px 0px 0px 12px;
+        /* padding: -10px 12px 6px 12px; */
+    }
+
+</style>
+
+<div id="reportFilter" ng-form="fReportSection" aria-busy="true">
+    <fieldset>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">
+                    <small>{{$ctrl.report.description}}</small>
+                </h1>
+            </div>
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="form-group col-md-4 required">
+                        <label id="ComponentLabel" for="selectComponent" class="control-label">Component</label>
+                        <selectize class="form-control" role="combobox" id="selectComponent" required aria-labelledby="ComponentLabel"
+                                   ng-model="$ctrl.selected.component"
+                                   options="$ctrl.components"
+                                   config="$ctrl.simpleConfig"
+                                   placeholder="Select One..."
+                                   name="components"></selectize>
+                        <div class="field-message" ng-messages="fReportSection.components.$error" ng-clock>
+                            <div ng-message="required">Select a value from the component filter</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 required" ng-if="$ctrl.selected.component == 'By Request Number'">
+                        <label id="requestNumberLabel" for="requestNumberInput" class="control-label">Request Number</label>
+                        <input name="requestNumber" id="requestNumberInput" aria-labelledby="requestNumberLabel"
+                               ng-model="$ctrl.selected.requestNumber" class="form-control" type="text"
+                               placeholder="Enter Request Number..." required aria-label="Request Number">
+                        <div class="admin-code-message" ng-messages="fReportSection.requestNumber.$error" ng-clock>
+                            <div ng-message="required">Type a request number for the report</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
+                        <label id="adminCodeLabel" for="adminCodeInput" class="control-label">Administrative Code</label>
+                        <input name="adminCode" id="adminCodeInput" aria-labelledby="adminCodeLabel"
+                               ng-model="$ctrl.selected.adminCode" class="form-control" type="text"
+                               ng-minlength="3"
+                               placeholder="Enter Administrative Code..." required aria-label="Administrative Code">
+                        <div class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
+                            <div ng-message="required">Type an administrative code for the report</div>
+                            <div ng-message="minlength">Enter a minimum of three characters for the administrative code</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
+                        <label id="subOrgLabel" for="subOrgSelect" class="control-label">Include Requests for Sub-Orgs?</label>
+                        <selectize id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" required
+                                   ng-model="$ctrl.selected.includeSubOrg"
+                                   options="$ctrl.includeSubOrgs"
+                                   config="$ctrl.simpleConfig"></selectize>
+                    </div>
+                </div>
+                <div class="row container-fluid" ng-if="$ctrl.selected.component != 'By Request Number'">
+                    <div class="col-md-3">
+                        <label id="dateRCompletedDateLabel" class="control-label">{{$ctrl.dateLabel}}</label>
+                    </div>
+                </div>
+                <div class="row container-fluid" ng-if="$ctrl.selected.component != 'By Request Number'">
+                    <div class="form-group col-md-4 required">
+                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput" class="control-label">From</label>
+                        <p class="input-group">
+                            <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate"
+                                   is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="true"
+                                   close-text="Close" ng-change="$ctrl.changeFromOption()" required aria-labelledby="dateRCompletedFromLabel"
+                                   placeholder="MM/DD/YYYY" name="dateFrom"/>
+                            <span class="input-group-btn">
+                                <button id="dateRCompletedFromButton" type="button" class="btn btn-default" ng-click="$ctrl.openFromDate($event)" required aria-labelledby="dateRCompletedFromLabel">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                        <div class="date-message" ng-messages="fReportSection.dateFrom.$error" ng-clock>
+                            <div ng-message="required">Set the start date for the report date range</div>
+                            <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 required">
+                        <label id="dateRCompletedToLabel" for="dateRCompletedToInput" class="control-label">To</label>
+                        <p class="input-group">
+                            <input id="dateRCompletedToInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.toDate"
+                                   is-open="$ctrl.toDateOpened" datepicker-options="$ctrl.dateOptionTo" ng-required="true"
+                                   close-text="Close" ng-change="$ctrl.changeToOption()" required aria-labelledby="dateRCompletedToLabel"
+                                   placeholder="MM/DD/YYYY" name="dateTo"/>
+                            <span class="input-group-btn">
+                                <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                        <div class="date-message" ng-messages="fReportSection.dateTo.$error" ng-clock>
+                            <div ng-message="required">Set the end date for the report date range</div>
+                            <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" aria-labelledby="sectionHelp">
+            <div class="panel-heading">
+                <h1 class="panel-title" id="sectionHelp">
+                    <small>The optional fields below allow you to further filter the set of job requests that you wish to see on the report.</small>
+                </h1>
+            </div>
+
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="form-group col-md-3">
+                        <label id="requestActivityLabel" for="requestTypeSelect" class="control-label">Request Activity</label>
+                        <selectize id="requestActivitySelect"
+                                   config="$ctrl.simpleConfig"
+                                   options="$ctrl.requestActivities"
+                                   ng-model="$ctrl.selected.requestActivity"></selectize>
+                    </div>
+
+                    <!--<div class="form-group col-md-3">-->
+                        <!--<label id="requestTypeLabel" for="requestTypeSelect" class="control-label">Request Type</label>-->
+                        <!--<selectize id="requestTypeSelect"-->
+                                   <!--config="$ctrl.simpleConfig"-->
+                                   <!--options="$ctrl.requestTypes"-->
+                                   <!--ng-model="$ctrl.selected.requestType"></selectize>-->
+
+
+                    <!--</div>-->
+                    <!--<div class="form-group col-md-3"-->
+                         <!--ng-if="$ctrl.selected.appointmentType != 'Expert/Consultant' && $ctrl.selected.appointmentType != 'Volunteer'">-->
+                        <!--<label id="classificationTypeLabel" for="classificationTypeSelect" class="control-label">Classification Type</label>-->
+                        <!--<selectize role="combobox" id="classificationTypeSelect" aria-labelledby="classificationTypeLabel" required-->
+                                   <!--ng-model="$ctrl.selected.classificationType"-->
+                                   <!--options="$ctrl.getClassificationTypes()"-->
+                                   <!--config="$ctrl.simpleConfig"></selectize>-->
+
+                    <!--</div>-->
+                </div>
+
+                <div class="row container-fluid" ng-if="$ctrl.selected.requestType == 'Appointment'">
+                    <div class="form-group col-md-3 required">
+                        <label id="appointmentTypeLabel" for="appointmentTypeSelect" class="control-label">Appointment Type</label>
+                        <selectize role="combobox" id="appointmentTypeSelect" aria-labelledby="appointmentTypeLabel" required
+                                   ng-model="$ctrl.selected.appointmentType"
+                                   options="$ctrl.appointmentTypes"
+                                   config="$ctrl.simpleConfig"></selectize>
+                    </div>
+                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.appointmentType == 'Schedule A'">
+                        <label id="scheduleATypeLabel" for="scheduleATypeSelect" class="control-label">Schedule A Type</label>
+                        <selectize role="combobox" id="scheduleATypeSelect" aria-labelledby="scheduleATypeLabel" required
+                                   ng-model="$ctrl.selected.scheduleAType"
+                                   options="$ctrl.scheduleATypes"
+                                   config="$ctrl.simpleConfig"></selectize>
+                    </div>
+                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.appointmentType == 'Volunteer'">
+                        <label role="combobox" id="volunteerTypeLabel" for="volunteerTypeSelect" class="control-label">Volunteer Type</label>
+                        <selectize id="volunteerTypeSelect" aria-labelledby="volunteerTypeLabel" required
+                                   ng-model="$ctrl.selected.volunteerType"
+                                   options="$ctrl.volunteerTypes"
+                                   config="$ctrl.simpleConfig"></selectize>
+                    </div>
+                </div>
+
+                <!--<div class="row container-fluid">-->
+                    <!--<div class="form-group col-md-3">-->
+                        <!--<label class="control-label">Selecting Official</label>-->
+                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
+                                   <!--options="$ctrl.group['Selecting Officials']"-->
+                                   <!--ng-model="$ctrl.selected.selectingOfficial"></selectize>-->
+                    <!--</div>-->
+                    <!--<div class="form-group col-md-3">-->
+                        <!--<label class="control-label">Executive Officer</label>-->
+                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
+                                   <!--options="$ctrl.group['Executive Officers']"-->
+                                   <!--ng-model="$ctrl.selected.executiveOfficer"></selectize>-->
+                    <!--</div>-->
+                    <!--<div class="form-group col-md-3">-->
+                        <!--<label id="hrLiaison" class="control-label">HR Liaison</label>-->
+                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
+                                   <!--options="$ctrl.group['HR Liaison']"-->
+                                   <!--ng-model="$ctrl.selected.hrLiaison"></selectize>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="row container-fluid">-->
+                    <!--<div class="form-group col-md-3">-->
+                        <!--<label class="control-label">Staffing Specialist</label>-->
+                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
+                                   <!--options="$ctrl.group['HR Staffing Specialists']"-->
+                                   <!--ng-model="$ctrl.selected.staffSpecialist"></selectize>-->
+                    <!--</div>-->
+                    <!--<div class="form-group col-md-3">-->
+                        <!--<label class="control-label">Classification Specialist</label>-->
+                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
+                                   <!--options="$ctrl.group['HR Classification Specialists']"-->
+                                   <!--ng-model="$ctrl.selected.classSpecialist"></selectize>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="row row-centered">
+                    <div class="col-md-5 col-centered">
+                        <button type="button" class="btn btn-primary" name="ok" ng-click="$ctrl.submit()" ng-disabled="fReportSection.$invalid" aria-label="OK">
+                            <span class="glyphicon glyphicon-ok"></span> OK
+                        </button>
+                        <button type="button" class="btn btn-primary" name="reset" ng-click="$ctrl.reset()" aria-label="Reset">
+                            <span class="glyphicon glyphicon-refresh"></span> Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" name="cancel" ng-click="$ctrl.close()" aria-label="Cancel">
+                            <span class="glyphicon glyphicon-remove"></span> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
