@@ -53,9 +53,9 @@ private Connection getBizFlowDBConnection() throws Exception {
 
 private String getCMSUserGroups() throws Exception
 {
-    String query = "select c.memberid as grpid, c.name as grpname, a.memberid, a.name from bizflow.member a " + 
-                    "join bizflow.usrgrpprtcp b on b.prtcp = a.memberid " + 
-                    "join bizflow.member c on c.memberid = b.usrgrpid " + 
+    String query = "select c.memberid as grpid, c.name as grpname, a.memberid, a.name from bizflow.member a " +
+                    "join bizflow.usrgrpprtcp b on b.prtcp = a.memberid " +
+                    "join bizflow.member c on c.memberid = b.usrgrpid " +
                     "join bizflow.member d on c.deptid = d.memberid and d.name = 'CMS' and d.type = 'H'";
 
     Connection conn = getBizFlowDBConnection();
@@ -68,12 +68,12 @@ private String getCMSUserGroups() throws Exception
 
         sb.append("{\"groups\": [");
         boolean isFirst = true;
-        
+
         while (rs.next()) {
             if (isFirst == false) {
                 sb.append(",");
             }
-            
+
             String grpid = rs.getString("grpid");
             String grpname = rs.getString("grpname");
             grpname = grpname.replaceAll("'","\\\\'");
@@ -145,7 +145,7 @@ private String getCMSUserGroups() throws Exception
     <script src="./bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script src="./bower_components/lodash/dist/lodash.min.js"></script>
     <script src="./bower_components/microplugin/src/microplugin.js"></script>
-    
+
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./bower_components/sifter/sifter.js"></script>
     <script src="./bower_components/selectize/dist/js/selectize.js"></script>
@@ -185,6 +185,7 @@ private String getCMSUserGroups() throws Exception
 
     <script src="app.main.js"></script>
     <script src="features/reportFilter/report-filter.js"></script>
+    <script src="incentives/reportFilter/report-filter.js"></script>
 </head>
 <script language="javascript">
 <!--
@@ -192,12 +193,12 @@ CMS_REPORT_FILTER = {};
 CMS_REPORT_FILTER.CURUSERID = "<%= CURUSERID %>";
 CMS_REPORT_FILTER.CURUSERNAME = "<%= CURUSERNAME %>";
 CMS_REPORT_FILTER.CURLOGINID = "<%= CURLOGINID %>";
-CMS_REPORT_FILTER.SESSION = '<%= SESSION %>';    
+CMS_REPORT_FILTER.SESSION = '<%= SESSION %>';
 CMS_REPORT_FILTER.REPORTNAME = '<%= REPORTNAME %>';
 CMS_REPORT_FILTER.GROUPS = '<%= groupResult %>';
 CMS_REPORT_FILTER.REPORTPATH = '<%= REPORTPATH %>';
 CMS_REPORT_FILTER.OPTION = '<%= OPTION %>';
--->    
+-->
 </script>
 
 <body ng-app="bizflow.app" ng-controller="CtrlAppMain">
