@@ -76,13 +76,14 @@
                         <label id="dateRCompletedDateLabel" class="control-label">{{$ctrl.dateLabel}}</label>
                     </div>
                 </div>
-                <div class="row container-fluid" ng-if="$ctrl.selected.component != 'By Request Number'">
+                <div class="row container-fluid">
                     <div class="form-group col-md-4 required">
-                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput" class="control-label">From</label>
+                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput" ng-if="$ctrl.selected.component == 'By Request Number'">From</label>
+                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput" ng-if="$ctrl.selected.component != 'By Request Number'" class="control-label">From</label>
                         <p class="input-group">
                             <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate"
-                                   is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="true"
-                                   close-text="Close" ng-change="$ctrl.changeFromOption()" required aria-labelledby="dateRCompletedFromLabel"
+                                   is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="$ctrl.selected.component != 'By Request Number'"
+                                   close-text="Close" ng-change="$ctrl.changeFromOption()" aria-labelledby="dateRCompletedFromLabel"
                                    placeholder="MM/DD/YYYY" name="dateFrom"/>
                             <span class="input-group-btn">
                                 <button id="dateRCompletedFromButton" type="button" class="btn btn-default" ng-click="$ctrl.openFromDate($event)" required aria-labelledby="dateRCompletedFromLabel">
@@ -96,11 +97,12 @@
                         </div>
                     </div>
                     <div class="form-group col-md-4 required">
-                        <label id="dateRCompletedToLabel" for="dateRCompletedToInput" class="control-label">To</label>
+                        <label id="dateRCompletedToLabel" for="dateRCompletedToInput" ng-if="$ctrl.selected.component == 'By Request Number'">To</label>
+                        <label id="dateRCompletedToLabel" for="dateRCompletedToInput" ng-if="$ctrl.selected.component != 'By Request Number'" class="control-label">To</label>
                         <p class="input-group">
                             <input id="dateRCompletedToInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.toDate"
-                                   is-open="$ctrl.toDateOpened" datepicker-options="$ctrl.dateOptionTo" ng-required="true"
-                                   close-text="Close" ng-change="$ctrl.changeToOption()" required aria-labelledby="dateRCompletedToLabel"
+                                   is-open="$ctrl.toDateOpened" datepicker-options="$ctrl.dateOptionTo" ng-required="$ctrl.selected.component != 'By Request Number'"
+                                   close-text="Close" ng-change="$ctrl.changeToOption()" aria-labelledby="dateRCompletedToLabel"
                                    placeholder="MM/DD/YYYY" name="dateTo"/>
                             <span class="input-group-btn">
                                 <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
