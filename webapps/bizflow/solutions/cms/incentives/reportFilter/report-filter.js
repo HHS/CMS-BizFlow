@@ -212,22 +212,23 @@
                 } else {
                     url = url + '&ADMIN_CD=~NULL~';
                 }
-                if (vm.selected.fromDate != null) { // COMP_DATE_FROM
-                    var from = vm.getDateString(vm.selected.fromDate);
-                    url = url + '&COMP_DATE_FROM=' + from;
-                } else {
-                    url = url + '&COMP_DATE_FROM=2000-01-01';
-                }
-                if (vm.selected.toDate != null) { // COMP_DATE_TO
-                    var to = vm.getDateString(vm.selected.toDate);
-                    url = url + '&COMP_DATE_TO=' + to;
-                } else {
-                    url = url + '&COMP_DATE_TO=2050-12-31';
-                }
+            }
+
+            if (vm.selected.fromDate != null) {
+                var from = vm.getDateString(vm.selected.fromDate);
+                url = url + '&DATE_FROM=' + from;
+            } else {
+                url = url + '&DATE_FROM=2000-01-01';
+            }
+            if (vm.selected.toDate != null) {
+                var to = vm.getDateString(vm.selected.toDate);
+                url = url + '&DATE_TO=' + to;
+            } else {
+                url = url + '&DATE_TO=2050-12-31';
             }
 
             if (vm.selected.requestStatus) {
-                url = url + '&REQ_STATUS =' + vm.selected.requestStatus;
+                url = url + '&REQ_STATUS=' + vm.selected.requestStatus;
             }
             // url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
             // url = url + '&CLSF_TYPE=' + vm.selected.classificationType; // Classification Type
