@@ -20,7 +20,7 @@
         // Primitive Options - Not for Selectize
         vm._components = ['By Request Number', 'By Admin Code', 'Office of the Administrator (OA) Only'];
         vm._includeSubOrgs = ['Yes', 'No'];
-        vm._requestActivities = ["Completed", "Active", "Both"];
+        vm._requestStatus = ["Completed", "Active", "Both"];
         vm._requestTypes = ['All', 'Appointment', 'Classification Only', 'Recruitment'];
         vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
@@ -197,40 +197,48 @@
             url = url + '&j_memberid=' + CMS_REPORT_FILTER.CURUSERID; // j_memberid
             url = url + '&j_username=' + CMS_REPORT_FILTER.CURLOGINID; // j_username
             url = url + '&reportUnit=' + CMS_REPORT_FILTER.REPORTPATH; // reportUnit
-            if (vm.selected.component.length > 0) { // Component
-                url = url + '&COMPONENT=' + vm.selected.component;
-            }
-            if (vm.selected.requestNumber.length > 0) { // Request Number
-                url = url + '&REQ_NUM=' + vm.selected.requestNumber;
-            }
-            if (vm.selected.adminCode.length > 0) { // Admin Code
-                url = url + '&ADMIN_CD=' + vm.selected.adminCode.toUpperCase();
+
+            if (vm.selected.component === "By Request Number") {
+                url += '&REPORT_MODE=' + encodeURIComponent("By Request Num");
+                url += '&REQ_NUM=' + vm.selected.requestNumber;
             } else {
-                url = url + '&ADMIN_CD=~NULL~';
+                url = url + '&REPORT_MODE=' + encodeURIComponent("By Component");
+
+                if (vm.selected.component.length > 0) { // Component
+                    url = url + '&COMPONENT=' + vm.selected.component;
+                }
+                if (vm.selected.adminCode.length > 0) { // Admin Code
+                    url = url + '&ADMIN_CD=' + vm.selected.adminCode.toUpperCase();
+                } else {
+                    url = url + '&ADMIN_CD=~NULL~';
+                }
+                if (vm.selected.fromDate != null) { // COMP_DATE_FROM
+                    var from = vm.getDateString(vm.selected.fromDate);
+                    url = url + '&COMP_DATE_FROM=' + from;
+                } else {
+                    url = url + '&COMP_DATE_FROM=2000-01-01';
+                }
+                if (vm.selected.toDate != null) { // COMP_DATE_TO
+                    var to = vm.getDateString(vm.selected.toDate);
+                    url = url + '&COMP_DATE_TO=' + to;
+                } else {
+                    url = url + '&COMP_DATE_TO=2050-12-31';
+                }
             }
-            if (vm.selected.fromDate != null) { // COMP_DATE_FROM
-                var from = vm.getDateString(vm.selected.fromDate);
-                url = url + '&COMP_DATE_FROM=' + from;
-            } else {
-                url = url + '&COMP_DATE_FROM=2000-01-01';
+
+            if (vm.selected.requestStatus) {
+                url = url + '&REQ_STATUS =' + vm.selected.requestStatus;
             }
-            if (vm.selected.toDate != null) { // COMP_DATE_TO
-                var to = vm.getDateString(vm.selected.toDate);
-                url = url + '&COMP_DATE_TO=' + to;
-            } else {
-                url = url + '&COMP_DATE_TO=2050-12-31';
-            }
-            url = url + '&REQ_ACTIVITY =' + vm.selected.requestActivity; // Request Activity
-            url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
-            url = url + '&CLSF_TYPE=' + vm.selected.classificationType; // Classification Type
-            url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
-            url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
-            url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
-            url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
-            url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
-            url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
-            url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
-            url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
+            // url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
+            // url = url + '&CLSF_TYPE=' + vm.selected.classificationType; // Classification Type
+            // url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
+            // url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
+            // url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
+            // url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
+            // url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
+            // url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
+            // url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
+            // url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             //$log.debug('Report URL [' + url + ']');
             return url;
         };
@@ -322,7 +330,7 @@
             $('#reportFilter').attr('aria-busy', 'false');
 
             vm.requestTypes = vm.getSelectizeOptions(vm._requestTypes);
-            vm.requestActivities = vm.getSelectizeOptions(vm._requestActivities);
+            vm.requestStatus = vm.getSelectizeOptions(vm._requestStatus);
             vm.appointmentTypes = vm.getSelectizeOptions(vm._appointmentTypes);
             vm.scheduleATypes = vm.getSelectizeOptions(vm._scheduleATypes);
             vm.volunteerTypes = vm.getSelectizeOptions(vm._volunteerTypes);
