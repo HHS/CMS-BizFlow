@@ -1,6 +1,16 @@
 
 SET DEFINE OFF;
 
+/**
+ * NOTE:
+ *
+ * The following is conversion script to add unique key for PROCID on TBL_FORM_DTL table.
+ * If there are already duplicate records in the target table, the creation of index will fail.
+ * Therefore, inspection query is provided to run to figure out how many duplicate records exist.
+ * Cleanup query is provided to remove duplicate record.  
+ * If there are more than 2 duplicate records for any PROCID, you need to run the cleanup query as many times as needed.
+ */
+
 
 DROP INDEX TBL_FORM_DTL_NK1
 ;
