@@ -199,7 +199,7 @@ IS
       FROM DUAL;
       
       SP_GET_ID(I_SVRID, V_PROCIDSTR, 1, V_CMNTSEQ);
-      
+      COMMIT;    
       
       SELECT SYSTIMESTAMP AT TIME ZONE 'UTC'
       INTO V_UTC
