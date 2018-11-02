@@ -54,7 +54,9 @@
                 'description': 'Calculates the time HR and Component users held a request. This report displays data for the Strategic Consultation and Classification processes.'
             },{
                 'name': 'CMS Time to Hire End to End Report - Completed', 
-                'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the entire process. Time starts when a new request is created in NEIL, and tracks through the Send Official Offer Complete date.'
+                'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the entire process. Time starts when a new request is created in NEIL, and tracks through the Send Official Offer Complete date.',
+				'requestType': ['All','Appointment', 'Recruitment'],
+				'dateLabel': 'Date Send Official Completed'
             }
         ];
         
