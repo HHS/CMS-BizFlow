@@ -47,7 +47,7 @@ rule "Incentives / PCA Required Documents / New / Recruitment"
                             , $actName: actName
                             , $fields : fields
                             )
-         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
          $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
          $field3: WorkflowField ( fieldId == "pcaType", fieldValue == "New" ) from $fields
          $field4: WorkflowField ( fieldId == "requestType", fieldValue == "Recruitment" ) from $fields
@@ -66,7 +66,7 @@ rule "Incentives / PCA Required Documents / RequireBoardCert"
                             , $actName: actName
                             , $fields : fields
                             )
-         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
          $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
          $field3: WorkflowField ( fieldId == "requireBoardCert", fieldValue == "Yes" ) from $fields
          $field4: WorkflowField ( fieldId == "candiAgreeRenewal", fieldValue != "No" ) from $fields
@@ -85,7 +85,7 @@ rule "Incentives / PCA Required Documents "
                             , $actName: actName
                             , $fields : fields
                             )
-         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
          $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
          $field3: WorkflowField ( fieldId == "candiAgreeRenewal", fieldValue != "No" ) from $fields
 
@@ -105,7 +105,7 @@ end
 //                            , $actName: actName
 //                            , $fields : fields
 //                            )
-//         $field1: WorkflowField ( fieldId == "rule", fieldValue == "PCARequiredDocuments" ) from $fields
+//         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
 //         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
 //         $field3: WorkflowField ( fieldId == "candiAgreeRenewal", fieldValue == "No" ) from $fields
 //
@@ -114,6 +114,26 @@ end
 //    then
 //        addDocument($workflowDocuments, "Candidate Declination", true);
 //end
+
+rule "Incentives / SAM Required Documents "
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "SAM" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments,"Resume/Curriculum Vitae", false);
+        addDocument($workflowDocuments,"Competing Job Offer", false);
+        addDocument($workflowDocuments,"Pay Stub", false);
+        addDocument($workflowDocuments,"Additional Compensation", false);
+        addDocument($workflowDocuments,"Vacancy Announcement", false);
+end
 
 //------------------------------
 // DEFAULT DOCUMENT
