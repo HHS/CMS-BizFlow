@@ -1,0 +1,1 @@
+./js-export.bat --output-zip ./hhscmsreport_prod_datasource.zip --uris /organizations/organization_1/datasources/BizFlow_Data_Source

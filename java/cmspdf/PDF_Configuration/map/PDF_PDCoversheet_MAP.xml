@@ -80,7 +80,7 @@
 
     <item name="Cyber Security Code">
         <key>#PD_CYB_SEC_CD</key>
-        <value lookup="true" lookupField="name">/FORM_DATA/DOCUMENT/CLASSIFICATION_CODE/PD_CYB_SEC_CD</value>
+        <value>/FORM_DATA/DOCUMENT/CLASSIFICATION_CODE/PD_CYB_SEC_CD</value>
     </item>
 
     <item name="Position Sensitivity">

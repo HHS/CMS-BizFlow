@@ -1,0 +1,29 @@
+-- CNS_HR_DB_UPD_09_create_core_program.sql
+
+/**
+ * Gets current user group key
+ *
+ * @param I_NAME - a user's group name
+ *
+ * @return the key of a users group
+ */
+CREATE OR REPLACE FUNCTION FN_GET_USER_GROUP_KEY
+  (
+    I_NAME IN VARCHAR2
+  )
+  RETURN VARCHAR2
+IS
+  L_KEY VARCHAR2(100);
+
+  BEGIN
+
+    SELECT KEY INTO L_KEY FROM UG_MAPPING WHERE NAME = I_NAME;
+
+    RETURN L_KEY;
+  END;
+/
+
+-- CMS_HR_DB_UPD_10_permission_core.sql
+GRANT EXECUTE ON HHS_CMS_HR.FN_GET_USER_GROUP_KEY TO BIZFLOW;
+GRANT EXECUTE ON HHS_CMS_HR.FN_GET_USER_GROUP_KEY TO HHS_CMS_HR_RW_ROLE;
+GRANT EXECUTE ON HHS_CMS_HR.FN_GET_USER_GROUP_KEY TO HHS_CMS_HR_DEV_ROLE;
