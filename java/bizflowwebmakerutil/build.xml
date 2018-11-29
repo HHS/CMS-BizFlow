@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<project name="bizflowwebmakerutil" basedir="." default="compile">
+  <property name="java-src.dir" value="src" />
+  <property name="lib.dir" value="lib" />
+  <property name="build.dir" value="build" />
+  <property name="dist.dir" value="dist" />
+  <property name="project.name" value="bizflowwebmakerutil" />
+  <property name="project.version" value="1.0" />
+  <property name="archive.name" value="${project.name}-${project.version}" />
+
+  <path id="classpath">
+    <fileset dir="${lib.dir}" includes="*.jar" />
+    <pathelement path="${build.dir}" />
+  </path>
+
+  <target name="compile"  description="Compile main source tree java files">
+    <mkdir dir="${build.dir}/classes" />
+    <javac destdir="${build.dir}/classes" target="1.5" debug="true" optimize="false" deprecation="false" failonerror="true">
+      <src path="${java-src.dir}" />
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile" description="packages up the class files into jar files">
+    <jar destfile="${build.dir}/${archive.name}.jar" basedir="${build.dir}/classes" includes="**"/>
+    <move file="${build.dir}/${archive.name}.jar" todir="${dist.dir}" overwrite="true"/>
+  </target>
+
+  <target name="sourceZip" depends="compile" description="packages up the class files into jar files">
+    <delete dir="${dist.dir}/source/${archive.name}-src" failonerror="false"/>
+    <delete file="${dist.dir}/${archive.name}-src.zip" failonerror="false"/>
+    <mkdir dir="${dist.dir}/source/${archive.name}-src"/>
+    <copy todir="${dist.dir}/source/${archive.name}-src" overwrite="true">
+      <fileset dir="." excludes="out/**,tmp/**,dist/**,.idea/**, build/**, *.iml, *.ipr, *.iws, **/.svn/**"/>
+    </copy>
+    <zip basedir="${dist.dir}/source" destfile="${dist.dir}/${archive.name}-src.zip"/>
+    <delete dir="${dist.dir}/source" failonerror="false"/>
+  </target>
+
+  <target name="dist" depends="clean">
+    <antcall target="jar"/>
+    <antcall target="sourceZip"/>
+  </target>
+
+  <target name="clean" description="Clean output directories">
+  	<delete dir="${build.dir}"/>
+  </target>
+</project>
