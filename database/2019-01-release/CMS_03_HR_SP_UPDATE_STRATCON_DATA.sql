@@ -9,8 +9,8 @@
  * @param IO_XMLDOC - Form data xml as an input and output.
  *
  * @return IO_XMLDOC - Form data xml that is modified in accordance with business rule.
- */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_STRATCON_DATA2
+ */ 
+CREATE OR REPLACE PROCEDURE SP_UPDATE_STRATCON_DATA
   (
     I_PROCID      IN     NUMBER,
     I_ACTSEQ      IN     NUMBER,
@@ -177,30 +177,7 @@ IS
 
 /
 
+GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_STRATCON_DATA TO HHS_CMS_HR_RW_ROLE;
+GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_STRATCON_DATA TO HHS_CMS_HR_DEV_ROLE;
 
 
-commit
-
---select * from bizflow.rlvntdata where rlvntdataname = 'posTitle' and procid = 4158
---select * from TBL_FORM_DTL where procid = 4158
-
---
--- INSERT INTO ERROR_LOG
--- (
---   ERROR_CD
---   , ERROR_MSG
---   , BACKTRACE
---   , CALLSTACK
---   , CRT_DT
---   , CRT_USR
--- )
--- VALUES (
---   1
---   , 'STAFF'
---   , null
---   , null
---   , SYSDATE
---   , USER
--- );
---
--- COMMIT;
