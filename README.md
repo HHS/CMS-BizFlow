@@ -206,5 +206,5 @@ The deployment script will stop tomcat service, copy runtime files to tomcat web
 	* To (target environment):
 		* <DEV_server_dir>/work/deploy/
 ```
-	chomod 744 script1.sh
+	chomod 744 script1.sh 
 ```
