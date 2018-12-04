@@ -28,7 +28,7 @@
 <%@ include file="./sslinit.jsp" %>
 
 <%!
-    static final String DEFAULT_DOCUMENT_TYPE = "PD Coversheet/OF-8";
+    static final String DEFAULT_DOCUMENT_TYPE = "SAM Justification Worksheet";
     static final String DEFAULT_FILE_NAME = "SAM Justification Worksheet.pdf";
     static final String RUNNING_PROCESS_STATE = "R";
     static Properties properties = null;
