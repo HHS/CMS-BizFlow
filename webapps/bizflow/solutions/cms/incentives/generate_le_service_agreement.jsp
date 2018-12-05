@@ -210,7 +210,7 @@
 
                 worksheetFile.delete();
             } else {
-                errorMsg = "[Internal Error] Cannot create an LE Service Agreement.";
+                errorMsg = "[Internal Error] Cannot create a LE Service Agreement.";
             }
 
         } catch (Exception e) {
