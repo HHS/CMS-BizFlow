@@ -210,7 +210,7 @@
 
                 worksheetFile.delete();
             } else {
-                errorMsg = "[Internal Error] Cannot create an LE Justification Worksheet.";
+                errorMsg = "[Internal Error] Cannot create a LE Justification Worksheet.";
             }
 
         } catch (Exception e) {

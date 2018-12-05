@@ -28,8 +28,8 @@
 <%@ include file="./sslinit.jsp" %>
 
 <%!
-    static final String DEFAULT_DOCUMENT_TYPE = "SAM Justification Worksheet";
-    static final String DEFAULT_FILE_NAME = "SAM Justification Worksheet.pdf";
+    static final String DEFAULT_DOCUMENT_TYPE = "Salary Above Minimum Checklist";
+    static final String DEFAULT_FILE_NAME = "SAM Checklist.pdf";
     static final String RUNNING_PROCESS_STATE = "R";
     static Properties properties = null;
 
@@ -142,9 +142,9 @@
         nProcessId = Integer.parseInt(processid);
         nActivityId = Integer.parseInt(activityid);
         reportServerURL = properties.getProperty("report.server.url", reportServerURL);
-        documentType = properties.getProperty("report.SAMJustificationWorksheet.documentType", DEFAULT_DOCUMENT_TYPE);
-        fileName = properties.getProperty("report.SAMJustificationWorksheet.fileName", DEFAULT_FILE_NAME);
-        reportPath = properties.getProperty("report.SAMJustificationWorksheet.path");
+        documentType = properties.getProperty("report.SAMChecklist.documentType", DEFAULT_DOCUMENT_TYPE);
+        fileName = properties.getProperty("report.SAMChecklist.fileName", DEFAULT_FILE_NAME);
+        reportPath = properties.getProperty("report.SAMChecklist.path");
 
         XMLResultSet xrsProcess = getProcess(hwSession, hwSessionInfo, nProcessId);
         int cnt = xrsProcess.getRowCount();
@@ -210,7 +210,7 @@
 
                 worksheetFile.delete();
             } else {
-                errorMsg = "[Internal Error] Cannot create a SAM Justification Worksheet.";
+                errorMsg = "[Internal Error] Cannot create a Salary Above Minimum Checklist.";
             }
 
         } catch (Exception e) {

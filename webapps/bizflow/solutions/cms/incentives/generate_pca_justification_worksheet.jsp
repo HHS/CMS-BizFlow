@@ -210,7 +210,7 @@
 
                 worksheetFile.delete();
             } else {
-                errorMsg = "[Internal Error] Cannot create an PCA Justification Worksheet.";
+                errorMsg = "[Internal Error] Cannot create a PCA Justification Worksheet.";
             }
 
         } catch (Exception e) {
