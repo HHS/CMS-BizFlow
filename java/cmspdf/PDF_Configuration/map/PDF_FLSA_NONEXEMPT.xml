@@ -6,7 +6,7 @@
         <item name="Position Title"
               font="HELVETICA" fontSize="9" x="139"  y="449" width="178" maxFontSize="10" >#POSITION_TITLE</item>
         <item name="Office/Organization"
-              font="HELVETICA" fontSize="9" x="165"  y="431">#OFFICE_ORGANIZATION</item>
+              font="HELVETICA" fontSize="8" x="165"  y="431">#OFFICE_ORGANIZATION</item>
         <item name="Position Number"
               font="HELVETICA" fontSize="9" x="170"  y="418"></item>
         <item name="Pay Plan/Series"
