@@ -301,6 +301,10 @@ public class WMConnector
 					}
 				}
 
+				//3rd level organization - #OFFICE_ORGANIZATION
+				String orgName = CMSUtility.getOrganizationName(document);
+				valueMap.put("#OFFICE_ORGANIZATION", orgName);
+
 				// Classification Date
 				String classificationDate = CMSUtility.getLatestClassificationDate(grades, true);
 				if (classificationDate != null && classificationDate.length() > 0)
@@ -362,6 +366,11 @@ public class WMConnector
 						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "]");
 					}
 				}
+
+				//3rd level organization - #OFFICE_ORGANIZATION
+				String orgName = CMSUtility.getOrganizationName(document);
+				valueMap.put("#OFFICE_ORGANIZATION", orgName);
+
 
 				// Classification Date
 				String classificationDate = CMSUtility.getLatestClassificationDate(grades, false);

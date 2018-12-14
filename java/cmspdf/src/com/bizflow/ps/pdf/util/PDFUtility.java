@@ -101,8 +101,8 @@ public class PDFUtility
 		StopWatch watch = new StopWatch(PDFUtility.class, "isCharacterEncodable");
 		if (logger.isDebugEnabled())
 		{
-			logger.debug("isCharacterEncodable START");
-			logger.debug(" - font [" + font.getName() + "]");
+//			logger.debug("isCharacterEncodable START");
+//			logger.debug(" - font [" + font.getName() + "]");
 
 //			Character charObject = new Character(character);
 //			Integer charValue = (int)charObject.charValue();
@@ -119,7 +119,7 @@ public class PDFUtility
 
 		if (logger.isDebugEnabled())
 		{
-			logger.debug("isCharacterEncodable END [" + result + "]");
+//			logger.debug("isCharacterEncodable END [" + result + "]");
 		}
 		watch.check();
 
