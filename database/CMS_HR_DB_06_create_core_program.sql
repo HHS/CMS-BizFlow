@@ -389,10 +389,6 @@ IS
       --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
       UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
-
-      SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseNumber', '/formData/items/item[id=''CASE_NUMBER'']/value/text()');
-
-
       --SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'caseStatus', '/formData/items/item[id=''CASE_STATUS'']/value/text()');
       V_RLVNTDATANAME := 'caseStatus';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_STATUS'']/value/text()');
@@ -6896,3 +6892,37 @@ IS
 	END;
 /
 
+
+/**
+ * Initialize ER/LR process
+ */
+CREATE OR REPLACE PROCEDURE SP_INIT_ERLR
+(
+	I_PROCID               IN  NUMBER
+)
+IS
+    V_CNT                   INT;
+    V_XMLDOC                XMLTYPE;
+    V_CASE_NUMBER           INT;
+BEGIN
+    V_CASE_NUMBER :=  ERLR_CASE_NUMBER_SEQ.NEXTVAL;
+    UPDATE BIZFLOW.RLVNTDATA 
+       SET VALUE = V_CASE_NUMBER
+     WHERE RLVNTDATANAME = 'caseNumber' 
+       AND PROCID = I_PROCID;
+    
+    SELECT COUNT(1) INTO V_CNT
+      FROM TBL_FORM_DTL
+     WHERE PROCID = I_PROCID;
+    
+    IF V_CNT = 0 THEN
+        V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
+        INSERT INTO TBL_FORM_DTL (PROCID, ACTSEQ, WITEMSEQ, FORM_TYPE, FIELD_DATA, CRT_DT, CRT_USR)
+                          VALUES (I_PROCID, 0, 0, 'CMSERLR', V_XMLDOC, SYSDATE, 'System');
+    END IF;
+    
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
