@@ -6926,3 +6926,25 @@ EXCEPTION
 		SP_ERROR_LOG();
 END;
 /
+
+/**
+ * Finalize ER/LR process
+ */
+CREATE OR REPLACE PROCEDURE SP_FINALIZE_ERLR
+(
+	I_PROCID               IN  NUMBER
+)
+IS
+    V_CNT                   INT;
+    V_XMLDOC                XMLTYPE;
+BEGIN
+    SELECT FIELD_DATA
+      INTO V_XMLDOC
+      FROM TBL_FORM_DTL
+     WHERE PROCID = I_PROCID;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
