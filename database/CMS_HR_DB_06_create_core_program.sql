@@ -336,11 +336,11 @@ IS
  * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
  * @param I_FIELD_DATA - Form data xml.
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_ERLR
-(
-	I_PROCID            IN      NUMBER
-	, I_FIELD_DATA      IN      XMLTYPE
-)
+create or replace PROCEDURE SP_UPDATE_PV_ERLR
+  (
+      I_PROCID            IN      NUMBER
+    , I_FIELD_DATA      IN      XMLTYPE
+  )
 IS
   V_RLVNTDATANAME        VARCHAR2(100);
   V_VALUE                NVARCHAR2(2000);
@@ -350,6 +350,7 @@ IS
   V_VALUE_DATE           DATE;
   V_VALUE_DATESTR        NVARCHAR2(30);
   V_XMLVALUE             XMLTYPE;
+  V_REQUEST_NUMBER       VARCHAR2(20);
   BEGIN
     --DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
     --DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -438,6 +439,19 @@ IS
           V_VALUE_LOOKUP := NULL;
         END;
         V_VALUE := V_VALUE_LOOKUP;
+        
+        --- set requestNum ------
+        SELECT VALUE INTO V_REQUEST_NUMBER 
+          FROM BIZFLOW.RLVNTDATA 
+         WHERE RLVNTDATANAME = 'requestNum' 
+           AND PROCID = I_PROCID;
+        IF V_REQUEST_NUMBER IS NULL THEN
+            GET_REQUEST_NUM (V_REQUEST_NUMBER);
+            UPDATE BIZFLOW.RLVNTDATA 
+               SET VALUE = V_REQUEST_NUMBER
+             WHERE RLVNTDATANAME = 'requestNum' 
+               AND PROCID = I_PROCID;
+        END IF;        
       ELSE
         V_VALUE := NULL;
       END IF;
@@ -471,8 +485,7 @@ IS
 
       SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'organization',           '/formData/items/item[id=''GEN_EMPLOYEE_ADMIN_CD'']/value/text()');
       SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'primaryDWCSpecialist',   '/formData/items/item[id=''GEN_PRIMARY_SPECIALIST'']/value/text()');
-      SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'reassign',               '/formData/items/item[id=''reassign'']/value/text()');
-      SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum',             '/formData/items/item[id=''REQ_NUMBER'']/value/text()');
+      SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'reassign',               '/formData/items/item[id=''reassign'']/value/text()');      
       SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestStatusDate',      '/formData/items/item[id=''REQ_STATUS_DT'']/value/text()');
       SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'secondaryDWCSpecialist', '/formData/items/item[id=''GEN_SECONDARY_SPECIALIST'']/value/text()');
 
