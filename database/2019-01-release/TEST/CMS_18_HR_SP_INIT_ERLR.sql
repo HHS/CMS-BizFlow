@@ -1,0 +1,33 @@
+CREATE OR REPLACE PROCEDURE SP_INIT_ERLR
+(
+	I_PROCID               IN  NUMBER
+)
+IS
+    V_CNT                   INT;
+    V_XMLDOC                XMLTYPE;
+    V_CASE_NUMBER           INT;
+BEGIN
+    V_CASE_NUMBER :=  ERLR_CASE_NUMBER_SEQ.NEXTVAL;
+    UPDATE BIZFLOW.RLVNTDATA 
+       SET VALUE = V_CASE_NUMBER
+     WHERE RLVNTDATANAME = 'caseNumber' 
+       AND PROCID = I_PROCID;
+    
+    SELECT COUNT(1) INTO V_CNT
+      FROM TBL_FORM_DTL
+     WHERE PROCID = I_PROCID;
+    
+    IF V_CNT = 0 THEN
+        V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
+        INSERT INTO TBL_FORM_DTL (PROCID, ACTSEQ, WITEMSEQ, FORM_TYPE, FIELD_DATA, CRT_DT, CRT_USR)
+                          VALUES (I_PROCID, 0, 0, 'CMSERLR', V_XMLDOC, SYSDATE, 'System');
+    END IF;
+    
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
+
+GRANT EXECUTE ON HHS_CMS_HR.SP_INIT_ERLR TO HHS_CMS_HR_DEV_ROLE;
+GRANT EXECUTE ON HHS_CMS_HR.SP_INIT_ERLR TO HHS_CMS_HR_RW_ROLE;
