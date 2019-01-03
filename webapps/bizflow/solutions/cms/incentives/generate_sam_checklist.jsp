@@ -28,7 +28,7 @@
 <%@ include file="./sslinit.jsp" %>
 
 <%!
-    static final String DEFAULT_DOCUMENT_TYPE = "Salary Above Minimum Checklist";
+    static final String DEFAULT_DOCUMENT_TYPE = "SAM Checklist";
     static final String DEFAULT_FILE_NAME = "SAM Checklist.pdf";
     static final String RUNNING_PROCESS_STATE = "R";
     static Properties properties = null;
@@ -210,7 +210,7 @@
 
                 worksheetFile.delete();
             } else {
-                errorMsg = "[Internal Error] Cannot create a Salary Above Minimum Checklist.";
+                errorMsg = "[Internal Error] Cannot create a SAM Checklist.";
             }
 
         } catch (Exception e) {
