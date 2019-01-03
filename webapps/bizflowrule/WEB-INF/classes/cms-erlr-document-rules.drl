@@ -1,0 +1,88 @@
+package com.bizflow.drools.document.rules;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map
+import java.util.Iterator
+import java.util.Arrays
+
+import com.bizflow.ps.drools.document.model.WorkflowDocument;
+import com.bizflow.ps.drools.document.model.WorkflowRuleSearch;
+import com.bizflow.ps.drools.document.model.WorkflowField;
+
+dialect "mvel"
+
+function void addDocument(ArrayList bizflowDocument, String documentName, boolean required) {
+    boolean exist = false;
+    int len = bizflowDocument.size();
+    for (int i=0; i < len; i++) {
+        WorkflowDocument doc = (WorkflowDocument) bizflowDocument.get(i);
+        if(documentName.equalsIgnoreCase(doc.getName())) {
+            exist = true;
+            break;
+        }
+    }
+
+    if(!exist) {
+        bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, required));
+    }
+}
+
+function void addDocumentEx(ArrayList bizflowDocument, String documentName, String actName, String[] actNames, boolean required) {
+    boolean isRequiredDocument = false;
+    for (String act: actNames) {
+        if (act.equals(actName)) {
+            isRequiredDocument = required;
+            break;
+        }
+    }
+    bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, isRequiredDocument));
+}
+
+
+rule "ERLR / Unfair Labor Practices"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Unfair Labor Practices" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Discovery Request", false);
+        addDocument($workflowDocuments, "Discovery Response", false);
+        addDocument($workflowDocuments, "Final Decision", false);
+        addDocument($workflowDocuments, "Hearing Notice", false);
+        addDocument($workflowDocuments, "Initial Decision", false);
+        addDocument($workflowDocuments, "Motions", false);
+        addDocument($workflowDocuments, "Petition for Review", false);
+        addDocument($workflowDocuments, "Pleadings", false);
+        addDocument($workflowDocuments, "Prehearing Conference Notice", false);
+        addDocument($workflowDocuments, "Prehearing Conference Order", false);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+        addDocument($workflowDocuments, "Supporting Documents", false);
+
+end
+
+//------------------------------
+// DEFAULT DOCUMENT
+//------------------------------
+rule "ERLR / Default"
+    when
+        $docSearch  :   WorkflowRuleSearch
+                        (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                        )
+        $workflowDocuments : ArrayList()
+    then
+        addDocument($workflowDocuments, "Other", false);
+end
