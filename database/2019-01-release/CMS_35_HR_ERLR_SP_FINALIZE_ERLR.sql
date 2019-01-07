@@ -110,7 +110,7 @@ BEGIN
         END IF;
     ELSIF V_CASE_TYPE_ID = LABOR_NEGOTIATION_ID THEN -- Labor Negotiation
         -- Triggering Unfair Labor Practices Case
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="LN_UNION_FILE_ULP"]/value/text()');--Did Union File ULP?
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="LN_FILE_ULP"]/value/text()');--Did Union File ULP?
         IF V_XMLVALUE IS NOT NULL THEN
             V_VALUE := V_XMLVALUE.GETSTRINGVAL();
         END IF;
