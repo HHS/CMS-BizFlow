@@ -63,7 +63,7 @@ BEGIN
             SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
             SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
             SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-            INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);            
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
         END IF;
     ELSIF V_CASE_TYPE_ID = INVESTIGATION_ID THEN -- Investigation
         -- Triggering Conduct Case
@@ -75,13 +75,11 @@ BEGIN
         IF V_VALUE = YES THEN
             V_NEW_CASE_TYPE_ID   := CONDUCT_ISSUE_ID;
             V_NEW_CASE_TYPE_NAME := CONDUCT_ISSUE;
-            
-            
             SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
             SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
             SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
             SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-            INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
         END IF;
     ELSIF V_CASE_TYPE_ID = MEDICAL_DOCUMENTATION_ID THEN -- Medical Documentation
         -- Triggering Grievance Case
@@ -99,18 +97,16 @@ BEGIN
             IF V_VALUE = YES THEN
                 V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
                 V_NEW_CASE_TYPE_NAME := GRIEVANCE;
-                
-                
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-                INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
             END IF;
         END IF;
     ELSIF V_CASE_TYPE_ID = LABOR_NEGOTIATION_ID THEN -- Labor Negotiation
         -- Triggering Unfair Labor Practices Case
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="LN_UNION_FILE_ULP"]/value/text()');--Did Union File ULP?
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="LN_FILE_ULP"]/value/text()');--Did Union File ULP?
         IF V_XMLVALUE IS NOT NULL THEN
             V_VALUE := V_XMLVALUE.GETSTRINGVAL();
         END IF;
@@ -118,13 +114,11 @@ BEGIN
         IF V_VALUE = YES THEN        
             V_NEW_CASE_TYPE_ID   := UNFAIR_LABOR_PRACTICES_ID;
             V_NEW_CASE_TYPE_NAME := UNFAIR_LABOR_PRACTICES;
-            
-            
             SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
             SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
             SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
             SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-            INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
         END IF;        
     ELSIF V_CASE_TYPE_ID = PERFORMANCE_ISSUE_ID THEN -- Performance Issue
         V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_ACTION_TYPE"]/value/text()');
@@ -141,13 +135,11 @@ BEGIN
             IF V_VALUE = YES THEN
                 V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
                 V_NEW_CASE_TYPE_NAME := GRIEVANCE;
-                
-                
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-                INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
             END IF;
         ELSIF V_VALUE = ACTION_TYPE_PIP_ID THEN -- Action Type: PIP
             V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_PIP_EMPL_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
@@ -158,13 +150,11 @@ BEGIN
             IF V_VALUE = YES THEN
                 V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
                 V_NEW_CASE_TYPE_NAME := GRIEVANCE;
-                
-                
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-                INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
             END IF;
             
             V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_WNR_WGI_WTHLD"]/value/text()'); --Was WGI Withheld?
@@ -175,13 +165,11 @@ BEGIN
             IF V_VALUE = YES THEN
                 V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
                 V_NEW_CASE_TYPE_NAME := WGI_DENIAL;
-                
-                
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-                INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed2' AND PROCID = I_PROCID;
             END IF;
         ELSIF V_VALUE = ACTION_TYPE_WNR_ID THEN -- Action Type: Written Narrative Review
             V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_WNR_WGI_WTHLD"]/value/text()'); -- Was WGI Withheld?
@@ -192,13 +180,11 @@ BEGIN
             IF V_VALUE = YES THEN
                 V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
                 V_NEW_CASE_TYPE_NAME := WGI_DENIAL;
-                
-                
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
                 SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
                 SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;
-                INSERT INTO ERLR_CASE_TRIGGER (SEQ,FROM_PROCID,CASE_NUMBER,FIELD_DATA) VALUES (ERLR_CASE_TRIGGER_SEQ.NEXTVAL, I_PROCID, V_CASE_NUMBER, V_XMLDOC);    
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = 'T' WHERE RLVNTDATANAME = 'triggeringCaseNeed1' AND PROCID = I_PROCID;
             END IF;        
         END IF;
     END IF;
@@ -207,3 +193,4 @@ EXCEPTION
 	WHEN OTHERS THEN
 		SP_ERROR_LOG();
 END;
+/

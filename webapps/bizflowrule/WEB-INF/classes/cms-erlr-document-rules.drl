@@ -40,6 +40,217 @@ function void addDocumentEx(ArrayList bizflowDocument, String documentName, Stri
     bizflowDocument.add(new WorkflowDocument(bizflowDocument.size() + 1, documentName, bizflowDocument.size()+1, isRequiredDocument));
 }
 
+rule "ERLR / Conduct Issue"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Conduct Issue" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Counseling", false);
+		addDocument($workflowDocuments, "Decision", false);
+		addDocument($workflowDocuments, "Direct Order", false);
+		addDocument($workflowDocuments, "Leave Restriction", false);
+		addDocument($workflowDocuments, "Leave Warning", false);
+		addDocument($workflowDocuments, "Proposal", false);
+		addDocument($workflowDocuments, "Report of Findings", false);
+		addDocument($workflowDocuments, "Reprimand", false);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "SF-50", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+		addDocument($workflowDocuments, "Third Party Appeal", false);
+end
+
+rule "ERLR / Grievance"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Grievance" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Grievance Form", true);
+		addDocument($workflowDocuments, "Request for Next Level Grievance", false);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "Step/Stage 1 Decision", false);
+		addDocument($workflowDocuments, "Step/Stage 2 Decision", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+rule "ERLR / Information Request"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Information Request" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Agency Response", false);
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Request for Information", true);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+
+rule "ERLR / Investigation"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Investigation" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Administrative Warning", false);
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Complaint", false);
+		addDocument($workflowDocuments, "Decision", false);
+		addDocument($workflowDocuments, "Direct Order", false);
+		addDocument($workflowDocuments, "OIG Report", false);
+		addDocument($workflowDocuments, "OIG Response", false);
+		addDocument($workflowDocuments, "Proposal", false);
+		addDocument($workflowDocuments, "Prosecutorial Declination", false);
+		addDocument($workflowDocuments, "Questions", false);
+		addDocument($workflowDocuments, "Report of Findings", false);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "Statements", false);
+		addDocument($workflowDocuments, "Summary of Investigation", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+rule "ERLR / Labor Negotiation"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Labor Negotiation" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Article 4 Notice", false);
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Bargaining Proposals", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Ground Rules", false);
+		addDocument($workflowDocuments, "Notice of Impasse", false);
+		addDocument($workflowDocuments, "Request for FSIP", false);
+		addDocument($workflowDocuments, "Request for Mediation", false);
+		addDocument($workflowDocuments, "Request to Bargain", true);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "Signed Agreements", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+		addDocument($workflowDocuments, "Training Materials", false);
+end
+
+rule "ERLR / Medical Documentation"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Medical Documentation" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Agency Determination", false);
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Medical Documentation", false);
+		addDocument($workflowDocuments, "Referral to FOH", false);
+		addDocument($workflowDocuments, "Request for Documentation", false);
+		addDocument($workflowDocuments, "Response from FOH", false);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+rule "ERLR / Performance Issue"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Performance Issue" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Decision", false);
+		addDocument($workflowDocuments, "Performance Counseling", false);
+		addDocument($workflowDocuments, "PIP/ODAP", false);
+		addDocument($workflowDocuments, "PMAP/Duties", true);
+		addDocument($workflowDocuments, "Position Description", false);
+		addDocument($workflowDocuments, "Proposal", false);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+rule "ERLR / Probationary Period"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Probationary Period" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+		addDocument($workflowDocuments, "Background Information", false);
+		addDocument($workflowDocuments, "Background Investigation", false);
+		addDocument($workflowDocuments, "Communications", false);
+		addDocument($workflowDocuments, "Counseling", false);
+		addDocument($workflowDocuments, "Decision", false);
+		addDocument($workflowDocuments, "PMAP/Duties", false);
+		addDocument($workflowDocuments, "Position Description", false);
+		addDocument($workflowDocuments, "Proposal", false);
+		addDocument($workflowDocuments, "Resignation", false);
+		addDocument($workflowDocuments, "Resume", true);
+		addDocument($workflowDocuments, "Settlement Agreement", false);
+		addDocument($workflowDocuments, "SF-50", true);
+		addDocument($workflowDocuments, "Supporting Documents", false);
+		addDocument($workflowDocuments, "Termination Notice", false);
+		addDocument($workflowDocuments, "Transcript", false);
+end
 
 rule "ERLR / Unfair Labor Practices"
     when
@@ -54,22 +265,46 @@ rule "ERLR / Unfair Labor Practices"
         $workflowDocuments : ArrayList()
 
     then
+        addDocument($workflowDocuments, "Agency Response", false);
+        addDocument($workflowDocuments, "Answer to Complaint", false);
         addDocument($workflowDocuments, "Background Information", false);
         addDocument($workflowDocuments, "Communications", false);
-        addDocument($workflowDocuments, "Discovery Request", false);
-        addDocument($workflowDocuments, "Discovery Response", false);
-        addDocument($workflowDocuments, "Final Decision", false);
-        addDocument($workflowDocuments, "Hearing Notice", false);
-        addDocument($workflowDocuments, "Initial Decision", false);
-        addDocument($workflowDocuments, "Motions", false);
-        addDocument($workflowDocuments, "Petition for Review", false);
-        addDocument($workflowDocuments, "Pleadings", false);
-        addDocument($workflowDocuments, "Prehearing Conference Notice", false);
-        addDocument($workflowDocuments, "Prehearing Conference Order", false);
+        addDocument($workflowDocuments, "Complaint", false);
+        addDocument($workflowDocuments, "Court Decision", false);
+        addDocument($workflowDocuments, "Exceptions", false);
+        addDocument($workflowDocuments, "FLRA Decision", false);
+        addDocument($workflowDocuments, "Initial Charge", true);
+        addDocument($workflowDocuments, "Posting", false);
+        addDocument($workflowDocuments, "Regional Director's Decision", true);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+        addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+rule "ERLR / Within Grade Increase Denial/Reconsideration"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Within Grade Increase Denial/Reconsideration" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "PMAP", true);
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Notification Letter", true);
+        addDocument($workflowDocuments, "Reconsideration Decision", false);
+        addDocument($workflowDocuments, "Reconsideration Request", false);
+        addDocument($workflowDocuments, "Redetermination Notice", false);
         addDocument($workflowDocuments, "Settlement Agreement", false);
         addDocument($workflowDocuments, "Supporting Documents", false);
 
 end
+
 
 //------------------------------
 // DEFAULT DOCUMENT
