@@ -45,7 +45,7 @@ BEGIN
               INTO V_NEW_CASE_TYPE_ID
               FROM BIZFLOW.RLVNTDATA 
              WHERE RLVNTDATANAME = 'caseTypeID' 
-               AND PROCID = V_FROM_PROCID;
+               AND PROCID = I_PROCID;
 
             SELECT TO_NUMBER(VALUE)
               INTO V_ORG_CASE_NUMBER
@@ -64,6 +64,41 @@ BEGIN
               WHEN OTHERS THEN
               V_NEW_CASE_TYPE_NAME := TO_CHAR(V_NEW_CASE_TYPE_ID);
             END;
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='employeeName' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='employeeName';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='contactName' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='contactName';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='initialContactDate' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='initialContactDate';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='organization' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='organization';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='primaryDWCSpecialist' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='primaryDWCSpecialist';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='secondaryDWCSpecialist' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='secondaryDWCSpecialist';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = V_NEW_CASE_TYPE_NAME
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='caseType';
 
             SELECT XMLQUERY('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()' PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL() INTO V_GEN_EMP_HHSID FROM DUAL;
             SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
