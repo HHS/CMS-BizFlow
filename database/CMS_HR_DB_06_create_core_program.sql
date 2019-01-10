@@ -3815,7 +3815,6 @@ IS
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'modifyCoversheetFeedback', '/DOCUMENT/PROCESS_VARIABLE/modifyCoversheetFeedback/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'modifyFinalPackageFeedback', '/DOCUMENT/PROCESS_VARIABLE/modifyFinalPackageFeedback/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'returnToSO', '/DOCUMENT/PROCESS_VARIABLE/returnToSO/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectOfficial', '/DOCUMENT/GENERAL/SO_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posLocation', '/DOCUMENT/GENERAL/PD_EMPLOYING_OFFICE/text()', null);
 
       V_RLVNTDATANAME := 'classSpecialist';
@@ -3877,6 +3876,19 @@ IS
 
       END IF;
 
+      V_RLVNTDATANAME := 'selectOfficial';
+      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SO_ID/text()');
+      IF V_XMLVALUE IS NOT NULL THEN
+        -------------------------------
+        -- participant prefix
+        -------------------------------
+        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+      ELSE
+        V_VALUE := NULL;
+      END IF;
+      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
       V_RLVNTDATANAME := 'hrLiaison';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/HRL_ID/text()');
