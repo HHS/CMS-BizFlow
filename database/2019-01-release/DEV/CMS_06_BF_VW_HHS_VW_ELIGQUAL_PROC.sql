@@ -53,8 +53,8 @@ AS
         LEFT JOIN WITEM C ON A.PROCID = C.PROCID AND B.ACTSEQ = C.ACTSEQ AND C.STATE IN ('I','V','E','P','R')
         JOIN FLDRLIST FL ON FL.FLDRID = A.INSTFLDRID
    WHERE A.PREPROCDEFNAME = 'Eligibility and Qualifications Review'
+    --WHERE PD.NAME = 'Eligibility and Qualifications Review'
       AND FL.NAME IN ('CMS')    
     ORDER BY A.PROCID    
 /
-
 
