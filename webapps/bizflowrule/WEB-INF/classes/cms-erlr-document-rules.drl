@@ -65,7 +65,6 @@ rule "ERLR / Conduct Issue"
 		addDocument($workflowDocuments, "Reprimand", false);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
 		addDocument($workflowDocuments, "SF-50", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 		addDocument($workflowDocuments, "Third Party Appeal", false);
 end
 
@@ -88,8 +87,7 @@ rule "ERLR / Grievance"
 		addDocument($workflowDocuments, "Request for Next Level Grievance", false);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
 		addDocument($workflowDocuments, "Step/Stage 1 Decision", false);
-		addDocument($workflowDocuments, "Step/Stage 2 Decision", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
+		addDocument($workflowDocuments, "Step/Stage 2 Decision", false);		
 end
 
 rule "ERLR / Information Request"
@@ -110,7 +108,6 @@ rule "ERLR / Information Request"
 		addDocument($workflowDocuments, "Communications", false);
 		addDocument($workflowDocuments, "Request for Information", true);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 end
 
 
@@ -142,7 +139,6 @@ rule "ERLR / Investigation"
 		addDocument($workflowDocuments, "Settlement Agreement", false);
 		addDocument($workflowDocuments, "Statements", false);
 		addDocument($workflowDocuments, "Summary of Investigation", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 end
 
 rule "ERLR / Labor Negotiation"
@@ -169,7 +165,6 @@ rule "ERLR / Labor Negotiation"
 		addDocument($workflowDocuments, "Request to Bargain", true);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
 		addDocument($workflowDocuments, "Signed Agreements", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 		addDocument($workflowDocuments, "Training Materials", false);
 end
 
@@ -194,7 +189,6 @@ rule "ERLR / Medical Documentation"
 		addDocument($workflowDocuments, "Request for Documentation", false);
 		addDocument($workflowDocuments, "Response from FOH", false);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 end
 
 rule "ERLR / Performance Issue"
@@ -219,7 +213,6 @@ rule "ERLR / Performance Issue"
 		addDocument($workflowDocuments, "Position Description", false);
 		addDocument($workflowDocuments, "Proposal", false);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 end
 
 rule "ERLR / Probationary Period"
@@ -247,7 +240,6 @@ rule "ERLR / Probationary Period"
 		addDocument($workflowDocuments, "Resume", true);
 		addDocument($workflowDocuments, "Settlement Agreement", false);
 		addDocument($workflowDocuments, "SF-50", true);
-		addDocument($workflowDocuments, "Supporting Documents", false);
 		addDocument($workflowDocuments, "Termination Notice", false);
 		addDocument($workflowDocuments, "Transcript", false);
 end
@@ -277,7 +269,6 @@ rule "ERLR / Unfair Labor Practices"
         addDocument($workflowDocuments, "Posting", false);
         addDocument($workflowDocuments, "Regional Director's Decision", true);
         addDocument($workflowDocuments, "Settlement Agreement", false);
-        addDocument($workflowDocuments, "Supporting Documents", false);
 end
 
 rule "ERLR / Within Grade Increase Denial/Reconsideration"
@@ -301,9 +292,143 @@ rule "ERLR / Within Grade Increase Denial/Reconsideration"
         addDocument($workflowDocuments, "Reconsideration Request", false);
         addDocument($workflowDocuments, "Redetermination Notice", false);
         addDocument($workflowDocuments, "Settlement Agreement", false);
-        addDocument($workflowDocuments, "Supporting Documents", false);
-
 end
+
+rule "ERLR / Third Party Hearing / Arbitration"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Third Party Hearing" ) from $fields
+		 $field3: WorkflowField ( fieldId == "ThirdPartyAppealType", fieldValue == "Arbitration" ) from $fields
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "7114 (b)(4) Request", false);
+        addDocument($workflowDocuments, "7114 (b)(4) Response", false);
+        addDocument($workflowDocuments, "Arbitration Decision", false);
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Exhibit List", false);
+        addDocument($workflowDocuments, "Final Decision", false);
+        addDocument($workflowDocuments, "FMCS Notice", true);
+        addDocument($workflowDocuments, "Hearing Notice", false);
+        addDocument($workflowDocuments, "Invocation of Arbitration", true);
+        addDocument($workflowDocuments, "Notice of Exceptions", false);
+        addDocument($workflowDocuments, "Opening Statement", false);
+        addDocument($workflowDocuments, "Post Hearing Brief", false);
+        addDocument($workflowDocuments, "Prehearing Conference Notice", false);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+        addDocument($workflowDocuments, "Stipulations", false);
+        addDocument($workflowDocuments, "Witness List", false);
+end
+
+rule "ERLR / Third Party Hearing / FLRA"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Third Party Hearing" ) from $fields
+		 $field3: WorkflowField ( fieldId == "ThirdPartyAppealType", fieldValue == "FLRA" ) from $fields
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Final Decision", false);
+        addDocument($workflowDocuments, "Motions", false);
+        addDocument($workflowDocuments, "Notice of Complaint", true);
+        addDocument($workflowDocuments, "Notice of Exceptions", false);
+        addDocument($workflowDocuments, "Pleadings", false);
+        addDocument($workflowDocuments, "Prehearing Conference", false);
+        addDocument($workflowDocuments, "Regional Director's Decision", false);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+        addDocument($workflowDocuments, "Subpoenas", false);
+        addDocument($workflowDocuments, "ULP Filing", true);
+end
+
+rule "ERLR / Third Party Hearing / FSIP"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Third Party Hearing" ) from $fields
+		 $field3: WorkflowField ( fieldId == "ThirdPartyAppealType", fieldValue == "FSIP" ) from $fields
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Filings", false);
+        addDocument($workflowDocuments, "FSIP Decision", false);
+        addDocument($workflowDocuments, "FSIP Notice", false);
+        addDocument($workflowDocuments, "Notice of Impasse", true);
+        addDocument($workflowDocuments, "Request for FSIP Services", false);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+        addDocument($workflowDocuments, "Supporting Documents", false);
+end
+
+rule "ERLR / Third Party Hearing / Grievance"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Third Party Hearing" ) from $fields
+		 $field3: WorkflowField ( fieldId == "ThirdPartyAppealType", fieldValue == "Grievance" ) from $fields
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Grievance Form", true);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+        addDocument($workflowDocuments, "Step 1 Decision", false);
+        addDocument($workflowDocuments, "Step 2 Decision", false);
+end
+
+rule "ERLR / Third Party Hearing / MSPB"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Third Party Hearing" ) from $fields
+		 $field3: WorkflowField ( fieldId == "ThirdPartyAppealType", fieldValue == "MSPB" ) from $fields
+        $workflowDocuments : ArrayList()
+    then
+        addDocument($workflowDocuments, "Acknowledgment Order", true);
+        addDocument($workflowDocuments, "Agency Response", true);
+        addDocument($workflowDocuments, "Background Information", false);
+        addDocument($workflowDocuments, "Communications", false);
+        addDocument($workflowDocuments, "Discovery Request", false);
+        addDocument($workflowDocuments, "Discovery Response", false);
+        addDocument($workflowDocuments, "Employee's Appeal", true);
+        addDocument($workflowDocuments, "Final Decision", false);
+        addDocument($workflowDocuments, "Hearing Notice", false);
+        addDocument($workflowDocuments, "Initial Decision", false);
+        addDocument($workflowDocuments, "Motions", false);
+        addDocument($workflowDocuments, "Petition for Review", false);
+        addDocument($workflowDocuments, "Pleadings", false);
+        addDocument($workflowDocuments, "Prehearing Conference Notice", false);
+        addDocument($workflowDocuments, "Prehearing Conference Order", false);
+        addDocument($workflowDocuments, "Settlement Agreement", false);
+end
+
+
 
 
 //------------------------------
@@ -319,5 +444,5 @@ rule "ERLR / Default"
                         )
         $workflowDocuments : ArrayList()
     then
-        addDocument($workflowDocuments, "Other", false);
+        addDocument($workflowDocuments, "Supporting Documents", false);
 end
