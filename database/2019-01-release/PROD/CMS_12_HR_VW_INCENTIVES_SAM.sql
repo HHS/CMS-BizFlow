@@ -26,6 +26,13 @@ FROM TBL_FORM_DTL FD,
 	     , SUP_DOC_REQ_DATE VARCHAR2(10) PATH './item[id="dateSupDocRequested"]/value'
 	     , SUP_DOC_RCV_DATE VARCHAR2(10) PATH './item[id="dateSupDocReceived"]/value'
 	     -- Justification
+		 , JUSTIFICATION_CRT_NAME VARCHAR2(100) PATH './item[id="currentUser"]/value'
+		 , JUSTIFICATION_CRT_ID VARCHAR2(10) PATH './item[id="currentUserId"]/value'
+		 , JUSTIFICATION_MOD_REASON VARCHAR2(100) PATH './item[id="justificationModificationReason"]/value'
+		 , JUSTIFICATION_MOD_SUMMARY VARCHAR2(500) PATH './item[id="justificationModificationSummary"]/value'
+		 , JUSTIFICATION_MODIFIER_NAME VARCHAR2(100) PATH './item[id="justificationModifier"]/value'
+		 , JUSTIFICATION_MODIFIER_ID VARCHAR2(10) PATH './item[id="justificationModifierId"]/value'
+		 , JUSTIFICATION_MODIFIED_DATE VARCHAR2(20) PATH './item[id="justificationModified"]/value'	
 	     , JUSTIFICATION_SUPER_QUAL_DESC VARCHAR2(4000) PATH './item[id="justificationSuperQualificationDesc"]/value'
 	     , JUSTIFICATION_QUAL_COMP_DESC VARCHAR2(4000) PATH './item[id="justificationQualificationComparedDesc"]/value'
 	     , JUSTIFICATION_PAY_EQUITY_DESC VARCHAR2(4000) PATH './item[id="justificationPayEquityDesc"]/value'

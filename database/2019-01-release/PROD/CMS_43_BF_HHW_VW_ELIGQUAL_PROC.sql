@@ -51,10 +51,10 @@ AS
         PROCS A
         LEFT JOIN ACT B ON A.PROCID = B.PROCID AND B.STATE IN ('R', 'V', 'E') AND B.TYPE = 'P'
         LEFT JOIN WITEM C ON A.PROCID = C.PROCID AND B.ACTSEQ = C.ACTSEQ AND C.STATE IN ('I','V','E','P','R')
-        JOIN PROCDEF PD ON PD.PROCDEFID = A.ORGPROCDEFID
-        JOIN FLDRLIST FL ON FL.FLDRID = PD.FLDRID
-    --WHERE A.PREPROCDEFNAME = 'Eligibility and Qualifications Review'
-    WHERE PD.NAME = 'Eligibility and Qualifications Review'
+        JOIN FLDRLIST FL ON FL.FLDRID = A.INSTFLDRID
+   WHERE A.PREPROCDEFNAME = 'Eligibility and Qualifications Review'
       AND FL.NAME IN ('CMS')    
     ORDER BY A.PROCID    
 /
+
+
