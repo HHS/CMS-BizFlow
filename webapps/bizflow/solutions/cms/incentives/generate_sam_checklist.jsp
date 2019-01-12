@@ -33,7 +33,7 @@
     static final String RUNNING_PROCESS_STATE = "R";
     static Properties properties = null;
 
-    static final String REPORT_URL = "{REPORTSERVERURL}/rest_v2/reports{PATH}.{FILEFORMAT}?j_memberid={J_MEMBERID}&j_username={J_USERNAME}&param1={PARAM1}";
+    static final String REPORT_URL = "{REPORTSERVERURL}/rest_v2/reports{PATH}.{FILEFORMAT}?j_memberid={J_MEMBERID}&j_username={J_USERNAME}&caseID={PARAM1}";
 
     static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger("JSP");
 
