@@ -7052,7 +7052,8 @@ BEGIN
 	                , X.GEN_INVESTIGATE_END_DT
 	                , X.GEN_STD_CONDUCT
 	                , X.GEN_STD_CONDUCT_TYPE
-	                , X.CC_FINAL_ACTION
+	                --, X.CC_FINAL_ACTION
+					, FN_GET_FINAL_ACTIONS(I_PROCID) AS CC_FINAL_ACTION
 	                , TO_DATE(X.CC_CASE_COMPLETE_DT,'MM/DD/YYYY HH24:MI:SS') AS CC_CASE_COMPLETE_DT          
 				FROM TBL_FORM_DTL FD
 					, XMLTABLE('/formData/items' PASSING FD.FIELD_DATA
