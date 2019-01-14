@@ -34,7 +34,7 @@ IS
 
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'adminCode', '/DOCUMENT/GENERAL/SG_ADMIN_CD/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancelReason', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison', '/DOCUMENT/GENERAL/SG_HRL_ID/text()', null);
+      --HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison', '/DOCUMENT/GENERAL/SG_HRL_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingAckResponse', '/DOCUMENT/PROCESS_VARIABLE/meetingAckResponse/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingApvResponse', '/DOCUMENT/PROCESS_VARIABLE/meetingApvResponse/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingEmailRecipients', '/DOCUMENT/PROCESS_VARIABLE/meetingEmailRecipients/text()', null);
@@ -137,6 +137,20 @@ IS
 
       V_RLVNTDATANAME := 'execOfficer';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_XO_ID/text()');
+      IF V_XMLVALUE IS NOT NULL THEN
+        -------------------------------
+        -- participant prefix
+        -------------------------------
+        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+      ELSE
+        V_VALUE := NULL;
+      END IF;
+      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+      V_RLVNTDATANAME := 'hrLiaison';
+      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_HRL_ID/text()');
       IF V_XMLVALUE IS NOT NULL THEN
         -------------------------------
         -- participant prefix

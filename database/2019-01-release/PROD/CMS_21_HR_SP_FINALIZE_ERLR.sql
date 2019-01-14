@@ -48,7 +48,7 @@ BEGIN
     V_CASE_TYPE_ID := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_CASE_TYPE"]/value/text()').getStringVal();    
     V_GEN_EMP_ID   := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()').getStringVal();    
     V_CASE_NUMBER  := TO_NUMBER(V_XMLDOC.EXTRACT('/formData/items/item[id="CASE_NUMBER"]/value/text()').getStringVal());    
-    SP_ERLR_EMPLOYEE_CASE_ADD(V_GEN_EMP_ID, V_CASE_NUMBER, NULL, NULL);
+    SP_ERLR_EMPLOYEE_CASE_ADD(V_GEN_EMP_ID, V_CASE_NUMBER, TO_NUMBER(V_CASE_TYPE_ID), NULL, NULL);
     
     IF V_CASE_TYPE_ID = INFORMATION_REQUEST_ID THEN -- Information Request
         V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="IR_APPEAL_DENIAL"]/value/text()'); -- Did Requester Appeal Denial?
@@ -154,3 +154,4 @@ EXCEPTION
 		SP_ERROR_LOG();
 END;
 /
+
