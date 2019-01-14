@@ -26,8 +26,8 @@ FROM TBL_FORM_DTL FD,
 	     , SUP_DOC_REQ_DATE VARCHAR2(10) PATH './item[id="dateSupDocRequested"]/value'
 	     , SUP_DOC_RCV_DATE VARCHAR2(10) PATH './item[id="dateSupDocReceived"]/value'
 	     -- Justification
-		 , JUSTIFICATION_CRT_NAME VARCHAR2(100) PATH './item[id="currentUser"]/value'
-		 , JUSTIFICATION_CRT_ID VARCHAR2(10) PATH './item[id="currentUserId"]/value'
+		 , JUSTIFICATION_LASTMOD_NAME VARCHAR2(100) PATH './item[id="currentUser"]/value'
+		 , JUSTIFICATION_LASTMOD_ID VARCHAR2(10) PATH './item[id="currentUserId"]/value'
 		 , JUSTIFICATION_MOD_REASON VARCHAR2(100) PATH './item[id="justificationModificationReason"]/value'
 		 , JUSTIFICATION_MOD_SUMMARY VARCHAR2(500) PATH './item[id="justificationModificationSummary"]/value'
 		 , JUSTIFICATION_MODIFIER_NAME VARCHAR2(100) PATH './item[id="justificationModifier"]/value'
