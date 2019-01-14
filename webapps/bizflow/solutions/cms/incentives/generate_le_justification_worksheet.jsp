@@ -106,18 +106,47 @@
         return xrs;
     }
 
-    String getReportServerUrl(ServletRequest request) {
-        StringBuilder sb = new StringBuilder(50);
-        sb.append(request.getScheme()).append("://");
-        sb.append(request.getServerName());
-        int port = request.getServerPort();
-        if (80 != port) {
-            sb.append(":").append(port);
+    public String getReportServerUrl(HWSession hwSession, HWSessionInfo hwSessionInfo, HttpServletRequest request) {
+        InputStream is = null;
+        StringBuilder sbUrl = new StringBuilder(50);
+        try {
+            String requestUrl = request.getRequestURL().toString();
+            String requestUri = request.getRequestURI();
+
+            HttpSession session = request.getSession();
+            is = hwSession.getExtServers(hwSessionInfo.toString(), "REPORT");
+
+            XMLResultSetImpl xrsReportServerList = new XMLResultSetImpl();
+            xrsReportServerList.setLookupField("NAME");
+            xrsReportServerList.parse(is);
+
+            int r = xrsReportServerList.lookupField("NAME", "BizFlow Advanced Report Server");
+            String url = "/bizflowadvreport";
+            if(-1 != r) {
+                url = xrsReportServerList.getFieldValueAt(r, "URL");
+            }
+            if (url.startsWith("http")) {
+                sbUrl.append(url);
+            } else if (url.startsWith("/")) {
+                sbUrl.append(com.hs.frmwk.web.util.StringUtility.replaceAll(requestUrl, requestUri, ""));
+                sbUrl.append(url);
+            } else {
+                sbUrl.append(com.hs.frmwk.web.util.StringUtility.replaceAll(requestUrl, requestUri, ""));
+                sbUrl.append("/" + url);
+            }
+        } catch (Exception e) {
+            log.error(e);
         }
-
-        sb.append("/bizflowadvreport");
-
-        return sb.toString();
+        finally {
+            if(null != is) {
+                try {
+                    is.close();
+                } catch(Exception ex) {
+                    // ignore
+                }
+            }
+        }
+        return sbUrl.toString();
     }
 %>
 <%
@@ -131,7 +160,7 @@
     String fileName = null;
     String reportPath = null;
     String fileFormat = "pdf";
-    String reportServerURL = getReportServerUrl(request);
+    String reportServerURL = getReportServerUrl(hwSession, hwSessionInfo, request);
     boolean isOverwrite = !"false".equalsIgnoreCase(overwrite);
 
     try {
@@ -141,7 +170,7 @@
         loginUser = (XMLResultSet) session.getAttribute("LoginUser");
         nProcessId = Integer.parseInt(processid);
         nActivityId = Integer.parseInt(activityid);
-        reportServerURL = properties.getProperty("report.server.url", reportServerURL);
+        //reportServerURL = properties.getProperty("report.server.url", reportServerURL);
         documentType = properties.getProperty("report.LEJustificationWorksheet.documentType", DEFAULT_DOCUMENT_TYPE);
         fileName = properties.getProperty("report.LEJustificationWorksheet.fileName", DEFAULT_FILE_NAME);
         reportPath = properties.getProperty("report.LEJustificationWorksheet.path");
