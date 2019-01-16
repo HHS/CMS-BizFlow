@@ -284,6 +284,13 @@ IS
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateAccept', '/formData/items/item[id="candiAgreeRenewal"]/value/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requesterRole', '/formData/items/item[id="requesterRole"]/value/text()');
 
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'execOfficer', '/formData/items/item[id="executiveOfficers"]/value[1]/participantId/text()', '/formData/items/item[id="executiveOfficers"]/value[1]/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'execOfficer2', '/formData/items/item[id="executiveOfficers"]/value[2]/participantId/text()', '/formData/items/item[id="executiveOfficers"]/value[2]/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'execOfficer3', '/formData/items/item[id="executiveOfficers"]/value[3]/participantId/text()', '/formData/items/item[id="executiveOfficers"]/value[3]/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison', '/formData/items/item[id="hrLiaisons"]/value[1]/participantId/text()', '/formData/items/item[id="hrLiaisons"]/value[1]/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison2', '/formData/items/item[id="hrLiaisons"]/value[2]/participantId/text()', '/formData/items/item[id="hrLiaisons"]/value[2]/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison3', '/formData/items/item[id="hrLiaisons"]/value[3]/participantId/text()', '/formData/items/item[id="hrLiaisons"]/value[3]/name/text()');
+
 			V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="incentiveType"]/value/text()');
 			IF V_XMLVALUE IS NOT NULL THEN
 				V_INCENTIVE_TYPE := V_XMLVALUE.GETSTRINGVAL();
@@ -6721,7 +6728,6 @@ EXCEPTION
 		SP_ERROR_LOG();
 END;
 /
-
 create or replace PROCEDURE SP_ERLR_EMPLOYEE_CASE_ADD
 (
 	I_HHSID IN VARCHAR2,
@@ -6733,6 +6739,8 @@ create or replace PROCEDURE SP_ERLR_EMPLOYEE_CASE_ADD
 IS
     V_CNT NUMBER;
     V_CASE_TYPE_NAME VARCHAR2(100);
+    V_FIRST_NAME VARCHAR2(50);
+    V_LAST_NAME VARCHAR2(50);
 BEGIN
     SELECT COUNT(*)
       INTO V_CNT
@@ -6745,18 +6753,22 @@ BEGIN
           INTO V_CASE_TYPE_NAME
           FROM TBL_LOOKUP
          WHERE TBL_ID = I_CASE_TYPE_ID;
+         
+        SELECT FIRST_NAME, LAST_NAME 
+          INTO V_FIRST_NAME, V_LAST_NAME 
+        FROM HHS_HR.EMPLOYEE_LOOKUP           
+        WHERE HHSID = (SELECT XMLQUERY('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()' PASSING FIELD_DATA RETURNING CONTENT).GETSTRINGVAL() 
+          FROM TBL_FORM_DTL F JOIN BIZFLOW.RLVNTDATA P ON F.PROCID = P.PROCID AND P.RLVNTDATANAME='caseNumber'
+         WHERE P.VALUE = TO_CHAR(I_CASEID));
     
         IF I_MEMBER_ID IS NULL THEN
             INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME)
-            SELECT I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, LAST_NAME, FIRST_NAME
-              FROM HHS_HR.EMPLOYEE_LOOKUP
-             WHERE HHSID = I_HHSID;
+                                    VALUES(I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME);
         ELSE
             INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME, M_DT, M_MEMBER_ID, M_MEMBER_NAME)
-            SELECT I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, LAST_NAME, FIRST_NAME, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, M.NAME
-              FROM BIZFLOW.MEMBER M, HHS_HR.EMPLOYEE_LOOKUP E
-             WHERE M.MEMBERID = I_MEMBER_ID
-               AND E.HHSID = I_HHSID;
+            SELECT I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, M.NAME
+              FROM BIZFLOW.MEMBER M
+             WHERE M.MEMBERID = I_MEMBER_ID;
         END IF;
     END IF;
 

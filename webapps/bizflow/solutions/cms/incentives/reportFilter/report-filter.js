@@ -19,31 +19,46 @@
 
         // Primitive Options - Not for Selectize
         vm._components = ['By Request Number', 'By Admin Code', 'Office of the Administrator (OA) Only'];
+        vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
         vm._includeSubOrgs = ['Yes', 'No'];
-        vm._requestStatus = ["Completed", "Active", "Both"];
-        vm._requestTypes = ['All', 'Appointment', 'Classification Only', 'Recruitment'];
-        vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
+        //vm._requestStatus = ["Completed", "Active", "Both"];
+        vm._requestTypes = ['Appointment', 'Recruitment'];
+        vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
 
-        vm.reportMap = [{
-            'name': 'CMS HR Incentives Workload Summary Report',
-            'description': 'Incentives Workload Summary',
-            'dateLabel': 'Date Request Entered'
-        }];
+        vm.reportMap = [
+			{
+				'name': 'CMS HR Incentives Workload Summary Report',
+				'description': 'Incentives Workload Summary',
+				'dateLabel': 'Date Request Entered'
+			},
+			{
+				'name': 'CMS HR Incentives Time to Completion Report - SAM & LE',
+				'description': 'Incentives Time to Completion Report - SAM & LE',
+				'dateLabel': 'Date Request Entered'
+			},
+			{
+				'name': 'CMS HR Cancelled Incentives Report',
+				'description': 'Cancelled Incentives',
+				'dateLabel': 'Date Request Entered'
+			}
+		];
 
         // Default Values
         vm.orgSelected = {
             component: '',
+            incentiveType: '',
             adminCode: '',
             includeSubOrg: 'Yes',
-            requestType: 'All',
+            requestType: '',
             classificationType: 'All',
             appointmentType: 'All',
             scheduleAType: 'All',
             volunteerType: 'All',
             fromDate: null,
             toDate: null,
+            hrSpecialist: 'All',
             selectingOfficial: 'All',
             executiveOfficer: 'All',
             hrLiaison: 'All',
@@ -67,6 +82,7 @@
             create: false,
             valueField: 'memberid',
             labelField: 'name',
+			sortField: 'name',
             searchField: ['name']
         };
         // Selectize configuration for simple list
@@ -77,11 +93,25 @@
             labelField: 'key'
         };
 
+        vm.multipleConfig = {
+            create: false,
+			allowEmptyOption: false,
+            valueField: 'value',
+            labelField: 'key'
+        };
+
         vm.getSelectizeOptions = function (items) {
             return items.map(function (item) {
                 return {key: item, value: item};
             })
-        }
+        };
+		
+        vm.getSelectizeOptionsEx = function (items) {
+            return items.map(function (item) {
+                return item;
+            })
+        };
+		
         vm.copyItems = function (targets, sources) {
             if (targets) {
                 if (targets.length > 0) {
@@ -106,7 +136,7 @@
 
         // Functions
         vm.getClassificationTypes = function () {
-            if (vm.selected.requestType === 'All' || vm.selected.requestType === 'Classification Only') {
+            if (vm.selected.requestType === '') {
                 if (vm.classTypesForClass.length == 0) {
                     vm.classTypesForClass = vm.classTypesForClass.concat(vm.allClassificationTypes);
                     vm.classTypesForClass.sort();
@@ -214,28 +244,55 @@
                 }
             }
 
+
+			var date_from = "DATE_FROM";
+			var date_to = "DATE_TO";
+			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE") {
+				date_from = "COMP_DATE_FROM";
+				date_to = "COMP_DATE_TO";
+			} else {
+				date_from = "DATE_FROM";
+				date_to = "DATE_TO";
+			}
+
             if (vm.selected.fromDate != null) {
                 var from = vm.getDateString(vm.selected.fromDate);
-                url = url + '&DATE_FROM=' + from;
+                url = url + '&' + date_from + '=' + from;
             } else {
-                url = url + '&DATE_FROM=2000-01-01';
+                url = url + '&' + date_from + '=2000-01-01';
             }
             if (vm.selected.toDate != null) {
                 var to = vm.getDateString(vm.selected.toDate);
-                url = url + '&DATE_TO=' + to;
+                url = url + '&' + date_to + '=' + to;
             } else {
-                url = url + '&DATE_TO=2050-12-31';
+                url = url + '&' + date_to + '=2050-12-31';
             }
 
-            if (vm.selected.requestStatus) {
-                url = url + '&REQ_STATUS=' + vm.selected.requestStatus;
+            //if (vm.selected.requestStatus) {
+            //    url = url + '&REQ_STATUS=' + vm.selected.requestStatus;
+            //}
+            if (vm.selected.hrSpecialist) {
+                url = url + '&HRS_ID=' + vm.selected.hrSpecialist; // HR Specialist
             }
-            // url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
+            if (vm.selected.incentiveType) {
+				var incentiveTypeArray = vm.selected.incentiveType;
+				if(incentiveTypeArray.length > 0) {
+					var incentiveType = incentiveTypeArray.join(",");
+					if(incentiveType != "") {
+						url = url + '&INCEN_TYPE=' + incentiveType; // Incentive Type
+					}
+				}
+            }
+            if (vm.selected.requestType) {
+				url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
+            }
             // url = url + '&CLSF_TYPE=' + vm.selected.classificationType; // Classification Type
-            // url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
+            if (vm.selected.appointmentType) {
+				url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
+            }
             // url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
             // url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
-            // url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
+            //url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
             // url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
             // url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
             // url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
@@ -251,18 +308,6 @@
             if (vm.selected.component !== 'By Admin Code') {
                 vm.selected.adminCode = '';
                 vm.selected.includeSubOrg = '';
-            }
-            if (vm.selected.appointmentType === 'Expert/Consultant' || vm.selected.appointmentType === 'Volunteer') {
-                vm.selected.classificationType = 'All';
-            }
-            if (vm.selected.requestType !== 'Appointment') {
-                vm.selected.appointmentType = 'All';
-            }
-            if (vm.selected.appointmentType !== 'Schedule A') {
-                vm.selected.scheduleAType = 'All';
-            }
-            if (vm.selected.appointmentType !== 'Volunteer') {
-                vm.selected.volunteerType = 'All';
             }
             var url = vm.getTargetReportURL();
 
@@ -303,13 +348,6 @@
                         }
                     }
 
-                    if (foundReportMap.requestActivity && foundReportMap.requestActivity.length > 0) {
-                        vm.copyItems(vm._requestActivities, foundReportMap.requestActivity);
-                        if (vm._requestActivities.length == 1) {
-                            vm.orgSelected.requestActivity = vm._requestActivities[0]
-                        }
-                    }
-
                     if (foundReportMap.dateLabel && foundReportMap.dateLabel.length > 0) {
                         vm.dateLabel = foundReportMap.dateLabel
                     }
@@ -329,14 +367,19 @@
             vm.selected = _.assign({}, vm.orgSelected);
 
             $('#reportFilter').attr('aria-busy', 'false');
-
+			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE") {
+				vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
+			} else {
+				vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
+			}
             vm.requestTypes = vm.getSelectizeOptions(vm._requestTypes);
-            vm.requestStatus = vm.getSelectizeOptions(vm._requestStatus);
+            //vm.requestStatus = vm.getSelectizeOptions(vm._requestStatus);
             vm.appointmentTypes = vm.getSelectizeOptions(vm._appointmentTypes);
             vm.scheduleATypes = vm.getSelectizeOptions(vm._scheduleATypes);
             vm.volunteerTypes = vm.getSelectizeOptions(vm._volunteerTypes);
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
+            vm.incentiveTypes = vm.getSelectizeOptionsEx(vm._incentiveTypes);
         };
 
         vm.$onDestroy = function () {
