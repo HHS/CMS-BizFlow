@@ -129,92 +129,41 @@
             <div class="panel-body">
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
-                        <label id="requestStatusLabel" for="requestStatus" class="control-label">Request Activity</label>
-                        <selectize id="requestStatus"
+                        <label id="hrSpecialistLabel" for="selectHrSpecialist" class="control-label">HR Specialist</label>
+                        <selectize class="form-control" role="combobox" id="selectHrSpecialist" aria-labelledby="hrSpecialistLabel"
+                                   name="selectHrSpecialist"
+                                    config="$ctrl.membersInGroupConfig"
+                                    options="$ctrl.group['HR Specialists']" 
+                                    ng-model="$ctrl.selected.hrSpecialist"></selectize>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label id="incentiveTypeLabel" for="selectIncentiveType" class="control-label">Incentype Type</label>
+                        <selectize class="form-control form-control-lg" role="combobox" id="selectIncentiveType" aria-labelledby="incentiveTypeLabel"
+                                   name="selectIncentiveType"
+                                   config="$ctrl.multipleConfig"
+                                   options="$ctrl.incentiveTypes"
+                                   ng-model="$ctrl.selected.incentiveType"></selectize>
+                    </div>
+                </div>
+                <div class="row container-fluid">
+                    <div class="form-group col-md-3">
+                        <label id="requestTypeLabel" for="requestTypeSelect" class="control-label">Request Type</label>
+                        <selectize id="requestTypeSelect"
+                                   name="requestTypeSelect"
                                    config="$ctrl.simpleConfig"
-                                   options="$ctrl.requestStatus"
-                                   ng-model="$ctrl.selected.requestStatus"></selectize>
+                                   options="$ctrl.requestTypes"
+                                   ng-model="$ctrl.selected.requestType"></selectize>
                     </div>
-
-                    <!--<div class="form-group col-md-3">-->
-                        <!--<label id="requestTypeLabel" for="requestTypeSelect" class="control-label">Request Type</label>-->
-                        <!--<selectize id="requestTypeSelect"-->
-                                   <!--config="$ctrl.simpleConfig"-->
-                                   <!--options="$ctrl.requestTypes"-->
-                                   <!--ng-model="$ctrl.selected.requestType"></selectize>-->
-
-
-                    <!--</div>-->
-                    <!--<div class="form-group col-md-3"-->
-                         <!--ng-if="$ctrl.selected.appointmentType != 'Expert/Consultant' && $ctrl.selected.appointmentType != 'Volunteer'">-->
-                        <!--<label id="classificationTypeLabel" for="classificationTypeSelect" class="control-label">Classification Type</label>-->
-                        <!--<selectize role="combobox" id="classificationTypeSelect" aria-labelledby="classificationTypeLabel" required-->
-                                   <!--ng-model="$ctrl.selected.classificationType"-->
-                                   <!--options="$ctrl.getClassificationTypes()"-->
-                                   <!--config="$ctrl.simpleConfig"></selectize>-->
-
-                    <!--</div>-->
-                </div>
-
-                <div class="row container-fluid" ng-if="$ctrl.selected.requestType == 'Appointment'">
-                    <div class="form-group col-md-3 required">
+                    <div class="form-group col-md-3">
                         <label id="appointmentTypeLabel" for="appointmentTypeSelect" class="control-label">Appointment Type</label>
-                        <selectize role="combobox" id="appointmentTypeSelect" aria-labelledby="appointmentTypeLabel" required
-                                   ng-model="$ctrl.selected.appointmentType"
+                        <selectize role="combobox" id="appointmentTypeSelect" aria-labelledby="appointmentTypeLabel"
+                                   name="appointmentTypeSelect"
+                                   config="$ctrl.simpleConfig"
                                    options="$ctrl.appointmentTypes"
-                                   config="$ctrl.simpleConfig"></selectize>
-                    </div>
-                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.appointmentType == 'Schedule A'">
-                        <label id="scheduleATypeLabel" for="scheduleATypeSelect" class="control-label">Schedule A Type</label>
-                        <selectize role="combobox" id="scheduleATypeSelect" aria-labelledby="scheduleATypeLabel" required
-                                   ng-model="$ctrl.selected.scheduleAType"
-                                   options="$ctrl.scheduleATypes"
-                                   config="$ctrl.simpleConfig"></selectize>
-                    </div>
-                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.appointmentType == 'Volunteer'">
-                        <label role="combobox" id="volunteerTypeLabel" for="volunteerTypeSelect" class="control-label">Volunteer Type</label>
-                        <selectize id="volunteerTypeSelect" aria-labelledby="volunteerTypeLabel" required
-                                   ng-model="$ctrl.selected.volunteerType"
-                                   options="$ctrl.volunteerTypes"
-                                   config="$ctrl.simpleConfig"></selectize>
+                                   ng-model="$ctrl.selected.appointmentType"></selectize>
                     </div>
                 </div>
 
-                <!--<div class="row container-fluid">-->
-                    <!--<div class="form-group col-md-3">-->
-                        <!--<label class="control-label">Selecting Official</label>-->
-                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
-                                   <!--options="$ctrl.group['Selecting Officials']"-->
-                                   <!--ng-model="$ctrl.selected.selectingOfficial"></selectize>-->
-                    <!--</div>-->
-                    <!--<div class="form-group col-md-3">-->
-                        <!--<label class="control-label">Executive Officer</label>-->
-                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
-                                   <!--options="$ctrl.group['Executive Officers']"-->
-                                   <!--ng-model="$ctrl.selected.executiveOfficer"></selectize>-->
-                    <!--</div>-->
-                    <!--<div class="form-group col-md-3">-->
-                        <!--<label id="hrLiaison" class="control-label">HR Liaison</label>-->
-                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
-                                   <!--options="$ctrl.group['HR Liaison']"-->
-                                   <!--ng-model="$ctrl.selected.hrLiaison"></selectize>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-                <!--<div class="row container-fluid">-->
-                    <!--<div class="form-group col-md-3">-->
-                        <!--<label class="control-label">Staffing Specialist</label>-->
-                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
-                                   <!--options="$ctrl.group['HR Staffing Specialists']"-->
-                                   <!--ng-model="$ctrl.selected.staffSpecialist"></selectize>-->
-                    <!--</div>-->
-                    <!--<div class="form-group col-md-3">-->
-                        <!--<label class="control-label">Classification Specialist</label>-->
-                        <!--<selectize config="$ctrl.membersInGroupConfig" role="combobox"-->
-                                   <!--options="$ctrl.group['HR Classification Specialists']"-->
-                                   <!--ng-model="$ctrl.selected.classSpecialist"></selectize>-->
-                    <!--</div>-->
-                <!--</div>-->
 
                 <div class="row row-centered">
                     <div class="col-md-5 col-centered">
