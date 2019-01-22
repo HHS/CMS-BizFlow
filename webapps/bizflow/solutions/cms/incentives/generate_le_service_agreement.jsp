@@ -112,7 +112,13 @@
         try {
             String requestUrl = request.getRequestURL().toString();
             String requestUri = request.getRequestURI();
-
+            String scheme = request.getScheme();
+            String forwardedProtocol = request.getHeader("x-forwarded-proto"); // forwardedProtocol should be "http" or "https"
+            if("http".equalsIgnoreCase(forwardedProtocol) || "https".equalsIgnoreCase(forwardedProtocol)) {
+                if(!scheme.equalsIgnoreCase(forwardedProtocol)) {
+                    requestUrl = com.hs.frmwk.web.util.StringUtility.replace(requestUrl, scheme, forwardedProtocol);
+                }
+            }
             HttpSession session = request.getSession();
             is = hwSession.getExtServers(hwSessionInfo.toString(), "REPORT");
 
