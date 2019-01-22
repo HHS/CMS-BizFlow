@@ -1,3 +1,4 @@
+
 --------------------------------------------------------
 --  DDL for VW_ERLR_APPEAL
 --------------------------------------------------------
@@ -85,4 +86,3 @@ FROM
     LEFT OUTER JOIN ERLR_CASE EC ON A.ERLR_CASE_NUMBER = EC.ERLR_CASE_NUMBER
 ;
 /
-
