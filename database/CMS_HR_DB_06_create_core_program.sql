@@ -6601,7 +6601,7 @@ IS
     PERFORMANCE_ISSUE_ID	CONSTANT VARCHAR2(10) :='750';
     PERFORMANCE_ISSUE		CONSTANT VARCHAR2(50) :='Performance Issue';
     PROBATIONARY_PERIOD_ID	CONSTANT VARCHAR2(10) :='751';
-    PROBATIONARY_PERIOD		CONSTANT VARCHAR2(50) :='Probationary Period';
+    PROBATIONARY_PERIOD		CONSTANT VARCHAR2(50) :='Probationary Period Action';
     UNFAIR_LABOR_PRACTICES_ID	CONSTANT VARCHAR2(10) :='754';
     UNFAIR_LABOR_PRACTICES	CONSTANT VARCHAR2(50) :='Unfair Labor Practices';
     WGI_DENIAL_ID			CONSTANT VARCHAR2(10) :='809';
@@ -6701,7 +6701,7 @@ BEGIN
                 UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
             END IF;
             
-            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_WNR_WGI_WTHLD"]/value/text()'); --Was WGI Withheld?
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_PIP_WGI_WTHLD"]/value/text()'); --Was WGI Withheld?
             IF V_XMLVALUE IS NOT NULL THEN
                 V_VALUE := V_XMLVALUE.GETSTRINGVAL();
             END IF;
