@@ -215,7 +215,7 @@ rule "ERLR / Performance Issue"
 		addDocument($workflowDocuments, "Settlement Agreement", false);
 end
 
-rule "ERLR / Probationary Period"
+rule "ERLR / Probationary Period Action"
     when
         $docSearch: WorkflowRuleSearch (
                             $procName: procName
@@ -223,7 +223,7 @@ rule "ERLR / Probationary Period"
                             , $fields : fields
                             )
          $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
-         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Probationary Period" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Probationary Period Action" ) from $fields
 
         $workflowDocuments : ArrayList()
 
@@ -244,7 +244,7 @@ rule "ERLR / Probationary Period"
 		addDocument($workflowDocuments, "Transcript", false);
 end
 
-rule "ERLR / Unfair Labor Practices"
+rule "ERLR / Unfair Labor Practice"
     when
         $docSearch: WorkflowRuleSearch (
                             $procName: procName
@@ -252,7 +252,7 @@ rule "ERLR / Unfair Labor Practices"
                             , $fields : fields
                             )
          $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
-         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Unfair Labor Practices" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Unfair Labor Practice" ) from $fields
 
         $workflowDocuments : ArrayList()
 
