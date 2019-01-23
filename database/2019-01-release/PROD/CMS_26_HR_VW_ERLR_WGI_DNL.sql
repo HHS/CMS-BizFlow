@@ -1,3 +1,4 @@
+
 --------------------------------------------------------
 --  DDL for VW_ERLR_WGI_DNL
 --------------------------------------------------------
@@ -26,4 +27,3 @@ FROM
     LEFT OUTER JOIN ERLR_CASE EC ON WD.ERLR_CASE_NUMBER = EC.ERLR_CASE_NUMBER
 ;
 /
-
