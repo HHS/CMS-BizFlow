@@ -6999,7 +6999,7 @@ BEGIN
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
-                            GEN_CASE_STATUS NUMBER(20,0) PATH './item[id="GEN_CASE_STATUS"]/value'
+                            GEN_CASE_STATUS NVARCHAR2(200) PATH './item[id="GEN_CASE_STATUS"]/value'
                 ) X
 			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
