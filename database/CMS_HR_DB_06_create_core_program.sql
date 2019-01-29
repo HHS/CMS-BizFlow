@@ -406,23 +406,6 @@ IS
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_STATUS'']/value/text()');
       IF V_XMLVALUE IS NOT NULL THEN
         V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        -- skip looking up hard-coded value for case cancellation
-        IF  V_VALUE <> 'Case Created' AND V_VALUE <> 'closeNow' THEN
-          ---------------------------------
-          -- replace with lookup value
-          ---------------------------------
-          BEGIN
-            SELECT TBL_LABEL INTO V_VALUE_LOOKUP
-            FROM TBL_LOOKUP
-            WHERE TBL_ID = TO_NUMBER(V_VALUE);
-            EXCEPTION
-            WHEN NO_DATA_FOUND THEN
-            V_VALUE_LOOKUP := NULL;
-            WHEN OTHERS THEN
-            V_VALUE_LOOKUP := NULL;
-          END;
-          V_VALUE := V_VALUE_LOOKUP;
-        END IF;
       ELSE
         V_VALUE := NULL;
       END IF;
@@ -436,7 +419,6 @@ IS
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_TYPE'']/value/text()');
       IF V_XMLVALUE IS NOT NULL THEN
         V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-	UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = 'caseTypeID' AND PROCID = I_PROCID;
         ---------------------------------
         -- replace with lookup value
         ---------------------------------
@@ -510,7 +492,6 @@ IS
     SP_ERROR_LOG();
     --DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_ERLR -------------------');
   END;
-
 /
 
 
