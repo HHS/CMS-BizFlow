@@ -313,6 +313,7 @@ IS
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/participantId/text()', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/name/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgdApprove', '/formData/items/item[id="approvalDGHOValue"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgApprove', '/formData/items/item[id="approvalTABGValue"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcApprove', '/formData/items/item[id="approvalOHCValue"]/value/text()');
                 SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cocDirector', '/formData/items/item[id="cocDirector"]/value/participantId/text()', '/formData/items/item[id="cocDirector"]/value/name/text()');
 			ELSIF 'LE' = V_INCENTIVE_TYPE THEN
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'leSupport', '/formData/items/item[id="supportLE"]/value/text()');
@@ -405,23 +406,6 @@ IS
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_STATUS'']/value/text()');
       IF V_XMLVALUE IS NOT NULL THEN
         V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        -- skip looking up hard-coded value for case cancellation
-        IF  V_VALUE <> 'Case Created' AND V_VALUE <> 'closeNow' THEN
-          ---------------------------------
-          -- replace with lookup value
-          ---------------------------------
-          BEGIN
-            SELECT TBL_LABEL INTO V_VALUE_LOOKUP
-            FROM TBL_LOOKUP
-            WHERE TBL_ID = TO_NUMBER(V_VALUE);
-            EXCEPTION
-            WHEN NO_DATA_FOUND THEN
-            V_VALUE_LOOKUP := NULL;
-            WHEN OTHERS THEN
-            V_VALUE_LOOKUP := NULL;
-          END;
-          V_VALUE := V_VALUE_LOOKUP;
-        END IF;
       ELSE
         V_VALUE := NULL;
       END IF;
@@ -435,7 +419,6 @@ IS
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id=''GEN_CASE_TYPE'']/value/text()');
       IF V_XMLVALUE IS NOT NULL THEN
         V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-	UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = 'caseTypeID' AND PROCID = I_PROCID;
         ---------------------------------
         -- replace with lookup value
         ---------------------------------
@@ -509,7 +492,6 @@ IS
     SP_ERROR_LOG();
     --DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_ERLR -------------------');
   END;
-
 /
 
 
@@ -6890,7 +6872,7 @@ END;
  *
 */
 
-CREATE OR REPLACE PROCEDURE SP_UPDATE_ERLR_TABLE
+create or replace PROCEDURE SP_UPDATE_ERLR_TABLE
 (
 	I_PROCID            IN      NUMBER
 )
@@ -6999,7 +6981,7 @@ BEGIN
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
-                            GEN_CASE_STATUS NUMBER(20,0) PATH './item[id="GEN_CASE_STATUS"]/value'
+                            GEN_CASE_STATUS NVARCHAR2(200) PATH './item[id="GEN_CASE_STATUS"]/value'
                 ) X
 			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
@@ -7086,10 +7068,10 @@ BEGIN
 	                        , GEN_EMPLOYEE_ADMIN_CD	NVARCHAR2(8)    PATH './item[id="GEN_EMPLOYEE_ADMIN_CD"]/value'
 	                        , GEN_EMPLOYEE_ADMIN_CD_DESC	NVARCHAR2(50)   PATH './item[id="GEN_EMPLOYEE_ADMIN_CD_DESC"]/value'
 	                        , GEN_CASE_DESC	NVARCHAR2(500)  PATH './item[id="GEN_CASE_DESC"]/value'
-	                        , GEN_CASE_STATUS	 NUMBER(20,0)   PATH './item[id="GEN_CASE_STATUS"]/value'
+	                        , GEN_CASE_STATUS	 NVARCHAR2(200)   PATH './item[id="GEN_CASE_STATUS"]/value'
 	                        , GEN_CUST_INIT_CONTACT_DT	VARCHAR2(10)    PATH './item[id="GEN_CUST_INIT_CONTACT_DT"]/value'
 	                        , GEN_PRIMARY_REP_AFFILIATION	 NVARCHAR2(20)  PATH './item[id="GEN_PRIMARY_REP"]/value'
-	                        , GEN_CMS_PRIMARY_REP_ID VARCHAR2(10)  PATH './item[id="GEN_CMS_PRIMARY_REP"]/value/id'
+	                        , GEN_CMS_PRIMARY_REP_ID VARCHAR2(255)  PATH './item[id="GEN_CMS_PRIMARY_REP"]/value/name'
 	                        , GEN_CMS_PRIMARY_REP_PHONE	NVARCHAR2(50)   PATH './item[id="GEN_CMS_PRIMARY_REP_PHONE"]/value'
 	                        , GEN_NON_CMS_PRIMARY_FNAME	NVARCHAR2(50)   PATH './item[id="GEN_NON_CMS_PRIMARY_FNAME"]/value'
 	                        , GEN_NON_CMS_PRIMARY_MNAME	NVARCHAR2(50)   PATH './item[id="GEN_NON_CMS_PRIMARY_MNAME"]/value'
@@ -7312,10 +7294,10 @@ BEGIN
 							, CI_ADMIN_NOTICE_LEAVE	NVARCHAR2(5)	PATH './item[id="CI_ADMIN_NOTICE_LEAVE"]/value'
 							, CI_LEAVE_START_DT	NVARCHAR2(10)	PATH './item[id="CI_LEAVE_START_DT"]/value'
 							, CI_LEAVE_END_DT	NVARCHAR2(10)	PATH './item[id="CI_LEAVE_END_DT"]/value'
-							, CI_APPROVAL_NAME	NVARCHAR2(10)	PATH './item[id="CI_APPROVAL_NAME"]/value/id'
+							, CI_APPROVAL_NAME	NVARCHAR2(255)	PATH './item[id="CI_APPROVAL_NAME"]/value/name'
 							, CI_LEAVE_START_DT_2	NVARCHAR2(10)	PATH './item[id="CI_LEAVE_START_DT_2"]/value'
 							, CI_LEAVE_END_DT_2	NVARCHAR2(10)	PATH './item[id="CI_LEAVE_END_DT_2"]/value'
-							, CI_APPROVAL_NAME_2	NVARCHAR2(10)	PATH './item[id="CI_APPROVAL_NAME_2"]/value/id'
+							, CI_APPROVAL_NAME_2	NVARCHAR2(255)	PATH './item[id="CI_APPROVAL_NAME_2"]/value/name'
 							, CI_PROP_ACTION_ISSUED_DT	NVARCHAR2(10)	PATH './item[id="CI_PROP_ACTION_ISSUED_DT"]/value'
 							, CI_ORAL_PREZ_REQUESTED	NVARCHAR2(3)	PATH './item[id="CI_ORAL_PREZ_REQUESTED"]/value'
 							, CI_ORAL_PREZ_DT	NVARCHAR2(10)	PATH './item[id="CI_ORAL_PREZ_DT"]/value'
@@ -7338,7 +7320,7 @@ BEGIN
 							, CI_FINAL_INFO_GRADE	NVARCHAR2(50)	PATH './item[id="CI_FINAL_INFO_GRADE"]/value'
 							, CI_FINAL_INFO_STEP	NVARCHAR2(50)	PATH './item[id="CI_FINAL_INFO_STEP"]/value'
 							, CI_DEMO_FINAL_AGNCY_DCSN	NVARCHAR2(200)	PATH './item[id="CI_DEMO_FINAL_AGENCY_DECISION"]/value'
-							, CI_DECIDING_OFFCL	NVARCHAR2(10)	PATH './item[id="CI_DECIDING_OFFCL"]/value/id'
+							, CI_DECIDING_OFFCL	NVARCHAR2(255)	PATH './item[id="CI_DECIDING_OFFCL"]/value/name'
 							, CI_DECISION_ISSUED_DT	NVARCHAR2(10)	PATH './item[id="CI_DECISION_ISSUED_DT"]/value'
 							, CI_DEMO_FINAL_AGENCY_EFF_DT	NVARCHAR2(10)	PATH './item[id="CI_DEMO_FINAL_AGENCY_EFF_DT"]/value'
 							, CI_NUMB_DAYS	NUMBER(20,0)	PATH './item[id="CI_NUMB_DAYS"]/value'
@@ -7365,7 +7347,7 @@ BEGIN
 							, CI_WRITTEN_RESPONSE_DUE_DT	NVARCHAR2(10)	PATH './item[id="CI_WRITTEN_RESPONSE_DUE_DT"]/value'
 							, CI_WRITTEN_SUBMITTED_DT	NVARCHAR2(10)	PATH './item[id="CI_WRITTEN_SUBMITTED_DT"]/value'
 							, CI_RMVL_FINAL_AGNCY_DCSN	NVARCHAR2(200)	PATH './item[id="CI_RMVL_FINAL_AGENCY_DECISION"]/value'
-							, CI_DECIDING_OFFCL_NAME	NVARCHAR2(10)	PATH './item[id="CI_DECIDING_OFFCL_NAME"]/value/id'
+							, CI_DECIDING_OFFCL_NAME	NVARCHAR2(255)	PATH './item[id="CI_DECIDING_OFFCL_NAME"]/value/name'
 							, CI_RMVL_DATE_DCSN_ISSUED	NVARCHAR2(10)	PATH './item[id="CI_REMOVAL_DATE_DECISION_ISSUED"]/value'
 							, CI_REMOVAL_EFFECTIVE_DT	NVARCHAR2(10)	PATH './item[id="CI_REMOVAL_EFFECTIVE_DT"]/value'
 							, CI_RMVL_NUMB_DAYS	NUMBER(20,0)	PATH './item[id="CI_RMVL_NUMB_DAYS"]/value'
@@ -7377,7 +7359,7 @@ BEGIN
 							, CI_SUSP_WRITTEN_RESP_DUE_DT	NVARCHAR2(10)	PATH './item[id="CI_SUSP_WRITTEN_RESP_DUE_DT"]/value'
 							, CI_SUSP_WRITTEN_RESP_DT	NVARCHAR2(10)	PATH './item[id="CI_SUSP_WRITTEN_RESP_DT"]/value'
 							, CI_SUSP_FINAL_AGNCY_DCSN	NVARCHAR2(200)	PATH './item[id="CI_SUSP_FINAL_AGENCY_DECISION"]/value'
-							, CI_SUSP_DECIDING_OFFCL_NAME	NVARCHAR2(10)	PATH './item[id="CI_SUSP_DECIDING_OFFCL_NAME"]/value/id'
+							, CI_SUSP_DECIDING_OFFCL_NAME	NVARCHAR2(255)	PATH './item[id="CI_SUSP_DECIDING_OFFCL_NAME"]/value/name'
 							, CI_SUSP_DECISION_ISSUED_DT	NVARCHAR2(10)	PATH './item[id="CI_SUSP_DECISION_ISSUED_DT"]/value'
 							, CI_SUSP_EFFECTIVE_DECISION_DT	NVARCHAR2(10)	PATH './item[id="CI_SUSP_EFFECTIVE_DECISION_DT"]/value'
 							, CI_SUS_NUMB_DAYS	NUMBER(20,0)	PATH './item[id="CI_SUS_NUMB_DAYS"]/value'
@@ -7388,9 +7370,9 @@ BEGIN
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
 				--TRG.ERLR_CASE_NUMBER = SRC.ERLR_CASE_NUMBER
-				TRG.CI_ACTION_TYPE = SRC.CI_ACTION_TYPE	
-				, TRG.CI_ADMIN_INVESTIGATORY_LEAVE = SRC.CI_ADMIN_INVESTIGATORY_LEAVE
-                , TRG.CI_ADMIN_NOTICE_LEAVE = SRC.CI_ADMIN_NOTICE_LEAVE							
+				TRG.CI_ACTION_TYPE = SRC.CI_ACTION_TYPE
+                , TRG.CI_ADMIN_INVESTIGATORY_LEAVE = SRC.CI_ADMIN_INVESTIGATORY_LEAVE
+                , TRG.CI_ADMIN_NOTICE_LEAVE = SRC.CI_ADMIN_NOTICE_LEAVE				
 				, TRG.CI_LEAVE_START_DT = SRC.CI_LEAVE_START_DT
 				, TRG.CI_LEAVE_END_DT = SRC.CI_LEAVE_END_DT
 				, TRG.CI_APPROVAL_NAME = SRC.CI_APPROVAL_NAME
@@ -7468,8 +7450,8 @@ BEGIN
             (
                 TRG.ERLR_CASE_NUMBER
 				, TRG.CI_ACTION_TYPE
-				, TRG.CI_ADMIN_INVESTIGATORY_LEAVE
-                , TRG.CI_ADMIN_NOTICE_LEAVE							
+                , TRG.CI_ADMIN_INVESTIGATORY_LEAVE
+                , TRG.CI_ADMIN_NOTICE_LEAVE			
 				, TRG.CI_LEAVE_START_DT
 				, TRG.CI_LEAVE_END_DT
 				, TRG.CI_APPROVAL_NAME
@@ -7548,8 +7530,8 @@ BEGIN
             (
                 SRC.ERLR_CASE_NUMBER
 				, SRC.CI_ACTION_TYPE
-				, SRC.CI_ADMIN_INVESTIGATORY_LEAVE
-                , SRC.CI_ADMIN_NOTICE_LEAVE												
+                , SRC.CI_ADMIN_INVESTIGATORY_LEAVE
+                , SRC.CI_ADMIN_NOTICE_LEAVE				
 				, SRC.CI_LEAVE_START_DT
 				, SRC.CI_LEAVE_END_DT
 				, SRC.CI_APPROVAL_NAME
@@ -7756,7 +7738,7 @@ BEGIN
 							, PI_DMTN_FIN_GRADE	NVARCHAR2(50)	PATH './item[id="PI_DMTN_FIN_GRADE"]/value'
 							, PI_DMTN_FIN_STEP	NVARCHAR2(50)	PATH './item[id="PI_DMTN_FIN_STEP"]/value'
 							, PI_DMTN_FIN_AGCY_DECISION	NUMBER(20,0)	PATH './item[id="PI_DMTN_FIN_AGCY_DECISION"]/value'
-							, PI_DMTN_FIN_DECIDING_OFC NVARCHAR2(10)	PATH './item[id="PI_DMTN_FIN_DECIDING_OFC"]/value/id'
+							, PI_DMTN_FIN_DECIDING_OFC NVARCHAR2(255)	PATH './item[id="PI_DMTN_FIN_DECIDING_OFC_NM"]/value/name'
 							, PI_DMTN_FIN_DECISION_ISSUE_DT	VARCHAR2(10)	PATH './item[id="PI_DMTN_FIN_DECISION_ISSUE_DT"]/value'
 							, PI_DMTN_DECISION_EFF_DT	VARCHAR2(10)	PATH './item[id="PI_DMTN_DECISION_EFF_DT"]/value'
 							, PI_DMTN_APPEAL_DECISION	VARCHAR2(3)	PATH './item[id="PI_DMTN_APPEAL_DECISION"]/value'
@@ -7786,7 +7768,7 @@ BEGIN
 							, PI_PIP_WRTN_RESP_DUE_DT	VARCHAR2(10)	PATH './item[id="PI_PIP_WRTN_RESP_DUE_DT"]/value'
 							, PI_PIP_WRTN_SBMT_DT	VARCHAR2(10)	PATH './item[id="PI_PIP_WRTN_SBMT_DT"]/value'
 							, PI_PIP_FIN_AGCY_DECISION	NUMBER(20,0)	PATH './item[id="PI_PIP_FIN_AGCY_DECISION"]/value'
-							, PI_PIP_DECIDING_OFFICAL	NVARCHAR2(10)	PATH './item[id="PI_PIP_DECIDING_OFFICAL"]/value/id'
+							, PI_PIP_DECIDING_OFFICAL	NVARCHAR2(255)	PATH './item[id="PI_PIP_DECIDING_OFFICAL_NM"]/value/name'
 							, PI_PIP_FIN_AGCY_DECISION_DT	VARCHAR2(10)	PATH './item[id="PI_PIP_FIN_AGCY_DECISION_DT"]/value'
 							, PI_PIP_DECISION_ISSUE_DT	VARCHAR2(10)	PATH './item[id="PI_PIP_DECISION_ISSUE_DT"]/value'
 							, PI_PIP_EFF_ACTN_DT	VARCHAR2(10)	PATH './item[id="PI_PIP_EFF_ACTN_DT"]/value'
@@ -7807,7 +7789,7 @@ BEGIN
 							, PI_RMV_WRTN_RESP_DUE_DT	VARCHAR2(10)	PATH './item[id="PI_RMV_WRTN_RESP_DUE_DT"]/value'
 							, PI_RMV_WRTN_RESP_SBMT_DT	VARCHAR2(10)	PATH './item[id="PI_RMV_WRTN_RESP_SBMT_DT"]/value'
 							, PI_RMV_FIN_AGCY_DECISION	NUMBER(20,0)	PATH './item[id="PI_RMV_FIN_AGCY_DECISION"]/value'
-							, PI_RMV_FIN_DECIDING_OFC	NVARCHAR2(10)	PATH './item[id="PI_RMV_FIN_DECIDING_OFC"]/value/id'
+							, PI_RMV_FIN_DECIDING_OFC	NVARCHAR2(255)	PATH './item[id="PI_RMV_FIN_DECIDING_OFC_NM"]/value/name'
 							, PI_RMV_DECISION_ISSUE_DT	VARCHAR2(10)	PATH './item[id="PI_RMV_DECISION_ISSUE_DT"]/value'
 							, PI_RMV_EFF_DT	VARCHAR2(10)	PATH './item[id="PI_RMV_EFF_DT"]/value'
 							, PI_RMV_NUM_DAYS	NUMBER(20,0)	PATH './item[id="PI_RMV_NUM_DAYS"]/value'
@@ -8156,7 +8138,7 @@ BEGIN
                             GI_TYPE	NVARCHAR2(200) PATH './item[id="GI_TYPE"]/value'
 							, GI_NEGOTIATED_GRIEVANCE_TYPE	NVARCHAR2(200) PATH './item[id="GI_NEGOTIATED_GRIEVANCE_TYPE"]/value'
 							, GI_TIMELY_FILING_2	VARCHAR2(10) PATH './item[id="GI_TIMELY_FILING_2"]/value'	
-							, GI_IND_MANAGER	NVARCHAR2(10) PATH './item[id="GI_IND_MANAGER"]/value/id'
+							, GI_IND_MANAGER	NVARCHAR2(255) PATH './item[id="GI_IND_MANAGER"]/value/name'
 							, GI_FILING_DT_2	VARCHAR2(10) PATH './item[id="GI_FILING_DT_2"]/value'
 							, GI_TIMELY_FILING	VARCHAR2(10) PATH './item[id="GI_TIMELY_FILING"]/value'
 							, GI_FILING_DT	VARCHAR2(10) PATH './item[id="GI_FILING_DT"]/value'
@@ -8180,11 +8162,11 @@ BEGIN
 							, GI_GRIEVANCE_STATUS	NVARCHAR2(200) PATH './item[id="GI_GRIEVANCE_STATUS"]/value'
 							, GI_ARBITRATION_DEADLINE_DT	VARCHAR2(10) PATH './item[id="GI_ARBITRATION_DEADLINE_DT"]/value'
 							, GI_ARBITRATION_REQUEST	VARCHAR2(10) PATH './item[id="GI_ARBITRATION_REQUEST"]/value'
-							, GI_ADMIN_OFFCL_1	NVARCHAR2(10) PATH './item[id="GI_ADMIN_OFFCL_1"]/value/id'
+							, GI_ADMIN_OFFCL_1	NVARCHAR2(255) PATH './item[id="GI_ADMIN_OFFCL_1"]/value/name'
 							, GI_ADMIN_STG_1_DECISION_DT	VARCHAR2(10) PATH './item[id="GI_ADMIN_STG_1_DECISION_DT"]/value'
 							, GI_ADMIN_STG_1_ISSUE_DT	VARCHAR2(10) PATH './item[id="GI_ADMIN_STG_1_ISSUE_DT"]/value'
 							, GI_ADMIN_STG_2_RESP	VARCHAR2(10) PATH './item[id="GI_ADMIN_STG_2_RESP"]/value'
-							, GI_ADMIN_OFFCL_2	NVARCHAR2(10) PATH './item[id="GI_ADMIN_OFFCL_2"]/value/id'
+							, GI_ADMIN_OFFCL_2	NVARCHAR2(255) PATH './item[id="GI_ADMIN_OFFCL_2"]/value/name'
 							, GI_ADMIN_STG_2_DECISION_DT	VARCHAR2(10) PATH './item[id="GI_ADMIN_STG_2_DECISION_DT"]/value'
 							, GI_ADMIN_STG_2_ISSUE_DT	VARCHAR2(10) PATH './item[id="GI_ADMIN_STG_2_ISSUE_DT"]/value'
 							
@@ -9526,7 +9508,7 @@ BEGIN
 							, PPA_TERM_WRITTEN_RESP_DUE_DT	VARCHAR2(10)	PATH './item[id="PPA_TERM_WRITTEN_RESP_DUE_DT"]/value'
 							, PPA_TERM_WRITTEN_RESP_DT	VARCHAR2(10)	PATH './item[id="PPA_TERM_WRITTEN_RESP_DT"]/value'
 							, PPA_TERM_AGENCY_DECISION	NVARCHAR2(200)	PATH './item[id="PPA_TERM_AGENCY_DECISION"]/value'
-							, PPA_TERM_DECIDING_OFFCL_NAME	NVARCHAR2(10)	PATH './item[id="PPA_TERM_DECIDING_OFFCL_NAME"]/value/id'
+							, PPA_TERM_DECIDING_OFFCL_NAME	NVARCHAR2(255)	PATH './item[id="PPA_TERM_DECIDING_OFFCL_NAME"]/value/name'
 							, PPA_TERM_DECISION_ISSUED_DT	VARCHAR2(10)	PATH './item[id="PPA_TERM_DECISION_ISSUED_DT"]/value'
 							, PPA_TERM_EFFECTIVE_DECISION_DT	VARCHAR2(10)	PATH './item[id="PPA_TERM_EFFECTIVE_DECISION_DT"]/value'
 							, PPA_PROB_TERM_DCSN_ISSUED_DT	VARCHAR2(10)	PATH './item[id="PPA_PROBATION_TERMINATION_DECISION_ISSUED_DT"]/value'
@@ -9557,7 +9539,7 @@ BEGIN
 							, PPA_FINAL_INFO_STEP	NVARCHAR2(50)	PATH './item[id="PPA_FINAL_INFO_STEP"]/value'
 							, PPA_NOTICE_ISSUED_DT	VARCHAR2(10)	PATH './item[id="PPA_NOTICE_ISSUED_DT"]/value'
 							, PPA_DEMO_FINAL_AGENCY_DECISION	NVARCHAR2(200)	PATH './item[id="PPA_DEMO_FINAL_AGENCY_DECISION"]/value'
-							, PPA_DECIDING_OFFCL	NVARCHAR2(10)	PATH './item[id="PPA_DECIDING_OFFCL"]/value/id'
+							, PPA_DECIDING_OFFCL	NVARCHAR2(255)	PATH './item[id="PPA_DECIDING_OFFCL"]/value/name'
 							, PPA_DECISION_ISSUED_DT	VARCHAR2(10)	PATH './item[id="PPA_DECISION_ISSUED_DT"]/value'
 							, PPA_DEMO_FINAL_AGENCY_EFF_DT	VARCHAR2(10)	PATH './item[id="PPA_DEMO_FINAL_AGENCY_EFF_DT"]/value'
 							, PPA_NUMB_DAYS	NUMBER(20,0)	PATH './item[id="PPA_NUMB_DAYS"]/value'
