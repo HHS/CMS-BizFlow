@@ -5856,6 +5856,7 @@ BEGIN
 							<CS_FIN_STMT_REQ_ID>{data($sc/DOCUMENT/POSITION/POS_CE_FINANCIAL_TYPE_ID)}</CS_FIN_STMT_REQ_ID>
 							<CS_SEC_ID>{data($sc/DOCUMENT/POSITION/POS_SEC_ID)}</CS_SEC_ID>
 						</CLASSIFICATION_CODE>
+						<APPROVAL></APPROVAL>
 					</DOCUMENT>
 				'
 				-- WARNING: Oracle 12c causes problem ($molabel variable empty)
