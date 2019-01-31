@@ -15,7 +15,7 @@ BEGIN
 
     SELECT SUBSTR(I_ADMIN_CD, 1, 2) INTO V_VALUE FROM DUAL;
     IF V_VALUE != 'FC' THEN    
-        V_RETURN_VAL := 'OTHERS';
+        V_RETURN_VAL := 'N/A';
     ELSE
         SELECT SUBSTR(I_ADMIN_CD, 3, 1) INTO V_VALUE FROM DUAL;
         CASE V_VALUE
@@ -49,10 +49,10 @@ BEGIN
             WHEN 'W' THEN V_RETURN_VAL := 'FCW';
             WHEN 'X' THEN V_RETURN_VAL := 'FCX';
             ELSE
-                V_RETURN_VAL := 'OTHERS';    
+                V_RETURN_VAL := 'N/A';    
          END CASE;         
     END IF;
-    IF V_RETURN_VAL != 'OTHERS' THEN
+    IF V_RETURN_VAL != 'N/A' THEN
       SELECT AC_ADMIN_CD_DESCR INTO V_ORG_NAME FROM ADMIN_CODES WHERE AC_ADMIN_CD = V_RETURN_VAL;              
       V_RETURN_VAL := V_RETURN_VAL || ' - ' || V_ORG_NAME;
     END IF;
@@ -66,5 +66,4 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || SQLERRM);
 		RETURN NULL;
 END;
-
 /
