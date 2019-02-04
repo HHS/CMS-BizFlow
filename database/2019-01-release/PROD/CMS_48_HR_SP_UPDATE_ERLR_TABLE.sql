@@ -1419,7 +1419,7 @@ BEGIN
 		--------------------------------
 		-- ERLR_INVESTIGATION table
 		--------------------------------
-		/*BEGIN
+		BEGIN
             MERGE INTO ERLR_INVESTIGATION TRG
             USING
             (
@@ -1432,13 +1432,12 @@ BEGIN
 						PASSING FD.FIELD_DATA
 						COLUMNS
                             INVESTIGATION_TYPE	NVARCHAR2(200)	PATH './item[id="INVESTIGATION_TYPE"]/value'
-							, I_MISCONDUCT_FOUND	VARCHAR2(3)	PATH './item[id="I_MISCONDUCT_FOUND"]/value'
+							, I_MISCONDUCT_FOUND	NVARCHAR2(3)	PATH './item[id="I_MISCONDUCT_FOUND"]/value'
                 ) X
 			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
-            WHEN MATCHED THEN UPDATE SET
-                TRG.ERLR_CASE_NUMBER = SRC.ERLR_CASE_NUMBER
-				, TRG.INVESTIGATION_TYPE = SRC.INVESTIGATION_TYPE
+            WHEN MATCHED THEN UPDATE SET                
+				TRG.INVESTIGATION_TYPE = SRC.INVESTIGATION_TYPE
 				, TRG.I_MISCONDUCT_FOUND = SRC.I_MISCONDUCT_FOUND
             WHEN NOT MATCHED THEN INSERT
             (
@@ -1454,7 +1453,7 @@ BEGIN
             );
 
 		END;
-		*/
+		
 		--------------------------------
 		-- ERLR_APPEAL table
 		--------------------------------
