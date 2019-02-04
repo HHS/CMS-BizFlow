@@ -107,7 +107,7 @@ BEGIN
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
-                            GEN_CASE_STATUS NUMBER(20,0) PATH './item[id="GEN_CASE_STATUS"]/value'
+                            GEN_CASE_STATUS NVARCHAR2(200) PATH './item[id="GEN_CASE_STATUS"]/value'
                 ) X
 			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
@@ -194,7 +194,7 @@ BEGIN
 	                        , GEN_EMPLOYEE_ADMIN_CD	NVARCHAR2(8)    PATH './item[id="GEN_EMPLOYEE_ADMIN_CD"]/value'
 	                        , GEN_EMPLOYEE_ADMIN_CD_DESC	NVARCHAR2(50)   PATH './item[id="GEN_EMPLOYEE_ADMIN_CD_DESC"]/value'
 	                        , GEN_CASE_DESC	NVARCHAR2(500)  PATH './item[id="GEN_CASE_DESC"]/value'
-	                        , GEN_CASE_STATUS	 NUMBER(20,0)   PATH './item[id="GEN_CASE_STATUS"]/value'
+	                        , GEN_CASE_STATUS	 NVARCHAR2(200)   PATH './item[id="GEN_CASE_STATUS"]/value'
 	                        , GEN_CUST_INIT_CONTACT_DT	VARCHAR2(10)    PATH './item[id="GEN_CUST_INIT_CONTACT_DT"]/value'
 	                        , GEN_PRIMARY_REP_AFFILIATION	 NVARCHAR2(20)  PATH './item[id="GEN_PRIMARY_REP"]/value'
 	                        , GEN_CMS_PRIMARY_REP_ID VARCHAR2(255)  PATH './item[id="GEN_CMS_PRIMARY_REP"]/value/name'
@@ -1277,7 +1277,7 @@ BEGIN
 							, GI_STEP_2_REQUEST	VARCHAR2(10) PATH './item[id="GI_STEP_2_REQUEST"]/value'
 							, GI_IND_STEP_2_MTG_DT	VARCHAR2(10) PATH './item[id="GI_IND_STEP_2_MTG_DT"]/value'
 							, GI_IND_STEP_2_DECISION_DUE_DT	VARCHAR2(10) PATH './item[id="GI_IND_STEP_2_DECISION_DUE_DT"]/value'
-							, GI_IND_STEP_2_DCSN_ISSUE_DT	VARCHAR2(10) PATH './item[id="GI_IND_STEP_2_DCSN_ISSUE_DT"]/value'
+							, GI_IND_STEP_2_DCSN_ISSUE_DT	VARCHAR2(10) PATH './item[id="GI_IND_STEP_2_DECISION_ISSUE_DT"]/value'
 							, GI_IND_STEP_2_DEADLINE	VARCHAR2(10) PATH './item[id="GI_IND_STEP_2_DEADLINE"]/value'
 							, GI_IND_EXT_2_EXT_DUE_DT	VARCHAR2(10) PATH './item[id="GI_IND_EXT_2_EXT_DUE_DT"]/value'
 							, GI_IND_STEP_2_EXT_DUE_REASON	NVARCHAR2(500) PATH './item[id="GI_IND_STEP_2_EXT_DUE_REASON"]/value'
@@ -1419,7 +1419,7 @@ BEGIN
 		--------------------------------
 		-- ERLR_INVESTIGATION table
 		--------------------------------
-		/*BEGIN
+		BEGIN
             MERGE INTO ERLR_INVESTIGATION TRG
             USING
             (
@@ -1432,13 +1432,12 @@ BEGIN
 						PASSING FD.FIELD_DATA
 						COLUMNS
                             INVESTIGATION_TYPE	NVARCHAR2(200)	PATH './item[id="INVESTIGATION_TYPE"]/value'
-							, I_MISCONDUCT_FOUND	VARCHAR2(3)	PATH './item[id="I_MISCONDUCT_FOUND"]/value'
+							, I_MISCONDUCT_FOUND	NVARCHAR2(3)	PATH './item[id="I_MISCONDUCT_FOUND"]/value'
                 ) X
 			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
-            WHEN MATCHED THEN UPDATE SET
-                TRG.ERLR_CASE_NUMBER = SRC.ERLR_CASE_NUMBER
-				, TRG.INVESTIGATION_TYPE = SRC.INVESTIGATION_TYPE
+            WHEN MATCHED THEN UPDATE SET                
+				TRG.INVESTIGATION_TYPE = SRC.INVESTIGATION_TYPE
 				, TRG.I_MISCONDUCT_FOUND = SRC.I_MISCONDUCT_FOUND
             WHEN NOT MATCHED THEN INSERT
             (
@@ -1454,7 +1453,7 @@ BEGIN
             );
 
 		END;
-		*/
+		
 		--------------------------------
 		-- ERLR_APPEAL table
 		--------------------------------
