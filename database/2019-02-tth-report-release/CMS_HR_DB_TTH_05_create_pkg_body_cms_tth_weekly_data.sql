@@ -1,6 +1,6 @@
-create or replace PACKAGE BODY HHS_CMS_HR.CMS_TTH_WEEKLY_DATA_PKS AS
+create or replace PACKAGE BODY            CMS_TTH_WEEKLY_DATA_PKS AS
 --------------------------------------------------------------------------------------------------------
---THIS PACKAGE WILL HANDLE PULLING AND POPULATING CMS_TIME_TO_HIRE_WEEKLY_PILOT TABLES in HHS_CMS_HR SCHEMA 
+--THIS PACKAGE WILL HANDLE PULLING AND POPULATING CMS_TIME_TO_HIRE_WEEKLY_PILOT TABLES in HHS_HR SCHEMA 
 --------------------------------------------------------------------------------------------------------
  
 --======================================================
@@ -16,7 +16,7 @@ create or replace PACKAGE BODY HHS_CMS_HR.CMS_TTH_WEEKLY_DATA_PKS AS
 --------------------------------------------------------
 CURSOR CUR_CMS_TTH_DATA 
     IS
-    SELECT	AC_ADMIN_CD || ' - ' || AC_ADMIN_CD_DESCR AS COMPONENT,
+    SELECT	ADMIN_CODE || ' - ' || ADMIN_CODE_DESC AS COMPONENT,
 			REQ_JOB_REQ_NUMBER AS REQUEST_NUMBER,
 			PROCESS_ID,
 			PROCESS_CREATION_DATE AS STRAT_CON_START,
@@ -47,7 +47,7 @@ CURSOR CUR_CMS_TTH_DATA
 				THEN 1
 				ELSE 0
 			END AS MISSED_SELECTION
-	FROM HHS_CMS_HR.ADMIN_CODES AC
+	FROM HHS_HR.ADMINISTRATIVE_CODE AC
 	LEFT JOIN 
 			(SELECT REQ_JOB_REQ_NUMBER,
 					SUB_ORG_2_CD,
@@ -62,15 +62,15 @@ CURSOR CUR_CMS_TTH_DATA
 				ON SCF.SG_PROCID = SCP.PROCESS_ID
 			WHERE REQUEST_STATUS = 'Strategic Consultation Approved'
 			AND PROCESS_COMPLETION_DATE IS NOT NULL) STRATCON
-		ON AC.AC_ADMIN_CD = STRATCON.SUB_ORG_2_CD
-		AND PROCESS_CREATION_DATE > '03-FEB-19'
+		ON AC.ADMIN_CODE = STRATCON.SUB_ORG_2_CD
+		AND PROCESS_CREATION_DATE > '03-FEB-19' 
 	LEFT JOIN HHS_HR.DSS_CMS_TIME_TO_HIRE TTH
 		ON TTH.REQUEST_NUMBER = STRATCON.REQ_JOB_REQ_NUMBER
-	WHERE ((LENGTH(AC_ADMIN_CD) <= 3 AND AC_ADMIN_CD LIKE 'FC%')
-	OR (LENGTH(AC_ADMIN_CD) = 4 AND AC_ADMIN_CD LIKE 'FCM%'))
+	WHERE ((LENGTH(ADMIN_CODE) <= 3 AND ADMIN_CODE LIKE 'FC%')
+	OR (LENGTH(ADMIN_CODE) = 4 AND ADMIN_CODE LIKE 'FCM%'))
 	AND TTH.EOD_DATE IS NULL
 	GROUP BY
-			AC.AC_ADMIN_CD || ' - ' || AC.AC_ADMIN_CD_DESCR,
+			AC.ADMIN_CODE || ' - ' || AC.ADMIN_CODE_DESC,
 			REQ_JOB_REQ_NUMBER,
 			PROCESS_ID,
 			PROCESS_CREATION_DATE,
@@ -96,7 +96,12 @@ CURSOR CUR_CMS_TTH_DATA
 --DESCRIPTION : 
 ---------------------------------------------------------
 PROCEDURE INSERT_CMS_TTH_WEEKLY_DATA
-AS    
+AS  
+COUNT_REQUESTS        NUMBER(10);
+SUM_MISSED_STRAT_CON  NUMBER(10);
+SUM_MISSED_CLASS      NUMBER(10);
+SUM_MISSED_QUALS      NUMBER(10);
+SUM_MISSED_SELECTION  NUMBER(10);
 BEGIN
  
     OPEN CUR_CMS_TTH_DATA;
@@ -152,6 +157,33 @@ BEGIN
                         SP_ERROR_LOG();
             END;
         END LOOP;
+        
+        --To calculate totals for each missed process for CMS
+        SELECT COUNT(REQUEST_NUMBER), SUM(MISSED_STRAT_CON), SUM(MISSED_CLASS), SUM(MISSED_QUALS), SUM(MISSED_SELECTION)
+        INTO COUNT_REQUESTS, SUM_MISSED_STRAT_CON, SUM_MISSED_CLASS, SUM_MISSED_QUALS, SUM_MISSED_SELECTION
+        FROM CMS_TIME_TO_HIRE_WEEKLY_PILOT
+        WHERE TRUNC(DATA_PULLED_ON)=TRUNC(SYSDATE);
+        
+        --Insert a new row with totals for CMS
+        INSERT INTO HHS_CMS_HR.CMS_TIME_TO_HIRE_WEEKLY_PILOT
+            (DATA_PULLED_ON, 
+            WEEK_OF, 
+            COMPONENT,
+            REQUEST_NUMBER,
+            MISSED_STRAT_CON, 
+            MISSED_CLASS,
+            MISSED_QUALS, 
+            MISSED_SELECTION)
+          VALUES 
+            (SYSDATE,  
+            NEXT_DAY(SYSDATE - 7,'Sunday'), 
+            'CMS - wide', 
+            COUNT_REQUESTS,
+            SUM_MISSED_STRAT_CON, 
+            SUM_MISSED_CLASS,
+            SUM_MISSED_QUALS, 
+            SUM_MISSED_SELECTION); 
+        
          COMMIT;
       END IF;
  
@@ -162,7 +194,7 @@ END INSERT_CMS_TTH_WEEKLY_DATA;
 --DESCRIPTION: Entry point for this package,calls individual 
 --procedure run INSERT scrip inside the procedure. It will
 -- return and error code and message if any. This function
---will be called by Oracle job scheduler.
+--will be called by spring batch.
 --------------------------------------------------------
 FUNCTION FN_IMPORT_CMS_TTH_WEEKLY_DATA
 RETURN VARCHAR2
