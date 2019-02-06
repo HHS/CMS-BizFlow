@@ -3801,7 +3801,7 @@ IS
       --DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
 
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'adminCode', '/DOCUMENT/GENERAL/CS_ADMIN_CD/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'adminCode', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancelReason', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'coversheetApprovedBySO', '/DOCUMENT/PROCESS_VARIABLE/coversheetApprovedBySO/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'finalPackageApprovedSO', '/DOCUMENT/PROCESS_VARIABLE/finalPackageApprovedSO/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'modifyCoversheetFeedback', '/DOCUMENT/PROCESS_VARIABLE/modifyCoversheetFeedback/text()', null);
