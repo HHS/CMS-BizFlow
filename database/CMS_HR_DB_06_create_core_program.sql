@@ -6860,7 +6860,7 @@ END;
 
 
 --------------------------------------------------------
---  DDL for Procedure SP_UPDATE_PV_STRATCON
+--  DDL for Procedure SP_UPDATE_ERLR_TABLE
 --------------------------------------------------------
 
 /**
@@ -7049,10 +7049,10 @@ BEGIN
 	                , X.GEN_INVESTIGATE_START_DT
 	                , X.GEN_INVESTIGATE_END_DT
 	                , X.GEN_STD_CONDUCT
-	                , X.GEN_STD_CONDUCT_TYPE
-	                --, X.CC_FINAL_ACTION
+	                , X.GEN_STD_CONDUCT_TYPE	                
+                    , TO_DATE(X.CC_CASE_COMPLETE_DT,'MM/DD/YYYY HH24:MI:SS') AS CC_CASE_COMPLETE_DT
 					, FN_GET_FINAL_ACTIONS(I_PROCID) AS CC_FINAL_ACTION
-	                , TO_DATE(X.CC_CASE_COMPLETE_DT,'MM/DD/YYYY HH24:MI:SS') AS CC_CASE_COMPLETE_DT          
+	                          
 				FROM TBL_FORM_DTL FD
 					, XMLTABLE('/formData/items' PASSING FD.FIELD_DATA
 						COLUMNS
@@ -8951,11 +8951,11 @@ BEGIN
 					, X.IR_PRTCT_DISCLOSURE_BY_LAW
 					, X.IR_MAINTAINED_BY_AGENCY
 					, X.IR_COLLECTIVE_BARGAINING_UNIT
-					/*, X.IR_APPROVE
+					, X.IR_APPROVE
 					, TO_DATE(X.IR_PROVIDE_DT,'MM/DD/YYYY HH24:MI:SS') AS IR_PROVIDE_DT
 					, X.IR_DENIAL_NOTICE_DT_LIST
 					, X.IR_APPEAL_DENIAL
-                    */
+                    
                 FROM TBL_FORM_DTL FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
@@ -8975,11 +8975,11 @@ BEGIN
 							, IR_PRTCT_DISCLOSURE_BY_LAW	VARCHAR2(3)	PATH './item[id="IR_PROTECTED_FROM_DISCLOSURE_BY_LAW"]/value'
 							, IR_MAINTAINED_BY_AGENCY	VARCHAR2(3)	PATH './item[id="IR_MAINTAINED_BY_AGENCY"]/value'
 							, IR_COLLECTIVE_BARGAINING_UNIT	VARCHAR2(3)	PATH './item[id="IR_COLLECTIVE_BARGAINING_UNIT"]/value'
-						/*	, IR_APPROVE	VARCHAR2(3)	PATH './item[id="IR_APPROVE"]/value'
+							, IR_APPROVE	VARCHAR2(3)	PATH './item[id="IR_APPROVE"]/value'
 							, IR_PROVIDE_DT	VARCHAR2(10)	PATH './item[id="IR_PROVIDE_DT"]/value'
 							, IR_DENIAL_NOTICE_DT_LIST	VARCHAR2(4000)	PATH './item[id="IR_PROVIDE_DT_LIST"]/value'
 							, IR_APPEAL_DENIAL	VARCHAR2(3)	PATH './item[id="IR_APPEAL_DENIAL"]/value'
-							*/
+							
                 ) X
 			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
@@ -8999,11 +8999,11 @@ BEGIN
 				, TRG.IR_PRTCT_DISCLOSURE_BY_LAW = SRC.IR_PRTCT_DISCLOSURE_BY_LAW
 				, TRG.IR_MAINTAINED_BY_AGENCY = SRC.IR_MAINTAINED_BY_AGENCY
 				, TRG.IR_COLLECTIVE_BARGAINING_UNIT = SRC.IR_COLLECTIVE_BARGAINING_UNIT
-			/*	, TRG.IR_APPROVE = SRC.IR_APPROVE
+				, TRG.IR_APPROVE = SRC.IR_APPROVE
 				, TRG.IR_PROVIDE_DT = SRC.IR_PROVIDE_DT
 				, TRG.IR_DENIAL_NOTICE_DT_LIST = SRC.IR_DENIAL_NOTICE_DT_LIST
 				, TRG.IR_APPEAL_DENIAL = SRC.IR_APPEAL_DENIAL
-				*/
+				
             WHEN NOT MATCHED THEN INSERT
             (
                 TRG.ERLR_CASE_NUMBER
@@ -9022,11 +9022,11 @@ BEGIN
 				, TRG.IR_PRTCT_DISCLOSURE_BY_LAW
 				, TRG.IR_MAINTAINED_BY_AGENCY
 				, TRG.IR_COLLECTIVE_BARGAINING_UNIT
-			/*	, TRG.IR_APPROVE
+				, TRG.IR_APPROVE
 				, TRG.IR_PROVIDE_DT
 				, TRG.IR_DENIAL_NOTICE_DT_LIST
 				, TRG.IR_APPEAL_DENIAL
-              */ 
+              
             )
             VALUES
             (
@@ -9046,11 +9046,11 @@ BEGIN
 				, SRC.IR_PRTCT_DISCLOSURE_BY_LAW
 				, SRC.IR_MAINTAINED_BY_AGENCY
 				, SRC.IR_COLLECTIVE_BARGAINING_UNIT
-			/*	, SRC.IR_APPROVE
+				, SRC.IR_APPROVE
 				, SRC.IR_PROVIDE_DT
 				, SRC.IR_DENIAL_NOTICE_DT_LIST
 				, SRC.IR_APPEAL_DENIAL
-             */  
+              
             );
 
 		END;
@@ -10047,7 +10047,6 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
 END;
-
 /
 
 /**
