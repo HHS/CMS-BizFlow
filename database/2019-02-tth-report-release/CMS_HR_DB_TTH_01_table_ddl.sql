@@ -7,7 +7,7 @@
 --------------------------------------------
 /*
 -- Time To Hire Pilot Weekly Data Table
-DROP TABLE HHS_HR.CMS_TIME_TO_HIRE_WEEKLY_PILOT;
+DROP TABLE HHS_CMS_HR.CMS_TIME_TO_HIRE_WEEKLY_PILOT;
 */
 
 SET DEFINE OFF;
