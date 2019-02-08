@@ -169,15 +169,22 @@ create or replace PROCEDURE SP_ERLR_EMPLOYEE_CASE_ADD
 	I_MEMBER_ID IN VARCHAR2 -- MANUALLY ENTERED CASE IF THIS VALUE IS NOT NULL
 )
 IS
+    V_HHSID VARCHAR2(100);
     V_CNT NUMBER;
     V_CASE_TYPE_NAME VARCHAR2(100);
     V_FIRST_NAME VARCHAR2(50);
     V_LAST_NAME VARCHAR2(50);
 BEGIN
+    IF (UPPER(I_HHSID) = 'NULL' OR UPPER(I_HHSID) = 'UNDEFINED' OR 0=LENGTH(I_HHSID)) THEN
+        V_HHSID := NULL;
+    ELSE
+        V_HHSID := I_HHSID;
+    END IF;
+
     SELECT COUNT(*)
       INTO V_CNT
       FROM ERLR_EMPLOYEE_CASE
-     WHERE HHSID = I_HHSID
+     WHERE HHSID = V_HHSID
        AND CASEID = I_CASEID;
 
     IF 0=V_CNT THEN
@@ -195,10 +202,10 @@ BEGIN
     
         IF I_MEMBER_ID IS NULL THEN
             INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME)
-                                    VALUES(I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME);
+                                    VALUES(V_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME);
         ELSE
             INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME, M_DT, M_MEMBER_ID, M_MEMBER_NAME)
-            SELECT I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, M.NAME
+            SELECT V_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, M.NAME
               FROM BIZFLOW.MEMBER M
              WHERE M.MEMBERID = I_MEMBER_ID;
         END IF;
@@ -209,6 +216,7 @@ EXCEPTION
 		SP_ERROR_LOG();
 END;
 /
+
 
 GRANT EXECUTE ON HHS_CMS_HR.SP_ERLR_EMPLOYEE_CASE_ADD TO HHS_CMS_HR_RW_ROLE;
 /
@@ -356,7 +364,10 @@ BEGIN
             V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
         ELSE
             SP_ERLR_EMPLOYEE_CASE_ADD(V_GEN_EMP_HHSID, V_CASE_NUMBER, TO_NUMBER(V_NEW_CASE_TYPE_ID), V_ORG_CASE_NUMBER, NULL);            
-            SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item>')) INTO V_XMLDOC FROM DUAL;            
+            SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item>')) INTO V_XMLDOC FROM DUAL;
+            IF V_GEN_EMP_HHSID IS NOT NULL AND 1<LENGTH(V_GEN_EMP_HHSID) THEN
+                SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>_disableDeleteEmployeeInfo</id><etype>variable</etype><value>Yes</value></item>')) INTO V_XMLDOC FROM DUAL;
+            END IF;
         END IF;
         
         INSERT INTO TBL_FORM_DTL (PROCID, ACTSEQ, WITEMSEQ, FORM_TYPE, FIELD_DATA, CRT_DT, CRT_USR)
@@ -420,9 +431,12 @@ BEGIN
       FROM TBL_FORM_DTL
      WHERE PROCID = I_PROCID;
 
-    V_CASE_TYPE_ID := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_CASE_TYPE"]/value/text()').getStringVal();    
-    V_GEN_EMP_ID   := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()').getStringVal();    
+    V_CASE_TYPE_ID := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_CASE_TYPE"]/value/text()').getStringVal();        
     V_CASE_NUMBER  := TO_NUMBER(V_XMLDOC.EXTRACT('/formData/items/item[id="CASE_NUMBER"]/value/text()').getStringVal());    
+    V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()');
+    IF V_XMLVALUE IS NOT NULL THEN
+        V_GEN_EMP_ID := V_XMLVALUE.GETSTRINGVAL();
+    END IF;
     SP_ERLR_EMPLOYEE_CASE_ADD(V_GEN_EMP_ID, V_CASE_NUMBER, TO_NUMBER(V_CASE_TYPE_ID), NULL, NULL);
     
     IF V_CASE_TYPE_ID = INFORMATION_REQUEST_ID THEN -- Information Request
@@ -529,58 +543,9 @@ EXCEPTION
 		SP_ERROR_LOG();
 END;
 /
+
 GRANT EXECUTE ON HHS_CMS_HR.SP_FINALIZE_ERLR TO HHS_CMS_HR_RW_ROLE;
 GRANT EXECUTE ON HHS_CMS_HR.SP_FINALIZE_ERLR TO HHS_CMS_HR_DEV_ROLE;
-/
-
-create or replace PROCEDURE SP_UPDATE_ERLR_FORM_DATA 
-   (I_WIH_ACTION IN VARCHAR2, -- SAVE, SUBMIT
-    I_FIELD_DATA IN CLOB, 
-    I_USER       IN VARCHAR2, 
-    I_PROCID     IN NUMBER, 
-    I_ACTSEQ     IN NUMBER, 
-    I_WITEMSEQ   IN NUMBER) 
-IS 
-  V_XMLDOC               XMLTYPE;
-  V_FORM_TYPE            VARCHAR2(20) := 'CMSERLR';
-  V_CNT                  INT;
-  COMPLATE_CASE_ACTIVITY CONSTANT VARCHAR2(50) := 'Complete Case';
-  DWC_SUPERVISOR         CONSTANT VARCHAR2(50) := 'DWC Supervisor';
-BEGIN 
-    -- sanity check: ignore and exit if form data xml is null or empty 
-    IF I_FIELD_DATA IS NULL OR LENGTH(I_FIELD_DATA) <= 0 OR I_PROCID IS NULL OR I_USER IS NULL OR I_ACTSEQ IS NULL THEN 
-      RETURN; 
-    END IF;
-    
-    -- TODO: I_USER should be member of work item checked out
-    --
-
-    V_XMLDOC := XMLTYPE(I_FIELD_DATA); 
-
-    MERGE INTO TBL_FORM_DTL A
-    USING (SELECT * FROM TBL_FORM_DTL WHERE PROCID=I_PROCID) B
-       ON (A.PROCID = B.PROCID)
-     WHEN MATCHED THEN
-          UPDATE 
-             SET A.FIELD_DATA = V_XMLDOC, 
-                 A.MOD_DT = SYS_EXTRACT_UTC(SYSTIMESTAMP), 
-                 A.MOD_USR = I_USER 
-     WHEN NOT MATCHED THEN     
-          INSERT (A.PROCID, A.ACTSEQ, A.WITEMSEQ, A.FORM_TYPE, A.FIELD_DATA, A.CRT_DT, A.CRT_USR) 
-          VALUES (I_PROCID, NVL(I_ACTSEQ, 0), NVL(I_WITEMSEQ, 0), V_FORM_TYPE, V_XMLDOC, SYS_EXTRACT_UTC(SYSTIMESTAMP), I_USER); 
-
-    -- Update process variable and transition xml into individual tables 
-    -- for respective process definition 
-    SP_UPDATE_PV_ERLR(I_PROCID, V_XMLDOC); 
-    SP_UPDATE_ERLR_TABLE(I_PROCID); 
-
-EXCEPTION 
-  WHEN OTHERS THEN 
-             SP_ERROR_LOG(); 
-END; 
-/
-
-GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_ERLR_FORM_DATA TO HHS_CMS_HR_RW_ROLE;
 /
 
 create or replace PROCEDURE SP_UPDATE_ERLR_TABLE
@@ -3759,8 +3724,61 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
 END;
 /
+
 GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_ERLR_TABLE TO HHS_CMS_HR_RW_ROLE;
 GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_ERLR_TABLE TO HHS_CMS_HR_DEV_ROLE;
+/
+
+
+
+create or replace PROCEDURE SP_UPDATE_ERLR_FORM_DATA 
+   (I_WIH_ACTION IN VARCHAR2, -- SAVE, SUBMIT
+    I_FIELD_DATA IN CLOB, 
+    I_USER       IN VARCHAR2, 
+    I_PROCID     IN NUMBER, 
+    I_ACTSEQ     IN NUMBER, 
+    I_WITEMSEQ   IN NUMBER) 
+IS 
+  V_XMLDOC               XMLTYPE;
+  V_FORM_TYPE            VARCHAR2(20) := 'CMSERLR';
+  V_CNT                  INT;
+  COMPLATE_CASE_ACTIVITY CONSTANT VARCHAR2(50) := 'Complete Case';
+  DWC_SUPERVISOR         CONSTANT VARCHAR2(50) := 'DWC Supervisor';
+BEGIN 
+    -- sanity check: ignore and exit if form data xml is null or empty 
+    IF I_FIELD_DATA IS NULL OR LENGTH(I_FIELD_DATA) <= 0 OR I_PROCID IS NULL OR I_USER IS NULL OR I_ACTSEQ IS NULL THEN 
+      RETURN; 
+    END IF;
+    
+    -- TODO: I_USER should be member of work item checked out
+    --
+
+    V_XMLDOC := XMLTYPE(I_FIELD_DATA); 
+
+    MERGE INTO TBL_FORM_DTL A
+    USING (SELECT * FROM TBL_FORM_DTL WHERE PROCID=I_PROCID) B
+       ON (A.PROCID = B.PROCID)
+     WHEN MATCHED THEN
+          UPDATE 
+             SET A.FIELD_DATA = V_XMLDOC, 
+                 A.MOD_DT = SYS_EXTRACT_UTC(SYSTIMESTAMP), 
+                 A.MOD_USR = I_USER 
+     WHEN NOT MATCHED THEN     
+          INSERT (A.PROCID, A.ACTSEQ, A.WITEMSEQ, A.FORM_TYPE, A.FIELD_DATA, A.CRT_DT, A.CRT_USR) 
+          VALUES (I_PROCID, NVL(I_ACTSEQ, 0), NVL(I_WITEMSEQ, 0), V_FORM_TYPE, V_XMLDOC, SYS_EXTRACT_UTC(SYSTIMESTAMP), I_USER); 
+
+    -- Update process variable and transition xml into individual tables 
+    -- for respective process definition 
+    SP_UPDATE_PV_ERLR(I_PROCID, V_XMLDOC); 
+    SP_UPDATE_ERLR_TABLE(I_PROCID); 
+
+EXCEPTION 
+  WHEN OTHERS THEN 
+             SP_ERROR_LOG(); 
+END; 
+/
+
+GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_ERLR_FORM_DATA TO HHS_CMS_HR_RW_ROLE;
 /
 
 /**
