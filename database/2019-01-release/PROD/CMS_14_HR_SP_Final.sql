@@ -233,3 +233,6 @@ BEGIN
 END;
 
 /
+
+COMMIT;
+/
