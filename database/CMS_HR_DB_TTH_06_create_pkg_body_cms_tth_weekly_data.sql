@@ -2,7 +2,7 @@ create or replace PACKAGE BODY            CMS_TTH_WEEKLY_DATA_PKS AS
 --------------------------------------------------------------------------------------------------------
 --THIS PACKAGE WILL HANDLE PULLING AND POPULATING CMS_TIME_TO_HIRE_WEEKLY_PILOT TABLES in HHS_HR SCHEMA 
 --------------------------------------------------------------------------------------------------------
- 
+
 --======================================================
 -- - - -- - - - - - - - - - - - - - - - - - - - - - - -
  
@@ -63,7 +63,7 @@ CURSOR CUR_CMS_TTH_DATA
 			WHERE REQUEST_STATUS = 'Strategic Consultation Approved'
 			AND PROCESS_COMPLETION_DATE IS NOT NULL) STRATCON
 		ON AC.ADMIN_CODE = STRATCON.SUB_ORG_2_CD
-		AND PROCESS_CREATION_DATE > '03-FEB-19' 
+		AND PROCESS_CREATION_DATE > '01-JAN-18' -- Will be updated to '03-FEB-19'
 	LEFT JOIN HHS_HR.DSS_CMS_TIME_TO_HIRE TTH
 		ON TTH.REQUEST_NUMBER = STRATCON.REQ_JOB_REQ_NUMBER
 	WHERE ((LENGTH(ADMIN_CODE) <= 3 AND ADMIN_CODE LIKE 'FC%')
@@ -109,7 +109,7 @@ BEGIN
     CLOSE CUR_CMS_TTH_DATA;
  
     IF CMS_TTH_DATA.COUNT > 0 THEN
-    DBMS_OUTPUT.PUT_LINE('COUNT: ' || CMS_TTH_DATA.COUNT);
+    DBMS_OUTPUT.PUT_LINE('WEEKLY RECORD COUNT: ' || CMS_TTH_DATA.COUNT);
     
         
          FOR i IN CMS_TTH_DATA.FIRST.. CMS_TTH_DATA.LAST LOOP
@@ -182,13 +182,79 @@ BEGIN
             SUM_MISSED_STRAT_CON, 
             SUM_MISSED_CLASS,
             SUM_MISSED_QUALS, 
-            SUM_MISSED_SELECTION); 
-        
-         COMMIT;
+            SUM_MISSED_SELECTION);      
+            
+        COMMIT;
       END IF;
- 
+
 END INSERT_CMS_TTH_WEEKLY_DATA;
  
+ 
+---------------------------------------------------------
+--PROCEDURE: NOTIFY_JOB_MONITORS
+--DESCRIPTION : Send email notification about weekly data  
+--import status
+---------------------------------------------------------
+PROCEDURE NOTIFY_JOB_MONITORS
+AS  
+V_JOB_NAME VARCHAR2(100) := 'IMPORT_TTH_WEEKLY_PILOT_DATA';
+V_STATUS VARCHAR2(50);
+V_ORACLE_ERROR_CODE NUMBER;
+V_ERRORS VARCHAR2(4000);
+V_ADD_INFO VARCHAR2(4000);
+V_SENDER VARCHAR2(100) := 'DO_NOT_REPLY_EMAIL';
+V_SUBJECT VARCHAR2(2000);
+V_ERROR_DETAILS VARCHAR2(8000);
+V_ENV VARCHAR2(10) := 'DEV';
+V_BODY CLOB;
+TYPE recipientArrayType IS VARRAY(2) OF VARCHAR2(100);
+V_TORECIPIENTS recipientArrayType;
+V_RECIPIENT_COUNT NUMBER(10);
+BEGIN
+
+V_TORECIPIENTS := recipientArrayType('RECIPIENT_1','RECIPIENT_2');
+V_RECIPIENT_COUNT := V_TORECIPIENTS.COUNT;
+
+      --fetch job status
+      SELECT 
+        STATUS, 
+        ERROR#, 
+        ERRORS, 
+        ADDITIONAL_INFO
+      INTO 
+        V_STATUS, 
+        V_ORACLE_ERROR_CODE, 
+        V_ERRORS, 
+        V_ADD_INFO
+      FROM ALL_SCHEDULER_JOB_RUN_DETAILS 
+      WHERE JOB_NAME IN (V_JOB_NAME)
+      AND TRUNC(CAST(LOG_DATE AS DATE)) = TRUNC(SYSDATE);
+      
+      V_SUBJECT := TO_CHAR(SYSDATE, 'DD-Mon-YYYY') || ' - Time to Hire Weekly Data Import Job ' || V_STATUS || ' [' || V_ENV || ']';
+         		
+      V_BODY := 'The batch job ' || V_JOB_NAME || ' completed with the following status: [' || V_STATUS || '].' ;
+      
+      IF (V_ORACLE_ERROR_CODE > 0) THEN
+        IF (V_ERRORS IS NOT NULL AND V_ADD_INFO IS NOT NULL) THEN 
+          V_ERROR_DETAILS := '[Error Code: ' || V_ORACLE_ERROR_CODE || ']: ' || V_ERRORS || '| [Additional Information]: ' || V_ADD_INFO;
+        ELSIF (V_ERRORS IS NOT NULL AND V_ADD_INFO IS NULL) THEN
+          V_ERROR_DETAILS := '[Error Code: ' || V_ORACLE_ERROR_CODE || ']: ' || V_ERRORS;
+        ELSIF (V_ERRORS IS NULL AND V_ADD_INFO IS NOT NULL) THEN
+          V_ERROR_DETAILS := '[Additional Information]: ' || V_ADD_INFO;
+        ELSE
+          V_ERROR_DETAILS := '[Error Code: ' || V_ORACLE_ERROR_CODE ;
+        END IF;
+        
+        V_BODY := 'The batch job ' || V_JOB_NAME || ' completed with the status: [' || V_STATUS || ']. ' || V_ERROR_DETAILS;
+      END IF;
+
+      --Send email notification to each recipient  
+      FOR i IN 1 .. V_RECIPIENT_COUNT LOOP
+      DBMS_OUTPUT.PUT_LINE(V_TORECIPIENTS(i));
+        HHS_HR.SP_SEND_MAIL (V_TORECIPIENTS(i), '', '', V_SENDER, V_SUBJECT, V_BODY, '');
+      END LOOP;     
+ 
+END NOTIFY_JOB_MONITORS;
 --------------------------------------------------------
 --FUNCTION: FN_IMPORT_CMS_TTH_WEEKLY_DATA
 --DESCRIPTION: Entry point for this package,calls individual 
@@ -201,6 +267,7 @@ RETURN VARCHAR2
 AS
 BEGIN
         INSERT_CMS_TTH_WEEKLY_DATA(); 
+        NOTIFY_JOB_MONITORS();
 RETURN ERROR_LOG();
 END FN_IMPORT_CMS_TTH_WEEKLY_DATA;
  
