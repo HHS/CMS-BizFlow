@@ -8,6 +8,12 @@ CREATE OR REPLACE PACKAGE HHS_CMS_HR.CMS_TTH_WEEKLY_DATA_PKS AS
 PROCEDURE INSERT_CMS_TTH_WEEKLY_DATA;
 
 --------------------------------------------------------------------------
+--PROCEDURE: NOTIFY_JOB_MONITORS
+--DESCRIPTION : Send email notification about weekly data import status
+--------------------------------------------------------------------------
+PROCEDURE NOTIFY_JOB_MONITORS;
+
+--------------------------------------------------------------------------
 --PROCEDURE: FN_IMPORT_CMS_TTH_WEEKLY_DATA
 --DESCRIPTION: FN_IMPORT_CMS_TTH_WEEKLY_DATA will be called by Oracle job, 
 --which will call individual procedures in the package.
