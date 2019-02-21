@@ -34,7 +34,7 @@
                 'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.'
             },{
                 'name': 'CMS Time to Classify Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
             },{
                 'name': 'CMS Time to Appoint Report - Completed', 
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
@@ -57,7 +57,23 @@
                 'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the entire process. Time starts when a new request is created in NEIL, and tracks through the Send Official Offer Complete date.',
 				'requestType': ['All','Appointment', 'Recruitment'],
 				'dateLabel': 'Date Send Official Completed'
-            }
+            }, {
+				'name': 'CMS My Monitor - Active Requests Report', 
+                'description': 'Mandatory filters required to run the report.',				
+				'dateLabel': 'Date Request Created'
+			}, {
+				'name': 'CMS My Monitor - Completed Requests Report', 
+                'description': 'Mandatory filters required to run the report.'		
+			}, {
+				'name': 'CMS Request Current Status Report', 
+                'description': 'Mandatory filters required to run the report.',
+				'dateLabel': 'Date Request Created'				
+			}, {
+				'name': 'CMS HR Appointment Workload Summary Report', 
+                'description': 'Mandatory filters required to run the report.',
+				'requestType': ["Appointment"],
+				'dateLabel': 'Date Request Created'
+			}
         ];
         
         // Default Values
