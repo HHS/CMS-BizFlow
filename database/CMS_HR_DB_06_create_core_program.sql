@@ -6928,7 +6928,6 @@ END;
  * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
  *
 */
-
 create or replace PROCEDURE SP_UPDATE_ERLR_TABLE
 (
 	I_PROCID            IN      NUMBER
@@ -7084,6 +7083,7 @@ BEGIN
                     , X.GEN_CUSTOMER_ADMIN_CD
                     , X.GEN_CUSTOMER_ADMIN_CD_DESC
                     , X.GEN_EMPLOYEE_NAME
+                    , X.GEN_EMPLOYEE_ID
                     , X.GEN_EMPLOYEE_PHONE
                     , X.GEN_EMPLOYEE_ADMIN_CD
                     , X.GEN_EMPLOYEE_ADMIN_CD_DESC
@@ -7121,6 +7121,7 @@ BEGIN
 	                        , GEN_CUSTOMER_ADMIN_CD	NVARCHAR2(8)    PATH './item[id="GEN_CUSTOMER_ADMIN_CD"]/value'
 	                        , GEN_CUSTOMER_ADMIN_CD_DESC	NVARCHAR2(50)   PATH './item[id="GEN_CUSTOMER_ADMIN_CD_DESC"]/value'
 	                        , GEN_EMPLOYEE_NAME	NVARCHAR2(150)  PATH './item[id="GEN_EMPLOYEE_NAME"]/value'
+	                        , GEN_EMPLOYEE_ID	NVARCHAR2(64)  PATH './item[id="GEN_EMPLOYEE_ID"]/value'
 	                        , GEN_EMPLOYEE_PHONE	NVARCHAR2(50)   PATH './item[id="GEN_EMPLOYEE_PHONE"]/value'
 	                        , GEN_EMPLOYEE_ADMIN_CD	NVARCHAR2(8)    PATH './item[id="GEN_EMPLOYEE_ADMIN_CD"]/value'
 	                        , GEN_EMPLOYEE_ADMIN_CD_DESC	NVARCHAR2(50)   PATH './item[id="GEN_EMPLOYEE_ADMIN_CD_DESC"]/value'
@@ -7157,6 +7158,7 @@ BEGIN
 				, TRG.GEN_CUSTOMER_ADMIN_CD    = SRC.GEN_CUSTOMER_ADMIN_CD
 				, TRG.GEN_CUSTOMER_ADMIN_CD_DESC                = SRC.GEN_CUSTOMER_ADMIN_CD_DESC
 				, TRG.GEN_EMPLOYEE_NAME       = SRC.GEN_EMPLOYEE_NAME
+				, TRG.GEN_EMPLOYEE_ID       = SRC.GEN_EMPLOYEE_ID
 				, TRG.GEN_EMPLOYEE_PHONE      = SRC.GEN_EMPLOYEE_PHONE
 				, TRG.GEN_EMPLOYEE_ADMIN_CD    = SRC.GEN_EMPLOYEE_ADMIN_CD
 				, TRG.GEN_EMPLOYEE_ADMIN_CD_DESC                = SRC.GEN_EMPLOYEE_ADMIN_CD_DESC
@@ -7192,6 +7194,7 @@ BEGIN
 				, TRG.GEN_CUSTOMER_ADMIN_CD
 				, TRG.GEN_CUSTOMER_ADMIN_CD_DESC
 				, TRG.GEN_EMPLOYEE_NAME
+				, TRG.GEN_EMPLOYEE_ID
 				, TRG.GEN_EMPLOYEE_PHONE
 				, TRG.GEN_EMPLOYEE_ADMIN_CD
 				, TRG.GEN_EMPLOYEE_ADMIN_CD_DESC
@@ -7228,6 +7231,7 @@ BEGIN
 				, SRC.GEN_CUSTOMER_ADMIN_CD
 				, SRC.GEN_CUSTOMER_ADMIN_CD_DESC
 				, SRC.GEN_EMPLOYEE_NAME
+				, SRC.GEN_EMPLOYEE_ID
 				, SRC.GEN_EMPLOYEE_PHONE
 				, SRC.GEN_EMPLOYEE_ADMIN_CD
 				, SRC.GEN_EMPLOYEE_ADMIN_CD_DESC
