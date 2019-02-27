@@ -7109,7 +7109,7 @@ BEGIN
 	                , X.GEN_STD_CONDUCT_TYPE	                
                     , TO_DATE(X.CC_CASE_COMPLETE_DT,'MM/DD/YYYY HH24:MI:SS') AS CC_CASE_COMPLETE_DT
 					, FN_GET_FINAL_ACTIONS(I_PROCID) AS CC_FINAL_ACTION
-	                          
+					, X.CC_FINAL_ACTION_OTHER	                          
 				FROM TBL_FORM_DTL FD
 					, XMLTABLE('/formData/items' PASSING FD.FIELD_DATA
 						COLUMNS
@@ -7146,6 +7146,7 @@ BEGIN
 	                        , GEN_STD_CONDUCT	NVARCHAR2(3)    PATH './item[id="GEN_STD_CONDUCT"]/value'
 	                        , GEN_STD_CONDUCT_TYPE	 NVARCHAR2(200) PATH './item[id="GEN_STD_CONDUCT_TYPE"]/value'
 	                        , CC_FINAL_ACTION	NVARCHAR2(200)  PATH './item[id="CC_FINAL_ACTION"]/value'
+							, CC_FINAL_ACTION_OTHER	NVARCHAR2(100)  PATH './item[id="CC_FINAL_ACTION_OTHER"]/value'
 	                        , CC_CASE_COMPLETE_DT	VARCHAR2(10)    PATH './item[id="CC_CASE_COMPLETE_DT"]/value'
 					) X					
 				WHERE FD.PROCID = I_PROCID
@@ -7183,7 +7184,8 @@ BEGIN
 				, TRG.GEN_STD_CONDUCT                  = SRC.GEN_STD_CONDUCT
 				, TRG.GEN_STD_CONDUCT_TYPE                    = SRC.GEN_STD_CONDUCT_TYPE
 				, TRG.CC_FINAL_ACTION                     = SRC.CC_FINAL_ACTION
-				, TRG.CC_CASE_COMPLETE_DT                  = SRC.CC_CASE_COMPLETE_DT				
+				, TRG.CC_CASE_COMPLETE_DT                  = SRC.CC_CASE_COMPLETE_DT		
+				, TRG.CC_FINAL_ACTION_OTHER = SRC.CC_FINAL_ACTION_OTHER		
 			WHEN NOT MATCHED THEN INSERT
 			(
 				TRG.ERLR_CASE_NUMBER
@@ -7220,6 +7222,7 @@ BEGIN
 				, TRG.GEN_STD_CONDUCT_TYPE
 				, TRG.CC_FINAL_ACTION
 				, TRG.CC_CASE_COMPLETE_DT
+				, TRG.CC_FINAL_ACTION_OTHER
 			)
 			VALUES
 			(
@@ -7257,6 +7260,7 @@ BEGIN
 				, SRC.GEN_STD_CONDUCT_TYPE
 				, SRC.CC_FINAL_ACTION
 				, SRC.CC_CASE_COMPLETE_DT
+				, SRC.CC_FINAL_ACTION_OTHER
 			)
 			;
 		END;
