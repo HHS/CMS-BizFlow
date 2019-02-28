@@ -271,6 +271,7 @@
             url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
             url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
             url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
+            url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg; // Include Requests for Sub-Org
             //$log.debug('Report URL [' + url + ']');
             return url;
         };
