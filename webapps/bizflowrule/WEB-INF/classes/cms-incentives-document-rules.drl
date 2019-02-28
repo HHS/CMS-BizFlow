@@ -59,6 +59,23 @@ rule "Incentives / PCA Required Documents / New / Recruitment"
         addDocument($workflowDocuments, "Vacancy Announcement", true);
 end
 
+rule "Incentives / PCA Required Documents / New"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+         $field3: WorkflowField ( fieldId == "pcaType", fieldValue == "New" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "Request to fill", ($actName == "Start New"));
+end
+
 rule "Incentives / PCA Required Documents / RequireBoardCert"
     when
         $docSearch: WorkflowRuleSearch (
