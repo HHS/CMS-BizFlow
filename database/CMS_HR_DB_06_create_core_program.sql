@@ -6426,420 +6426,6 @@ IS
 		RETURN L_KEY;
 	END;
 /
-
-create or replace PROCEDURE SP_INIT_ERLR
-(
-	I_PROCID               IN  NUMBER
-)
-IS
-    V_CNT                   INT;    
-    V_FROM_PROCID           NUMBER(10);
-    V_XMLDOC                XMLTYPE;    
-    V_ORG_CASE_NUMBER       NUMBER(10);
-    V_CASE_NUMBER           NUMBER(10);    
-    V_GEN_EMP_HHSID         VARCHAR2(64);
-    V_NEW_CASE_TYPE_ID	    NUMBER(38);
-    V_NEW_CASE_TYPE_NAME    VARCHAR2(100);
-BEGIN
-    SELECT COUNT(1) INTO V_CNT
-      FROM TBL_FORM_DTL
-     WHERE PROCID = I_PROCID;
-
-    IF V_CNT = 0 THEN
-        V_CASE_NUMBER :=  ERLR_CASE_NUMBER_SEQ.NEXTVAL;
-        UPDATE BIZFLOW.RLVNTDATA 
-           SET VALUE = V_CASE_NUMBER
-         WHERE RLVNTDATANAME = 'caseNumber' 
-           AND PROCID = I_PROCID;
-        
-        -- CHECK: TRIGGERED FROM OTHER CASE
-        BEGIN
-            SELECT TO_NUMBER(VALUE)
-              INTO V_FROM_PROCID
-              FROM BIZFLOW.RLVNTDATA 
-             WHERE RLVNTDATANAME = 'fromProcID' 
-               AND PROCID = I_PROCID;
-        EXCEPTION 
-        WHEN NO_DATA_FOUND THEN
-            V_FROM_PROCID := NULL;
-        END;
-        
-        IF V_FROM_PROCID IS NOT NULL THEN
-            SELECT FIELD_DATA
-              INTO V_XMLDOC
-              FROM TBL_FORM_DTL
-             WHERE PROCID = V_FROM_PROCID;
-
-            SELECT TO_NUMBER(VALUE)
-              INTO V_NEW_CASE_TYPE_ID
-              FROM BIZFLOW.RLVNTDATA 
-             WHERE RLVNTDATANAME = 'caseTypeID' 
-               AND PROCID = I_PROCID;
-
-            SELECT TO_NUMBER(VALUE)
-              INTO V_ORG_CASE_NUMBER
-              FROM BIZFLOW.RLVNTDATA 
-             WHERE RLVNTDATANAME = 'caseNumber' 
-               AND PROCID = V_FROM_PROCID;
-
-            BEGIN
-              SELECT TBL_LABEL
-                INTO V_NEW_CASE_TYPE_NAME
-                FROM TBL_LOOKUP
-               WHERE TBL_ID = V_NEW_CASE_TYPE_ID;
-            EXCEPTION
-              WHEN NO_DATA_FOUND THEN
-              V_NEW_CASE_TYPE_NAME := TO_CHAR(V_NEW_CASE_TYPE_ID);
-              WHEN OTHERS THEN
-              V_NEW_CASE_TYPE_NAME := TO_CHAR(V_NEW_CASE_TYPE_ID);
-            END;
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='employeeName' AND PROCID = V_FROM_PROCID)
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='employeeName';
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='contactName' AND PROCID = V_FROM_PROCID)
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='contactName';
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='initialContactDate' AND PROCID = V_FROM_PROCID)
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='initialContactDate';
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='organization' AND PROCID = V_FROM_PROCID)
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='organization';
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='primaryDWCSpecialist' AND PROCID = V_FROM_PROCID)
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='primaryDWCSpecialist';
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='secondaryDWCSpecialist' AND PROCID = V_FROM_PROCID)
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='secondaryDWCSpecialist';
-
-            UPDATE BIZFLOW.RLVNTDATA
-               SET VALUE = V_NEW_CASE_TYPE_NAME
-             WHERE PROCID = I_PROCID
-               AND RLVNTDATANAME='caseType';
-
-            SELECT XMLQUERY('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()' PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL() INTO V_GEN_EMP_HHSID FROM DUAL;
-            SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
-            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
-            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_DESC"]') INTO V_XMLDOC FROM DUAL;
-            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_STATUS"]') INTO V_XMLDOC FROM DUAL;
-            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CUST_INIT_CONTACT_DT"]') INTO V_XMLDOC FROM DUAL;
-            
-            IF V_NEW_CASE_TYPE_ID IS NOT NULL AND V_NEW_CASE_TYPE_NAME IS NOT NULL THEN
-                SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
-                SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;                
-            END IF;
-        END IF;        
-        
-        IF V_XMLDOC IS NULL THEN
-            V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
-        ELSE
-            SP_ERLR_EMPLOYEE_CASE_ADD(V_GEN_EMP_HHSID, V_CASE_NUMBER, TO_NUMBER(V_NEW_CASE_TYPE_ID), V_ORG_CASE_NUMBER, NULL);            
-            SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item>')) INTO V_XMLDOC FROM DUAL;            
-        END IF;
-        
-        INSERT INTO TBL_FORM_DTL (PROCID, ACTSEQ, WITEMSEQ, FORM_TYPE, FIELD_DATA, CRT_DT, CRT_USR)
-                          VALUES (I_PROCID, 0, 0, 'CMSERLR', V_XMLDOC, SYSDATE, 'System');
-    END IF;
-
-EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
-/
-create or replace PROCEDURE SP_FINALIZE_ERLR
-(
-	I_PROCID               IN  NUMBER
-)
-IS
-    V_CNT                   INT;
-    V_XMLDOC                XMLTYPE;
-    V_XMLVALUE              XMLTYPE;
-    V_CASE_TYPE_ID          VARCHAR2(10);
-    V_VALUE                 VARCHAR2(100);
-    V_NEW_CASE_TYPE_ID      VARCHAR2(10);
-    V_NEW_CASE_TYPE_NAME    VARCHAR2(100);
-    V_GEN_EMP_ID            VARCHAR2(64);
-    V_CASE_NUMBER           NUMBER(10);
-    V_TRIGGER_NEW_CASE      BOOLEAN := FALSE;
-    YES                     CONSTANT VARCHAR2(3) := 'Yes';
-    CONDUCT_ISSUE_ID		CONSTANT VARCHAR2(10) :='743';
-    CONDUCT_ISSUE			CONSTANT VARCHAR2(50) :='Conduct Issue';
-    GRIEVANCE_ID			CONSTANT VARCHAR2(10) :='745';
-    GRIEVANCE			    CONSTANT VARCHAR2(50) :='Grievance';
-    INVESTIGATION_ID		CONSTANT VARCHAR2(10) :='744';
-    INVESTIGATION			CONSTANT VARCHAR2(50) :='Investigation';
-    LABOR_NEGOTIATION_ID	CONSTANT VARCHAR2(10) :='748';
-    LABOR_NEGOTIATION		CONSTANT VARCHAR2(50) :='Labor Negotiation';
-    MEDICAL_DOCUMENTATION_ID CONSTANT VARCHAR2(10) :='746';
-    MEDICAL_DOCUMENTATION	CONSTANT VARCHAR2(50) :='Medical Documentation';
-    PERFORMANCE_ISSUE_ID	CONSTANT VARCHAR2(10) :='750';
-    PERFORMANCE_ISSUE		CONSTANT VARCHAR2(50) :='Performance Issue';
-    PROBATIONARY_PERIOD_ID	CONSTANT VARCHAR2(10) :='751';
-    PROBATIONARY_PERIOD		CONSTANT VARCHAR2(50) :='Probationary Period Action';
-    UNFAIR_LABOR_PRACTICES_ID	CONSTANT VARCHAR2(10) :='754';
-    UNFAIR_LABOR_PRACTICES	CONSTANT VARCHAR2(50) :='Unfair Labor Practices';
-    WGI_DENIAL_ID			CONSTANT VARCHAR2(10) :='809';
-    WGI_DENIAL			    CONSTANT VARCHAR2(50) :='Within Grade Increase Denial/Reconsideration';    
-    INFORMATION_REQUEST_ID  CONSTANT VARCHAR2(10) := '747';    
-    THIRD_PARTY_HEARING_ID  CONSTANT VARCHAR2(10) := '753';    
-    THIRD_PARTY_HEARING     CONSTANT VARCHAR2(50) := 'Third Party Hearing';
-    ACTION_TYPE_COUNSELING_ID CONSTANT VARCHAR2(10) := '785';
-    ACTION_TYPE_PIP_ID      CONSTANT VARCHAR2(10) := '787';
-    ACTION_TYPE_WNR_ID      CONSTANT VARCHAR2(10) := '790';    
-    REASON_FMLA_ID          CONSTANT VARCHAR2(10) := '1650';
-BEGIN
-    SELECT FIELD_DATA
-      INTO V_XMLDOC
-      FROM TBL_FORM_DTL
-     WHERE PROCID = I_PROCID;
-
-    V_CASE_TYPE_ID := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_CASE_TYPE"]/value/text()').getStringVal();        
-    V_CASE_NUMBER  := TO_NUMBER(V_XMLDOC.EXTRACT('/formData/items/item[id="CASE_NUMBER"]/value/text()').getStringVal());    
-    V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()');
-    IF V_XMLVALUE IS NOT NULL THEN
-        V_GEN_EMP_ID := V_XMLVALUE.GETSTRINGVAL();
-    END IF;
-    SP_ERLR_EMPLOYEE_CASE_ADD(V_GEN_EMP_ID, V_CASE_NUMBER, TO_NUMBER(V_CASE_TYPE_ID), NULL, NULL);
-    
-    IF V_CASE_TYPE_ID = INFORMATION_REQUEST_ID THEN -- Information Request
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="IR_APPEAL_DENIAL"]/value/text()'); -- Did Requester Appeal Denial?
-        IF V_XMLVALUE IS NOT NULL THEN
-            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        END IF;
-        
-        IF V_VALUE = YES THEN
-            V_NEW_CASE_TYPE_ID   := THIRD_PARTY_HEARING_ID;
-            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-        END IF;
-    ELSIF V_CASE_TYPE_ID = INVESTIGATION_ID THEN -- Investigation
-        -- Triggering Conduct Case
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="I_MISCONDUCT_FOUND"]/value/text()'); --Was Misconduct Found?
-        IF V_XMLVALUE IS NOT NULL THEN
-            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        END IF;
-        
-        IF V_VALUE = YES THEN
-            V_NEW_CASE_TYPE_ID   := CONDUCT_ISSUE_ID;
-            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-        END IF;
-    ELSIF V_CASE_TYPE_ID = MEDICAL_DOCUMENTATION_ID THEN -- Medical Documentation
-        -- Triggering Grievance Case
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="MD_REQUEST_REASON"]/value/text()'); -- Reason for Request
-        IF V_XMLVALUE IS NOT NULL THEN
-            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        END IF;
-        
-        IF V_VALUE = REASON_FMLA_ID THEN  -- FMLA      
-            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="MD_FMLA_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
-            IF V_XMLVALUE IS NOT NULL THEN
-                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-            END IF;
-            
-            IF V_VALUE = YES THEN
-                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
-                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-            END IF;
-        END IF;
-    ELSIF V_CASE_TYPE_ID = LABOR_NEGOTIATION_ID THEN -- Labor Negotiation
-        -- Triggering Unfair Labor Practices Case
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="LN_FILE_ULP"]/value/text()');--Did Union File ULP?
-        IF V_XMLVALUE IS NOT NULL THEN
-            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        END IF;
-        
-        IF V_VALUE = YES THEN        
-            V_NEW_CASE_TYPE_ID   := UNFAIR_LABOR_PRACTICES_ID;
-            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-        END IF;        
-    ELSIF V_CASE_TYPE_ID = PERFORMANCE_ISSUE_ID THEN -- Performance Issue
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_ACTION_TYPE"]/value/text()');
-        IF V_XMLVALUE IS NOT NULL THEN
-            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        END IF;
-        
-        IF V_VALUE = ACTION_TYPE_COUNSELING_ID THEN -- Action Type: Counseling
-            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_CNSL_GRV_DECISION"]/value/text()'); -- Did Employee File a Grievance?
-            IF V_XMLVALUE IS NOT NULL THEN
-                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-            END IF;
-            
-            IF V_VALUE = YES THEN
-                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
-                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-            END IF;
-        ELSIF V_VALUE = ACTION_TYPE_PIP_ID THEN -- Action Type: PIP
-            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_PIP_EMPL_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
-            IF V_XMLVALUE IS NOT NULL THEN
-                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-            END IF;
-            
-            IF V_VALUE = YES THEN
-                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
-                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-            END IF;
-            
-            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_PIP_WGI_WTHLD"]/value/text()'); --Was WGI Withheld?
-            IF V_XMLVALUE IS NOT NULL THEN
-                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-            END IF;
-            
-            IF V_VALUE = YES THEN
-                V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
-                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID2' AND PROCID = I_PROCID;
-            END IF;
-        ELSIF V_VALUE = ACTION_TYPE_WNR_ID THEN -- Action Type: Written Narrative Review
-            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_WNR_WGI_WTHLD"]/value/text()'); -- Was WGI Withheld?
-            IF V_XMLVALUE IS NOT NULL THEN
-                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-            END IF;
-            
-            IF V_VALUE = YES THEN
-                V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
-                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-            END IF;        
-        END IF;
-    END IF;
-    
-EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
-/
-create or replace PROCEDURE SP_ERLR_EMPLOYEE_CASE_ADD
-(
-	I_HHSID IN VARCHAR2,
-	I_CASEID IN NUMBER,
-    I_CASE_TYPE_ID IN NUMBER,
-	I_FROM_CASEID IN NUMBER,
-	I_MEMBER_ID IN VARCHAR2 -- MANUALLY ENTERED CASE IF THIS VALUE IS NOT NULL
-)
-IS
-    V_CNT NUMBER;
-    V_CASE_TYPE_NAME VARCHAR2(100);
-    V_FIRST_NAME VARCHAR2(50);
-    V_LAST_NAME VARCHAR2(50);
-    V_CASE_EMP_ID VARCHAR2(100);
-BEGIN
-    IF I_HHSID IS NULL THEN
-        SELECT COUNT(*)
-          INTO V_CNT
-          FROM ERLR_EMPLOYEE_CASE
-         WHERE HHSID IS NULL
-           AND CASEID = I_CASEID;
-
-        IF 0=V_CNT THEN
-            SELECT TBL_LABEL
-              INTO V_CASE_TYPE_NAME
-              FROM TBL_LOOKUP
-             WHERE TBL_ID = I_CASE_TYPE_ID;
-             
-            SELECT XMLQUERY('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()' PASSING FIELD_DATA RETURNING CONTENT).GETSTRINGVAL() 
-              INTO V_CASE_EMP_ID
-              FROM TBL_FORM_DTL F JOIN BIZFLOW.RLVNTDATA P ON F.PROCID = P.PROCID AND P.RLVNTDATANAME='caseNumber'
-             WHERE P.VALUE = TO_CHAR(I_CASEID);
-            
-            IF 1<LENGTH(V_CASE_EMP_ID) THEN
-                BEGIN
-                    SELECT FIRST_NAME, LAST_NAME 
-                      INTO V_FIRST_NAME, V_LAST_NAME 
-                    FROM HHS_HR.EMPLOYEE_LOOKUP           
-                    WHERE HHSID = V_CASE_EMP_ID;
-                EXCEPTION WHEN NO_DATA_FOUND THEN
-                    V_FIRST_NAME := NULL;
-                    V_LAST_NAME := NULL;
-                END;
-            END IF;
-            
-            IF I_MEMBER_ID IS NULL THEN
-                INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME)
-                                        VALUES(I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME);
-            ELSE
-                INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME, M_DT, M_MEMBER_ID, M_MEMBER_NAME)
-                SELECT I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, M.NAME
-                  FROM BIZFLOW.MEMBER M
-                 WHERE M.MEMBERID = I_MEMBER_ID;
-            END IF;
-        END IF;
-    ELSE
-        SELECT COUNT(*)
-          INTO V_CNT
-          FROM ERLR_EMPLOYEE_CASE
-         WHERE HHSID = I_HHSID
-           AND CASEID = I_CASEID;
-
-        IF 0=V_CNT THEN
-            SELECT TBL_LABEL
-              INTO V_CASE_TYPE_NAME
-              FROM TBL_LOOKUP
-             WHERE TBL_ID = I_CASE_TYPE_ID;
-             
-            SELECT XMLQUERY('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()' PASSING FIELD_DATA RETURNING CONTENT).GETSTRINGVAL() 
-              INTO V_CASE_EMP_ID
-              FROM TBL_FORM_DTL F JOIN BIZFLOW.RLVNTDATA P ON F.PROCID = P.PROCID AND P.RLVNTDATANAME='caseNumber'
-             WHERE P.VALUE = TO_CHAR(I_CASEID);
-            
-            IF 1<LENGTH(V_CASE_EMP_ID) THEN
-                BEGIN
-                    SELECT FIRST_NAME, LAST_NAME 
-                      INTO V_FIRST_NAME, V_LAST_NAME 
-                    FROM HHS_HR.EMPLOYEE_LOOKUP           
-                    WHERE HHSID = V_CASE_EMP_ID;
-                EXCEPTION WHEN NO_DATA_FOUND THEN
-                    V_FIRST_NAME := NULL;
-                    V_LAST_NAME := NULL;
-                END;
-            END IF;
-        
-            IF I_MEMBER_ID IS NULL THEN
-                INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME)
-                                        VALUES(I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME);
-            ELSE
-                INSERT INTO ERLR_EMPLOYEE_CASE(HHSID, CASEID, FROM_CASEID, CASE_TYPE_ID, CASE_TYPE_NAME, EMP_LAST_NAME, EMP_FIRST_NAME, M_DT, M_MEMBER_ID, M_MEMBER_NAME)
-                SELECT I_HHSID, I_CASEID, I_FROM_CASEID, I_CASE_TYPE_ID, V_CASE_TYPE_NAME, V_LAST_NAME, V_FIRST_NAME, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, M.NAME
-                  FROM BIZFLOW.MEMBER M
-                 WHERE M.MEMBERID = I_MEMBER_ID;
-            END IF;
-        END IF;
-    END IF;
-    
-
-EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
-/
-create or replace PROCEDURE SP_ERLR_EMPLOYEE_CASE_DEL
-(
-	I_HHSID IN VARCHAR2,
-	I_CASEID IN NUMBER
-)
-IS
-    V_CNT NUMBER;
-BEGIN
-
-    -- DELETE ONLY MANUALLY ENTERED CASE
-    DELETE ERLR_EMPLOYEE_CASE
-     WHERE HHSID = I_HHSID
-       AND CASEID = I_CASEID
-       AND M_DT IS NOT NULL; 
-    
-EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
-/
 create or replace PROCEDURE SP_UPDATE_ERLR_FORM_DATA 
    (I_WIH_ACTION IN VARCHAR2, -- SAVE, SUBMIT
     I_FIELD_DATA IN CLOB, 
@@ -7020,6 +6606,13 @@ BEGIN
 		EXCEPTION
 			WHEN NO_DATA_FOUND THEN V_CASE_CREATION_DT := NULL;
 		END;
+        
+        
+        SELECT FIELD_DATA
+          INTO V_XMLDOC
+          FROM TBL_FORM_DTL
+         WHERE PROCID = I_PROCID;
+
 		--------------------------------
 		-- ERLR_CASE table
 		--------------------------------
@@ -7033,13 +6626,12 @@ BEGIN
                     , I_PROCID AS PROCID
                     , X.GEN_CASE_STATUS AS ERLR_CASE_STATUS_ID
                     , V_CASE_CREATION_DT AS ERLR_CASE_CREATE_DT
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
                             GEN_CASE_STATUS NVARCHAR2(200) PATH './item[id="GEN_CASE_STATUS"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
                 TRG.ERLR_CASE_STATUS_ID = SRC.ERLR_CASE_STATUS_ID
@@ -7062,8 +6654,6 @@ BEGIN
             );
 
 		END;
-
-
 
 		--------------------------------
 		-- ERLR_GEN table
@@ -7109,8 +6699,9 @@ BEGIN
 	                , X.GEN_STD_CONDUCT_TYPE	                
                     , TO_DATE(X.CC_CASE_COMPLETE_DT,'MM/DD/YYYY HH24:MI:SS') AS CC_CASE_COMPLETE_DT
 					, FN_GET_FINAL_ACTIONS(I_PROCID) AS CC_FINAL_ACTION
-					, X.CC_FINAL_ACTION_OTHER	                          
-				FROM TBL_FORM_DTL FD
+                    , X.CC_FINAL_ACTION_OTHER
+	                          
+				FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
 					, XMLTABLE('/formData/items' PASSING FD.FIELD_DATA
 						COLUMNS
 							ERLR_CASE_NUMBER	NUMBER(20,0)	PATH './item[id="CASE_NUMBER"]/value'
@@ -7146,10 +6737,9 @@ BEGIN
 	                        , GEN_STD_CONDUCT	NVARCHAR2(3)    PATH './item[id="GEN_STD_CONDUCT"]/value'
 	                        , GEN_STD_CONDUCT_TYPE	 NVARCHAR2(200) PATH './item[id="GEN_STD_CONDUCT_TYPE"]/value'
 	                        , CC_FINAL_ACTION	NVARCHAR2(200)  PATH './item[id="CC_FINAL_ACTION"]/value'
-							, CC_FINAL_ACTION_OTHER	NVARCHAR2(100)  PATH './item[id="CC_FINAL_ACTION_OTHER"]/value'
+                            , CC_FINAL_ACTION_OTHER	NVARCHAR2(100)  PATH './item[id="CC_FINAL_ACTION_OTHER"]/value'
 	                        , CC_CASE_COMPLETE_DT	VARCHAR2(10)    PATH './item[id="CC_CASE_COMPLETE_DT"]/value'
 					) X					
-				WHERE FD.PROCID = I_PROCID
 			) SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
 			WHEN MATCHED THEN UPDATE SET
 				TRG.GEN_PRIMARY_SPECIALIST                    = SRC.GEN_PRIMARY_SPECIALIST
@@ -7184,8 +6774,8 @@ BEGIN
 				, TRG.GEN_STD_CONDUCT                  = SRC.GEN_STD_CONDUCT
 				, TRG.GEN_STD_CONDUCT_TYPE                    = SRC.GEN_STD_CONDUCT_TYPE
 				, TRG.CC_FINAL_ACTION                     = SRC.CC_FINAL_ACTION
-				, TRG.CC_CASE_COMPLETE_DT                  = SRC.CC_CASE_COMPLETE_DT		
-				, TRG.CC_FINAL_ACTION_OTHER = SRC.CC_FINAL_ACTION_OTHER		
+				, TRG.CC_CASE_COMPLETE_DT                  = SRC.CC_CASE_COMPLETE_DT
+                , TRG.CC_FINAL_ACTION_OTHER = SRC.CC_FINAL_ACTION_OTHER				
 			WHEN NOT MATCHED THEN INSERT
 			(
 				TRG.ERLR_CASE_NUMBER
@@ -7222,7 +6812,8 @@ BEGIN
 				, TRG.GEN_STD_CONDUCT_TYPE
 				, TRG.CC_FINAL_ACTION
 				, TRG.CC_CASE_COMPLETE_DT
-				, TRG.CC_FINAL_ACTION_OTHER
+                , TRG.CC_FINAL_ACTION_OTHER
+                , TRG.PROCID
 			)
 			VALUES
 			(
@@ -7260,7 +6851,8 @@ BEGIN
 				, SRC.GEN_STD_CONDUCT_TYPE
 				, SRC.CC_FINAL_ACTION
 				, SRC.CC_CASE_COMPLETE_DT
-				, SRC.CC_FINAL_ACTION_OTHER
+                , SRC.CC_FINAL_ACTION_OTHER
+                , I_PROCID
 			)
 			;
 		END;
@@ -7350,7 +6942,7 @@ BEGIN
 					, X.CI_SUS_NUMB_DAYS
 					, TO_DATE(X.CI_REPRIMAND_ISSUE_DT,'MM/DD/YYYY HH24:MI:SS') AS CI_REPRIMAND_ISSUE_DT
 					, X.CI_EMP_APPEAL_DECISION                    
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
@@ -7431,7 +7023,6 @@ BEGIN
 							, CI_REPRIMAND_ISSUE_DT	NVARCHAR2(10)	PATH './item[id="CI_REPRIMAND_ISSUE_DT"]/value'
 							, CI_EMP_APPEAL_DECISION	NVARCHAR2(3)	PATH './item[id="CI_EMP_APPEAL_DECISION"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
 				--TRG.ERLR_CASE_NUMBER = SRC.ERLR_CASE_NUMBER
@@ -7773,7 +7364,7 @@ BEGIN
 					, TO_DATE(X.PI_WNR_RVW_OFC_CONCUR_DT,'MM/DD/YYYY HH24:MI:SS') AS PI_WNR_RVW_OFC_CONCUR_DT	
 					, X.PI_WNR_WGI_WTHLD
 					, TO_DATE(X.PI_WNR_WGI_RVW_DT,'MM/DD/YYYY HH24:MI:SS') AS PI_WNR_WGI_RVW_DT	
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
@@ -7868,7 +7459,6 @@ BEGIN
 							, PI_WNR_WGI_WTHLD	VARCHAR2(3)	PATH './item[id="PI_WNR_WGI_WTHLD"]/value'
 							, PI_WNR_WGI_RVW_DT	VARCHAR2(10)	PATH './item[id="PI_WNR_WGI_RVW_DT"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
 				TRG.PI_ACTION_TYPE = SRC.PI_ACTION_TYPE
@@ -8196,7 +7786,7 @@ BEGIN
 					, TO_DATE(X.GI_ADMIN_STG_2_DECISION_DT,'MM/DD/YYYY HH24:MI:SS') AS GI_ADMIN_STG_2_DECISION_DT
 					, TO_DATE(X.GI_ADMIN_STG_2_ISSUE_DT,'MM/DD/YYYY HH24:MI:SS') AS GI_ADMIN_STG_2_ISSUE_DT
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
@@ -8236,7 +7826,6 @@ BEGIN
 							, GI_ADMIN_STG_2_ISSUE_DT	VARCHAR2(10) PATH './item[id="GI_ADMIN_STG_2_ISSUE_DT"]/value'
 							
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
                 TRG.GI_TYPE = SRC.GI_TYPE
@@ -8366,14 +7955,13 @@ BEGIN
                     V_CASE_NUMBER AS ERLR_CASE_NUMBER
 					, X.INVESTIGATION_TYPE
 					, X.I_MISCONDUCT_FOUND                    
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
                             INVESTIGATION_TYPE	NVARCHAR2(200)	PATH './item[id="INVESTIGATION_TYPE"]/value'
 							, I_MISCONDUCT_FOUND	NVARCHAR2(3)	PATH './item[id="I_MISCONDUCT_FOUND"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET                
 				TRG.INVESTIGATION_TYPE = SRC.INVESTIGATION_TYPE
@@ -8476,7 +8064,7 @@ BEGIN
 					, TO_DATE(X.AP_FINAL_BOARD_DCSN_DT_FLRA,'MM/DD/YYYY HH24:MI:SS') AS AP_FINAL_BOARD_DCSN_DT_FLRA
 
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS                            
@@ -8553,7 +8141,6 @@ BEGIN
 							, AP_PETITION_FILE_DT_FLRA	VARCHAR2(10)	PATH './item[id="AP_ERLR_APPEAL_FILE_DT_FLRA"]/value'
 							, AP_FINAL_BOARD_DCSN_DT_FLRA	VARCHAR2(10)	PATH './item[id="AP_ERLR_FINAL_DECISION_FLRA_DT"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET				
 				TRG.AP_ERLR_APPEAL_TYPE = SRC.AP_ERLR_APPEAL_TYPE
@@ -8808,7 +8395,7 @@ BEGIN
 					, WGI_REVIEW_DENIED
 					, WGI_EMP_APPEAL_DECISION
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS                            
@@ -8826,7 +8413,6 @@ BEGIN
 							, WGI_REVIEW_DENIED	NVARCHAR2(3) PATH './item[id="WGI_REVIEW_DENIED"]/value'
 							, WGI_EMP_APPEAL_DECISION	NVARCHAR2(3) PATH './item[id="WGI_EMP_APPEAL_DECISION"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
             	TRG.WGI_DTR_DENIAL_ISSUED_DT = SRC.WGI_DTR_DENIAL_ISSUED_DT
@@ -8907,7 +8493,7 @@ BEGIN
 					, X.MD_DOC_ADMTV_ACCEPTABLE
 					, X.MD_DOC_ADMTV_REJECT_REASON
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS                            
@@ -8928,7 +8514,6 @@ BEGIN
 							, MD_DOC_ADMTV_ACCEPTABLE	NVARCHAR2(3) PATH './item[id="MD_DOC_ADMTV_ACCEPTABLE"]/value'
 							, MD_DOC_ADMTV_REJECT_REASON	NUMBER(20,0) PATH './item[id="MD_DOC_ADMTV_REJECT_REASON"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
 				TRG.MD_REQUEST_REASON = SRC.MD_REQUEST_REASON
@@ -9021,7 +8606,7 @@ BEGIN
 					, X.IR_DENIAL_NOTICE_DT_LIST
 					, X.IR_APPEAL_DENIAL
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
@@ -9046,7 +8631,6 @@ BEGIN
 							, IR_APPEAL_DENIAL	VARCHAR2(3)	PATH './item[id="IR_APPEAL_DENIAL"]/value'
 							
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
                 TRG.IR_REQUESTER = SRC.IR_REQUESTER
@@ -9200,7 +8784,7 @@ BEGIN
 					, THRD_PRTY_PANEL_MEMBER_MAILING
 					, THRD_PRTY_PANEL_DESCR
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
@@ -9275,7 +8859,6 @@ BEGIN
 							, THRD_PRTY_PANEL_MEMBER_MAILING	NVARCHAR2(250)	PATH './item[id="THRD_PRTY_PANEL_MEMBER_MAILING"]/value'
 							, THRD_PRTY_PANEL_DESCR	NVARCHAR2(500)	PATH './item[id="THRD_PRTY_PANEL_DESCR"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET                
 				TRG.THRD_PRTY_APPEAL_TYPE = SRC.THRD_PRTY_APPEAL_TYPE
@@ -9559,7 +9142,7 @@ BEGIN
 					, X.PPA_FINAL_ADMIN_CODE
 					, X.PPA_FINAL_ADMIN_CODE_FINAL_ORG
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS                            
@@ -9613,7 +9196,6 @@ BEGIN
 							, PPA_FINAL_ADMIN_CODE	NVARCHAR2(8)	PATH './item[id="PPA_FINAL_ADMIN_CODE"]/value'
 							, PPA_FINAL_ADMIN_CODE_FINAL_ORG	NVARCHAR2(50)	PATH './item[id="PPA_FINAL_ADMIN_CODE_FINAL_ORG"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
 				TRG.PPA_ACTION_TYPE = SRC.PPA_ACTION_TYPE
@@ -9804,7 +9386,7 @@ BEGIN
 					, X.ULP_EXCEPTION_FILED
 					, TO_DATE(X.ULP_EXCEPTION_FILED_DT,'MM/DD/YYYY HH24:MI:SS') AS ULP_EXCEPTION_FILED_DT
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS                            
@@ -9828,7 +9410,6 @@ BEGIN
 							, ULP_EXCEPTION_FILED	VARCHAR2(3)	PATH './item[id="ULP_EXCEPTION_FILED"]/value'
 							, ULP_EXCEPTION_FILED_DT	VARCHAR2(10)	PATH './item[id="ULP_EXCEPTION_FILED_DT"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET
                 TRG.ULP_RECEIPT_CHARGE_DT = SRC.ULP_RECEIPT_CHARGE_DT
@@ -9941,7 +9522,7 @@ BEGIN
 					, TO_DATE(X.LN_MNGMNT_BARGAIN_SBMSSION_DT,'MM/DD/YYYY HH24:MI:SS') AS LN_MNGMNT_BARGAIN_SBMSSION_DT
 					, X.LN_MNGMNT_PROPOSAL_SBMSSION
                     
-                FROM TBL_FORM_DTL FD
+                FROM (SELECT V_XMLDOC AS FIELD_DATA FROM DUAL) FD
                     , XMLTABLE('/formData/items'
 						PASSING FD.FIELD_DATA
 						COLUMNS
@@ -9977,7 +9558,6 @@ BEGIN
 							, LN_MNGMNT_BARGAIN_SBMSSION_DT	VARCHAR2(10)	PATH './item[id="LN_MNGMNT_BARGAIN_SUBMISSION_DT"]/value'
 							, LN_MNGMNT_PROPOSAL_SBMSSION	VARCHAR2(3)	PATH './item[id="LN_MNGMNT_PROPOSAL_SUBMISSION"]/value'
                 ) X
-			    WHERE FD.PROCID = I_PROCID
             )SRC ON (SRC.ERLR_CASE_NUMBER = TRG.ERLR_CASE_NUMBER)
             WHEN MATCHED THEN UPDATE SET				
 				TRG.LN_NEGOTIATION_TYPE = SRC.LN_NEGOTIATION_TYPE
@@ -10249,3 +9829,392 @@ EXCEPTION
 END;
 /
 
+create or replace PROCEDURE SP_CLOSE_ERLR
+(
+	I_PROCID               IN  NUMBER
+)
+IS
+    V_CNT                   INT;
+    V_CASE_NUMBER           NUMBER(10);    
+BEGIN
+    SELECT COUNT(1) INTO V_CNT
+      FROM TBL_FORM_DTL
+     WHERE PROCID = I_PROCID;
+
+    IF V_CNT = 1 THEN        
+        SELECT TO_NUMBER(VALUE)
+	  INTO V_CASE_NUMBER
+	  FROM BIZFLOW.RLVNTDATA
+         WHERE RLVNTDATANAME = 'caseNumber' 
+           AND PROCID = I_PROCID;
+
+	DELETE ERLR_RELATED_CASE
+	 WHERE CASE_NUMBER = V_CASE_NUMBER;
+
+    END IF;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
+create or replace PROCEDURE SP_ERLR_ADD_RELATED_CASE
+(
+    I_CASE_NUMBER IN NUMBER,
+    I_RELATED_CASE_NUMBER IN NUMBER,
+    I_AUTO_TRIGGERED IN CHAR, -- T: AUTO TRIGGERED CASE, F: MANUALLY ENTERED CASE
+	I_MEMBER_ID IN VARCHAR2 -- MANUALLY ENTERED CASE IF THIS VALUE IS NOT NULL
+)
+IS
+    V_CNT NUMBER;
+    V_MEMBER_NAME VARCHAR2(100);
+    V_TRIGGER_F CHAR(1);
+BEGIN
+    -- VAIDATE I_CASE_NUMBER
+    SELECT COUNT(*)
+      INTO V_CNT
+      FROM ERLR_CASE
+     WHERE ERLR_CASE_NUMBER = I_CASE_NUMBER;
+
+    IF 0 < V_CNT THEN
+
+        IF I_AUTO_TRIGGERED = 'F' THEN
+            SELECT M.NAME
+              INTO V_MEMBER_NAME
+              FROM BIZFLOW.MEMBER M
+             WHERE M.MEMBERID = I_MEMBER_ID;
+        END IF;
+
+        MERGE INTO ERLR_RELATED_CASE T
+             USING ERLR_RELATED_CASE S ON (S.CASE_NUMBER = I_CASE_NUMBER AND S.RELATED_CASE_NUMBER = I_RELATED_CASE_NUMBER)
+        WHEN NOT MATCHED THEN INSERT (CASE_NUMBER, RELATED_CASE_NUMBER, TRIGGER_F, M_DT, M_MEMBER_ID, M_MEMBER_NAME) 
+                              VALUES (I_CASE_NUMBER, I_RELATED_CASE_NUMBER, I_AUTO_TRIGGERED, CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE), I_MEMBER_ID, V_MEMBER_NAME);        
+    END IF;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
+create or replace PROCEDURE SP_ERLR_DELETE_RELATED_CASE
+(
+    I_CASE_NUMBER IN NUMBER,
+    I_RELATED_CASE_NUMBER IN NUMBER
+)
+IS
+BEGIN
+    -- DELETE ONLY MANUALLY ENTERED CASE
+    DELETE ERLR_RELATED_CASE
+     WHERE CASE_NUMBER = I_CASE_NUMBER
+       AND RELATED_CASE_NUMBER = I_RELATED_CASE_NUMBER
+       AND M_DT IS NOT NULL; 
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
+create or replace PROCEDURE SP_FINALIZE_ERLR
+(
+	I_PROCID               IN  NUMBER
+)
+IS
+    V_CNT                   INT;
+    V_XMLDOC                XMLTYPE;
+    V_XMLVALUE              XMLTYPE;
+    V_CASE_TYPE_ID          VARCHAR2(10);
+    V_VALUE                 VARCHAR2(100);
+    V_NEW_CASE_TYPE_ID      VARCHAR2(10);
+    V_NEW_CASE_TYPE_NAME    VARCHAR2(100);
+    V_GEN_EMP_ID            VARCHAR2(64);
+    V_CASE_NUMBER           NUMBER(10);
+    V_TRIGGER_NEW_CASE      BOOLEAN := FALSE;
+    YES                     CONSTANT VARCHAR2(3) := 'Yes';
+    CAREER_LADDER_DENIAL_ID CONSTANT VARCHAR2(10) :='742';
+    CONDUCT_ISSUE_ID		CONSTANT VARCHAR2(10) :='743';
+    CONDUCT_ISSUE			CONSTANT VARCHAR2(50) :='Conduct Issue';
+    GRIEVANCE_ID			CONSTANT VARCHAR2(10) :='745';
+    GRIEVANCE			    CONSTANT VARCHAR2(50) :='Grievance';
+    INVESTIGATION_ID		CONSTANT VARCHAR2(10) :='744';
+    INVESTIGATION			CONSTANT VARCHAR2(50) :='Investigation';
+    LABOR_NEGOTIATION_ID	CONSTANT VARCHAR2(10) :='748';
+    LABOR_NEGOTIATION		CONSTANT VARCHAR2(50) :='Labor Negotiation';
+    MEDICAL_DOCUMENTATION_ID CONSTANT VARCHAR2(10) :='746';
+    MEDICAL_DOCUMENTATION	CONSTANT VARCHAR2(50) :='Medical Documentation';
+    PERFORMANCE_ISSUE_ID	CONSTANT VARCHAR2(10) :='750';
+    PERFORMANCE_ISSUE		CONSTANT VARCHAR2(50) :='Performance Issue';
+    PROBATIONARY_PERIOD_ID	CONSTANT VARCHAR2(10) :='751';
+    PROBATIONARY_PERIOD		CONSTANT VARCHAR2(50) :='Probationary Period Action';
+    UNFAIR_LABOR_PRACTICES_ID	CONSTANT VARCHAR2(10) :='754';
+    UNFAIR_LABOR_PRACTICES	CONSTANT VARCHAR2(50) :='Unfair Labor Practices';
+    WGI_DENIAL_ID			CONSTANT VARCHAR2(10) :='809';
+    WGI_DENIAL			    CONSTANT VARCHAR2(50) :='Within Grade Increase Denial/Reconsideration';    
+    INFORMATION_REQUEST_ID  CONSTANT VARCHAR2(10) := '747';    
+    THIRD_PARTY_HEARING_ID  CONSTANT VARCHAR2(10) := '753';    
+    THIRD_PARTY_HEARING     CONSTANT VARCHAR2(50) := 'Third Party Hearing';
+    ACTION_TYPE_COUNSELING_ID CONSTANT VARCHAR2(10) := '785';
+    ACTION_TYPE_PIP_ID      CONSTANT VARCHAR2(10) := '787';
+    ACTION_TYPE_WNR_ID      CONSTANT VARCHAR2(10) := '790';    
+    REASON_FMLA_ID          CONSTANT VARCHAR2(10) := '1650';
+BEGIN
+    SELECT FIELD_DATA
+      INTO V_XMLDOC
+      FROM TBL_FORM_DTL
+     WHERE PROCID = I_PROCID;
+
+    V_CASE_TYPE_ID := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_CASE_TYPE"]/value/text()').getStringVal();        
+    V_CASE_NUMBER  := TO_NUMBER(V_XMLDOC.EXTRACT('/formData/items/item[id="CASE_NUMBER"]/value/text()').getStringVal());    
+    V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()');
+    IF V_XMLVALUE IS NOT NULL THEN
+        V_GEN_EMP_ID := V_XMLVALUE.GETSTRINGVAL();
+    END IF;
+    
+    IF V_CASE_TYPE_ID = CAREER_LADDER_DENIAL_ID THEN -- Career Ladder Promotion Denial
+        -- Triggering Grievance Case
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="CLPD_EMP_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        END IF;
+        
+        IF V_VALUE = YES THEN
+            V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+        END IF;
+    ELSIF V_CASE_TYPE_ID = INFORMATION_REQUEST_ID THEN -- Information Request
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="IR_APPEAL_DENIAL"]/value/text()'); -- Did Requester Appeal Denial?
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        END IF;
+        
+        IF V_VALUE = YES THEN
+            V_NEW_CASE_TYPE_ID   := THIRD_PARTY_HEARING_ID;
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+        END IF;
+    ELSIF V_CASE_TYPE_ID = INVESTIGATION_ID THEN -- Investigation
+        -- Triggering Conduct Case
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="I_MISCONDUCT_FOUND"]/value/text()'); --Was Misconduct Found?
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        END IF;
+        
+        IF V_VALUE = YES THEN
+            V_NEW_CASE_TYPE_ID   := CONDUCT_ISSUE_ID;
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+        END IF;
+    ELSIF V_CASE_TYPE_ID = MEDICAL_DOCUMENTATION_ID THEN -- Medical Documentation
+        -- Triggering Grievance Case
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="MD_REQUEST_REASON"]/value/text()'); -- Reason for Request
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        END IF;
+        
+        IF V_VALUE = REASON_FMLA_ID THEN  -- FMLA      
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="MD_FMLA_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
+            IF V_XMLVALUE IS NOT NULL THEN
+                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+            END IF;
+            
+            IF V_VALUE = YES THEN
+                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+            END IF;
+        END IF;
+    ELSIF V_CASE_TYPE_ID = LABOR_NEGOTIATION_ID THEN -- Labor Negotiation
+        -- Triggering Unfair Labor Practices Case
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="LN_FILE_ULP"]/value/text()');--Did Union File ULP?
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        END IF;
+        
+        IF V_VALUE = YES THEN        
+            V_NEW_CASE_TYPE_ID   := UNFAIR_LABOR_PRACTICES_ID;
+            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+        END IF;        
+    ELSIF V_CASE_TYPE_ID = PERFORMANCE_ISSUE_ID THEN -- Performance Issue
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_ACTION_TYPE"]/value/text()');
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        END IF;
+        
+        IF V_VALUE = ACTION_TYPE_COUNSELING_ID THEN -- Action Type: Counseling
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_CNSL_GRV_DECISION"]/value/text()'); -- Did Employee File a Grievance?
+            IF V_XMLVALUE IS NOT NULL THEN
+                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+            END IF;
+            
+            IF V_VALUE = YES THEN
+                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+            END IF;
+        ELSIF V_VALUE = ACTION_TYPE_PIP_ID THEN -- Action Type: PIP
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_PIP_EMPL_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
+            IF V_XMLVALUE IS NOT NULL THEN
+                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+            END IF;
+            
+            IF V_VALUE = YES THEN
+                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+            END IF;
+            
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_PIP_WGI_WTHLD"]/value/text()'); --Was WGI Withheld?
+            IF V_XMLVALUE IS NOT NULL THEN
+                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+            END IF;
+            
+            IF V_VALUE = YES THEN
+                V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID2' AND PROCID = I_PROCID;
+            END IF;
+        ELSIF V_VALUE = ACTION_TYPE_WNR_ID THEN -- Action Type: Written Narrative Review
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_WNR_WGI_WTHLD"]/value/text()'); -- Was WGI Withheld?
+            IF V_XMLVALUE IS NOT NULL THEN
+                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+            END IF;
+            
+            IF V_VALUE = YES THEN
+                V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+            END IF;        
+        END IF;
+    END IF;
+    
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
+create or replace PROCEDURE SP_INIT_ERLR
+(
+	I_PROCID               IN  NUMBER
+)
+IS
+    V_CNT                   INT;    
+    V_FROM_PROCID           NUMBER(10);
+    V_XMLDOC                XMLTYPE;    
+    V_ORG_CASE_NUMBER       NUMBER(10);
+    V_CASE_NUMBER           NUMBER(10);    
+    V_GEN_EMP_HHSID         VARCHAR2(64);
+    V_NEW_CASE_TYPE_ID	    NUMBER(38);
+    V_NEW_CASE_TYPE_NAME    VARCHAR2(100);
+BEGIN
+    SELECT COUNT(1) INTO V_CNT
+      FROM TBL_FORM_DTL
+     WHERE PROCID = I_PROCID;
+
+    IF V_CNT = 0 THEN
+        V_CASE_NUMBER :=  ERLR_CASE_NUMBER_SEQ.NEXTVAL;
+        UPDATE BIZFLOW.RLVNTDATA 
+           SET VALUE = V_CASE_NUMBER
+         WHERE RLVNTDATANAME = 'caseNumber' 
+           AND PROCID = I_PROCID;
+
+        -- CHECK: TRIGGERED FROM OTHER CASE
+        BEGIN
+            SELECT TO_NUMBER(VALUE)
+              INTO V_FROM_PROCID
+              FROM BIZFLOW.RLVNTDATA 
+             WHERE RLVNTDATANAME = 'fromProcID' 
+               AND PROCID = I_PROCID;
+        EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            V_FROM_PROCID := NULL;
+        END;
+
+        IF V_FROM_PROCID IS NOT NULL THEN
+            SELECT FIELD_DATA
+              INTO V_XMLDOC
+              FROM TBL_FORM_DTL
+             WHERE PROCID = V_FROM_PROCID;
+
+            SELECT TO_NUMBER(VALUE)
+              INTO V_NEW_CASE_TYPE_ID
+              FROM BIZFLOW.RLVNTDATA 
+             WHERE RLVNTDATANAME = 'caseTypeID' 
+               AND PROCID = I_PROCID;
+
+            SELECT TO_NUMBER(VALUE)
+              INTO V_ORG_CASE_NUMBER
+              FROM BIZFLOW.RLVNTDATA 
+             WHERE RLVNTDATANAME = 'caseNumber' 
+               AND PROCID = V_FROM_PROCID;
+
+            BEGIN
+              SELECT TBL_LABEL
+                INTO V_NEW_CASE_TYPE_NAME
+                FROM TBL_LOOKUP
+               WHERE TBL_ID = V_NEW_CASE_TYPE_ID;
+            EXCEPTION
+              WHEN NO_DATA_FOUND THEN
+              V_NEW_CASE_TYPE_NAME := TO_CHAR(V_NEW_CASE_TYPE_ID);
+              WHEN OTHERS THEN
+              V_NEW_CASE_TYPE_NAME := TO_CHAR(V_NEW_CASE_TYPE_ID);
+            END;
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='employeeName' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='employeeName';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='contactName' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='contactName';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='initialContactDate' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='initialContactDate';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='organization' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='organization';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='primaryDWCSpecialist' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='primaryDWCSpecialist';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = (SELECT VALUE FROM BIZFLOW.RLVNTDATA WHERE RLVNTDATANAME='secondaryDWCSpecialist' AND PROCID = V_FROM_PROCID)
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='secondaryDWCSpecialist';
+
+            UPDATE BIZFLOW.RLVNTDATA
+               SET VALUE = V_NEW_CASE_TYPE_NAME
+             WHERE PROCID = I_PROCID
+               AND RLVNTDATANAME='caseType';
+
+            SELECT XMLQUERY('/formData/items/item[id="GEN_EMPLOYEE_ID"]/value/text()' PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL() INTO V_GEN_EMP_HHSID FROM DUAL;
+            SELECT DELETEXML(V_XMLDOC,'/formData/items/item/id[not(contains(text(),"GEN_"))]/..') INTO V_XMLDOC FROM DUAL;
+            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_CATEGORY"]') INTO V_XMLDOC FROM DUAL;
+            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_DESC"]') INTO V_XMLDOC FROM DUAL;
+            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_STATUS"]') INTO V_XMLDOC FROM DUAL;
+            SELECT DELETEXML(V_XMLDOC,'/formData/items/item[id="GEN_CUST_INIT_CONTACT_DT"]') INTO V_XMLDOC FROM DUAL;
+
+            IF V_NEW_CASE_TYPE_ID IS NOT NULL AND V_NEW_CASE_TYPE_NAME IS NOT NULL THEN
+                SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/value/text()', V_NEW_CASE_TYPE_ID) INTO V_XMLDOC FROM DUAL;
+                SELECT UPDATEXML(V_XMLDOC,'/formData/items/item[id="GEN_CASE_TYPE"]/text/text()',  V_NEW_CASE_TYPE_NAME) INTO V_XMLDOC FROM DUAL;                
+            END IF;
+        END IF;        
+
+        IF V_XMLDOC IS NULL THEN
+            V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
+        ELSE
+            SP_ERLR_ADD_RELATED_CASE(V_CASE_NUMBER, V_ORG_CASE_NUMBER, 'T', NULL);            
+            SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item>')) INTO V_XMLDOC FROM DUAL;
+            IF V_GEN_EMP_HHSID IS NOT NULL AND 1<LENGTH(V_GEN_EMP_HHSID) THEN
+                SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>_disableDeleteEmployeeInfo</id><etype>variable</etype><value>Yes</value></item>')) INTO V_XMLDOC FROM DUAL;
+            END IF;
+        END IF;
+
+        INSERT INTO TBL_FORM_DTL (PROCID, ACTSEQ, WITEMSEQ, FORM_TYPE, FIELD_DATA, CRT_DT, CRT_USR)
+                          VALUES (I_PROCID, 0, 0, 'CMSERLR', V_XMLDOC, SYSDATE, 'System');
+    END IF;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+END;
+/
