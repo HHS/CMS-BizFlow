@@ -1,4 +1,4 @@
-﻿/* global $ CMS_REPORT_FILTER */
+/* global $ CMS_REPORT_FILTER */
 
 (function (angular) {
     'use strict';
@@ -84,9 +84,12 @@ angular.module('bizflow.app', [
                 .when('/reportFilter', {
                     template: '<report-filter></report-filter>'
                 })
+                .when('/reportFilterErlr', {
+                    template: '<report-filter-erlr></report-filter-erlr>'
+                })
                 .when('/incentiveReportFilter', {
                     template: '<incentive-report-filter></incentive-report-filter>'
-                })
+                })				
                 .otherwise({
                     template: '<h1>None</h1><p>Invalid Path Name.</p>'
                 });
