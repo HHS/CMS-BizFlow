@@ -29,6 +29,19 @@ function void addDocument(ArrayList bizflowDocument, String documentName, boolea
     }
 }
 
+function void addDocumentOther(ArrayList bizflowDocument, String documentName, boolean required) {
+    boolean isRequiredDocument = required;
+    int len = bizflowDocument.size();
+    for (int i=0; i < len; i++) {
+        WorkflowDocument doc = (WorkflowDocument) bizflowDocument.get(i);
+        if("Other".equalsIgnoreCase(doc.getName())) {
+            isRequiredDocument = false;
+            break;
+        }
+    }
+	bizflowDocument.add(new WorkflowDocument(1, bizflowDocument.size() + 1, documentName, "DocumentType", "Other", 0, bizflowDocument.size()+1, isRequiredDocument));
+}
+
 function void addDocumentEx(ArrayList bizflowDocument, String documentName, String actName, String[] actNames, boolean required) {
     boolean isRequiredDocument = false;
     for (String act: actNames) {
@@ -57,6 +70,42 @@ rule "Incentives / PCA Required Documents / New / Recruitment"
 
     then
         addDocument($workflowDocuments, "Vacancy Announcement", true);
+end
+
+rule "Incentives / PCA Required Documents / New"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+         $field3: WorkflowField ( fieldId == "pcaType", fieldValue == "New" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments, "Request to fill", ($actName == "Start New"));
+end
+
+rule "Incentives / PCA Required Documents / Declination of Renewal"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PCA" ) from $fields
+         $field3: WorkflowField ( fieldId == "pcaType", fieldValue == "Renewal" ) from $fields
+         $field5: WorkflowField ( fieldId == "candiAgreeRenewal", fieldValue == "No" ) from $fields
+         $field6: WorkflowField ( fieldId == "doesHaveOther", fieldValue == false ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocumentOther($workflowDocuments, "Employee's Declination of Renewal", true);
 end
 
 rule "Incentives / PCA Required Documents / RequireBoardCert"
