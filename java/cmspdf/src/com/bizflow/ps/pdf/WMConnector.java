@@ -233,8 +233,8 @@ public class WMConnector
 					String filePath = FileUtility.getTempFileName();
 					pdfUtility.merge(files, filePath, true);
 					toBeDeletedFiles.add(filePath);
-					String gradeString = (grade.grade > 0 && grade.grade < 10 ? "0" : "") + Integer.toString(grade.grade);
-					BizFlowUtility.addAttachment(attachments, "PD Coversheet", "PDCoversheet_Grade" + gradeString + ".pdf", filePath, "Grade " + gradeString, PDFTool.CMS_PDFTYPE_PD_COVERSHEET, grade.grade);
+					String gradeString = (grade.grade >= 0 && grade.grade < 10 ? "0" : "") + Integer.toString(grade.grade);
+					BizFlowUtility.addAttachment(attachments, "PD Coversheet", "PD Coversheet Grade " + gradeString + ".pdf", filePath, "Grade " + gradeString, PDFTool.CMS_PDFTYPE_PD_COVERSHEET, grade.grade);
 				}
 				else
 				{
@@ -323,7 +323,7 @@ public class WMConnector
 				{
 					String filePath = FileUtility.getTempFileName();
 					pdfUtility.merge(files, filePath, true);
-					BizFlowUtility.addAttachment(attachments, "FLSA Exempt", "FLSA_Exempt.pdf", filePath, "FLSA Exempt Checklist", PDFTool.CMS_PDFTYPE_FLSA_EXEMPT, 0);
+					BizFlowUtility.addAttachment(attachments, "FLSA Exempt", "FLSA Exempt.pdf", filePath, "FLSA Exempt Checklist", PDFTool.CMS_PDFTYPE_FLSA_EXEMPT, 0);
 				}
 				else
 				{
@@ -389,7 +389,7 @@ public class WMConnector
 				{
 					String filePath = FileUtility.getTempFileName();
 					pdfUtility.merge(files, filePath, true);
-					BizFlowUtility.addAttachment(attachments, "FLSA Non-Exempt", "FLSA_NonExempt.pdf", filePath, "FLSA Non-Exempt Checklist", PDFTool.CMS_PDFTYPE_FLSA_NONEXEMPT, 0);
+					BizFlowUtility.addAttachment(attachments, "FLSA Non-Exempt", "FLSA Nonexempt.pdf", filePath, "FLSA Non-Exempt Checklist", PDFTool.CMS_PDFTYPE_FLSA_NONEXEMPT, 0);
 				}
 				else
 				{

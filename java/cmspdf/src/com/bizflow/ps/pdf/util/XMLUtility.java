@@ -7,6 +7,7 @@ import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -195,6 +196,69 @@ public class XMLUtility
 		return translatedValue;
 	}
 
+	public static void addSpaceAfterComma(Map<String, String> map, String key) {
+		StopWatch watch = new StopWatch(XMLUtility.class, "addSpaceAfterComma");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("addSpaceAfterComma START");
+			logger.debug("- map [" + (map != null ? "NOT NULL" : "NULL") + "]");
+			logger.debug("- key [" + key + "]");
+		}
+
+		if (map == null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("parameter map is null.");
+			}
+			return;
+		}
+
+		if (key == null || key.length() == 0) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("parameter key is null or empty.");
+			}
+			return;
+		}
+
+		String text = map.get(key);
+		if (text != null && text.length() > 0) {
+			String[] tokens = text.split(",");
+			ArrayList<String> items = new ArrayList<String>();
+
+			for (String token : tokens)
+			{
+				if (token != null && token.length() > 0)
+				{
+					items.add(token);
+				}
+			}
+
+			StringBuilder sb = new StringBuilder();
+			int count = items.size();
+			for (int index = 0; index < count; index++)
+			{
+				sb.append(items.get(index));
+				if (index < count - 1)
+				{
+					sb.append(", ");
+				}
+			}
+
+			String result = sb.toString();
+			map.put(key, result);
+
+			logger.debug("Cyber Security [" + text + "] ==> [" + result + "]");
+
+		} else {
+			logger.debug("Cyber Security code is null or empty.");
+		}
+
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("addSpaceAfterComma END");
+		}
+		watch.check();
+	}
+
 	public static Map<String, String> generateValueMap(String mapFile, Node documentData)
 	{
 		StopWatch watch = new StopWatch(XMLUtility.class, "generateValueMap");
@@ -245,10 +309,17 @@ public class XMLUtility
 							realValue = (String) expression.evaluate(documentData, XPathConstants.STRING);
 							realValue = XMLUtility.translateValue(element, realValue);
 						}
+						logger.debug("Adding item to map [" + key + "] ==> [" + realValue + "]");
 						map.put(key, realValue);
 					}
 				}
 			}
+
+			// Adjust following values in the map
+
+			// #1. Cyber Security Code
+			XMLUtility.addSpaceAfterComma(map, "#PD_CYB_SEC_CD");
+
 		}
 		catch(ParserConfigurationException | IOException | SAXException | XPathExpressionException e)
 		{
