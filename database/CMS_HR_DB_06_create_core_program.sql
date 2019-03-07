@@ -558,7 +558,7 @@ IS
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdStaffSpec', '/DOCUMENT/GENERAL/SG_SS_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posLocation', '/DOCUMENT/POSITION/POS_LOCATION/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posTitle', '/DOCUMENT/POSITION/POS_TITLE/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum', '/DOCUMENT/PROCESS_VARIABLE/requestNum/text()', null);
+      --HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum', '/DOCUMENT/PROCESS_VARIABLE/requestNum/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectOfficialReviewReq', '/DOCUMENT/PROCESS_VARIABLE/selectOfficialReviewReq/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'specialProgram', '/DOCUMENT/PROCESS_VARIABLE/specialProgram/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'alertMessage', '/DOCUMENT/PROCESS_VARIABLE/alertMessage/text()', null);
