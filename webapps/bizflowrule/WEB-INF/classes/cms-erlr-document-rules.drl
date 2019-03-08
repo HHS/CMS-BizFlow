@@ -60,6 +60,7 @@ rule "ERLR / Conduct Issue"
 		addDocument($workflowDocuments, "Direct Order", false);
 		addDocument($workflowDocuments, "Leave Restriction", false);
 		addDocument($workflowDocuments, "Leave Warning", false);
+		addDocument($workflowDocuments, "Notice of Administrative Leave", false);
 		addDocument($workflowDocuments, "Proposal", false);
 		addDocument($workflowDocuments, "Report of Findings", false);
 		addDocument($workflowDocuments, "Reprimand", false);
@@ -207,6 +208,9 @@ rule "ERLR / Performance Issue"
 		addDocument($workflowDocuments, "Background Information", false);
 		addDocument($workflowDocuments, "Communications", false);
 		addDocument($workflowDocuments, "Decision", false);
+		addDocument($workflowDocuments, "Developmental Assistance Plan", false);
+		addDocument($workflowDocuments, "Notice of Administrative Leave", false);
+		addDocument($workflowDocuments, "Notice of Withholding", false);
 		addDocument($workflowDocuments, "Performance Counseling", false);
 		addDocument($workflowDocuments, "PIP/ODAP", false);
 		addDocument($workflowDocuments, "PMAP/Duties", true);
