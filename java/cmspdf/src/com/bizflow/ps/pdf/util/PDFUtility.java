@@ -99,15 +99,15 @@ public class PDFUtility
 
 	static private boolean isCharacterEncodable (PDFont font, char character) throws IOException {
 		StopWatch watch = new StopWatch(PDFUtility.class, "isCharacterEncodable");
-		if (logger.isDebugEnabled())
-		{
+//		if (logger.isDebugEnabled())
+//		{
 //			logger.debug("isCharacterEncodable START");
 //			logger.debug(" - font [" + font.getName() + "]");
 
 //			Character charObject = new Character(character);
 //			Integer charValue = (int)charObject.charValue();
 //			logger.debug(" - character [0x" + Integer.toHexString(charValue)+ "]");
-		}
+//		}
 
 		Boolean result = true;
 		try {
@@ -117,10 +117,10 @@ public class PDFUtility
 			result = false;
 		}
 
-		if (logger.isDebugEnabled())
-		{
+//		if (logger.isDebugEnabled())
+//		{
 //			logger.debug("isCharacterEncodable END [" + result + "]");
-		}
+//		}
 		watch.check();
 
 		return result;
@@ -130,18 +130,18 @@ public class PDFUtility
 								String fontName, float fontSize, float maxFontSize, String text) throws IOException
 	{
 		StopWatch watch = new StopWatch(PDFUtility.class, "drawText");
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("drawText START");
-			logger.debug(" - contentStream [" + LogUtility.getNullCheckString(contentStream) + "]");
-			logger.debug(" - x [" + Float.toString(x) + "]");
-			logger.debug(" - y [" + Float.toString(y) + "]");
-			logger.debug(" - width [" + Float.toString(width) + "]");
-			logger.debug(" - fontName [" + fontName + "]");
-			logger.debug(" - fontSize [" + Float.toString(fontSize) + "]");
-			logger.debug(" - maxFontSize [" + Float.toString(maxFontSize) + "]");
-			logger.debug(" - text [" + text + "]");
-		}
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("drawText START");
+//			logger.debug(" - contentStream [" + LogUtility.getNullCheckString(contentStream) + "]");
+//			logger.debug(" - x [" + Float.toString(x) + "]");
+//			logger.debug(" - y [" + Float.toString(y) + "]");
+//			logger.debug(" - width [" + Float.toString(width) + "]");
+//			logger.debug(" - fontName [" + fontName + "]");
+//			logger.debug(" - fontSize [" + Float.toString(fontSize) + "]");
+//			logger.debug(" - maxFontSize [" + Float.toString(maxFontSize) + "]");
+//			logger.debug(" - text [" + text + "]");
+//		}
 
 		if (text != null && text.length() > 0)
 		{
@@ -178,10 +178,10 @@ public class PDFUtility
 			contentStream.endText();
 		}
 
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("drawText END");
-		}
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("drawText END");
+//		}
 		watch.check();
 	}
 
@@ -189,18 +189,18 @@ public class PDFUtility
 										 String fontName, float fontSize, String text) throws IOException
 	{
 		StopWatch watch = new StopWatch(PDFUtility.class, "drawMultilineText");
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("drawMultilineText START");
-			logger.debug(" - contentStream [" + LogUtility.getNullCheckString(contentStream) + "]");
-			logger.debug(" - width [" + Float.toString(width) + "]");
-			logger.debug(" - height [" + Float.toString(height) + "]");
-			logger.debug(" - x [" + Float.toString(x) + "]");
-			logger.debug(" - y [" + Float.toString(y) + "]");
-			logger.debug(" - fontName [" + fontName + "]");
-			logger.debug(" - fontSize [" + Float.toString(fontSize) + "]");
-			logger.debug(" - text [" + text + "]");
-		}
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("drawMultilineText START");
+//			logger.debug(" - contentStream [" + LogUtility.getNullCheckString(contentStream) + "]");
+//			logger.debug(" - width [" + Float.toString(width) + "]");
+//			logger.debug(" - height [" + Float.toString(height) + "]");
+//			logger.debug(" - x [" + Float.toString(x) + "]");
+//			logger.debug(" - y [" + Float.toString(y) + "]");
+//			logger.debug(" - fontName [" + fontName + "]");
+//			logger.debug(" - fontSize [" + Float.toString(fontSize) + "]");
+//			logger.debug(" - text [" + text + "]");
+//		}
 
 		if (_fontMap.size() == 0)
 		{
@@ -251,26 +251,26 @@ public class PDFUtility
 			}
 		}
 
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("drawMultilineText END");
-		}
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("drawMultilineText END");
+//		}
 		watch.check();
 	}
 
 	static public void drawLine(PDPageContentStream contentStream, float startX, float startY, float endX, float endY, int labelIndex)
 	{
 		StopWatch watch = new StopWatch(PDFUtility.class, "drawLine");
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("drawLine START");
-			logger.debug(" - contentStream [" + LogUtility.getNullCheckString(contentStream) + "]");
-			logger.debug(" - startX [" + Float.toString(startX) + "]");
-			logger.debug(" - startY [" + Float.toString(startY) + "]");
-			logger.debug(" - endX [" + Float.toString(endX) + "]");
-			logger.debug(" - endY [" + Float.toString(endY) + "]");
-			logger.debug(" - labelIndex [" + Integer.toString(labelIndex) + "]");
-		}
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("drawLine START");
+//			logger.debug(" - contentStream [" + LogUtility.getNullCheckString(contentStream) + "]");
+//			logger.debug(" - startX [" + Float.toString(startX) + "]");
+//			logger.debug(" - startY [" + Float.toString(startY) + "]");
+//			logger.debug(" - endX [" + Float.toString(endX) + "]");
+//			logger.debug(" - endY [" + Float.toString(endY) + "]");
+//			logger.debug(" - labelIndex [" + Integer.toString(labelIndex) + "]");
+//		}
 
 		try
 		{
@@ -283,10 +283,10 @@ public class PDFUtility
 			logger.fatal("Failed to draw line.", e);
 		}
 
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("drawLine END");
-		}
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("drawLine END");
+//		}
 		watch.check();
 	}
 

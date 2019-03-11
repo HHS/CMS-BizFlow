@@ -366,15 +366,12 @@ public class CMSUtility
 		String org2 = XMLUtility.getValue(xpath, document, "/FORM_DATA/DOCUMENT/GENERAL/PD_SUB_ORG_2_DSP");
 		String org3 = XMLUtility.getValue(xpath, document, "/FORM_DATA/DOCUMENT/GENERAL/PD_SUB_ORG_3_DSP");
 
-
-logger.debug("ORG2 -> [" + org2 + "]");
-logger.debug("ORG3 -> [" + org3 + "]");
 	    if (org3 != null && org3.length() > 0 && org2 != null && org2.length() > 0) {
 			orgName = org2 + " / " + org3;
 		} else {
 			orgName = org2;
 		}
-logger.debug("ORGNAME -> [" + orgName + "]");
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("getOrganizationName END [" + orgName +  "]");
 		}
