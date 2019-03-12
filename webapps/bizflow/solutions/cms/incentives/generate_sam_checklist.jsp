@@ -90,6 +90,7 @@
                 ;
             }
         } catch (Exception e) {
+            fp = null;
             log.error(e);
         }
 
