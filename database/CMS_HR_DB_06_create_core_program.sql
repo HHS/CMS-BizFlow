@@ -258,6 +258,9 @@ IS
 	V_XMLVALUE             XMLTYPE;
 	V_INCENTIVE_TYPE     NVARCHAR2(50);
 
+	V_DISAPPROVAL_CNT    NUMBER;
+	V_APPROVAL_VALUE     NVARCHAR2(10);
+
 	BEGIN
 		--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
 		--DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -314,12 +317,126 @@ IS
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgdApprove', '/formData/items/item[id="approvalDGHOValue"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgApprove', '/formData/items/item[id="approvalTABGValue"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcApprove', '/formData/items/item[id="approvalOHCValue"]/value/text()');
-                SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cocDirector', '/formData/items/item[id="cocDirector"]/value/participantId/text()', '/formData/items/item[id="cocDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cocDirector', '/formData/items/item[id="cocDirector"]/value/participantId/text()', '/formData/items/item[id="cocDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cocDirectorName', '/formData/items/item[id="cocDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficialName', '/formData/items/item[id="selectingOfficial"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrSpecialistName', '/formData/items/item[id="hrSpecialist"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirectorName', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'rcmdGrade', '/formData/items/item[id="reviewRcmdGrade"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'rcmdStep', '/formData/items/item[id="reviewRcmdStep"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancellationReason', '/formData/items/item[id="cancellationReason"]/value/text()');
+
+				V_DISAPPROVAL_CNT := 0;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="approvalSOValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="approvalSO"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="approvalCOCValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="approvalCOC"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="approvalDGHOValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="approvalDGHO"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="approvalTABGValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="approvalTABG"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="approvalOHCValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="approvalOHC"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '');
+				END IF;
 			ELSIF 'LE' = V_INCENTIVE_TYPE THEN
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'leSupport', '/formData/items/item[id="supportLE"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgdApprove', '/formData/items/item[id="leApprovalDGHOValue"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'tabgApprove', '/formData/items/item[id="leApprovalTABGValue"]/value/text()');
                 SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cocDirector', '/formData/items/item[id="lecocDirector"]/value/participantId/text()', '/formData/items/item[id="lecocDirector"]/value/name/text()');
+				
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cocDirectorName', '/formData/items/item[id="lecocDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectingOfficialName', '/formData/items/item[id="selectingOfficial"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrSpecialistName', '/formData/items/item[id="hrSpecialist"]/value/name/text()');
+
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'annualLeaveAccrualRate', '/formData/items/item[id="rcmdAnnualLeaveAccrualRate"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancellationReason', '/formData/items/item[id="cancellationReason"]/value/text()');
+
+				V_DISAPPROVAL_CNT := 0;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="leApprovalSOValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="leApprovalSO"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="leApprovalCOCValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="leApprovalCOC"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="leApprovalDGHOValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="leApprovalDGHO"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					V_XMLVALUE := I_FIELD_DATA.EXTRACT('/formData/items/item[id="leApprovalTABGValue"]/value/text()');
+					IF V_XMLVALUE IS NOT NULL THEN
+						V_APPROVAL_VALUE := V_XMLVALUE.GETSTRINGVAL();
+						IF 'Disapprove' = V_APPROVAL_VALUE THEN
+							SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '/formData/items/item[id="leApprovalTABG"]/value/text()');
+							V_DISAPPROVAL_CNT := 1;
+						END IF;
+					END IF;
+				END IF;
+				IF V_DISAPPROVAL_CNT = 0 THEN
+					SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'disapproverName', '');
+				END IF;
 			END IF;
 
 		--DBMS_OUTPUT.PUT_LINE('End PV update  -------------------');
@@ -512,7 +629,7 @@ IS
 -- CMS_HR_DB_UPD_17_UPDATE_PV_STRATCON.sql 
 -- CMS_HR_DB_UPD_64_SP_UPDATE_STRATCON.sql
 
-CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_STRATCON
+create or replace PROCEDURE SP_UPDATE_PV_STRATCON
   (
       I_PROCID            IN      NUMBER
     , I_FIELD_DATA      IN      XMLTYPE
@@ -546,7 +663,7 @@ IS
 
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'adminCode', '/DOCUMENT/GENERAL/SG_ADMIN_CD/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancelReason', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison', '/DOCUMENT/GENERAL/SG_HRL_ID/text()', null);
+      --HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison', '/DOCUMENT/GENERAL/SG_HRL_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingAckResponse', '/DOCUMENT/PROCESS_VARIABLE/meetingAckResponse/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingApvResponse', '/DOCUMENT/PROCESS_VARIABLE/meetingApvResponse/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingEmailRecipients', '/DOCUMENT/PROCESS_VARIABLE/meetingEmailRecipients/text()', null);
@@ -558,10 +675,11 @@ IS
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdStaffSpec', '/DOCUMENT/GENERAL/SG_SS_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posLocation', '/DOCUMENT/POSITION/POS_LOCATION/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posTitle', '/DOCUMENT/POSITION/POS_TITLE/text()', null);
-      --HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum', '/DOCUMENT/PROCESS_VARIABLE/requestNum/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum', '/DOCUMENT/PROCESS_VARIABLE/requestNum/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'selectOfficialReviewReq', '/DOCUMENT/PROCESS_VARIABLE/selectOfficialReviewReq/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'specialProgram', '/DOCUMENT/PROCESS_VARIABLE/specialProgram/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'alertMessage', '/DOCUMENT/PROCESS_VARIABLE/alertMessage/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingReschedReason', '/DOCUMENT/PROCESS_VARIABLE/meetingReschedReason/text()', null);
 
       V_RLVNTDATANAME := 'appointmentType';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_AT_ID/text()');
@@ -652,6 +770,20 @@ IS
       IF V_XMLVALUE IS NOT NULL THEN
         -------------------------------
         -- participant prefix
+        -------------------------------
+        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+      ELSE
+        V_VALUE := NULL;
+      END IF;
+      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
+      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
+      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+      V_RLVNTDATANAME := 'hrLiaison';
+      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_HRL_ID/text()');
+      IF V_XMLVALUE IS NOT NULL THEN
+        -------------------------------
+        -- participant prefixa
         -------------------------------
         V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
       ELSE
@@ -779,8 +911,8 @@ IS
 
       ELSE
 
-        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL 
-         WHERE RLVNTDATANAME IN ('memIdExecOff', 'memIdExecOff2', 'memIdExecOff3', 'execOfficer', 'execOfficer2', 'execOfficer3') AND PROCID = I_PROCID;
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL
+        WHERE RLVNTDATANAME IN ('memIdExecOff', 'memIdExecOff2', 'memIdExecOff3', 'execOfficer', 'execOfficer2', 'execOfficer3') AND PROCID = I_PROCID;
 
       END IF;
 
@@ -1174,10 +1306,6 @@ IS
     SP_ERROR_LOG();
     --DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_STRATCON -------------------');
   END;
-
-/
-
-
 
 
 
