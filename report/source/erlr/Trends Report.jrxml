@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-03-14T17:35:41 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Trends Report" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sgurung"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Trends_Report_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Trends_Report"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="883"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="107"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="Trends Report"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.9" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.9" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.7" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.7" value="Group1"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.7" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.7" value="Group1"/>
+	<property name="net.sf.jasperreports.export.pdf.exclude.key.Names"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.key.Filler"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.key.Filler"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter"/>
+	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+		<queryString language="SQL">
+			<![CDATA[Select top 5 * from  "ORDERS"]]>
+		</queryString>
+		<field name="ORDERID" class="java.lang.Integer"/>
+		<field name="SHIPNAME" class="java.lang.String"/>
+		<field name="SHIPPEDDATE" class="java.sql.Timestamp"/>
+	</subDataset>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-6)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTACT_NAME" class="java.lang.String"/>
+	<parameter name="EMP_NAME" class="java.lang.String"/>
+	<parameter name="PRIMARY_SPECIALIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_CTGRY" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="FNL_ACTN" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[-- Trends report
+
+SELECT
+DISTINCT 
+VWERLR2.CASENUMBER CASENUMBER,
+VWERLR2.EMPNAME EMPNAME,
+VWERLR2.CONTACTNAME CONTACTNAME,
+VWERLR2.SECONDSUBORGDESC SECONDSUBORGDESC,
+VWERLR2.ADMINCD ADMINCD,
+VWERLR2.CASETYPE CASETYPE,
+VWERLR2.CASECATEGORY CASECATEGORY,
+VWERLR2.FINAL_ACTION FINAL_ACTION,
+VWERLR2.INITIALCONTACTDATE INITIALCONTACTDATE,
+VWERLR2.DATE_CASE_COMPLETED DATE_CASE_COMPLETED,
+VWERLR2.TYPE TYPE,
+
+PLT2.COMPONENT COMPONENT
+
+FROM
+(
+SELECT
+DISTINCT
+VWERLR.ERLR_CASE_NUMBER CASENUMBER,
+VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+VWERLR.GEN_EMPLOYEE_2ND_SUB_ORG SECONDSUBORGDESC,
+VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+VWERLR.GEN_CASE_TYPE CASETYPE,
+VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+CASE 
+WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
+WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
+END FINAL_ACTION,
+VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED
+
+ ,CASE 
+ WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Conduct Issue') || '%' THEN 'ER'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Investigation') || '%' THEN 'ER'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Medical Documentation') || '%' THEN 'ER'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Performance Issue') || '%' THEN 'ER'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Probationary Period Action') || '%' THEN 'ER'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Within Grade Increase Denial/Reconsideration') || '%' THEN 'ER'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' AND VWERLR.THRD_PRTY_APPEAL_TYPE = 'MSPB' THEN 'ER'
+WHEN UPPER(VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Labor Negotiation') || '%' THEN 'LR'
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Grievance') || '%' THEN 'LR' 
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Information Request') || '%' THEN 'LR' 
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Unfair Labor Practice') || '%' THEN 'LR'   
+WHEN UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' 
+AND ( VWERLR.THRD_PRTY_APPEAL_TYPE = 'Arbitration' 
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FLRA'
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FSIP'   
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'Grievance'   
+   ) THEN 'LR'
+END TYPE
+
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+
+-- Specific Conditions for : Trends report
+WHERE -- no conditions really
+
+-- Common Conditions for all ERLR Reports 
+( UPPER(VWERLR.GEN_CASE_STATUS) NOT LIKE UPPER('%close%') OR VWERLR.GEN_CASE_STATUS IS NULL )
+
+-- Filter : Component
+AND (  ($P{COMPONENT} = 'CMS-wide' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) LIKE 'FC%')
+				OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
+				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) LIKE '$P!{ADMIN_CD}' || '%')
+				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) = $P{ADMIN_CD})
+		)
+
+-- Filter : Date Range
+AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+    			AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+    			
+	OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+    		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+    		
+	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
+	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
+	)
+	
+-- Filter : Employee Name
+AND  (	( TRIM($P{EMP_NAME}) IS NULL )
+	OR ( VWERLR.GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+-- Filter : Customer Contact Name
+AND  (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+	OR ( VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+-- Filter : Primary ER/LR Specialist
+AND  (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+	OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+
+-- Filter : Case Type
+AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE = $P{CASE_TYPE} ) )
+
+-- Filter: Case Category
+AND  ($X{IN, VWERLR.GEN_CASE_CATEGORY, CASE_CTGRY})
+
+-- Filter : Final Action 
+AND  ($X{IN, VWERLR.CC_FINAL_ACTION, FNL_ACTN})
+
+-- Filter : Case Status
+AND  ($X{IN, VWERLR.GEN_CASE_STATUS, CASE_STATUS})
+
+) VWERLR2
+
+RIGHT OUTER JOIN
+(
+SELECT * FROM
+HHS_CMS_HR.CMS_TIME_TO_HIRE_WEEKLY_PILOT PLT
+WHERE COMPONENT <> 'CMS - wide' 
+) PLT2
+ON VWERLR2.SECONDSUBORGDESC = PLT2.COMPONENT
+
+ORDER BY PLT2.COMPONENT, VWERLR2.EMPNAME, VWERLR2.INITIALCONTACTDATE]]>
+	</queryString>
+	<field name="CASENUMBER" class="java.math.BigDecimal"/>
+	<field name="EMPNAME" class="java.lang.String"/>
+	<field name="CONTACTNAME" class="java.lang.String"/>
+	<field name="SECONDSUBORGDESC" class="java.lang.String"/>
+	<field name="ADMINCD" class="java.lang.String"/>
+	<field name="CASETYPE" class="java.lang.String"/>
+	<field name="CASECATEGORY" class="java.lang.String"/>
+	<field name="FINAL_ACTION" class="java.lang.String"/>
+	<field name="INITIALCONTACTDATE" class="java.sql.Timestamp"/>
+	<field name="DATE_CASE_COMPLETED" class="java.sql.Timestamp"/>
+	<field name="TYPE" class="java.lang.String"/>
+	<field name="COMPONENT" class="java.lang.String"/>
+	<group name="Group1" keepTogether="true">
+		<groupExpression><![CDATA[$F{COMPONENT}]]></groupExpression>
+		<groupHeader>
+			<band height="15" splitType="Stretch">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<rectangle>
+					<reportElement x="0" y="0" width="750" height="15" uuid="d9d8806b-cbe5-4911-a21a-d3ecd0468228"/>
+				</rectangle>
+				<textField>
+					<reportElement x="0" y="0" width="750" height="15" uuid="17cf632b-a836-47d4-9148-9eacb1eee94e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMPONENT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="64" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="11" width="750" height="22" uuid="93c13c5a-3702-4e63-92c5-f1f79c9b7645">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trends Report]]></text>
+			</staticText>
+			<textField pattern="M/d/yyy">
+				<reportElement x="0" y="33" width="750" height="22" uuid="d0268c02-e4a3-4fc6-8fff-bbd07daf8258">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DATE_RANGE_FROM},"MMMMM d, yyy") + " through " + DATEFORMAT($P{DATE_RANGE_TO},"MMMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40">
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="750" height="40" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="330" y="0" width="100" height="40" backcolor="#1C16D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Case Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="180" y="0" width="90" height="40" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Contact Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="690" y="0" width="60" height="40" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Date Case Completed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="530" y="0" width="100" height="40" uuid="2fda400c-f6b7-4edf-a1bd-2fa336b4c9c1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Final Action]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="430" y="0" width="100" height="40" uuid="d7e61bec-7cd0-43c8-b833-295d510b7b9d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Case Category]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="40" y="0" width="50" height="40" uuid="671b57c0-3450-4f57-a009-0551e87c8f39">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Current Org]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="630" y="0" width="60" height="40" uuid="d4c5e570-ee5e-43d4-bb2f-84507f8f6433">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Initial Contact Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="90" y="0" width="90" height="40" backcolor="#1C16D9" uuid="bac40cd8-ec32-4d1b-8669-18670542d2b9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Employee Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="40" backcolor="#1C16D9" uuid="c007e8fb-3dc2-4265-ad74-bfcf2ecf5548">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="270" y="0" width="60" height="40" backcolor="#1C16D9" uuid="1a77928c-7d30-4433-b9a2-f5a6741883aa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="2" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Case Number]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<rectangle>
+				<reportElement key="Filler" stretchType="RelativeToTallestObject" x="180" y="0" width="90" height="15" backcolor="#FFFFFF" uuid="b7a61d63-a4f7-4101-8123-48cc2a3d367f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="15" uuid="fe655276-689a-41cf-b8d6-7fd594ac2cf4">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{TYPE} != null  )? $F{TYPE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="40" y="0" width="50" height="15" uuid="b5dc63d7-f39a-43d8-b920-43bd591d185e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{ADMINCD} != null  )? $F{ADMINCD} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="Names" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="180" y="0" width="90" height="15" uuid="c40d6a8a-1336-4524-977b-cd8a6ce80f63">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{CONTACTNAME} != null  )? $F{CONTACTNAME} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="270" y="0" width="60" height="15" uuid="0bda9654-a34f-493f-9f59-3694a5f094d3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{CASENUMBER} != null  )? $F{CASENUMBER} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="330" y="0" width="100" height="15" uuid="cfaae1d5-1b86-45f1-8457-a10bf5b25fa0">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{CASETYPE} != null  )? $F{CASETYPE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="430" y="0" width="100" height="15" uuid="8daca1eb-d584-434d-ba3c-2bfd1dba8fc3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{CASECATEGORY} != null  )? $F{CASECATEGORY} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="530" y="0" width="100" height="15" uuid="92142136-644a-4c8a-afee-08c1197b2d7a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{FINAL_ACTION} != null  )? $F{FINAL_ACTION} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="630" y="0" width="60" height="15" uuid="77f9b57f-0895-4be5-9eb4-50694c961c15">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{INITIALCONTACTDATE} != null  )?	DATEFORMAT($F{INITIALCONTACTDATE},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="690" y="0" width="60" height="15" uuid="cd7c3190-f365-42e0-932c-47f4e198cc5c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{DATE_CASE_COMPLETED} != null  )?	DATEFORMAT($F{DATE_CASE_COMPLETED},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement key="Filler" stretchType="RelativeToTallestObject" x="90" y="0" width="90" height="15" backcolor="#FFFFFF" uuid="a5bf4fe6-220b-43b4-b2e7-f1fd132be5c4">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="Names" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="90" y="0" width="90" height="15" uuid="f629924e-eff3-48a9-bd68-b8601243a974">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SECONDSUBORGDESC} != null && $F{EMPNAME} != null  )? $F{EMPNAME} : "N/A"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="661" y="25" width="46" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="">
+				<reportElement x="707" y="25" width="45" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="25" width="285" height="15" uuid="06be6423-337c-4f80-a347-9fab3940fea4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="74">
+			<staticText>
+				<reportElement x="0" y="54" width="750" height="20" uuid="56b892c2-a869-40a4-8e55-fd0ee05d336f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[There are no cases to display. No cases meet the parameters currently set by the report filters.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="8" width="750" height="25" uuid="a3ac0b61-55d1-498d-9d92-2f933bd85f14">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trends Report]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

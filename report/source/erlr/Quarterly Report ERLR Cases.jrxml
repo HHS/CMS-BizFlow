@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-03-14T17:34:06 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Quarterly Report of ER/LR Cases" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sgurung"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Quarterly_Report_of_ER_LR_Cases_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Quarterly_Report_of_ER_LR_Cases"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="780"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="206"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xlsx.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xlsx.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet=false"/>
+	<property name="net.sf.jasperreports.export.xlsx.one.page.per.sheet=false"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="Quarterly Report of ERLR Cases"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+		<queryString language="SQL">
+			<![CDATA[Select top 5 * from  "ORDERS"]]>
+		</queryString>
+		<field name="ORDERID" class="java.lang.Integer"/>
+		<field name="SHIPNAME" class="java.lang.String"/>
+		<field name="SHIPPEDDATE" class="java.sql.Timestamp"/>
+	</subDataset>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date"/>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMP_NAME" class="java.lang.String"/>
+	<parameter name="CONTACT_NAME" class="java.lang.String"/>
+	<parameter name="PRIMARY_SPECIALIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_CTGRY" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="FNL_ACTN" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[-- (Admin Code) FCX Quarterly Report of ER/LR Cases
+
+SELECT
+VWERLR.ERLR_CASE_NUMBER CASENUMBER,
+VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+VWERLR.GEN_CASE_TYPE CASETYPE,
+VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+VWERLR.CC_FINAL_ACTION FINAL_ACTION,
+VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED
+
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR]]>
+	</queryString>
+	<field name="CASENUMBER" class="java.math.BigDecimal"/>
+	<field name="EMPNAME" class="java.lang.String"/>
+	<field name="CONTACTNAME" class="java.lang.String"/>
+	<field name="ADMINCD" class="java.lang.String"/>
+	<field name="CASETYPE" class="java.lang.String"/>
+	<field name="CASECATEGORY" class="java.lang.String"/>
+	<field name="FINAL_ACTION" class="java.lang.String"/>
+	<field name="INITIALCONTACTDATE" class="java.sql.Timestamp"/>
+	<field name="DATE_CASE_COMPLETED" class="java.sql.Timestamp"/>
+	<group name="Group1">
+		<groupHeader>
+			<band height="76" splitType="Immediate">
+				<subreport>
+					<reportElement positionType="Float" x="0" y="6" width="752" height="70" uuid="6c4f6ea1-47fb-44f3-9d0a-c11588767850">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<subreportParameter name="DATE_RANGE_FROM">
+						<subreportParameterExpression><![CDATA[$P{DATE_RANGE_FROM}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="DATE_RANGE_TO">
+						<subreportParameterExpression><![CDATA[$P{DATE_RANGE_TO}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="COMPONENT">
+						<subreportParameterExpression><![CDATA[$P{COMPONENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ADMIN_CD">
+						<subreportParameterExpression><![CDATA[$P{ADMIN_CD}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="INC_SUBORG">
+						<subreportParameterExpression><![CDATA[$P{INC_SUBORG}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CONTACT_NAME">
+						<subreportParameterExpression><![CDATA[$P{CONTACT_NAME}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="EMP_NAME">
+						<subreportParameterExpression><![CDATA[$P{EMP_NAME}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="PRIMARY_SPECIALIST">
+						<subreportParameterExpression><![CDATA[$P{PRIMARY_SPECIALIST}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CASE_TYPE">
+						<subreportParameterExpression><![CDATA[$P{CASE_TYPE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CASE_CTGRY">
+						<subreportParameterExpression><![CDATA[$P{CASE_CTGRY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FNL_ACTN">
+						<subreportParameterExpression><![CDATA[$P{FNL_ACTN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CASE_STATUS">
+						<subreportParameterExpression><![CDATA[$P{CASE_STATUS}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:/reports/CMS/ERLR_Subreports/CMS_Employee_Relations_Cases_files/main_jrxml"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="77" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<subreport>
+					<reportElement x="0" y="7" width="752" height="70" uuid="9339504c-2ea9-453c-9f79-7ee4eb99082d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<subreportParameter name="DATE_RANGE_FROM">
+						<subreportParameterExpression><![CDATA[$P{DATE_RANGE_FROM}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="DATE_RANGE_TO">
+						<subreportParameterExpression><![CDATA[$P{DATE_RANGE_TO}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="COMPONENT">
+						<subreportParameterExpression><![CDATA[$P{COMPONENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ADMIN_CD">
+						<subreportParameterExpression><![CDATA[$P{ADMIN_CD}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="INC_SUBORG">
+						<subreportParameterExpression><![CDATA[$P{INC_SUBORG}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CONTACT_NAME">
+						<subreportParameterExpression><![CDATA[$P{CONTACT_NAME}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="EMP_NAME">
+						<subreportParameterExpression><![CDATA[$P{EMP_NAME}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="PRIMARY_SPECIALIST">
+						<subreportParameterExpression><![CDATA[$P{PRIMARY_SPECIALIST}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CASE_TYPE">
+						<subreportParameterExpression><![CDATA[$P{CASE_TYPE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CASE_CTGRY">
+						<subreportParameterExpression><![CDATA[$P{CASE_CTGRY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FNL_ACTN">
+						<subreportParameterExpression><![CDATA[$P{FNL_ACTN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CASE_STATUS">
+						<subreportParameterExpression><![CDATA[$P{CASE_STATUS}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:/reports/CMS/ERLR_Subreports/CMS_Labor_Relations_Cases_files/main_jrxml"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="51" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="29" width="752" height="22" uuid="c25b622a-9708-4871-8a2e-275f772f0b8e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DATE_RANGE_FROM},"MMMMM d, yyy") + " through " + DATEFORMAT($P{DATE_RANGE_TO},"MMMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="5" width="752" height="22" uuid="91f94b31-147a-4b02-aa46-b934e1b08cc4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.equals("CMS-wide")) ? "CMS-wide Quarterly Report of ER/LR Cases" : $P{ADMIN_CD} + " Quarterly Report of ER/LR Cases"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="651" y="25" width="50" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="">
+				<reportElement x="701" y="25" width="51" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="25" width="320" height="15" uuid="06be6423-337c-4f80-a347-9fab3940fea4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
