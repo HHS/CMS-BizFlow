@@ -8217,7 +8217,7 @@ IS
     V_CASE_NUMBER           NUMBER(10);
     V_TRIGGER_NEW_CASE      BOOLEAN := FALSE;
     YES                     CONSTANT VARCHAR2(3) := 'Yes';
-    CAREER_LADDER_DENIAL_ID CONSTANT VARCHAR2(10) :='742';
+    
     CONDUCT_ISSUE_ID		CONSTANT VARCHAR2(10) :='743';
     CONDUCT_ISSUE			CONSTANT VARCHAR2(50) :='Conduct Issue';
     GRIEVANCE_ID			CONSTANT VARCHAR2(10) :='745';
@@ -8243,6 +8243,7 @@ IS
     ACTION_TYPE_PIP_ID      CONSTANT VARCHAR2(10) := '787';
     ACTION_TYPE_WNR_ID      CONSTANT VARCHAR2(10) := '790';    
     REASON_FMLA_ID          CONSTANT VARCHAR2(10) := '1650';
+    ACTION_TYPE_CLPD        CONSTANT VARCHAR2(10) := '1794';    
 BEGIN
     SELECT FIELD_DATA
       INTO V_XMLDOC
@@ -8256,18 +8257,7 @@ BEGIN
         V_GEN_EMP_ID := V_XMLVALUE.GETSTRINGVAL();
     END IF;
     
-    IF V_CASE_TYPE_ID = CAREER_LADDER_DENIAL_ID THEN -- Career Ladder Promotion Denial
-        -- Triggering Grievance Case
-        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="CLPD_EMP_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
-        IF V_XMLVALUE IS NOT NULL THEN
-            V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        END IF;
-        
-        IF V_VALUE = YES THEN
-            V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
-            UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
-        END IF;
-    ELSIF V_CASE_TYPE_ID = INFORMATION_REQUEST_ID THEN -- Information Request
+    IF V_CASE_TYPE_ID = INFORMATION_REQUEST_ID THEN -- Information Request
         V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="IR_APPEAL_DENIAL"]/value/text()'); -- Did Requester Appeal Denial?
         IF V_XMLVALUE IS NOT NULL THEN
             V_VALUE := V_XMLVALUE.GETSTRINGVAL();
@@ -8363,6 +8353,17 @@ BEGIN
                 V_NEW_CASE_TYPE_ID   := WGI_DENIAL_ID;
                 UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
             END IF;        
+        ELSIF V_VALUE = ACTION_TYPE_CLPD THEN -- Action Type: Career Ladder Promotion Denial
+            -- Triggering Grievance Case
+            V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id="PI_CLPD_EMP_GRIEVANCE"]/value/text()'); -- Did Employee File a Grievance?
+            IF V_XMLVALUE IS NOT NULL THEN
+                V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+            END IF;
+            
+            IF V_VALUE = YES THEN
+                V_NEW_CASE_TYPE_ID   := GRIEVANCE_ID;
+                UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_NEW_CASE_TYPE_ID WHERE RLVNTDATANAME = 'triggeringCaseTypeID1' AND PROCID = I_PROCID;
+            END IF;            
         END IF;
     END IF;
     
