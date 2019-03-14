@@ -6564,7 +6564,10 @@ create or replace PROCEDURE SP_UPDATE_ERLR_FORM_DATA
 IS 
   V_XMLDOC               XMLTYPE;
   V_FORM_TYPE            VARCHAR2(20) := 'CMSERLR';
+  V_XMLVALUE             XMLTYPE;
   V_CNT                  INT;
+  V_PRIMARY_SPECIALIST   VARCHAR2(20);
+  CREATE_CASE_ACTIVITY CONSTANT VARCHAR2(50) := 'Create Case';
   COMPLATE_CASE_ACTIVITY CONSTANT VARCHAR2(50) := 'Complete Case';
   DWC_SUPERVISOR         CONSTANT VARCHAR2(50) := 'DWC Supervisor';
 BEGIN 
@@ -6575,7 +6578,7 @@ BEGIN
     
     -- TODO: I_USER should be member of work item checked out
     --
-
+    
     V_XMLDOC := XMLTYPE(I_FIELD_DATA); 
 
     MERGE INTO TBL_FORM_DTL A
@@ -6590,43 +6593,37 @@ BEGIN
           INSERT (A.PROCID, A.ACTSEQ, A.WITEMSEQ, A.FORM_TYPE, A.FIELD_DATA, A.CRT_DT, A.CRT_USR) 
           VALUES (I_PROCID, NVL(I_ACTSEQ, 0), NVL(I_WITEMSEQ, 0), V_FORM_TYPE, V_XMLDOC, SYS_EXTRACT_UTC(SYSTIMESTAMP), I_USER); 
 
+    IF UPPER(I_WIH_ACTION) = 'SAVE' THEN
+        -- Set Primary Specialist to Workitem owner at Create Case Activity
+        V_XMLVALUE := V_XMLDOC.EXTRACT('/formData/items/item[id=''GEN_PRIMARY_SPECIALIST'']/value/text()');
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_PRIMARY_SPECIALIST := V_XMLVALUE.GETSTRINGVAL();
+            V_PRIMARY_SPECIALIST := SUBSTR(V_PRIMARY_SPECIALIST, 4);
+            
+            UPDATE BIZFLOW.WITEM W
+               SET (PRTCPTYPE, PRTCP, PRTCPNAME) = (SELECT TYPE, MEMBERID, NAME FROM BIZFLOW.MEMBER WHERE MEMBERID = V_PRIMARY_SPECIALIST)
+             WHERE W.PROCID = I_PROCID
+               AND W.ACTSEQ = I_ACTSEQ
+               AND W.WITEMSEQ = I_WITEMSEQ
+               AND W.PRTCP <> V_PRIMARY_SPECIALIST
+               AND EXISTS (SELECT 1 
+                             FROM BIZFLOW.ACT
+                            WHERE NAME = CREATE_CASE_ACTIVITY 
+                              AND PROCID = W.PROCID 
+                              AND ACTSEQ = W.ACTSEQ);
+        END IF;    
+    END IF;
+
     -- Update process variable and transition xml into individual tables 
     -- for respective process definition 
     SP_UPDATE_PV_ERLR(I_PROCID, V_XMLDOC); 
     SP_UPDATE_ERLR_TABLE(I_PROCID); 
-/*************************************************    
-    IF UPPER(I_WIH_ACTION) = 'SUBMIT' THEN
-        -- CHECK: 'Complate Case' activity
-        SELECT COUNT(*)
-          INTO V_CNT
-          FROM BIZFLOW.ACT
-         WHERE PROCID = I_PROCID
-           AND ACTSEQ = I_ACTSEQ
-           AND NAME = COMPLETE_CASE_ACTIVITY;
-        IF 0<V_CNT THEN
-            -- CHECK: I_USER is member of 'DWC Supervisor' group
-            SELECT COUNT(*)
-              INTO V_CNT
-              FROM BIZFLOW.USRGRPPRTCP P JOIN BIZFLOW.MEMBER M ON P.USRGRPID = M.MEMBERID
-             WHERE M.TYPE='G'
-               AND M.NAME = DWC_SUPERVISOR
-               AND P.PRTCP = I_USER;
-            IF 0<V_CNT THEN
-                -- DWC Superviosr complete the 'Complete Case' activity
-                UPDATE BIZFLOW.RLVNTDATA
-                   SET VALUE = 'Yes'
-                 WHERE RLVNTDATANAME = 'completeCaseActivityPostCondition'
-                   AND PROCID = I_PROCID;
-            ELSE
-                
-            END IF;
-        END IF;
-    END IF;
-****************************************************/   
+
 EXCEPTION 
   WHEN OTHERS THEN 
              SP_ERROR_LOG(); 
-END; 
+
+END;
 /
 
 create or replace FUNCTION FN_EXTRACT_STR
