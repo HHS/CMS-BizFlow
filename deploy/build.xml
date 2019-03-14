@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="CaptureWMRuntime" default="package.ui" basedir=".">
 
-	
 	<property file="ui.properties" />
 
 	<property name="proj.root.dir" value="${basedir}" />
 	<property name="webserver.dir" value="C:\Program Files\Apache Software Foundation\Tomcat 7.0" />
 	<property name="src.web.bizflow.dir" value="${webserver.dir}/webapps/bizflow" />
 	<property name="src.wmruntime.dir" value="${webserver.dir}/webapps/bizflowwebmaker" />
+	<property name="src.report.dir" value="${webserver.dir}/webapps/bizflowadvreport" />
 	<property name="deploy.dir" value="${proj.root.dir}/deployment" />
 	<property name="deploy.runtime.dir" value="${deploy.dir}/ui/runtime" />
 	<property name="deploy.conf.dir" value="${deploy.runtime.dir}/configuration" />
@@ -59,9 +59,9 @@
 
 	<!-- patters for bizflow custom module files to be captured, excluding config -->
 	<patternset id="bf.web.include.noconf">
-		<include name="bizindex.jsp" />
+		<!-- <include name="bizindex.jsp" />
 		<include name="bizindex.org.before.disclaimer.jsp" />
-		<include name="bizindex.org.after.disclaimer.jsp" />
+		<include name="bizindex.org.after.disclaimer.jsp" /> -->
 		<include name="solutions/disclaimer/**" />
 		<include name="solutions/cms/**" />
 
@@ -73,9 +73,6 @@
 		<include name="solutions/cms/incentives/incentives.properties" />
 	</patternset>
 
-
-
-
 	<target name="init">
 		<tstamp>
 			<format property="curtime" pattern="yyyy-MM-dd HH:mm:ss" />
@@ -84,6 +81,7 @@
 		<echo message="proj.root.dir       = ${proj.root.dir}" />
 		<echo message="webserver.dir       = ${webserver.dir}" />
 		<echo message="src.wmruntime.dir   = ${src.wmruntime.dir}" />
+		<echo message="src.report.dir      = ${src.report.dir}" />
 		<echo message="deploy.dir          = ${deploy.dir}" />
 		<echo message="deploy.runtime.dir  = ${deploy.runtime.dir}" />
 		<echo message="deploy.conf.dir     = ${deploy.conf.dir}" />
@@ -102,15 +100,14 @@
 		<antcall target="package.form.blastcache" />
 		<antcall target="package.form.conf" />
 		<antcall target="package.form.addon" />
+		<antcall target="package.report.addon" />
 		<antcall target="package.bizflow.custom" />
 		<antcall target="package.bizflow.custom.blastcache" />
 		<antcall target="package.bizflow.custom.conf" />
 		<antcall target="zip.package" />
 	</target>
 
-
 	<target name="package.form"
-			depends="init"
 			description="capture and package form module without configuration">
 
 		<delete dir="${deploy.webapps.dir}/bizflowwebmaker" />
@@ -121,10 +118,8 @@
 		</copy>
 	</target>
 
-
 	<target name="package.form.blastcache"
 			if="blastcache.set"
-			depends="package.form"
 			description="modifies js/css inclusion with timestamp to blast web cache for webmaker form.">
 		<echo message="Web application cache blast is enabled." />
 		<tstamp>
@@ -137,9 +132,7 @@
 		</replace>
 	</target>
 
-
 	<target name="package.form.conf"
-			depends="init"
 			description="capture and package form configuration">
 
 		<delete dir="${deploy.conf.dir}/**/bizflowwebmaker" />
@@ -185,7 +178,6 @@
 
 
 	<target name="package.form.addon"
-			depends="init"
 			description="capture and package form addon module">
 
 		<delete dir="${deploy.webapps.dir}/bizflowwebmaker/WEB-INF" />
@@ -198,6 +190,7 @@
 				<include name="lib/bcpkix-jdk15on-1.54.jar" />
 				<include name="lib/bcprov-jdk15on-1.54.jar" />
 				<include name="lib/cmspdf.jar" />
+				<include name="lib/bizflowwebmakerutil-1.0.jar" />
 				<include name="lib/commons-collections-3.2.1-LICENSE.txt" />
 				<include name="lib/commons-collections-3.2.1.jar" />
 				<include name="lib/commons-logging-1.2.jar" />
@@ -224,9 +217,18 @@
 		</copy>
 	</target>
 
+	<target name="package.report.addon"
+			description="capture and package report addon module">
+
+		<delete dir="${deploy.webapps.dir}/bizflowadvreport/WEB-INF" />
+		<copy todir="${deploy.webapps.dir}/bizflowadvreport/WEB-INF">
+			<fileset dir="${src.report.dir}/WEB-INF">
+				<include name="lib/bizflowchartcustomizer.jar" />
+			</fileset>
+		</copy>
+	</target>
 
 	<target name="package.bizflow.custom"
-			depends="init"
 			description="capture and package bizflow customization">
 
 		<delete dir="${deploy.webapps.dir}/bizflow" />
@@ -240,7 +242,6 @@
 
 	<target name="package.bizflow.custom.blastcache"
 			if="blastcache.set"
-			depends="package.bizflow.custom"
 			description="modifies js/css inclusion with timestamp to blast web cache for bizflow custom module.">
 		<echo message="Web application cache blast is enabled." />
 		<tstamp>
@@ -255,7 +256,6 @@
 
 
 	<target name="package.bizflow.custom.conf"
-			depends="init"
 			description="capture and package bizflow custom module configuration">
 
 		<delete dir="${deploy.conf.dir}/**/bizflow" />
@@ -301,7 +301,6 @@
 
 
 	<target name="zip.package"
-			depends="init"
 			description="zip packaged deployment files">
 		<tstamp>
 			<format property="ziptime" pattern="yyyyMMdd_HHmmss" />
