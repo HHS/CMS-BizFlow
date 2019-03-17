@@ -28,6 +28,7 @@
                           'Pending OSC Investigation', 'Pending Administrative Investigation',
                           'Pending Third Party Decision', 'Researching',
                           'Settlement Discussions', 'Waiting for Information'];
+        vm._caseStatusList.sort();
         vm._allCategories = [];
         vm._allFinalActions = [];
         
@@ -383,14 +384,27 @@
             vm.finalActions = vm._allFinalActions;
             vm.ERLRTypes.sort();
 
-            // Standards of Conduct Case
-            if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Standards of Conduct Case') {
-                vm.ERLRTypes = ['Performance Issue'];
-                vm.orgSelected.caseType = 'Performance Issue';
+            // Initialization per Report
+            if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Grievance Report') {
+                vm.ERLRTypes = ['Grievance'];
+                vm.orgSelected.caseType = 'Grievance';
+            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS HPC Report') {
+                vm.ERLRTypes = ['Investigation'];
+                vm.orgSelected.caseType = 'Investigation';
+            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Performance Improvement Plan (PIP) Report') {
+                vm.ERLRTypes = ['Performance'];
+                vm.orgSelected.caseType = 'Performance';
+            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Standards of Conduct Case') {
+                vm.ERLRTypes = ['Conduct Issue'];
+                vm.orgSelected.caseType = 'Conduct Issue';
+            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Travel Card Case Report') {
+                vm.ERLRTypes = ['All', 'Conduct Issue', 'Probationary Period Action'];
+                vm.orgSelected.caseType = 'All';
             } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Trends Report') {
                 vm._components = ['CMS-wide'];
                 vm.orgSelected.component = 'CMS-wide';
             }
+            
         }
 
         // Calendar functions & configuration
