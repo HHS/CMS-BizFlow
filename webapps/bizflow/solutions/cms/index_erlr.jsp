@@ -109,12 +109,24 @@ private String getCMSUserGroups() throws Exception
 
 private String getERLRTypes() throws Exception
 {
-    String query = "SELECT P.TBL_NAME PARENTNAME, T.TBL_ID ID, T.TBL_PARENT_ID PARENTID, T.TBL_LTYPE TYPE, T.TBL_NAME NAME " + 
-                   "  FROM HHS_CMS_HR.TBL_LOOKUP T " + 
-                   " INNER JOIN HHS_CMS_HR.TBL_LOOKUP P ON T.TBL_PARENT_ID = P.TBL_ID " +
-                   " WHERE T.TBL_PARENT_ID IN (SELECT TBL_ID " + 
-                   "  FROM HHS_CMS_HR.TBL_LOOKUP " + 
-                   " WHERE TBL_LTYPE = 'ERLRInitialResponseCaseType' AND TBL_ACTIVE = 1) ";
+    String query = "SELECT P.TBL_NAME PARENTNAME, T.TBL_ID ID, T.TBL_PARENT_ID PARENTID, T.TBL_LTYPE TYPE, T.TBL_NAME NAME " +
+                   "FROM HHS_CMS_HR.TBL_LOOKUP T " +
+                   "INNER JOIN HHS_CMS_HR.TBL_LOOKUP P ON T.TBL_PARENT_ID = P.TBL_ID AND P.TBL_LTYPE = 'ERLRInitialResponseCaseType' AND P.TBL_ACTIVE = '1' " +
+                   "WHERE T.TBL_LTYPE in ('ERLRCasesCompletedFinalAction','ERLRCaseCategory') " +
+                   "AND NOT(T.TBL_LTYPE = 'ERLRCasesCompletedFinalAction' AND P.TBL_NAME = 'Third Party Hearing') " +
+                   "AND T.TBL_ACTIVE = '1' " +
+                   "AND T.TBL_CATEGORY = 'ERLR' " +
+                   "UNION ALL " +
+                   "SELECT  distinct P2.TBL_NAME PARENTNAME, 0 ID, P2.TBL_ID PARENTID, T.TBL_LTYPE TYPE, T.TBL_NAME NAME " +
+                   "FROM HHS_CMS_HR.TBL_LOOKUP T " +
+                   "INNER JOIN HHS_CMS_HR.TBL_LOOKUP P1 ON T.TBL_PARENT_ID = P1.TBL_ID AND P1.TBL_ACTIVE = '1' " +
+                   "INNER JOIN HHS_CMS_HR.TBL_LOOKUP P2 ON P1.TBL_PARENT_ID = P2.TBL_ID AND P2.TBL_ACTIVE = '1' " +
+                   "WHERE T.TBL_LTYPE = 'ERLRCasesCompletedFinalAction' " +
+                   "AND P1.TBL_LTYPE = 'ERLRCasesCompletedFinalAction' " +
+                   "AND P2.TBL_LTYPE = 'ERLRInitialResponseCaseType' " +
+                   "AND P2.TBL_NAME = 'Third Party Hearing' " +
+                   "AND T.TBL_ACTIVE = '1' " +
+                   "AND T.TBL_CATEGORY = 'ERLR' ";
 
     Connection conn = getBizFlowDBConnection();
     Statement stmt = null;
