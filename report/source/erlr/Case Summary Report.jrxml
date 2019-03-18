@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-14T17:31:52 -->
+<!-- 2019-03-18T12:27:17 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Case Summary Report" pageWidth="790" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="750" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
@@ -33,7 +33,7 @@
 	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
 	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -50,7 +50,7 @@
 		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ADMIN_CD" class="java.lang.String">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+		<parameterDescription><![CDATA["FC"]]></parameterDescription>
 	</parameter>
 	<parameter name="INC_SUBORG" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -73,72 +73,73 @@
 	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[-- Case Summary
 
 SELECT
-VWERLR.ERLR_CASE_NUMBER CASENUMBER,
-VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
-VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-VWERLR.GEN_PRIMARY_SPECIALIST_NAME PRIMARY_SPECIALIST,
-VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
-VWERLR.GEN_CASE_TYPE CASETYPE,
-VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
-VWERLR.CC_FINAL_ACTION FINAL_ACTION,
-VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
-VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
-VWERLR.GEN_CASE_STATUS CASESTATUS
+    VWERLR.ERLR_CASE_NUMBER CASENUMBER,
+    VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+    VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+    VWERLR.GEN_PRIMARY_SPECIALIST_NAME PRIMARY_SPECIALIST,
+    VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+    VWERLR.GEN_CASE_TYPE CASETYPE,
+    VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+    VWERLR.CC_FINAL_ACTION FINAL_ACTION,
+    VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+    VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
+    VWERLR.GEN_CASE_STATUS CASESTATUS
 
 FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
 
--- Specific Conditions for : Case Summary
-WHERE -- no conditions really
+  -- Specific Conditions for : Case Summary
+  WHERE -- no conditions really
 
--- Common Conditions for all ERLR Reports 
-( UPPER(VWERLR.GEN_CASE_STATUS) NOT LIKE UPPER('%close%') OR VWERLR.GEN_CASE_STATUS IS NULL )
+  -- Common Conditions for all ERLR Reports 
+  ( VWERLR.GEN_CASE_STATUS <> 'Closed' OR VWERLR.GEN_CASE_STATUS IS NULL )
 
--- Filter : Component
-AND (  ($P{COMPONENT} = 'CMS-wide' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) LIKE 'FC%')
-				OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) LIKE '$P!{ADMIN_CD}' || '%')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) = $P{ADMIN_CD})
-		)
+  -- Filter : Component
+  AND (  ($P{COMPONENT} = 'CMS-wide' AND ( VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE 'FC%' OR VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NULL ) )
+      OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
+      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')
+      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD = $P{ADMIN_CD})
+    )
 
--- Filter : Date Range
-AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    			AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    			
-	OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    		
-	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
-	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
-	)
+  -- Filter : Date Range
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+         AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+         
+   OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+        AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+        
+   OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
+   OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
+   )
 
--- Filter : Employee Name
-AND (	( TRIM($P{EMP_NAME}) IS NULL )
-	OR ( VWERLR.GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+  -- Filter : Employee Name
+  AND (	( TRIM($P{EMP_NAME}) IS NULL )
+   OR ( VWERLR.GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
 
--- Filter : Customer Contact Name
-	
-AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
-	OR ( VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+  -- Filter : Customer Contact Name
+   
+  AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+   OR ( VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
 
--- Filter : Primary ER/LR Specialist
-AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
-	OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+  -- Filter : Primary ER/LR Specialist
+  AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+   OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
 
--- Filter : Case Type
-AND (  ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE = $P{CASE_TYPE} ) )
+  -- Filter : Case Type
+  AND (  ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE = $P{CASE_TYPE} ) )
 
--- Filter: Case Category
-AND  ($X{IN, VWERLR.GEN_CASE_CATEGORY, CASE_CTGRY})
+  -- Filter: Case Category
+  AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')
 
--- Filter : Final Action 
-AND  ($X{IN, VWERLR.CC_FINAL_ACTION, FNL_ACTN})
+  -- Filter : Final Action 
 
--- Filter : Case Status
-AND  ($X{IN, VWERLR.GEN_CASE_STATUS, CASE_STATUS})
+  -- Filter : Case Status
+  AND  ($X{IN, VWERLR.GEN_CASE_STATUS, CASE_STATUS})
 
 ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 	</queryString>
@@ -153,17 +154,21 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 	<field name="INITIALCONTACTDATE" class="java.sql.Timestamp"/>
 	<field name="DATE_CASE_COMPLETED" class="java.sql.Timestamp"/>
 	<field name="CASESTATUS" class="java.lang.String"/>
+	<variable name="category" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{CASE_CTGRY}.size() > 0 ? $P{CASE_CTGRY}.toString().substring(1, $P{CASE_CTGRY}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
+	<variable name="finalaction" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{FNL_ACTN}.size() > 0 ? $P{FNL_ACTN}.toString().substring(1, $P{FNL_ACTN}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
 	<group name="Group1" keepTogether="true">
 		<groupExpression><![CDATA[$F{PRIMARY_SPECIALIST}]]></groupExpression>
 		<groupHeader>
 			<band height="65" splitType="Prevent">
 				<textField>
-					<reportElement x="0" y="10" width="750" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Group1" uuid="e1c02f95-4049-4b29-b56a-496f5dc3e1c4">
-						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<reportElement x="0" y="19" width="750" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Group1" uuid="e1c02f95-4049-4b29-b56a-496f5dc3e1c4">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font isBold="true" isUnderline="true"/>
 					</textElement>
@@ -312,15 +317,13 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="5" splitType="Stretch"/>
+		<band height="63" splitType="Stretch"/>
 	</title>
 	<pageHeader>
 		<band height="50" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement x="0" y="1" width="750" height="22" uuid="93c13c5a-3702-4e63-92c5-f1f79c9b7645">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement x="0" y="1" width="750" height="22" uuid="93c13c5a-3702-4e63-92c5-f1f79c9b7645"/>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
 				</textElement>
@@ -345,10 +348,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -360,10 +363,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -374,10 +377,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -389,10 +392,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -403,10 +406,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -417,10 +420,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -432,10 +435,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -448,10 +451,10 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
 				</reportElement>
-				<box>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="2" spacingBefore="2"/>
 				</textElement>
@@ -495,9 +498,9 @@ ORDER BY VWERLR.GEN_PRIMARY_SPECIALIST_NAME,VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN
 		</band>
 	</pageFooter>
 	<noData>
-		<band height="96">
+		<band height="90">
 			<staticText>
-				<reportElement x="0" y="54" width="750" height="20" uuid="56b892c2-a869-40a4-8e55-fd0ee05d336f">
+				<reportElement x="0" y="33" width="750" height="20" uuid="56b892c2-a869-40a4-8e55-fd0ee05d336f">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>

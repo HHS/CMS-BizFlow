@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-14T17:34:06 -->
+<!-- 2019-03-18T12:30:11 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Quarterly Report of ER/LR Cases" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
@@ -85,19 +85,21 @@
 	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[-- (Admin Code) FCX Quarterly Report of ER/LR Cases
 
 SELECT
-VWERLR.ERLR_CASE_NUMBER CASENUMBER,
-VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
-VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
-VWERLR.GEN_CASE_TYPE CASETYPE,
-VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
-VWERLR.CC_FINAL_ACTION FINAL_ACTION,
-VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
-VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED
+    VWERLR.ERLR_CASE_NUMBER CASENUMBER,
+    VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+    VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+    VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+    VWERLR.GEN_CASE_TYPE CASETYPE,
+    VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+    VWERLR.CC_FINAL_ACTION FINAL_ACTION,
+    VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+    VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED
 
 FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR]]>
 	</queryString>
@@ -233,7 +235,7 @@ FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR]]>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.equals("CMS-wide")) ? "CMS-wide Quarterly Report of ER/LR Cases" : $P{ADMIN_CD} + " Quarterly Report of ER/LR Cases"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? $P{ADMIN_CD} + " Quarterly Report of ER/LR Cases" : $P{COMPONENT} + " Quarterly Report of ER/LR Cases"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

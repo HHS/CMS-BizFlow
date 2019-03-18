@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-14T17:35:12 -->
+<!-- 2019-03-18T12:31:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Travel Card Case Report" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
@@ -81,131 +81,135 @@
 	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[-- Travel Card Case Report
 
 SELECT * FROM (
 
-(
--- Travel Card Case Report -- Conduct Issue
+    (
+    -- Travel Card Case Report -- Conduct Issue
 
-SELECT
-VWERLR.ERLR_CASE_NUMBER CASENUMBER,
-VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
-VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-VWERLR.GEN_PRIMARY_SPECIALIST_ID,
-VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
-VWERLR.GEN_CASE_TYPE CASETYPE,
-VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
-CASE 
-WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
-WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
-END FINAL_ACTION,
-VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
-VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
-VWERLR.BF_PROCS_STATE ACTIVE_OR_COMPLETED
-,VWERLR.GEN_CASE_STATUS
-,CASE
- WHEN CNDT_ISS.CI_ACTION_TYPE = 'Demotion' THEN CNDT_ISS.CI_DEMO_FINAL_AGENCY_EFF_DT
- WHEN CNDT_ISS.CI_ACTION_TYPE = 'Removal' THEN CNDT_ISS.CI_REMOVAL_EFFECTIVE_DT
- WHEN CNDT_ISS.CI_ACTION_TYPE = 'Counseling' THEN CNDT_ISS.CI_COUNSEL_ISSUED_DT
- WHEN CNDT_ISS.CI_ACTION_TYPE = 'Reprimand' THEN CNDT_ISS.CI_DATE_ACTION_TAKEN
-END DATE_ACTION_TAKEN
+    SELECT
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+        CASE 
+        WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
+        WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
+        END FINAL_ACTION,
+        VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+        VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
+        VWERLR.BF_PROCS_STATE ACTIVE_OR_COMPLETED
+        ,VWERLR.GEN_CASE_STATUS
+        ,CASE
+         WHEN CNDT_ISS.CI_ACTION_TYPE = 'Demotion' THEN CNDT_ISS.CI_DEMO_FINAL_AGENCY_EFF_DT
+         WHEN CNDT_ISS.CI_ACTION_TYPE = 'Removal' THEN CNDT_ISS.CI_REMOVAL_EFFECTIVE_DT
+         WHEN CNDT_ISS.CI_ACTION_TYPE = 'Counseling' THEN CNDT_ISS.CI_COUNSEL_ISSUED_DT
+         WHEN CNDT_ISS.CI_ACTION_TYPE = 'Reprimand' THEN CNDT_ISS.CI_DATE_ACTION_TAKEN
+        END DATE_ACTION_TAKEN
 
-FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR 
-INNER JOIN HHS_CMS_HR.VW_ERLR_CNDT_ISSUE CNDT_ISS ON VWERLR.ERLR_CASE_NUMBER = CNDT_ISS.ERLR_CASE_NUMBER
+    FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR 
+      INNER JOIN HHS_CMS_HR.VW_ERLR_CNDT_ISSUE CNDT_ISS ON VWERLR.ERLR_CASE_NUMBER = CNDT_ISS.ERLR_CASE_NUMBER
 
--- Specific Conditions for :  Travel Card Case Report
-WHERE ( VWERLR.GEN_CASE_TYPE = 'Conduct Issue'
-AND CNDT_ISS.CI_ACTION_TYPE IN ('Demotion','Removal','Counseling','Reprimand')
-)
+      -- Specific Conditions for :  Travel Card Case Report
+      WHERE ( VWERLR.GEN_CASE_TYPE = 'Conduct Issue'
+      AND CNDT_ISS.CI_ACTION_TYPE IN ('Demotion','Removal','Counseling','Reprimand')
+      AND VWERLR.GEN_CASE_CATEGORY LIKE '%Inappropriate%Use%of%Government%Credit%Card%-%Travel%'
+      )
 
-)
+    )
 
-UNION
+    UNION
 
-(
--- Travel Card Case Report -- Probationary Period Action
+    (
+    -- Travel Card Case Report -- Probationary Period Action
 
-SELECT
-VWERLR.ERLR_CASE_NUMBER CASENUMBER,
-VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
-VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-VWERLR.GEN_PRIMARY_SPECIALIST_ID,
-VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
-VWERLR.GEN_CASE_TYPE CASETYPE,
-VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
-CASE 
-WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
-WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
-END FINAL_ACTION,
-VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
-VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
-VWERLR.BF_PROCS_STATE ACTIVE_OR_COMPLETED
-,VWERLR.GEN_CASE_STATUS
-,CASE
- WHEN PROB_ACTN.PPA_ACTION_TYPE = 'Demotion' THEN PROB_ACTN.PPA_DEMO_FINAL_AGENCY_EFF_DT
- WHEN PROB_ACTN.PPA_ACTION_TYPE = 'Termination' AND PROB_ACTN.PPA_TERMINATION_TYPE = 'Pre-Employment' THEN PROB_ACTN.PPA_DATE_ACTION_TAKEN
- WHEN PROB_ACTN.PPA_ACTION_TYPE = 'Termination' AND PROB_ACTN.PPA_TERMINATION_TYPE = 'Probationary' THEN PROB_ACTN.PPA_DATE_ACTION_TAKEN
-END DATE_ACTION_TAKEN
+    SELECT
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+        CASE 
+        WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
+        WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
+        END FINAL_ACTION,
+        VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+        VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
+        VWERLR.BF_PROCS_STATE ACTIVE_OR_COMPLETED
+        ,VWERLR.GEN_CASE_STATUS
+        ,CASE
+         WHEN PROB_ACTN.PPA_ACTION_TYPE = 'Demotion' THEN PROB_ACTN.PPA_DEMO_FINAL_AGENCY_EFF_DT
+         WHEN PROB_ACTN.PPA_ACTION_TYPE = 'Termination' AND PROB_ACTN.PPA_TERMINATION_TYPE = 'Pre-Employment' THEN PROB_ACTN.PPA_DATE_ACTION_TAKEN
+         WHEN PROB_ACTN.PPA_ACTION_TYPE = 'Termination' AND PROB_ACTN.PPA_TERMINATION_TYPE = 'Probationary' THEN PROB_ACTN.PPA_DATE_ACTION_TAKEN
+        END DATE_ACTION_TAKEN
 
-FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR 
-INNER JOIN HHS_CMS_HR.VW_ERLR_PROB_ACTION PROB_ACTN ON VWERLR.ERLR_CASE_NUMBER = PROB_ACTN.ERLR_CASE_NUMBER
+    FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR 
+      INNER JOIN HHS_CMS_HR.VW_ERLR_PROB_ACTION PROB_ACTN ON VWERLR.ERLR_CASE_NUMBER = PROB_ACTN.ERLR_CASE_NUMBER
 
--- Specific Conditions for :  Travel Card Case Report
-WHERE ( VWERLR.GEN_CASE_TYPE = 'Probationary Period Action'
-AND PROB_ACTN.PPA_ACTION_TYPE IN ('Demotion','Termination')
-)
+      -- Specific Conditions for :  Travel Card Case Report
+      WHERE ( VWERLR.GEN_CASE_TYPE = 'Probationary Period Action'
+      AND PROB_ACTN.PPA_ACTION_TYPE IN ('Demotion','Termination')
+      AND VWERLR.GEN_CASE_CATEGORY LIKE '%Inappropriate%Use%of%Government%Credit%Card%-%Travel%'
+      )
 
-)
+    )
 
-) VWERLR2
+    ) VWERLR2
 
--- Common Conditions for all ERLR Reports 
-WHERE ( UPPER(VWERLR2.GEN_CASE_STATUS) NOT LIKE UPPER('%close%') OR VWERLR2.GEN_CASE_STATUS IS NULL )
+      -- Common Conditions for all ERLR Reports 
+      WHERE ( VWERLR2.GEN_CASE_STATUS <> 'Closed' OR VWERLR2.GEN_CASE_STATUS IS NULL )
 
--- Filter : Component
-AND (  ($P{COMPONENT} = 'CMS-wide' AND UPPER(VWERLR2.ADMINCD) LIKE 'FC%')
-				OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(VWERLR2.ADMINCD) LIKE '$P!{ADMIN_CD}' || '%')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(VWERLR2.ADMINCD) = $P{ADMIN_CD})
-		)
+      -- Filter : Component
+      AND (  ($P{COMPONENT} = 'CMS-wide' AND ( VWERLR2.ADMINCD LIKE 'FC%' OR VWERLR2.ADMINCD IS NULL ) )
+          OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND VWERLR2.ADMINCD LIKE '$P!{ADMIN_CD}' || '%')
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND VWERLR2.ADMINCD = $P{ADMIN_CD})
+        )
+        
+      -- Filter : Date Range
+      AND ((VWERLR2.INITIALCONTACTDATE BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+             
+       OR (VWERLR2.DATE_CASE_COMPLETED BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+            AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+            
+       OR (VWERLR2.INITIALCONTACTDATE  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR2.DATE_CASE_COMPLETED)
+       OR (VWERLR2.INITIALCONTACTDATE  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR2.DATE_CASE_COMPLETED IS NULL)	
+       )
 
--- Filter : Date Range
-AND ((VWERLR2.INITIALCONTACTDATE BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    			AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    			
-	OR (VWERLR2.DATE_CASE_COMPLETED BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    		
-	OR (VWERLR2.INITIALCONTACTDATE  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR2.DATE_CASE_COMPLETED)
-	OR (VWERLR2.INITIALCONTACTDATE  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR2.DATE_CASE_COMPLETED IS NULL)	
-	)
+      -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR ( VWERLR2.EMPNAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
 
--- Filter : Employee Name
-AND (	( TRIM($P{EMP_NAME}) IS NULL )
-	OR ( VWERLR2.EMPNAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR ( VWERLR2.CONTACTNAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
 
--- Filter : Customer Contact Name
-AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
-	OR ( VWERLR2.CONTACTNAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+      -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR2.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
 
--- Filter : Primary ER/LR Specialist
-AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
-	OR ( VWERLR2.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR2.CASETYPE = $P{CASE_TYPE} ) ) 
+       
+      -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR2.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')
 
--- Filter : Case Type
-AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR2.CASETYPE = $P{CASE_TYPE} ) ) 
+      -- Filter : Final Action 
+      AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR2.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+
+      -- Filter : Case Status
+      AND  ($X{IN, VWERLR2.GEN_CASE_STATUS, CASE_STATUS})
  
--- Filter: Case Category
-AND  ($X{IN, VWERLR2.CASECATEGORY, CASE_CTGRY})
-
--- Filter : Final Action 
-AND  ($X{IN, VWERLR2.FINAL_ACTION, FNL_ACTN})
-
--- Filter : Case Status
-AND  ($X{IN, VWERLR2.GEN_CASE_STATUS, CASE_STATUS})
-
 ORDER BY VWERLR2.ACTIVE_OR_COMPLETED DESC, VWERLR2.EMPNAME, VWERLR2.INITIALCONTACTDATE]]>
 	</queryString>
 	<field name="CASENUMBER" class="java.math.BigDecimal"/>
@@ -221,6 +225,12 @@ ORDER BY VWERLR2.ACTIVE_OR_COMPLETED DESC, VWERLR2.EMPNAME, VWERLR2.INITIALCONTA
 	<field name="ACTIVE_OR_COMPLETED" class="java.lang.String"/>
 	<field name="GEN_CASE_STATUS" class="java.lang.String"/>
 	<field name="DATE_ACTION_TAKEN" class="java.sql.Timestamp"/>
+	<variable name="category" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{CASE_CTGRY}.size() > 0 ? $P{CASE_CTGRY}.toString().substring(1, $P{CASE_CTGRY}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
+	<variable name="finalaction" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{FNL_ACTN}.size() > 0 ? $P{FNL_ACTN}.toString().substring(1, $P{FNL_ACTN}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
 	<group name="Group1">
 		<groupExpression><![CDATA[$F{ACTIVE_OR_COMPLETED}]]></groupExpression>
 		<groupHeader>
@@ -336,10 +346,9 @@ ORDER BY VWERLR2.ACTIVE_OR_COMPLETED DESC, VWERLR2.EMPNAME, VWERLR2.INITIALCONTA
 				<text><![CDATA[Date Case Completed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="455" y="0" width="40" height="45" uuid="96a2756e-12f6-41bb-b9c8-5e925ba16e2c">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="455" y="0" width="45" height="45" uuid="96a2756e-12f6-41bb-b9c8-5e925ba16e2c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -352,10 +361,10 @@ ORDER BY VWERLR2.ACTIVE_OR_COMPLETED DESC, VWERLR2.EMPNAME, VWERLR2.INITIALCONTA
 				<text><![CDATA[Initial Contact Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="495" y="0" width="166" height="45" uuid="2fda400c-f6b7-4edf-a1bd-2fa336b4c9c1">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="500" y="0" width="161" height="45" uuid="2fda400c-f6b7-4edf-a1bd-2fa336b4c9c1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<box bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
@@ -437,7 +446,7 @@ ORDER BY VWERLR2.ACTIVE_OR_COMPLETED DESC, VWERLR2.EMPNAME, VWERLR2.INITIALCONTA
 	<detail>
 		<band height="15" splitType="Prevent">
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="455" y="0" width="40" height="15" uuid="a99d0437-a04f-44fd-bb33-89b7b8de8af0"/>
+				<reportElement stretchType="RelativeToTallestObject" x="455" y="0" width="45" height="15" uuid="a99d0437-a04f-44fd-bb33-89b7b8de8af0"/>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
@@ -492,7 +501,7 @@ ORDER BY VWERLR2.ACTIVE_OR_COMPLETED DESC, VWERLR2.EMPNAME, VWERLR2.INITIALCONTA
 				<textFieldExpression><![CDATA[new Boolean ($F{DATE_CASE_COMPLETED} != null) ?	DATEFORMAT($F{DATE_CASE_COMPLETED},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="495" y="0" width="166" height="15" uuid="f3d79d60-f41d-4d69-8292-ebf685b40a7e">
+				<reportElement stretchType="RelativeToTallestObject" x="500" y="0" width="161" height="15" uuid="f3d79d60-f41d-4d69-8292-ebf685b40a7e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>

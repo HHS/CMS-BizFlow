@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-14T17:32:55 -->
+<!-- 2019-03-18T12:28:56 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS HPC Report" pageWidth="790" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="750" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
@@ -73,76 +73,76 @@
 	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[-- HPC Report
 
 SELECT
-VWERLR.ERLR_CASE_NUMBER CASENUMBER,
-VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
-VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
-VWERLR.GEN_CASE_TYPE CASETYPE,
-VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
-CASE 
-WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
-WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
-END FINAL_ACTION,
-VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
-VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
+    VWERLR.ERLR_CASE_NUMBER CASENUMBER,
+    VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+    VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+    VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+    VWERLR.GEN_CASE_TYPE CASETYPE,
+    VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+    CASE 
+    WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
+    WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
+    END FINAL_ACTION,
+    VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
+    VWERLR.CC_CASE_COMPLETE_DT DATE_CASE_COMPLETED,
 
-INV.INVESTIGATION_TYPE
-FROM
-HHS_CMS_HR.VW_ERLR_GEN VWERLR
-INNER JOIN HHS_CMS_HR.VW_ERLR_INVESTIGATION INV ON VWERLR.ERLR_CASE_NUMBER = INV.ERLR_CASE_NUMBER 
+    INV.INVESTIGATION_TYPE
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+  INNER JOIN HHS_CMS_HR.VW_ERLR_INVESTIGATION INV ON VWERLR.ERLR_CASE_NUMBER = INV.ERLR_CASE_NUMBER 
 
--- Specific Conditions for : HPC Report
-WHERE INV.INVESTIGATION_TYPE LIKE '%HPC%'
+  -- Specific Conditions for : HPC Report
+  WHERE INV.INVESTIGATION_TYPE LIKE '%HPC%'
 
--- Common Conditions for all ERLR Reports 
-AND ( UPPER(VWERLR.GEN_CASE_STATUS) NOT LIKE UPPER('%close%') OR VWERLR.GEN_CASE_STATUS IS NULL )
+  -- Common Conditions for all ERLR Reports 
+  AND ( VWERLR.GEN_CASE_STATUS <> 'Closed' OR VWERLR.GEN_CASE_STATUS IS NULL )
 
--- Filter : Component
-AND (  ($P{COMPONENT} = 'CMS-wide' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) LIKE 'FC%')
-				OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) LIKE '$P!{ADMIN_CD}' || '%')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(VWERLR.GEN_EMPLOYEE_ADMIN_CD) = $P{ADMIN_CD})
-		)
+  -- Filter : Component
+  AND (  ($P{COMPONENT} = 'CMS-wide' AND ( VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE 'FC%' OR VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NULL ) )
+      OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
+      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')
+      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD = $P{ADMIN_CD})
+    )
 
--- Filter : Date Range
-AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    			AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    			
-	OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    		
-	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
-	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
-	)
+  -- Filter : Date Range
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+         AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+         
+   OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+        AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+        
+   OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
+   OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
+   )
 
--- Filter : Employee Name
-AND (	( TRIM($P{EMP_NAME}) IS NULL )
-	OR ( VWERLR.GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+  -- Filter : Employee Name
+  AND (	( TRIM($P{EMP_NAME}) IS NULL )
+   OR ( VWERLR.GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
 
--- Filter : Customer Contact Name
-	
-AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
-	OR ( VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+  -- Filter : Customer Contact Name
+  AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+   OR ( VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
 
--- Filter : Primary ER/LR Specialist
-AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
-	OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+  -- Filter : Primary ER/LR Specialist
+  AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+   OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
 
--- Filter : Case Type
-AND (  ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE = $P{CASE_TYPE} ) )
+  -- Filter : Case Type
+  AND (  ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE = $P{CASE_TYPE} ) )
 
--- Filter: Case Category
-AND  ($X{IN, VWERLR.GEN_CASE_CATEGORY, CASE_CTGRY})
+  -- Filter: Case Category
+  AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')
 
--- Filter : Final Action 
-AND  ($X{IN, VWERLR.CC_FINAL_ACTION, FNL_ACTN})
+  -- Filter : Final Action 
+  AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
 
--- Filter : Case Status
-AND  ($X{IN, VWERLR.GEN_CASE_STATUS, CASE_STATUS})
+  -- Filter : Case Status
+  AND  ($X{IN, VWERLR.GEN_CASE_STATUS, CASE_STATUS})
 
 ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 	</queryString>
@@ -156,6 +156,12 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 	<field name="INITIALCONTACTDATE" class="java.sql.Timestamp"/>
 	<field name="DATE_CASE_COMPLETED" class="java.sql.Timestamp"/>
 	<field name="INVESTIGATION_TYPE" class="java.lang.String"/>
+	<variable name="category" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{CASE_CTGRY}.size() > 0 ? $P{CASE_CTGRY}.toString().substring(1, $P{CASE_CTGRY}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
+	<variable name="finalaction" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{FNL_ACTN}.size() > 0 ? $P{FNL_ACTN}.toString().substring(1, $P{FNL_ACTN}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
