@@ -437,14 +437,11 @@
             return dateString;
         };
 
-        vm.translateMultipleOptions = function(items) {
+        vm.translateMultipleOptions = function(parameterName, items) {
             var count = items.length;
             var result = "";
             for (var index = 0; index < count; index++) {
-                result = result + encodeURI(items[index]);
-                if (index < count - 1) {
-                    result = result + ","; 
-                }
+				result = result + "&" + parameterName + "=" + encodeURI(items[index]);
             }
             return result;
         }
@@ -480,13 +477,28 @@
             url = url + '&CONTACT_NAME=' + encodeURI(vm.selected.customerName); // Customer Name
             url = url + '&PRIMARY_SPECIALIST=' + vm.selected.specialist; // Primary Specialist
             url = url + '&CASE_TYPE=' + encodeURI(vm.selected.caseType); // caseType
-            if (vm.categories.length == 0) {
+            if (vm.selected.caseCategories.length == 0) {
                 url = url + '&CASE_CTGRY=All';
+				url = url + '&CATEGORY=All';
             } else {
-                url = url + '&CASE_CTGRY=' + vm.translateMultipleOptions(vm.selected.caseCategories); // Case Categories
+                url = url + vm.translateMultipleOptions('CASE_CTGRY', vm.selected.caseCategories); // Case Categories
+				url = url + '&CATEGORY=' + vm.selected.caseCategories.join(',');
             }
-            url = url + '&FNL_ACTN=' + vm.translateMultipleOptions(vm.selected.finalActions); // Selecting Official
-            url = url + '&CASE_STATUS=' + vm.translateMultipleOptions(vm.selected.statusList); // Case Status
+			if (vm.selected.finalActions.length == 0) {
+                url = url + '&FNL_ACTN=All';
+                url = url + '&FINALACTION=All';
+			} else {
+                url = url + vm.translateMultipleOptions('FNL_ACTN', vm.selected.finalActions); // Selecting Official
+                url = url + '&FINALACTION=' + vm.selected.finalActions.join(',');
+			}
+            
+			if (vm.selected.statusList.length == 0) {
+				url = url + '&CASE_STATUS=All';
+			} else {
+				url = url + vm.translateMultipleOptions('CASE_STATUS', vm.selected.statusList); // Case Status
+			}
+			
+			
             $log.debug('Report URL [' + url + ']');
 
             console.log(url);
