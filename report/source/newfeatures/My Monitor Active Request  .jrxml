@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-03-18T17:31:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="add5935c-7cf1-48e3-9ca4-05baa77dc234">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_My_Monitor___Active_Requests_Report"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_My_Monitor___Active_Requests_Report_files/Main_Jrxml"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="223"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="777"/>
+	<style name="Style1"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLSF_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SO_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="XO_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HRL_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SS_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CS_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="APPT_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SCHDA_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VOL_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * 
+FROM (   
+        (SELECT 
+            CON.PROCESS_ID As ID
+            ,CON.PROCESS_NAME As PROCESS_DEFINITION_NAME 
+            ,CON.V_REQUEST_NUMBER As REQUEST_NUMBER
+            ,CON.PROCESS_CREATION_DATE As REQUEST_DATE
+            ,CON.PROCESS_CREATOR_NAME As INITIATOR
+            ,CON.V_ADMIN_CODE As ADMINCODE
+            ,CON.V_REQUEST_TYPE As REQUEST_TYPE
+            ,CON.V_CLASSIFICATION_TYPE As CLASSIFIFCATION_TYPE
+            ,CON.REQUEST_STATUS As REQUEST_STATUS
+            ,CON.CURRENT_ACTIVITY_NAME 
+            ,CON.CURRENT_USER_NAME
+            ,MTI.MAX_MT_DT As Meeting_Date
+            
+            ,SCF.SG_SO_NAME As SELECTING_OFFICIAL
+            ,SCF.SG_SS_NAME As STAFFING_SPECIALIST
+            ,SCF.SG_CS_NAME As CLASS_SPECIALIST
+            ,SCF.POS_TITLE AS POSITION
+            
+            FROM HHS_VW_CONSULTATION_PROC CON
+            INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON CON.PROCESS_ID = SCF.SG_PROCID
+            LEFT OUTER JOIN (
+                    SELECT 
+                        MT.SSH_REQ_ID
+                        , MAX(MT.SSH_MEETING_SCHED_DT) AS MAX_MT_DT
+                    FROM "HHS_CMS_HR"."STRATCON_SCHED_HIST" MT
+                    GROUP BY MT.SSH_REQ_ID
+                    ORDER BY MT.SSH_REQ_ID
+                    ) MTI ON MTI.SSH_REQ_ID = SCF.REQ_ID 
+                 
+            WHERE PROCESS_STATE_DESC = 'Running' 
+            	AND CON.CURRENT_ACTIVITY_NAME NOT IN ('Create Request', 'Review Request')
+                    
+                AND CON.PROCESS_CREATION_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO} -- RUNNING in given date range
+                    
+        AND (($P{COMPONENT} = 'CMS-wide' AND CON.V_ADMIN_CODE LIKE 'FC%' ) 
+                        OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND   CON.V_ADMIN_CODE = 'FC')
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND  CON.V_ADMIN_CODE  LIKE '$P!{ADMIN_CD}' || '%'  )
+                        OR ($P{COMPONENT} = 'By Admin Code'  AND $P{INC_SUBORG} = 'No'  AND  CON.V_ADMIN_CODE = $P{ADMIN_CD})
+                    ) -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+                        
+                AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
+                AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+                AND (($P{APPT_TYPE} = 'All') OR (SCF.SG_AT_DSCR = $P{APPT_TYPE}))    -- Appointment Type filter: All Appointment Types or a specific type
+                AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule A filter: All Schedule A Types or a specific type
+                AND (($P{VOL_TYPE} = 'All') OR (SCF.SG_VT_DSCR = $P{VOL_TYPE}))      -- Volunteer Type filter: All Volunteer Types or a specific type
+                
+                AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))              -- Selecting Official
+                AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))              -- Executive Officer
+                AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
+                AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
+                AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+        )
+           
+UNION
+        (SELECT 
+             ELIG.PROCESS_ID As ID
+            ,ELIG.PROCESS_NAME As PROCESS_DEFINATION_NAME 
+            ,ELIG.V_REQUEST_NUMBER As REQUEST_NUMBER
+            ,SCF.REQ_JOB_REQ_CREATE_DT As REQUEST_DATE
+            ,ELIG.PROCESS_CREATOR_NAME As INITIATOR -- TO BE FIXED
+            ,ELIG.V_ADMIN_CODE As ADMINCODE
+            ,ELIG.V_REQUEST_TYPE As REQUEST_TYPE
+            ,ELIG.V_CLASSIFICATION_TYPE As CLASSIFIFCATION_TYPE
+            ,ELIG.REQUEST_STATUS As REQUEST_STATUS
+            ,ELIG.CURRENT_ACTIVITY_NAME 
+            ,ELIG.CURRENT_USER_NAME
+            ,MTI.MAX_MT_DT As Meeting_Date 
+            ,ELI.SO_NAME As SELECTING_OFFICIAL
+            ,ELI.SS_NAME As STAFFING_SPECIALIST
+            ,ELI.CS_NAME As CLASS_SPECIALIST
+            ,ELI.POS_TITLE AS POSITION
+            
+            FROM HHS_VW_ELIGQUAL_PROC ELIG
+            INNER JOIN HHS_CMS_HR.VW_ELIGQUAL ELI ON ELIG.PROCESS_ID = ELI.PROCID
+            LEFT OUTER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON SCF.REQ_ID = ELI.REQ_ID
+            LEFT OUTER JOIN (
+                    SELECT 
+                        MT.SSH_REQ_ID
+                        , MAX(MT.SSH_MEETING_SCHED_DT) AS MAX_MT_DT
+                    FROM "HHS_CMS_HR"."STRATCON_SCHED_HIST" MT
+                    GROUP BY MT.SSH_REQ_ID
+                    ORDER BY MT.SSH_REQ_ID
+                    ) MTI ON MTI.SSH_REQ_ID = ELI.REQ_ID 
+                    
+            WHERE PROCESS_STATE_DESC = 'Running'
+                        
+                AND SCF.REQ_JOB_REQ_CREATE_DT BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO} -- RUNNING in given date range
+                        
+                AND (($P{COMPONENT} = 'CMS-wide' AND ELIG.V_ADMIN_CODE LIKE 'FC%'  ) 
+                    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND ELIG.V_ADMIN_CODE = 'FC')
+                           OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND  ELIG.V_ADMIN_CODE  LIKE '$P!{ADMIN_CD}' || '%' )
+                    OR ($P{COMPONENT} = 'By Admin Code'  AND $P{INC_SUBORG} = 'No'  AND   ELIG.V_ADMIN_CODE= $P{ADMIN_CD})
+                    ) -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+                    
+                AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
+                AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+                AND (($P{APPT_TYPE} = 'All') OR (SCF.SG_AT_DSCR = $P{APPT_TYPE}))    -- Appointment Type filter: All Appointment Types or a specific type
+                AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule A filter: All Schedule A Types or a specific type
+                AND (($P{VOL_TYPE} = 'All') OR (SCF.SG_VT_DSCR = $P{VOL_TYPE}))      -- Volunteer Type filter: All Volunteer Types or a specific type	
+                
+                AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))              -- Selecting Official
+                AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))              -- Executive Officer
+                AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
+                AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
+                AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist)      
+           )
+
+UNION
+
+        (SELECT 
+             PRO.PROCESS_ID As ID 
+            ,PRO.PROCESS_NAME As PROCESS_DEFINITION_NAME 
+            ,PRO.V_REQUEST_NUMBER As REQUEST_NUMBER
+            ,SCF.REQ_JOB_REQ_CREATE_DT As REQUEST_DATE
+            ,PRO.PROCESS_CREATOR_NAME As INITIATOR -- TO BE FIXED
+            ,NVL(PRO.V_ADMIN_CODE, SCF.SG_ADMIN_CD) As ADMINCODE
+            ,PRO.V_REQUEST_TYPE As REQUEST_TYPE
+            ,PRO.V_CLASSIFICATION_TYPE As CLASSIFIFCATION_TYPE
+            ,PRO.REQUEST_STATUS As REQUEST_STATUS
+            ,PRO.CURRENT_ACTIVITY_NAME 
+            ,PRO.CURRENT_USER_NAME
+            ,MTI.MAX_MT_DT As Meeting_Date 
+            ,NVL(CLA.SO_NAME, SCF.SG_SO_NAME) As SELECTING_OFFICIAL
+            ,NVL(CLA.SS_NAME, SCF.SG_SS_NAME) As STAFFING_SPECIALIST
+            ,NVL(CLA.CS_NAME, SCF.SG_CS_NAME) As CLASS_SPECIALIST
+            ,CLA.CS_TITLE AS POSITION     
+            
+            FROM HHS_VW_CLASSIFICATION_PROC PRO
+            INNER JOIN HHS_CMS_HR.VW_CLASSIFICATION CLA ON PRO.PROCESS_ID = CLA.PD_PROCID
+            LEFT OUTER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON SCF.REQ_ID = CLA.REQ_ID
+            LEFT OUTER JOIN (
+                    SELECT 
+                        MT.SSH_REQ_ID
+                        , MAX(MT.SSH_MEETING_SCHED_DT) AS MAX_MT_DT
+                    FROM "HHS_CMS_HR"."STRATCON_SCHED_HIST" MT
+                    GROUP BY MT.SSH_REQ_ID
+                    ORDER BY MT.SSH_REQ_ID
+                    ) MTI ON MTI.SSH_REQ_ID = CLA.REQ_ID 
+            
+            WHERE PROCESS_STATE_DESC = 'Running' 
+                        
+                AND SCF.REQ_JOB_REQ_CREATE_DT BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO} -- RUNNING in given date range
+                AND (($P{COMPONENT} = 'CMS-wide' AND  CLA.CS_ADMIN_CD LIKE 'FC%' ) 
+                    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND  CLA.CS_ADMIN_CD = 'FC' )
+                    OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND  CLA.CS_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%'    )
+                    OR ($P{COMPONENT} = 'By Admin Code'  AND $P{INC_SUBORG} = 'No'  AND CLA.CS_ADMIN_CD = $P{ADMIN_CD})
+                  )
+                
+                  
+                AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
+                AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+                AND (($P{APPT_TYPE} = 'All') OR (SCF.SG_AT_DSCR = $P{APPT_TYPE}))    -- Appointment Type filter: All Appointment Types or a specific type
+                AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule A filter: All Schedule A Types or a specific type
+                AND (($P{VOL_TYPE} = 'All') OR (SCF.SG_VT_DSCR = $P{VOL_TYPE}))      -- Volunteer Type filter: All Volunteer Types or a specific type	
+                
+                AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))              -- Selecting Official
+                AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))              -- Executive Officer
+                AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
+                AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
+                AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+            )  
+    ORDER BY REQUEST_DATE desc
+    )]]>
+	</queryString>
+	<field name="ID" class="java.math.BigDecimal"/>
+	<field name="PROCESS_DEFINITION_NAME" class="java.lang.String"/>
+	<field name="REQUEST_NUMBER" class="java.lang.String"/>
+	<field name="REQUEST_DATE" class="java.sql.Timestamp"/>
+	<field name="INITIATOR" class="java.lang.String"/>
+	<field name="ADMINCODE" class="java.lang.String"/>
+	<field name="REQUEST_TYPE" class="java.lang.String"/>
+	<field name="CLASSIFIFCATION_TYPE" class="java.lang.String"/>
+	<field name="REQUEST_STATUS" class="java.lang.String"/>
+	<field name="CURRENT_ACTIVITY_NAME" class="java.lang.String"/>
+	<field name="CURRENT_USER_NAME" class="java.lang.String"/>
+	<field name="MEETING_DATE" class="java.sql.Timestamp"/>
+	<field name="SELECTING_OFFICIAL" class="java.lang.String"/>
+	<field name="STAFFING_SPECIALIST" class="java.lang.String"/>
+	<field name="CLASS_SPECIALIST" class="java.lang.String"/>
+	<field name="POSITION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="772" height="30" uuid="f5091792-e41c-4f4c-b85d-e94a23c71e56"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[My Monitor - Active Requests Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="30" width="772" height="30" uuid="ccb57e3b-f972-446e-bc27-0f4beff892ed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? "By Admin Code"+ ","  +  $P{ADMIN_CD} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy") : $P{COMPONENT} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="55" height="30" backcolor="#F0F8FA" uuid="54dab65d-e842-4f1c-9da8-8f72907790fa">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Workflow Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="55" y="0" width="45" height="30" backcolor="#F0F8FA" uuid="1f584995-6d8c-45d0-af01-21767091b5ea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="100" y="0" width="45" height="30" backcolor="#F0F8FA" uuid="11164865-c5fe-4a13-8c07-5cbc1f615734">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="145" y="0" width="50" height="30" backcolor="#F0F8FA" uuid="d1107c10-bdcf-4a80-b950-3ff675118678"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Initiator]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="195" y="0" width="30" height="30" backcolor="#F0F8FA" uuid="43d009c5-b938-4bc5-99e3-e09357cc5b75"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Admin Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="225" y="0" width="60" height="30" backcolor="#F0F8FA" uuid="b7d98e8e-8ec6-4654-a491-b3f7365a800e"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="285" y="0" width="60" height="30" backcolor="#F0F8FA" uuid="f5edebb7-d6d9-4e97-8a83-8e0b94d9d07c"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Classification Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="345" y="0" width="55" height="30" backcolor="#F0F8FA" uuid="a3b39deb-328d-4443-9aff-96038a342b36">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Position Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="0" width="55" height="30" backcolor="#F0F8FA" uuid="afed5dca-3cd6-4016-bf98-c5d003122e9e"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Selecting Official ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="455" y="0" width="55" height="30" backcolor="#F0F8FA" uuid="c484d3f7-103f-4be3-b1dd-aafbc9207627"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Staffing Specialist ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="510" y="0" width="55" height="30" backcolor="#F0F8FA" uuid="59e0e26b-c696-4d91-b2b2-f1b8cd5ddb96"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Classification Specilist]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="565" y="0" width="45" height="30" backcolor="#F0F8FA" uuid="7974aa08-c3d9-4bc9-8ae2-5ce91a7b6dd0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Meeting Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="610" y="0" width="55" height="30" backcolor="#F0F8FA" uuid="65f450b1-bdf6-49b0-89cc-0b91118dfbac"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="665" y="0" width="57" height="30" backcolor="#F0F8FA" uuid="8c3c20a5-817d-4a31-a6ab-98b80162653a"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Current Action ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="722" y="0" width="50" height="30" backcolor="#F0F8FA" uuid="8ce99fd4-76f0-4683-b4a8-acb581bd4d17">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Current Owner]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="20" uuid="2a70ffe5-1e7a-47f8-b4f7-45bc9eca6e01">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROCESS_DEFINITION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="55" y="0" width="45" height="20" uuid="c56db353-e861-4a02-9f63-185a6031ca1a"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="100" y="0" width="45" height="20" uuid="fd6b75c8-5557-4c97-b758-1716aa8192d4"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{REQUEST_DATE},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="145" y="0" width="50" height="20" uuid="ba2a699d-3c88-4e83-8ac4-c6cf2735fcc6"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INITIATOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="195" y="0" width="30" height="20" uuid="9bee51ad-3d2a-479f-a396-8d9d80895d79"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADMINCODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="225" y="0" width="60" height="20" uuid="656c95b2-a1e2-43db-8df9-ce30f2996363"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="285" y="0" width="60" height="20" uuid="a9f6392b-1e01-4df4-ae37-986c5f48c92d"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}.equals("Appointment") && $F{CLASSIFIFCATION_TYPE} == null ? "N/A" : $F{CLASSIFIFCATION_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="345" y="0" width="55" height="20" uuid="a72f92bb-d1b6-495a-b475-9acab4ec6363"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POSITION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="400" y="0" width="55" height="20" uuid="1ece9919-bc8a-40ec-a154-f8319004acac"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SELECTING_OFFICIAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="455" y="0" width="55" height="20" uuid="85b6b9fd-f4d3-4e96-817a-0791b9eed357"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}.equals("Classification Only") ? "N/A" : $F{STAFFING_SPECIALIST}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="510" y="0" width="55" height="20" uuid="991b8070-bfdd-4d0c-a2f2-f97381b45b8a"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}.equals("Appointment") && $F{CLASSIFIFCATION_TYPE} == null ? "N/A" : $F{CLASS_SPECIALIST}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="565" y="0" width="45" height="20" uuid="986fe4d5-c41b-4de6-aadb-d4e7a559953d"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Classification Only") && ($F{CLASSIFIFCATION_TYPE}.contains("Update Coversheet") || $F{CLASSIFIFCATION_TYPE}.contains("Review Existing Position Description") || $F{CLASSIFIFCATION_TYPE}.contains("Reorganization Pen & Ink"))) ? "N/A" : DATEFORMAT($F{MEETING_DATE},"M/d/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="610" y="0" width="55" height="20" uuid="8cf94e77-db90-4654-b756-de19f91e1b74"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="665" y="0" width="57" height="20" uuid="e668690d-a631-48a3-86fd-79389ff0a1ea"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CURRENT_ACTIVITY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="722" y="0" width="50" height="20" uuid="2b710ff6-fb53-4475-8341-70132d94c6a6">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CURRENT_USER_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="722" y="0" width="50" height="20" uuid="1545afcd-2585-4e79-8227-cbc9616f4b10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="54">
+			<staticText>
+				<reportElement x="0" y="0" width="772" height="30" uuid="14ed8284-b027-4633-92a6-b97a52cd9844"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[My Monitor - Active Requests Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="270" height="20" uuid="39fe1bc3-e035-4d46-a5f6-d3fad3d3f0e5"/>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
