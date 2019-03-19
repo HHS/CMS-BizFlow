@@ -113,11 +113,10 @@ BEGIN
             END IF;
         END IF;        
 
-        INSERT INTO ERLR_CASE(ERLR_CASE_NUMBER, PROCID) VALUES(V_CASE_NUMBER, I_PROCID);
-
         IF V_XMLDOC IS NULL THEN
             V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
         ELSE
+	    INSERT INTO ERLR_CASE(ERLR_CASE_NUMBER, PROCID) VALUES(V_CASE_NUMBER, I_PROCID);
             SP_ERLR_ADD_RELATED_CASE(V_CASE_NUMBER, V_ORG_CASE_NUMBER, 'T', NULL);            
             SELECT APPENDCHILDXML(V_XMLDOC, '/formData/items', XMLTYPE('<item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item>')) INTO V_XMLDOC FROM DUAL;
             IF V_GEN_EMP_HHSID IS NOT NULL AND 1<LENGTH(V_GEN_EMP_HHSID) THEN
@@ -127,6 +126,8 @@ BEGIN
 
         INSERT INTO TBL_FORM_DTL (PROCID, ACTSEQ, WITEMSEQ, FORM_TYPE, FIELD_DATA, CRT_DT, CRT_USR)
                           VALUES (I_PROCID, 0, 0, 'CMSERLR', V_XMLDOC, SYSDATE, 'System');
+	
+	SP_UPDATE_ERLR_TABLE(I_PROCID);
     END IF;
 
 EXCEPTION
