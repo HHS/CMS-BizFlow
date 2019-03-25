@@ -8484,6 +8484,8 @@ BEGIN
             END IF;
         END IF;        
 
+        INSERT INTO ERLR_CASE(ERLR_CASE_NUMBER, PROCID) VALUES(V_CASE_NUMBER, I_PROCID);
+
         IF V_XMLDOC IS NULL THEN
             V_XMLDOC := XMLTYPE('<formData xmlns=""><items><item><id>CASE_NUMBER</id><etype>variable</etype><value>'|| V_CASE_NUMBER ||'</value></item></items><history><item /></history></formData>');
         ELSE

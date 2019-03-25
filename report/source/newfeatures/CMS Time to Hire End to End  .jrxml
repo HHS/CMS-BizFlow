@@ -1,0 +1,865 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-03-18T16:09:56 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time to Hire End to End - Completed" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Time_to_Hire_End_to_End_Report___Completed_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Time_to_Hire_End_to_End_Report___Completed"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="689"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="302"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="Time to Hire End to End - Comp"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+		<queryString language="SQL">
+			<![CDATA[Select top 5 * from  "ORDERS"]]>
+		</queryString>
+		<field name="ORDERID" class="java.lang.Integer"/>
+		<field name="SHIPNAME" class="java.lang.String"/>
+		<field name="SHIPPEDDATE" class="java.sql.Timestamp"/>
+	</subDataset>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[Request Type]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLSF_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[Classification Type]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="APPT_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[Appointment Type]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SCHDA_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[Schedule A Type]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VOL_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SO_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="XO_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HRL_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SS_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CS_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	Create_Date,
+	
+	USAS_Req_Num,
+	
+	Admin_Code,
+	
+	Second_Sub_Org,
+	
+	PD_Num_1,
+	PD_Num_2,
+	PD_Num_3,
+	PD_Num_4,
+	PD_Num_5,
+	
+	Position_Title,
+	Pay_Plan,
+	Series,
+	Grade,
+	
+	Request_Type,
+	Classification_Type,
+	Appoint_Type,
+	Schedule_A_Type,
+	Volunteer_Type,
+	
+	Days_To_Consult,
+	Days_To_Classify,
+	Days_To_Appoint,
+	
+	BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(New_Hire_Create_Date, Send_Ofcl_Offr_Cmpl_Date) AS Days_To_Offer,
+
+	BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(Request_Approval_Date, Review_Return_Date) AS Days_To_Staff,
+	
+	Days_To_Consult + Days_To_Classify + Days_To_Appoint + 
+	BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(New_Hire_Create_Date, Send_Ofcl_Offr_Cmpl_Date) +
+	(BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(Request_Approval_Date, Review_Return_Date))
+	AS Days_To_Hire
+
+FROM (
+	SELECT
+		SCP."PROCESS_CREATION_DATE" AS Create_Date,
+		
+		USOF."REQUEST_NUMBER" AS USAS_Req_Num,
+		
+		CASE
+			WHEN SCF."SG_RT_DSCR"  = 'Recruitment'
+			THEN CLF."CS_ADMIN_CD"
+			ELSE EQF."ADMIN_CD"
+			END AS Admin_Code,
+			
+		CASE
+			WHEN SCF."SG_RT_DSCR"  = 'Recruitment'
+			THEN  CLF."PD_SUB_ORG_DSCR_2"
+			ELSE EQF."SUB_ORG_2_DSCR"
+			END AS Second_Sub_Org,
+	
+		CLF."CS_PD_NUMBER_JOBCD_1" AS PD_Num_1,
+		CLF."CS_PD_NUMBER_JOBCD_2" AS PD_Num_2,
+		CLF."CS_PD_NUMBER_JOBCD_3" AS PD_Num_3,
+		CLF."CS_PD_NUMBER_JOBCD_4" AS PD_Num_4,
+		CLF."CS_PD_NUMBER_JOBCD_5" AS PD_Num_5,
+			
+		USOF."POSITION_TITLE" AS Position_Title,
+		USOF."NEW_HIRE_PAY_PLAN" AS Pay_Plan,
+		USOF."NEW_HIRE_SERIES" AS Series,
+		LPAD( USOF."NEW_HIRE_GRADE", 2, '0')  AS Grade,
+	
+		SCF."SG_RT_DSCR" AS Request_Type,
+		SCF."SG_CT_DSCR" AS Classification_Type,
+		SCF."SG_AT_DSCR"  AS Appoint_Type,
+		SCF."SG_SAT_DSCR" AS Schedule_A_Type,
+		SCF."SG_VT_DSCR" AS Volunteer_Type,
+		
+		SCP."PROCESS_AGE" AS Days_To_Consult,
+		CLP."PROCESS_AGE" AS Days_To_Classify,
+		CASE WHEN EQP."PROCESS_AGE" IS NOT NULL THEN EQP."PROCESS_AGE" ELSE 0 END AS Days_To_Appoint,
+		
+		BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(USOF."NEW_HIRE_CREATE_DATE", USOF."SEND_OFCL_OFFR_CMPL_DATE") AS Days_To_Offer,
+		
+		MIN(USST."REVIEW_RETURN_DATE") AS Review_Return_Date,
+		USST."REQUEST_APPROVAL_DATE" AS Request_Approval_Date,
+		USOF."NEW_HIRE_CREATE_DATE" AS New_Hire_Create_Date,
+		USOF."SEND_OFCL_OFFR_CMPL_DATE" AS Send_Ofcl_Offr_Cmpl_Date
+	
+	FROM  "HHS_HR"."DSS_TIME_TO_OFFER" USOF -- USAS Offer data
+		INNER JOIN  "HHS_CMS_HR"."VW_STRATCON" SCF ON SUBSTR(USOF."REQUEST_NUMBER",0,13) = SCF."REQ_JOB_REQ_NUMBER"  --joined to Strat Con form data
+		INNER JOIN  "BIZFLOW"."HHS_VW_CONSULTATION_PROC" SCP ON SCF."SG_PROCID" = SCP."PROCESS_ID" -- joined to Strategic Consultation process data
+		INNER JOIN  "HHS_CMS_HR"."VW_CLASSIFICATION" CLF ON CLF."REQ_ID" = SCF."REQ_ID"  --joined to Classification form data
+		INNER JOIN  "BIZFLOW"."HHS_VW_CLASSIFICATION_PROC" CLP ON  CLP."PROCESS_ID" =  CLF."PD_PROCID" -- joined to Classification process data
+		INNER JOIN  "HHS_CMS_HR"."VW_ELIGQUAL" EQF ON  EQF."REQ_ID" = SCF."REQ_ID"  -- joined to Elig/Qual Review form data
+		LEFT OUTER JOIN  "BIZFLOW"."HHS_VW_ELIGQUAL_PROC" EQP ON  EQP."PROCESS_ID" = EQF."PROCID" -- joined to Elig/Qual Review process data
+		LEFT OUTER JOIN  "HHS_HR"."DSS_TIME_TO_STAFF" USST ON SUBSTR(USOF."REQUEST_NUMBER",0,13) = SUBSTR(USST."REQUEST_NUMBER",0,13)-- joined to USAS Staffing data 
+			AND USOF.NEW_HIRE_PAY_PLAN = SUBSTR(USST.PAYPLAN_SERIES_GRADE, 0,2)
+			AND USOF.NEW_HIRE_SERIES = USST.CERTIFICATE_SERIES
+			AND USOF.NEW_HIRE_GRADE = USST.CERTIFICATE_GRADE
+	
+	WHERE ((SCF."SG_RT_DSCR"  = 'Appointment' AND "EQP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("EQP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled'
+			AND EQP."REQUEST_STATUS" IN ('Appointment Approved', 'Selected by Component')) -- Appointment process Completed, but not Cancelled and Candidate Selected
+		OR 
+			(SCF."SG_RT_DSCR"  = 'Recruitment' AND "CLP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CLP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') -- Recruitment process Completed, but not Cancelled 
+			)
+			
+		AND USOF."REQUEST_STATUS" = 'Complete'
+		AND USOF."REQUEST_TYPE" = 'New Vacancy'
+		AND USST."REQUEST_STATUS" = 'Complete'
+		
+		AND USOF."SEND_OFCL_OFFR_CMPL_DATE" BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
+		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- Send Official Offer Completed in given date range
+		
+		AND (($P{COMPONENT} = 'CMS-wide' AND ((SCF."SG_RT_DSCR" = 'Recruitment' AND CLF.CS_ADMIN_CD LIKE 'FC%') -- If Recruitment, match Admin Code from Classification
+				OR (SCF."SG_RT_DSCR" = 'Appointment' AND EQF.ADMIN_CD LIKE 'FC%')) -- If Appointment, match Admin Code from Elig/Qual Review
+			)
+			OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND ((SCF."SG_RT_DSCR" = 'Recruitment' AND CLF.CS_ADMIN_CD = 'FC') -- If Recruitment, match Admin Code from Classification
+				OR (SCF."SG_RT_DSCR" = 'Appointment' AND EQF.ADMIN_CD = 'FC')) -- If Appointment, match Admin Code from Elig/Qual Review
+				)
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND ((SCF."SG_RT_DSCR" = 'Recruitment' AND CLF.CS_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')-- If Recruitment, match Admin Code from Classification
+				OR(SCF."SG_RT_DSCR" = 'Appointment' AND EQF.ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%'))-- If Appointment, match Admin Code from Elig/Qual Review
+				)
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND ((SCF."SG_RT_DSCR" = 'Recruitment' AND CLF.CS_ADMIN_CD = $P{ADMIN_CD})-- If Recruitment, match Admin Code from Classification
+				OR(SCF."SG_RT_DSCR" = 'Appointment' AND EQF.ADMIN_CD = $P{ADMIN_CD})) -- If Appointment, match Admin Code from Elig/Qual Review
+				)
+			)  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+		
+		
+		AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR  = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type (Recruitment or Appointment)
+		AND (($P{CLSF_TYPE} = 'All') OR ( SCF.SG_CT_DSCR  = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+		
+		AND (($P{APPT_TYPE} = 'All') OR (EQF.AT_DSCR = $P{APPT_TYPE}))    -- Appointment Type filter: All Appointment Types or a specific type
+		AND (($P{SCHDA_TYPE} = 'All') OR (EQF.SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule A filter: All Schedule A Types or a specific type
+		AND (($P{VOL_TYPE} = 'All') OR (EQF.VT_DSCR = $P{VOL_TYPE}))      -- Volunteer Type filter: All Volunteer Types or a specific type
+	
+		AND (($P{SO_ID} = 'All') OR (SCF.SG_RT_DSCR = 'Recruitment' AND SCF.SG_SO_ID = $P{SO_ID}) OR (SCF.SG_CT_DSCR = 'Appointment' AND EQF.SO_ID = $P{SO_ID}))  -- Selecting Official
+		AND (($P{XO_ID} = 'All') OR (SCF.SG_CT_DSCR = 'Recruitment' AND SCF.SG_XO_ID = $P{XO_ID}) OR (SCF.SG_CT_DSCR = 'Appointment' AND EQF.XO_ID = $P{XO_ID}))  -- Executive Officer
+		AND (($P{HRL_ID} = 'All') OR (SCF.SG_CT_DSCR = 'Recruitment' AND SCF.SG_HRL_ID = $P{HRL_ID}) OR (SCF.SG_CT_DSCR = 'Appointment' AND EQF.HRL_ID = $P{HRL_ID})) -- HR Liaison
+		AND (($P{SS_ID} = 'All') OR (SCF.SG_CT_DSCR = 'Recruitment' AND SCF.SG_SS_ID = $P{SS_ID}) OR (SCF.SG_CT_DSCR = 'Appointment' AND EQF.SS_ID = $P{SS_ID}))      -- Staffing Specialist
+		AND (($P{CS_ID} = 'All') OR (SCF.SG_CT_DSCR = 'Recruitment' AND SCF.SG_CS_ID = $P{CS_ID}) OR (SCF.SG_CT_DSCR = 'Appointment' AND EQF.CS_ID = $P{CS_ID})) -- Classification Specialist
+	GROUP BY 
+		SCP."PROCESS_CREATION_DATE",
+		USOF."REQUEST_NUMBER",
+		CASE
+			WHEN SCF."SG_RT_DSCR"  = 'Recruitment'
+			THEN CLF."CS_ADMIN_CD"
+			ELSE EQF."ADMIN_CD"
+			END,
+		CASE
+			WHEN SCF."SG_RT_DSCR"  = 'Recruitment'
+			THEN  CLF."PD_SUB_ORG_DSCR_2" 
+			ELSE EQF."SUB_ORG_2_DSCR"
+			END,
+		CLF."CS_PD_NUMBER_JOBCD_1",
+		CLF."CS_PD_NUMBER_JOBCD_2",
+		CLF."CS_PD_NUMBER_JOBCD_3",
+		CLF."CS_PD_NUMBER_JOBCD_4",
+		CLF."CS_PD_NUMBER_JOBCD_5",
+		USOF."POSITION_TITLE",
+		USOF."NEW_HIRE_PAY_PLAN",
+		USOF."NEW_HIRE_SERIES",
+		LPAD( USOF."NEW_HIRE_GRADE", 2, '0'),
+		SCF."SG_RT_DSCR",
+		SCF."SG_CT_DSCR",
+		SCF."SG_AT_DSCR",
+		SCF."SG_SAT_DSCR",
+		SCF."SG_VT_DSCR",
+		SCP."PROCESS_AGE",
+		CLP."PROCESS_AGE",
+		CASE WHEN EQP."PROCESS_AGE" IS NOT NULL THEN EQP."PROCESS_AGE" ELSE 0 END,
+		USST."REQUEST_APPROVAL_DATE",
+		USOF."NEW_HIRE_CREATE_DATE",
+		USOF."SEND_OFCL_OFFR_CMPL_DATE"
+	)
+ORDER BY USAS_Req_Num, Admin_Code]]>
+	</queryString>
+	<field name="CREATE_DATE" class="java.sql.Timestamp"/>
+	<field name="USAS_REQ_NUM" class="java.lang.String"/>
+	<field name="ADMIN_CODE" class="java.lang.String"/>
+	<field name="SECOND_SUB_ORG" class="java.lang.String"/>
+	<field name="PD_NUM_1" class="java.lang.String"/>
+	<field name="PD_NUM_2" class="java.lang.String"/>
+	<field name="PD_NUM_3" class="java.lang.String"/>
+	<field name="PD_NUM_4" class="java.lang.String"/>
+	<field name="PD_NUM_5" class="java.lang.String"/>
+	<field name="POSITION_TITLE" class="java.lang.String"/>
+	<field name="PAY_PLAN" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="GRADE" class="java.lang.String"/>
+	<field name="REQUEST_TYPE" class="java.lang.String"/>
+	<field name="CLASSIFICATION_TYPE" class="java.lang.String"/>
+	<field name="APPOINT_TYPE" class="java.lang.String"/>
+	<field name="SCHEDULE_A_TYPE" class="java.lang.String"/>
+	<field name="VOLUNTEER_TYPE" class="java.lang.String"/>
+	<field name="DAYS_TO_CONSULT" class="java.math.BigDecimal"/>
+	<field name="DAYS_TO_CLASSIFY" class="java.math.BigDecimal"/>
+	<field name="DAYS_TO_APPOINT" class="java.math.BigDecimal"/>
+	<field name="DAYS_TO_OFFER" class="java.math.BigDecimal"/>
+	<field name="DAYS_TO_STAFF" class="java.math.BigDecimal"/>
+	<field name="DAYS_TO_HIRE" class="java.math.BigDecimal"/>
+	<variable name="Days_To_Offer" class="java.lang.Integer" resetType="None" calculation="Sum">
+		<variableExpression><![CDATA[SUM($F{DAYS_TO_CONSULT}.intValue(),$F{DAYS_TO_CLASSIFY}.intValue(),$F{DAYS_TO_STAFF}.intValue(),$F{DAYS_TO_OFFER}.intValue())]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="78" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="6" width="772" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NEIL Time to Hire End to End Report - Completed]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="40" width="772" height="30" uuid="2629f677-a976-4959-a125-18e971e7a6bb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? "By Admin Code"+ ","  +  $P{ADMIN_CD} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy") : $P{COMPONENT} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="772" height="40" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="52" height="40" backcolor="#1C16D9" uuid="c9b1925e-2898-44b7-bb73-9a4b0e56d7e2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Date Request Created]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="52" y="0" width="65" height="40" uuid="ee3ddbe2-6804-442d-aa12-d465a7a5085c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Job Request Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="117" y="0" width="50" height="40" uuid="67d41334-b7b7-4611-ba33-a104ec534d37">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Admin Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="167" y="0" width="52" height="40" uuid="0025bffa-68b2-4cbb-af29-074b1483fe1f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[PD Num/ Job Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="219" y="0" width="65" height="40" uuid="e15536a8-1fe9-470d-a469-cc45e82747a7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Position Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="341" y="0" width="60" height="40" uuid="d7db8b73-153a-402a-91d5-4d0580e6a662">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Request Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="401" y="0" width="65" height="40" uuid="cf06d5ae-1dea-41ca-86b9-ad7ca56f7280">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Classification Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="531" y="0" width="40" height="40" uuid="aae1c37b-8170-4fdc-854a-89c59d6a3412">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Time to Consult]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="571" y="0" width="40" height="40" uuid="a162a271-df9e-43b7-a997-2eada6c7d913">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Time to Classify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="611" y="0" width="40" height="40" uuid="50bf2a76-d2e3-4fa7-9801-673176cd8e59">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Time to Appoint]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="651" y="0" width="40" height="40" uuid="12f7630f-d011-4290-b9f6-0126acb7a5ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Time to Staff]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="691" y="0" width="41" height="40" uuid="42ad4f1a-3d16-4972-aad6-b75da9fd004d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Time to Offer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="732" y="0" width="40" height="40" uuid="c771722c-7d13-4039-b8a7-0ccc70f1263e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Total Time to Hire]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="466" y="0" width="65" height="40" uuid="f224c910-8bcb-4104-a23d-0dda78a1e92c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Appointment Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="284" y="0" width="57" height="40" uuid="17944560-5903-4c1b-b664-d873e91129a8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Pay Plan - Grade - Series]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="52" height="20" uuid="485db9c5-cef1-4010-a19d-798c614ce1ed">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{CREATE_DATE},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="52" y="0" width="65" height="20" uuid="47d71421-7d32-44a4-b24f-73ec86552f33">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USAS_REQ_NUM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="117" y="0" width="50" height="20" uuid="efecde14-b3bf-4cbd-a637-60d781992620">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADMIN_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="167" y="0" width="52" height="20" uuid="21f8c56b-321c-4039-bd1e-8c4954162803">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PD_NUM_1} == null) ? "" 
+																	: new Boolean ($F{PD_NUM_2} == null) ? $F{PD_NUM_1}
+																				: new Boolean ($F{PD_NUM_3} == null) ? $F{PD_NUM_1} + "; " + $F{PD_NUM_2}
+																							: new Boolean ($F{PD_NUM_4} == null) ? $F{PD_NUM_1} + "; " + $F{PD_NUM_2} + "; " + $F{PD_NUM_3}
+																										: new Boolean ($F{PD_NUM_5} == null) ? $F{PD_NUM_1} + "; " + $F{PD_NUM_2} + "; " + $F{PD_NUM_3} + "; " + $F{PD_NUM_4}
+																													: $F{PD_NUM_1} + "; " + $F{PD_NUM_2} + "; " + $F{PD_NUM_3} + "; " + $F{PD_NUM_4} + "; " + $F{PD_NUM_5}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="219" y="0" width="65" height="20" uuid="fa78eba0-ac03-468d-b381-9a1115f2b069">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POSITION_TITLE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="341" y="0" width="60" height="20" uuid="fd784a8a-9055-4c0f-a410-2e723737f5ba">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="401" y="0" width="65" height="20" uuid="942f7d41-46b6-49c5-b9b3-6e3b1a2f841e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CLASSIFICATION_TYPE} != null )? $F{CLASSIFICATION_TYPE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="531" y="0" width="40" height="20" uuid="ebad16ae-dae7-4ff6-9571-11e5e3c41bd6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAYS_TO_CONSULT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="571" y="0" width="40" height="20" uuid="c9c96626-155f-42e5-817a-ebeb43ab8033">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{DAYS_TO_CLASSIFY}!= null) 	? $F{DAYS_TO_CLASSIFY} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="611" y="0" width="40" height="20" uuid="c64d7cf3-037a-417e-9f9a-eda4f2c5930d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ?  $F{DAYS_TO_APPOINT} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="651" y="0" width="40" height="20" uuid="7e3e94bc-bc50-4dc4-a00d-0cdd0b40e950">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Recruitment")) ?  $F{DAYS_TO_STAFF} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="691" y="0" width="41" height="20" uuid="826bc461-ae7e-4cda-922d-cd206c1af67a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAYS_TO_OFFER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="732" y="0" width="40" height="20" uuid="3c8cde8e-45cb-4b83-ab9e-f2363361d9f9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAYS_TO_HIRE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="466" y="0" width="65" height="20" uuid="d3728203-f866-4235-b8bf-b4168df8d913">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals( "Appointment" ) )
+						?	(new Boolean ($F{APPOINT_TYPE}.equals("Schedule A")) 
+													? $F{APPOINT_TYPE} + " - " + $F{SCHEDULE_A_TYPE}
+													: (new Boolean ($F{APPOINT_TYPE}.equals("Volunteer")) 
+																				? $F{APPOINT_TYPE} + " - " + $F{VOLUNTEER_TYPE} 
+													  							: $F{APPOINT_TYPE}
+													  ) 
+							)
+						 : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="284" y="0" width="57" height="20" uuid="8e18ff8c-65f1-4c63-8e1c-810c28f2b653">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAY_PLAN} + "-" + $F{SERIES} + "-"+ $F{GRADE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="691" y="25" width="41" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="732" y="25" width="40" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="25" width="283" height="15" uuid="5905c9bd-f414-4883-b983-3efa9601bbb8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="283" height="20" uuid="d23f5711-b9b4-4e15-a0cd-940508552535"/>
+				<textElement>
+					<font size="9"/>
+					<paragraph leftIndent="4" rightIndent="0"/>
+				</textElement>
+				<text><![CDATA[Note: All calculations are based on business days.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="96">
+			<staticText>
+				<reportElement x="1" y="54" width="283" height="20" uuid="56b892c2-a869-40a4-8e55-fd0ee05d336f"/>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="8" width="772" height="25" uuid="a3ac0b61-55d1-498d-9d92-2f933bd85f14">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NEIL Time to Hire End to End Report - Completed]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

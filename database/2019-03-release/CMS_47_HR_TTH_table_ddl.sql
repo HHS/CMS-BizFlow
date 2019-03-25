@@ -26,5 +26,5 @@ ALTER TABLE HHS_CMS_HR.CMS_TIME_TO_HIRE_WEEKLY_PILOT
        OFFER_START             DATE,          
        OFFER_END               DATE, 
        ACHIEVED_OFFER          NUMBER(10),
-       MISSED_OFFER          NUMBER(10)
+       MISSED_OFFER            NUMBER(10)
 	);
