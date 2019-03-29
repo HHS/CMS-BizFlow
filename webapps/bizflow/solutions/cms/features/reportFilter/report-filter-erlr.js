@@ -392,8 +392,8 @@
                 vm.ERLRTypes = ['Investigation'];
                 vm.orgSelected.caseType = 'Investigation';
             } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Performance Improvement Plan (PIP) Report') {
-                vm.ERLRTypes = ['Performance'];
-                vm.orgSelected.caseType = 'Performance';
+                vm.ERLRTypes = ['Performance Issue'];
+                vm.orgSelected.caseType = 'Performance Issue';
             } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Standards of Conduct Case') {
                 vm.ERLRTypes = ['Conduct Issue'];
                 vm.orgSelected.caseType = 'Conduct Issue';
