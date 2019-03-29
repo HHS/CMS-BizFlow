@@ -792,7 +792,7 @@ SELECT
 	, SG.SG_XO_ORG
 	, SG.SG_HRL_ID
 	--, LU_MEMHL.NAME AS SG_HL_NAME
-	, (SELECT M.NAME FROM BIZFLOW.MEMBER M WHERE M.MEMBERID = SG.SG_HRL_ID AND ROWNUM = 1)  AS SG_HL_NAME
+	, FN_GET_NAMES(SG.SG_HRL_ID) AS SG_HL_NAME
 	, SG.SG_HRL_TITLE
 	, SG.SG_HRL_ORG
 	, SG.SG_SS_ID
@@ -1129,7 +1129,7 @@ SELECT
 	, CS.XO_TITLE
 	, CS.XO_ORG
 	, CS.HRL_ID
-	, (SELECT M.NAME FROM BIZFLOW.MEMBER M WHERE M.MEMBERID = CS.HRL_ID AND ROWNUM = 1)  AS HL_NAME
+	, FN_GET_NAMES(CS.HRL_ID)  AS HL_NAME
 	, CS.HRL_TITLE
 	, CS.HRL_ORG
 	, CS.SS_ID
@@ -1313,7 +1313,7 @@ SELECT
 	, EQ.XO_ORG
 	, EQ.HRL_ID
 	--, LU_MEMHL.NAME AS HL_NAME
-	, (SELECT M.NAME FROM BIZFLOW.MEMBER M WHERE M.MEMBERID = EQ.HRL_ID AND ROWNUM = 1)  AS HL_NAME
+	, FN_GET_NAMES(EQ.HRL_ID)  AS HL_NAME
 	, EQ.HRL_TITLE
 	, EQ.HRL_ORG
 	, EQ.SS_ID
@@ -1925,7 +1925,7 @@ FROM TBL_FORM_DTL FD,
      XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
 	PDP_TYPE VARCHAR2(18) PATH './item[id="pdpType"]/value'
 	,PDP_TYPE_OTHER	VARCHAR2(150)PATH './item[id="pdpTypeOther"]/value'
-	,EXISTINGREQUEST	CHAR(1)PATH './item[id="associatedRequest"]/value'
+	,EXISTINGREQUEST	VARCHAR2(1)PATH './item[id="associatedRequest"]/value'
 	-- Position
 	,WORK_SCHEDULE        VARCHAR2(15) PATH './item[id="workSchedule"]/value'
 	,HOURS_PER_WEEK       VARCHAR2(5) PATH './item[id="hoursPerWeek"]/value'
@@ -1933,7 +1933,7 @@ FROM TBL_FORM_DTL FD,
 	,LIC_INFO             VARCHAR2(140) PATH './item[id="licenseInfo"]/value'
 	--Details
 	,MARKET_PAY_RATE VARCHAR2(9) PATH './item[id="marketPayRate"]/value' 
-	,CURRENT_FED_EMPLOYEE  CHAR(1) PATH './item[id="currentFederalEmployee"]/value' 
+	,CURRENT_FED_EMPLOYEE  VARCHAR2(1) PATH './item[id="currentFederalEmployee"]/value' 
 	,LEVEL_RESPONSIBILITY VARCHAR2(50) PATH './item[id="execRespLevelOfResponsability"]/value'
 	,EXEC_RESP_AMT_REQUESTED NUMBER(10) PATH './item[id="execRespAmountRequested"]/value' 
 	,EXEC_RESP_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="execRespJustification"]/value' 
@@ -1984,7 +1984,7 @@ FROM TBL_FORM_DTL FD,
 	,PANEL_ROLE VARCHAR2(9) PATH './item[id="selectPanelRole"]/value' 
 	,VOTING_STATUS VARCHAR2(16) PATH './item[id="selectVotingStatus"]/value' 
 	,PANEL_RECOMMENDED_COMPENSATION NUMBER(10) PATH './item[id="selectPanelRecommendedCompensation"]/value' 
-	,QUORUM_REACHED CHAR(1) PATH './item[id="selectQuorumReached"]/value'
+	,QUORUM_REACHED VARCHAR2(1) PATH './item[id="selectQuorumReached"]/value'
 	,PANEL_CURRENT_SALARY NUMBER(10) PATH './item[id="currentSalary"]/value' 
 	,PANEL_PDP_AMOUNT NUMBER(10) PATH './item[id="PDPAmount"]/value' 
 	,PANEL_RECOMM_ANNUAL_SALARY NUMBER(10) PATH './item[id="panelRecommendedAnnualSalary"]/value' 
