@@ -24,6 +24,7 @@
         vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
+        vm.dayTypes = [{key:'Business',value: 'Business Days'}, {key:'Calendar', value: 'Calendar Days'}];
 
         vm.reportMap = [{
                 'name': 'CMS Time of Possession - Classification Only Report - Completed', 
@@ -272,6 +273,7 @@
             url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
             url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg; // Include Requests for Sub-Org
+            url = url + '&DAYS=' + vm.selected.dayType; // Business day or Calendar day
             //$log.debug('Report URL [' + url + ']');
             return url;
         };

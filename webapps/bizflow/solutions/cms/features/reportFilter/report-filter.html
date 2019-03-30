@@ -105,6 +105,23 @@
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>                        
                     </div>
+                    <div class="form-group col-md-3 required">
+                        <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
+                        <selectize  required
+                                    ng-required="true"
+                                    placeholder="Select One"
+                                    name="dateType"
+                                    id="dayType" 
+                                    config="$ctrl.simpleConfig"
+                                    role="combobox" 
+                                    options="$ctrl.dayTypes" 
+                                    ng-model="$ctrl.selected.dayType"></selectize>
+
+                        <div class="date-message" ng-messages="fReportSection.dayType.$error" ng-clock>
+                            <div ng-message="required">Set the end date for the report date range</div>
+                            <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
+                        </div>                        
+                    </div>                    
                 </div>
             </div>
         </div>
