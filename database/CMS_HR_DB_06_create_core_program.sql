@@ -662,15 +662,13 @@ IS
       --DBMS_OUTPUT.PUT_LINE('Starting PV update ----------');
 
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'adminCode', '/DOCUMENT/GENERAL/SG_ADMIN_CD/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancelReason', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);
-      --HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'hrLiaison', '/DOCUMENT/GENERAL/SG_HRL_ID/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancelReason', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);      
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingAckResponse', '/DOCUMENT/PROCESS_VARIABLE/meetingAckResponse/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingApvResponse', '/DOCUMENT/PROCESS_VARIABLE/meetingApvResponse/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingEmailRecipients', '/DOCUMENT/PROCESS_VARIABLE/meetingEmailRecipients/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingRequired', '/DOCUMENT/PROCESS_VARIABLE/meetingRequired/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingResched',  '/DOCUMENT/PROCESS_VARIABLE/meetingResched/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdClassSpec', '/DOCUMENT/GENERAL/SG_CS_ID/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdHrLiaison', '/DOCUMENT/GENERAL/SG_HRL_ID/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdClassSpec', '/DOCUMENT/GENERAL/SG_CS_ID/text()', null);      
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdSelectOff', '/DOCUMENT/GENERAL/SG_SO_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdStaffSpec', '/DOCUMENT/GENERAL/SG_SS_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posLocation', '/DOCUMENT/POSITION/POS_LOCATION/text()', null);
@@ -758,34 +756,6 @@ IS
           V_VALUE_LOOKUP := NULL;
         END;
         V_VALUE := V_VALUE_LOOKUP;
-      ELSE
-        V_VALUE := NULL;
-      END IF;
-      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
-      V_RLVNTDATANAME := 'execOfficer';
-      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_XO_ID/text()');
-      IF V_XMLVALUE IS NOT NULL THEN
-        -------------------------------
-        -- participant prefix
-        -------------------------------
-        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-      ELSE
-        V_VALUE := NULL;
-      END IF;
-      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
-      V_RLVNTDATANAME := 'hrLiaison';
-      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_HRL_ID/text()');
-      IF V_XMLVALUE IS NOT NULL THEN
-        -------------------------------
-        -- participant prefixa
-        -------------------------------
-        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
       ELSE
         V_VALUE := NULL;
       END IF;
@@ -919,6 +889,47 @@ IS
       --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
       --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
 
+    V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_HRL_ID/text()');
+    IF V_XMLVALUE IS NOT NULL THEN
+        V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 1) INTO V_VALUE1 FROM DUAL;
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 2) INTO V_VALUE2 FROM DUAL;
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 3) INTO V_VALUE3 FROM DUAL;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE1) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE1 IS NOT NULL THEN
+          V_VALUE1 := '[U]' || V_VALUE1;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE1) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison2';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE2) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE2 IS NOT NULL THEN
+          V_VALUE2 := '[U]' || V_VALUE2;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison2';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE2) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison3';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE3) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE3 IS NOT NULL THEN
+          V_VALUE3 := '[U]' || V_VALUE3;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison3';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE3) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+      ELSE
+
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL
+        WHERE RLVNTDATANAME IN ('memIdHrLiaison', 'memIdHrLiaison2', 'memIdHrLiaison3', 'hrLiaison', 'hrLiaison2', 'hrLiaison3') AND PROCID = I_PROCID;
+
+      END IF;
+       
 
       V_RLVNTDATANAME := 'posIs';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/POSITION/POS_SUPERVISORY/text()');
@@ -1306,7 +1317,6 @@ IS
     SP_ERROR_LOG();
     --DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_STRATCON -------------------');
   END;
-
 
 
 
@@ -2153,9 +2163,9 @@ BEGIN
 							, SG_XO_ID                          NVARCHAR2(32)   PATH 'SG_XO_ID'
 							, SG_XO_TITLE                       NVARCHAR2(200)   PATH 'SG_XO_TITLE'
 							, SG_XO_ORG                         NVARCHAR2(200)   PATH 'SG_XO_ORG'
-							, SG_HRL_ID                         NVARCHAR2(10)   PATH 'SG_HRL_ID'
-							, SG_HRL_TITLE                      NVARCHAR2(50)   PATH 'SG_HRL_TITLE'
-							, SG_HRL_ORG                        NVARCHAR2(50)   PATH 'SG_HRL_ORG'
+							, SG_HRL_ID                         NVARCHAR2(32)   PATH 'SG_HRL_ID'
+							, SG_HRL_TITLE                      NVARCHAR2(200)   PATH 'SG_HRL_TITLE'
+							, SG_HRL_ORG                        NVARCHAR2(200)   PATH 'SG_HRL_ORG'
 							, SG_SS_ID                          NVARCHAR2(10)   PATH 'SG_SS_ID'
 							, SG_CS_ID                          NVARCHAR2(10)   PATH 'SG_CS_ID'
 							, SG_SO_AGREE                       CHAR(1)         PATH 'if (SG_SO_AGREE/text() = "true") then 1 else 0'
@@ -3398,9 +3408,9 @@ BEGIN
 							, XO_ID                             NVARCHAR2(32)   PATH 'XO_ID'
 							, XO_TITLE                          NVARCHAR2(200)   PATH 'XO_TITLE'
 							, XO_ORG                            NVARCHAR2(200)   PATH 'XO_ORG'
-							, HRL_ID                            NVARCHAR2(10)   PATH 'HRL_ID'
-							, HRL_TITLE                         NVARCHAR2(50)   PATH 'HRL_TITLE'
-							, HRL_ORG                           NVARCHAR2(50)   PATH 'HRL_ORG'
+							, HRL_ID                            NVARCHAR2(32)   PATH 'HRL_ID'
+							, HRL_TITLE                         NVARCHAR2(200)   PATH 'HRL_TITLE'
+							, HRL_ORG                           NVARCHAR2(200)   PATH 'HRL_ORG'
 							, SS_ID                             NVARCHAR2(10)   PATH 'SS_ID'
 							, CS_ID                             NVARCHAR2(10)   PATH 'CS_ID'
 					) XG
@@ -3900,7 +3910,7 @@ END;
  * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
  * @param I_FIELD_DATA - Form data xml.
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_CLSF
+create or replace PROCEDURE SP_UPDATE_PV_CLSF
   (
       I_PROCID            IN      NUMBER
     , I_FIELD_DATA      IN      XMLTYPE
@@ -3990,9 +4000,50 @@ IS
 
       ELSE
 
-        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL 
-         WHERE RLVNTDATANAME in ('memIdExecOff', 'memIdExecOff2', 'memIdExecOff3', 'execOfficer', 'execOfficer2', 'execOfficer3') 
-           AND PROCID = I_PROCID;
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL
+        WHERE RLVNTDATANAME in ('memIdExecOff', 'memIdExecOff2', 'memIdExecOff3', 'execOfficer', 'execOfficer2', 'execOfficer3')
+              AND PROCID = I_PROCID;
+
+      END IF;
+
+    V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/HRL_ID/text()');
+    IF V_XMLVALUE IS NOT NULL THEN
+        V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 1) INTO V_VALUE1 FROM DUAL;
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 2) INTO V_VALUE2 FROM DUAL;
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 3) INTO V_VALUE3 FROM DUAL;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE1) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE1 IS NOT NULL THEN
+          V_VALUE1 := '[U]' || V_VALUE1;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE1) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison2';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE2) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE2 IS NOT NULL THEN
+          V_VALUE2 := '[U]' || V_VALUE2;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison2';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE2) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison3';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE3) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE3 IS NOT NULL THEN
+          V_VALUE3 := '[U]' || V_VALUE3;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison3';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE3) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+      ELSE
+
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL
+        WHERE RLVNTDATANAME IN ('memIdHrLiaison', 'memIdHrLiaison2', 'memIdHrLiaison3', 'hrLiaison', 'hrLiaison2', 'hrLiaison3') AND PROCID = I_PROCID;
 
       END IF;
 
@@ -4010,20 +4061,7 @@ IS
       --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
       UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
-      V_RLVNTDATANAME := 'hrLiaison';
-      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/HRL_ID/text()');
-      IF V_XMLVALUE IS NOT NULL THEN
-        -------------------------------
-        -- participant prefix
-        -------------------------------
-        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-      ELSE
-        V_VALUE := NULL;
-      END IF;
-      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
+      
 
       V_RLVNTDATANAME := 'lastActivityCompDate';
       BEGIN
@@ -4241,7 +4279,7 @@ IS
     SP_ERROR_LOG();
     --DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_CLSF -------------------');
   END;
-/
+  /
 
 
 --------------------------------------------------------
@@ -4256,7 +4294,7 @@ IS
  * @param I_PROCID - Process ID for the target process instance whose process variables should be updated.
  * @param I_FIELD_DATA - Form data xml.
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_PV_ELIGQUAL
+create or replace PROCEDURE SP_UPDATE_PV_ELIGQUAL
   (
       I_PROCID            IN      NUMBER
     , I_FIELD_DATA      IN      XMLTYPE
@@ -4293,8 +4331,7 @@ IS
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancelReason', '/DOCUMENT/PROCESS_VARIABLE/cancelReason/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'feedbackDCO', '/DOCUMENT/PROCESS_VARIABLE/feedbackDCO/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'feedbackStaffSpec', '/DOCUMENT/PROCESS_VARIABLE/feedbackStaffSpec/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdClassSpec', '/DOCUMENT/GENERAL/CS_ID/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdHrLiaison', '/DOCUMENT/GENERAL/HRL_ID/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdClassSpec', '/DOCUMENT/GENERAL/CS_ID/text()', null);      
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdSelectOff', '/DOCUMENT/GENERAL/SO_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdStaffSpec', '/DOCUMENT/GENERAL/SS_ID/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posLocation', '/DOCUMENT/POSITION/LOCATION/text()', null);
@@ -4442,20 +4479,6 @@ IS
         UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
       END IF;
 
-      V_RLVNTDATANAME := 'hrLiaison';
-      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/HRL_ID/text()');
-      IF V_XMLVALUE IS NOT NULL THEN
-        -------------------------------
-        -- participant prefix
-        -------------------------------
-        V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-      ELSE
-        V_VALUE := NULL;
-      END IF;
-      --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
-      --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
-      UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
       V_RLVNTDATANAME := 'ineligReason';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/REVIEW/INELIG_REASON/text()');
       IF V_XMLVALUE IS NOT NULL THEN
@@ -4529,10 +4552,51 @@ IS
 
       ELSE
 
-        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL 
-         WHERE RLVNTDATANAME in ('memIdExecOff','memIdExecOff2','memIdExecOff3', 'execOfficer','execOfficer2','execOfficer3')
-           AND PROCID = I_PROCID;
-      
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL
+        WHERE RLVNTDATANAME in ('memIdExecOff','memIdExecOff2','memIdExecOff3', 'execOfficer','execOfficer2','execOfficer3')
+              AND PROCID = I_PROCID;
+
+      END IF;
+
+    V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/HRL_ID/text()');
+    IF V_XMLVALUE IS NOT NULL THEN
+        V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 1) INTO V_VALUE1 FROM DUAL;
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 2) INTO V_VALUE2 FROM DUAL;
+        SELECT REGEXP_SUBSTR (V_VALUE, '[^,]+', 1, 3) INTO V_VALUE3 FROM DUAL;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE1) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE1 IS NOT NULL THEN
+          V_VALUE1 := '[U]' || V_VALUE1;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE1) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison2';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE2) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE2 IS NOT NULL THEN
+          V_VALUE2 := '[U]' || V_VALUE2;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison2';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE2) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        V_RLVNTDATANAME := 'memIdHrLiaison3';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE3) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+        IF V_VALUE3 IS NOT NULL THEN
+          V_VALUE3 := '[U]' || V_VALUE3;
+        END IF;
+        V_RLVNTDATANAME := 'hrLiaison3';
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE3) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
+      ELSE
+
+        UPDATE BIZFLOW.RLVNTDATA SET VALUE = NULL
+        WHERE RLVNTDATANAME IN ('memIdHrLiaison', 'memIdHrLiaison2', 'memIdHrLiaison3', 'hrLiaison', 'hrLiaison2', 'hrLiaison3') AND PROCID = I_PROCID;
+
       END IF;
 
 
@@ -5069,9 +5133,9 @@ BEGIN
 							, XO_ID                         NVARCHAR2(32)   PATH 'GENERAL/XO_ID'
 							, XO_TITLE                      NVARCHAR2(200)   PATH 'GENERAL/XO_TITLE'
 							, XO_ORG                        NVARCHAR2(200)   PATH 'GENERAL/XO_ORG'
-							, HRL_ID                        NVARCHAR2(10)   PATH 'GENERAL/HRL_ID'
-							, HRL_TITLE                     NVARCHAR2(50)   PATH 'GENERAL/HRL_TITLE'
-							, HRL_ORG                       NVARCHAR2(50)   PATH 'GENERAL/HRL_ORG'
+							, HRL_ID                        NVARCHAR2(32)   PATH 'GENERAL/HRL_ID'
+							, HRL_TITLE                     NVARCHAR2(200)   PATH 'GENERAL/HRL_TITLE'
+							, HRL_ORG                       NVARCHAR2(200)   PATH 'GENERAL/HRL_ORG'
 							, SS_ID                         NVARCHAR2(10)   PATH 'GENERAL/SS_ID'
 							, CS_ID                         NVARCHAR2(10)   PATH 'GENERAL/CS_ID'
 							, SO_AGREE                      CHAR(1)         PATH 'if (GENERAL/SO_AGREE/text() = "true") then 1 else 0'
