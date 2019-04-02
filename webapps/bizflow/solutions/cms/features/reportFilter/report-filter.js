@@ -74,7 +74,12 @@
                 'description': 'Mandatory filters required to run the report.',
 				'requestType': ["Appointment"],
 				'dateLabel': 'Date Request Created'
-			}
+			},{
+                'name': 'CMS Appointment Eligibility Qual Review', 
+                'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
+                'requestType': ["Appointment"],
+                'appointmentType': ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)']
+            }
         ];
         
         // Default Values
@@ -330,6 +335,13 @@
                         vm.copyItems(vm._requestTypes, foundReportMap.requestType);
                         if (vm._requestTypes.length == 1) {
                             vm.orgSelected.requestType = vm._requestTypes[0]
+                        }
+                    }
+                    if (foundReportMap.appointmentType && foundReportMap.appointmentType.length > 0) {
+                        // vm._appointmentTypes = foundReportMap.appointmentType;
+                        vm.copyItems(vm._appointmentTypes, foundReportMap.appointmentType);
+                        if (vm._appointmentTypes.length == 1) {
+                            vm.orgSelected.appointmentType = vm._appointmentTypes[0]
                         }
                     }
 
