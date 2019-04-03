@@ -19,6 +19,11 @@ UPDATE BIZFLOW.RLVNTDATA
  WHERE RLVNTDATANAME ='caseStatus'
    AND VALUE = 'closeNow';
 
+UPDATE BIZFLOW.CONDDEF
+   SET EXPR = '([IV:caseStatus] != "Closed")'
+ WHERE EXPR = '([IV:caseStatus] != "closeNow")';
+
+
 UPDATE HHS_CMS_HR.ERLR_GEN
    SET GEN_CASE_STATUS = 'Closed'
  WHERE GEN_CASE_STATUS = 'closeNow';
