@@ -26,7 +26,8 @@
         vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
-
+		vm._typeOfDay = ['Business', 'Calendar']; //#290605 - Business and Calendar Days filter 
+		
         vm.reportMap = [
 			{
 				'name': 'CMS HR Incentives Workload Summary Report',
@@ -63,7 +64,8 @@
             executiveOfficer: 'All',
             hrLiaison: 'All',
             staffSpecialist: 'All',
-            classSpecialist: 'All'
+            classSpecialist: 'All',
+			typeOfDay: 'Business' //#290605 - Business and Calendar Days filter 
         };
         // Selected Values
         vm.selected = {};
@@ -298,6 +300,10 @@
             // url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
             // url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             //$log.debug('Report URL [' + url + ']');
+			
+            if (vm.selected.typeOfDay) {
+				url = url + '&DAYS=' + vm.selected.typeOfDay; // Type of Days [Business Days | Calendar Days]
+            }			
             return url;
         };
 
@@ -380,6 +386,7 @@
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
             vm.incentiveTypes = vm.getSelectizeOptionsEx(vm._incentiveTypes);
+			vm.typeOfDay = vm.getSelectizeOptions(vm._typeOfDay); //#290605 - Business and Calendar Days filter 
         };
 
         vm.$onDestroy = function () {
