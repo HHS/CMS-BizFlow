@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="bizFlowRolesSynchronization" class="com.hs.bf.security.authentication.dao.BizFlowRolesSynchronizationImpl">
+        <property name="bizFlowData"><ref local="bizFlowData"/></property>
+        <property name="tenantId"><value>organization_1</value></property>
+        <property name="userAuthorityService"><ref bean="mtUserAuthorityServiceTarget"/></property>
+        <property name="transactionManager"><ref bean="transactionManager"/></property>
+        <property name="multiTenancyConfiguration"><ref bean="multiTenancyConfiguration"/></property>
+    </bean>
+
+    <bean id="synchronizationService" class="com.hs.bf.security.authentication.service.SynchronizationServiceImpl">
+<!--        <property name="delay"><value>300</value></property>
+        <property name="period"><value>1200</value></property> -->
+        <property name="delay"><value>10000</value></property>
+        <property name="period"><value>3600000</value></property>
+		
+        <property name="bizFlowRolesSynchronization">
+            <ref local="bizFlowRolesSynchronization" />
+        </property>
+    </bean>
+
+    <bean id="synchronizationServiceStarter" class="com.hs.bf.security.authentication.service.SynchronizationServiceStarter">
+        <property name="synchronizationService">
+            <ref local="synchronizationService" />
+        </property>
+    </bean>
+
+    <bean id="bizflowAuthenticationProvider" class="com.hs.bf.security.providers.BizFlowAuthenticationProvider">
+        <property name="authenticationService">
+            <ref local="authenticationService"/>
+        </property>
+    </bean>
+
+    <bean id="authenticationService" class="com.hs.bf.security.authentication.service.UserAuthenticationServiceImpl">
+        <property name="bizFlowUserAuthentication">
+            <ref local="bizFlowUserAuthentication"/>
+        </property>
+    </bean>
+
+    <bean id="bizFlowUserAuthentication" class="com.hs.bf.security.authentication.dao.BizFlowUserAuthenticationImpl">
+		<property name="bizFlowData"><ref local="bizFlowData"/></property>
+        <property name="tenantId"><value>organization_1</value></property>
+        <property name="defaultInternalRoles">
+            <list>
+                <value>ROLE_USER</value>
+            </list>
+        </property>
+        <property name="objectPermissionService" ref="customObjectPermissionServiceTarget"/>
+        <property name="userService" ref="userAuthorityService"/>
+        <property name="tenantService" ref="tenantService"/>
+        <property name="repository" ref="easyXMLizedRepository"/>
+        <property name="transactionManager" ref="transactionManager"/>
+	</bean>
+
+	<bean id="bizFlowData" class="com.hs.bf.security.authentication.data.BizFlowData">
+        <property name="bizFlowHeadOfficeID"><value>9999999996</value></property>
+        <!-- Oracle
+        <property name="bizFlowJDBCDriver"><value>oracle.jdbc.driver.OracleDriver</value></property>
+        <property name="bizFlowJDBCURL"><value>jdbc:oracle:thin:@localhost:1521:orcl</value></property>
+        -->
+        <!-- MSSQL
+        <property name="bizFlowJDBCDriver"><value>com.microsoft.sqlserver.jdbc.SQLServerDriver</value></property>
+        <property name="bizFlowJDBCURL"><value>jdbc:sqlserver://localhost:1433;DatabaseName=workflow</value></property>
+        -->
+        <property name="bizFlowJDBCDriver"><value>oracle.jdbc.driver.OracleDriver</value></property>
+        <property name="bizFlowJDBCURL"><value>jdbc:oracle:thin:@WIN-PC4G2ICS1H4:1521:orcl</value></property>
+        <property name="bizFlowDBUser"><value>bizflow</value></property>
+        <property name="bizFlowDBKeychain"><value>bizflow</value></property>
+        <property name="bizFlowServerIP"><value>WIN-PC4G2ICS1H4</value></property>
+        <property name="bizFlowServerPort"><value>7201</value></property>
+        <!--
+        <property name="bizFlowJNDIContext"><value>java:comp/env</value></property>
+        -->
+        <property name="bizFlowJNDIContext"><value></value></property>
+        <!--
+        <property name="bizFlowJNDIDataSource"><value>jdbc/bizflow</value></property>
+        -->
+        <property name="bizFlowJNDIDataSource"><value></value></property>
+
+        <property name="dbcpJdbcDataSourceFactory" ref="dbcpJdbcDataSourceFactory"/>
+        <property name="bizFlowDBAllRolesQuery">
+            <value><![CDATA[
+				SELECT M.NAME, M.MEMBERID, PM.MEMBERPATH
+				FROM MEMBER M, PARENTMEMBER PM, PARENTMEMBER T
+				WHERE M.MEMBERID = PM.MEMBERID
+				AND PM.MEMBERID = PM.PARENTID
+				AND M.MEMBERID = T.MEMBERID
+				AND T.PARENTID = ?
+				AND M.TYPE = 'D'
+				UNION
+				SELECT 'group.'||SUBSTR(PM.MEMBERPATH, 2, INSTR(PM.MEMBERPATH,'/', 2)-2)||'.'||M.NAME AS NAME, M.MEMBERID, PM.MEMBERPATH
+				FROM MEMBER M, PARENTMEMBER PM
+				WHERE M.MEMBERID = PM.MEMBERID
+				AND PM.MEMBERID = PM.PARENTID
+				AND PM.MEMBERID IN (SELECT P.MEMBERID FROM MEMBER M JOIN PARENTMEMBER P ON P.PARENTID = M.MEMBERID WHERE M.TYPE='H' AND M.NAME IN ('CDC', 'CMS', 'IHS', 'WHRSC'))
+				AND M.TYPE = 'G'
+			]]></value>
+        </property>
+        <property name="bizFlowDBAllRolesParams">
+			<list>
+	            <value>{BFHEADOFFICEID}</value>
+			</list>
+        </property>
+        <property name="bizFlowDBUserRolesQuery">
+            <value><![CDATA[
+				SELECT CASE M.TYPE WHEN 'D' THEN M.NAME 
+							ELSE 'GROUP.'||SUBSTR(PM.MEMBERPATH, 2, INSTR(PM.MEMBERPATH,'/', 2)-2)||'.'||M.NAME
+						END AS NAME, M.MEMBERID,  PM.MEMBERPATH
+				FROM MEMBER M, PARENTMEMBER PM, VUSRGRPPRTCP P
+				WHERE M.MEMBERID = PM.MEMBERID
+				AND PM.MEMBERID = PM.PARENTID
+				AND P.USRGRPID = M.MEMBERID
+				AND P.PRTCP = ?
+			]]></value>
+        </property>
+        <property name="bizFlowDBUserRolesParams">
+			<list>
+	            <value>{BFMEMBERID}</value>
+			</list>
+        </property>
+		
+	</bean>
+
+</beans>
+
