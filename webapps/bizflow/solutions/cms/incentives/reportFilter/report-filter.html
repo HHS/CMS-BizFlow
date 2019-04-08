@@ -116,14 +116,17 @@
                         </div>
                     </div>
 					<!-- //#290605 - Business and Calendar Days filter  //-->
-                    <div class="form-group col-md-2 required">
-                        <label id="typeOfDaySelectLabel" for="appointmentTypeSelect" class="control-label">Business/Calendar Days</label>
-                        <selectize role="combobox" id="typeOfDaySelect" required aria-labelledby="typeOfDaySelectLabel"
-                                   name="typeOfDaySelect"
-                                   config="$ctrl.simpleConfig"
-                                   options="$ctrl.typeOfDay"
-                                   ng-model="$ctrl.selected.typeOfDay"
-								   ></selectize>
+                    <div class="form-group col-md-3 required">
+                        <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
+                        <selectize  required
+                                    ng-required="true"
+                                    placeholder="Select One"
+                                    name="dateType"
+                                    id="dayType" 
+                                    config="$ctrl.simpleConfig"
+                                    role="combobox" 
+                                    options="$ctrl.dayTypes"
+                                    ng-model="$ctrl.selected.dayType"></selectize>								   
                     </div>					
                 </div>
             </div>

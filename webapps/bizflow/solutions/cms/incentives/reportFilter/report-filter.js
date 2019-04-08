@@ -26,7 +26,7 @@
         vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
-		vm._typeOfDay = ['Business', 'Calendar']; //#290605 - Business and Calendar Days filter 
+		vm._dayTypes = ['Business', 'Calendar']; //#290605 - Business and Calendar Days filter 
 		
         vm.reportMap = [
 			{
@@ -64,8 +64,7 @@
             executiveOfficer: 'All',
             hrLiaison: 'All',
             staffSpecialist: 'All',
-            classSpecialist: 'All',
-			typeOfDay: 'Business' //#290605 - Business and Calendar Days filter 
+            classSpecialist: 'All'
         };
         // Selected Values
         vm.selected = {};
@@ -386,7 +385,7 @@
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
             vm.incentiveTypes = vm.getSelectizeOptionsEx(vm._incentiveTypes);
-			vm.typeOfDay = vm.getSelectizeOptions(vm._typeOfDay); //#290605 - Business and Calendar Days filter 
+			vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
         };
 
         vm.$onDestroy = function () {
