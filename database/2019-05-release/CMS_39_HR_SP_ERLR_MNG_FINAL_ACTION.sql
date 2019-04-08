@@ -37,7 +37,8 @@ BEGIN
        SET TBL_ACTIVE = '0', 
            TBL_EXPIRATION_DT = TO_DATE('05/01/2019', 'MM/DD/YYYY')
        WHERE TBL_CATEGORY = 'ERLR'
-         AND TBL_LABEL = I_LABEL; 
+         AND TBL_LABEL = I_LABEL
+         AND TBL_PARENT_ID = I_CASE_TYPE_ID; 
     ELSIF I_ACTION = 'UPDATE' THEN
         V_XPATH := '/formData/items/item[id="CC_FINAL_ACTION_SEL"]/value/value[.="'||I_LABEL||'"]/text()';
         FOR FORM_REC IN (
