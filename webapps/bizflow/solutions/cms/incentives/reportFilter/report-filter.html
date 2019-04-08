@@ -115,6 +115,16 @@
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>
                     </div>
+					<!-- //#290605 - Business and Calendar Days filter  //-->
+                    <div class="form-group col-md-2 required">
+                        <label id="typeOfDaySelectLabel" for="appointmentTypeSelect" class="control-label">Business/Calendar Days</label>
+                        <selectize role="combobox" id="typeOfDaySelect" required aria-labelledby="typeOfDaySelectLabel"
+                                   name="typeOfDaySelect"
+                                   config="$ctrl.simpleConfig"
+                                   options="$ctrl.typeOfDay"
+                                   ng-model="$ctrl.selected.typeOfDay"
+								   ></selectize>
+                    </div>					
                 </div>
             </div>
         </div>
