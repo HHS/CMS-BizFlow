@@ -300,8 +300,8 @@
             // url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             //$log.debug('Report URL [' + url + ']');
 			
-            if (vm.selected.typeOfDay) {
-				url = url + '&DAYS=' + vm.selected.typeOfDay; // Type of Days [Business Days | Calendar Days]
+            if (vm.selected.dayType) {
+				url = url + '&DAYS=' + vm.selected.dayType; // Type of Days [Business Days | Calendar Days]
             }			
             return url;
         };
