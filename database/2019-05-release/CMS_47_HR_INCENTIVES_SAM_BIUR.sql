@@ -69,7 +69,7 @@ BEGIN
             L_JUSTIFICATION_CRT_NAME,
             L_JUSTIFICATION_CRT_ID,
             L_JUSTIFICATION_CRT_DATE,
-            SYSTIMESTAMP,
+            TO_DATE(L_JUSTIFICATION_CRT_DATE, 'mm/dd/yyyy hh24:mi:ss'),
             :old.JUSTIFICATION_SUPER_QUAL_DESC,
             :old.JUSTIFICATION_QUAL_COMP_DESC,
             :old.JUSTIFICATION_PAY_EQUITY_DESC
