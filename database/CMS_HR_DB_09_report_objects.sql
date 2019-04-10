@@ -2003,7 +2003,244 @@ WHERE FD.FORM_TYPE = 'CMSINCENTIVES'
 /
 
 
-CREATE OR REPLACE VIEW VW_INCENTIVES_SAM AS
+CREATE OR REPLACE FORCE VIEW HHS_CMS_HR.VW_INCENTIVES_SAM
+(
+    PROC_ID
+    ,INIT_SALARY_GRADE
+    ,INIT_SALARY_STEP
+    ,INIT_SALARY_SALARY_PER_ANNUM
+    ,INIT_SALARY_LOCALITY_PAY_SCALE
+    ,SUPPORT_SAM
+    ,RCMD_SALARY_GRADE
+    ,RCMD_SALARY_STEP
+    ,RCMD_SALARY_SALARY_PER_ANNUM
+    ,RCMD_SALARY_LOCALITY_PAY_SCALE
+    ,SELECTEE_SALARY_PER_ANNUM
+    ,SELECTEE_SALARY_TYPE
+    ,SELECTEE_BONUS
+    ,SELECTEE_BENEFITS
+    ,SELECTEE_TOTAL_COMPENSATION
+    ,SUP_DOC_REQ_DATE
+    ,SUP_DOC_RCV_DATE
+    ,JUSTIFICATION_SUPER_QUAL_DESC
+    ,JUSTIFICATION_QUAL_COMP_DESC
+    ,JUSTIFICATION_PAY_EQUITY_DESC
+    ,JUSTIFICATION_EXIST_PKG_DESC
+    ,JUSTIFICATION_EXPLAIN_CONSID
+    ,SELECT_MEET_ELIGIBILITY
+    ,SELECT_MEET_CRITERIA
+    ,SUPERIOR_QUAL_REASON
+    ,OTHER_FACTORS
+    ,SPL_AGENCY_NEED_RSN
+    ,SPL_AGENCY_NEED_RSN_ESS
+    ,QUAL_REAPPT
+    ,OTHER_EXCEPTS
+    ,BASIC_PAY_RATE_FACTOR1
+    ,BASIC_PAY_RATE_FACTOR2
+    ,BASIC_PAY_RATE_FACTOR3
+    ,BASIC_PAY_RATE_FACTOR4
+    ,BASIC_PAY_RATE_FACTOR5
+    ,BASIC_PAY_RATE_FACTOR6
+    ,BASIC_PAY_RATE_FACTOR7
+    ,BASIC_PAY_RATE_FACTOR8
+    ,BASIC_PAY_RATE_FACTOR9
+    ,BASIC_PAY_RATE_FACTOR10
+    ,OTHER_RLVNT_FACTOR
+    ,OTHER_REQ_JUST_APVD
+    ,OTHER_REQ_SUFF_INFO_PRVD
+    ,OTHER_REQ_INCEN_REQD
+    ,OTHER_REQ_DOC_PRVD
+    ,HRS_RVW_CERT
+    ,HRS_NOT_SPT_RSN
+    ,RVW_HRS
+    ,HRS_RVW_DATE
+    ,RCMD_GRADE
+    ,RCMD_STEP
+    ,RCMD_SALARY_PER_ANNUM
+    ,RCMD_LOCALITY_PAY_SCALE
+    ,RCMD_INC_DEC_AMOUNT
+    ,RCMD_PERC_DIFF
+    ,OHC_APPRO_REQ
+    ,RCMD_APPRO_OHC_NAME
+    ,RCMD_APPRO_OHC_EMAIL
+    ,RCMD_APPRO_OHC_ID
+    ,RVW_REMARKS
+    ,APPROVAL_SO_VALUE
+    ,APPROVAL_SO
+    ,APPROVAL_SO_RESP_DATE 
+    ,APPROVAL_DGHO_VALUE
+    ,APPROVAL_DGHO
+    ,APPROVAL_DGHO_RESP_DATE 
+    ,APPROVAL_TABG_VALUE
+    ,APPROVAL_TABG
+    ,APPROVAL_TABG_RESP_DATE 
+    ,APPROVAL_OHC_VALUE
+    ,APPROVAL_OHC
+    ,APPROVAL_OHC_RESP_DATE 
+    ,APPROVER_NOTES
+    ,COC_NAME
+    ,COC_EMAIL
+    ,COC_ID
+    ,COC_TITLE
+    ,APPROVAL_COC_VALUE
+    ,APPROVAL_COC_ACTING
+    ,APPROVAL_COC
+    ,APPROVAL_COC_RESP_DATE 
+    ,APPROVAL_SO_ACTING
+    ,APPROVAL_DGHO_ACTING
+    ,APPROVAL_TABG_ACTING
+    ,APPROVAL_OHC_ACTING
+    ,JUSTIFICATION_MOD_REASON
+    ,JUSTIFICATION_MOD_SUMMARY
+    ,JUSTIFICATION_MODIFIER_NAME
+    ,JUSTIFICATION_MODIFIER_ID
+    ,JUSTIFICATION_MODIFIED_DATE
+    ,JUSTIFICATION_VER
+    ,JUSTIFICATION_CRT_NAME
+    ,JUSTIFICATION_CRT_ID
+    ,JUSTIFICATION_CRT_DATE 
+    ,JUSTIFICATION_LASTMOD_NAME
+    ,JUSTIFICATION_LASTMOD_ID
+    ,JUSTIFICATION_LASTMOD_DATE
+    ,INIT_SALARY_SALARY_PER_ANNUM_N
+    ,RCMD_SALARY_SALARY_PER_ANNUM_N
+    ,SELECTEE_SALARY_PER_ANNUM_N
+    ,SELECTEE_BONUS_N
+    ,SELECTEE_TOTAL_COMPENSATION_N
+    ,SUP_DOC_REQ_DATE_D
+    ,SUP_DOC_RCV_DATE_D
+    ,HRS_RVW_DATE_D
+    ,RCMD_SALARY_PER_ANNUM_N
+    ,RCMD_INC_DEC_AMOUNT_N
+    ,APPROVAL_SO_RESP_DATE_D
+    ,APPROVAL_DGHO_RESP_DATE_D
+    ,APPROVAL_TABG_RESP_DATE_D
+    ,APPROVAL_OHC_RESP_DATE_D
+    ,APPROVAL_COC_RESP_DATE_D
+    ,JUSTIFICATION_MODIFIED_DATE_D
+    ,JUSTIFICATION_CRT_DATE_D
+    ,JUSTIFICATION_LASTMOD_DATE_D
+)
+AS
+--------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    PROC_ID
+    ,INIT_SALARY_GRADE
+    ,INIT_SALARY_STEP
+    ,TO_CHAR(INIT_SALARY_SALARY_PER_ANNUM_N, '$999,999,999,999,999,999.99' ) as INIT_SALARY_SALARY_PER_ANNUM 
+    ,INIT_SALARY_LOCALITY_PAY_SCALE
+    ,SUPPORT_SAM
+    ,RCMD_SALARY_GRADE
+    ,RCMD_SALARY_STEP
+    ,TO_CHAR(RCMD_SALARY_SALARY_PER_ANNUM_N, '$999,999,999,999,999,999.99' ) as RCMD_SALARY_SALARY_PER_ANNUM
+    ,RCMD_SALARY_LOCALITY_PAY_SCALE
+    ,TO_CHAR(SELECTEE_SALARY_PER_ANNUM_N, '$999,999,999,999,999,999.99' ) as SELECTEE_SALARY_PER_ANNUM
+    ,SELECTEE_SALARY_TYPE
+    ,TO_CHAR(SELECTEE_BONUS_N, '$999,999,999,999,999,999.99' ) as SELECTEE_BONUS
+    ,SELECTEE_BENEFITS
+    ,TO_CHAR(SELECTEE_TOTAL_COMPENSATION_N, '$999,999,999,999,999,999.99' ) as SELECTEE_TOTAL_COMPENSATION
+    ,TO_CHAR(SUP_DOC_REQ_DATE_D, 'mm/dd/yyyy') as SUP_DOC_REQ_DATE
+    ,TO_CHAR(SUP_DOC_RCV_DATE_D, 'mm/dd/yyyy') as SUP_DOC_RCV_DATE
+    ,JUSTIFICATION_SUPER_QUAL_DESC
+    ,JUSTIFICATION_QUAL_COMP_DESC
+    ,JUSTIFICATION_PAY_EQUITY_DESC
+    ,JUSTIFICATION_EXIST_PKG_DESC
+    ,JUSTIFICATION_EXPLAIN_CONSID
+    ,SELECT_MEET_ELIGIBILITY
+    ,SELECT_MEET_CRITERIA
+    ,SUPERIOR_QUAL_REASON
+    ,OTHER_FACTORS
+    ,SPL_AGENCY_NEED_RSN
+    ,SPL_AGENCY_NEED_RSN_ESS
+    ,QUAL_REAPPT
+    ,OTHER_EXCEPTS
+    ,BASIC_PAY_RATE_FACTOR1
+    ,BASIC_PAY_RATE_FACTOR2
+    ,BASIC_PAY_RATE_FACTOR3
+    ,BASIC_PAY_RATE_FACTOR4
+    ,BASIC_PAY_RATE_FACTOR5
+    ,BASIC_PAY_RATE_FACTOR6
+    ,BASIC_PAY_RATE_FACTOR7
+    ,BASIC_PAY_RATE_FACTOR8
+    ,BASIC_PAY_RATE_FACTOR9
+    ,BASIC_PAY_RATE_FACTOR10
+    ,OTHER_RLVNT_FACTOR
+    ,OTHER_REQ_JUST_APVD
+    ,OTHER_REQ_SUFF_INFO_PRVD
+    ,OTHER_REQ_INCEN_REQD
+    ,OTHER_REQ_DOC_PRVD
+    ,HRS_RVW_CERT
+    ,HRS_NOT_SPT_RSN
+    ,RVW_HRS
+    ,TO_CHAR(HRS_RVW_DATE_D, 'mm/dd/yyyy') as HRS_RVW_DATE
+    ,RCMD_GRADE
+    ,RCMD_STEP
+    ,DECODE(RCMD_SALARY_PER_ANNUM_N, 0, '0.00', TO_CHAR(RCMD_SALARY_PER_ANNUM_N, 's999,999,999,999,999,999.99')) as RCMD_SALARY_PER_ANNUM
+    ,RCMD_LOCALITY_PAY_SCALE
+    ,DECODE(RCMD_INC_DEC_AMOUNT_N, 0, '0.00', TO_CHAR(RCMD_INC_DEC_AMOUNT_N, 's999,999,999,999,999,999.99')) as RCMD_INC_DEC_AMOUNT 
+    ,RCMD_PERC_DIFF
+    ,OHC_APPRO_REQ
+    ,RCMD_APPRO_OHC_NAME
+    ,RCMD_APPRO_OHC_EMAIL
+    ,RCMD_APPRO_OHC_ID
+    ,RVW_REMARKS
+    ,APPROVAL_SO_VALUE
+    ,APPROVAL_SO
+    ,TO_CHAR(APPROVAL_SO_RESP_DATE_D, 'mm/dd/yyyy') as APPROVAL_SO_RESP_DATE
+    ,APPROVAL_DGHO_VALUE
+    ,APPROVAL_DGHO
+    ,TO_CHAR(APPROVAL_DGHO_RESP_DATE_D, 'mm/dd/yyyy') as APPROVAL_DGHO_RESP_DATE
+    ,APPROVAL_TABG_VALUE
+    ,APPROVAL_TABG
+    ,TO_CHAR(APPROVAL_TABG_RESP_DATE_D, 'mm/dd/yyyy') as APPROVAL_TABG_RESP_DATE
+    ,APPROVAL_OHC_VALUE
+    ,APPROVAL_OHC
+    ,TO_CHAR(APPROVAL_OHC_RESP_DATE_D, 'mm/dd/yyyy') as APPROVAL_OHC_RESP_DATE
+    ,APPROVER_NOTES
+    ,COC_NAME
+    ,COC_EMAIL
+    ,COC_ID
+    ,COC_TITLE
+    ,APPROVAL_COC_VALUE
+    ,APPROVAL_COC_ACTING
+    ,APPROVAL_COC
+    ,TO_CHAR(APPROVAL_COC_RESP_DATE_D, 'mm/dd/yyyy') as APPROVAL_COC_RESP_DATE
+    ,APPROVAL_SO_ACTING
+    ,APPROVAL_DGHO_ACTING
+    ,APPROVAL_TABG_ACTING
+    ,APPROVAL_OHC_ACTING
+    ,JUSTIFICATION_MOD_REASON
+    ,JUSTIFICATION_MOD_SUMMARY
+    ,JUSTIFICATION_MODIFIER_NAME
+    ,JUSTIFICATION_MODIFIER_ID
+    ,TO_CHAR(JUSTIFICATION_MODIFIED_DATE_D, 'mm/dd/yyyy hh24:mi:ss') as JUSTIFICATION_MODIFIED_DATE
+    ,JUSTIFICATION_VER
+    ,JUSTIFICATION_CRT_NAME
+    ,JUSTIFICATION_CRT_ID
+    ,TO_CHAR(JUSTIFICATION_CRT_DATE_D, 'mm/dd/yyyy hh24:mi:ss') as JUSTIFICATION_CRT_DATE
+    ,JUSTIFICATION_LASTMOD_NAME
+    ,JUSTIFICATION_LASTMOD_ID
+    ,TO_CHAR(JUSTIFICATION_LASTMOD_DATE_D, 'mm/dd/yyyy hh24:mi:ss') as JUSTIFICATION_LASTMOD_DATE
+    ,INIT_SALARY_SALARY_PER_ANNUM_N
+    ,RCMD_SALARY_SALARY_PER_ANNUM_N
+    ,SELECTEE_SALARY_PER_ANNUM_N
+    ,SELECTEE_BONUS_N
+    ,SELECTEE_TOTAL_COMPENSATION_N
+    ,SUP_DOC_REQ_DATE_D 
+    ,SUP_DOC_RCV_DATE_D
+    ,HRS_RVW_DATE_D
+    ,RCMD_SALARY_PER_ANNUM_N
+    ,RCMD_INC_DEC_AMOUNT_N
+    ,APPROVAL_SO_RESP_DATE_D
+    ,APPROVAL_DGHO_RESP_DATE_D
+    ,APPROVAL_TABG_RESP_DATE_D
+    ,APPROVAL_OHC_RESP_DATE_D
+    ,APPROVAL_COC_RESP_DATE_D
+    ,JUSTIFICATION_MODIFIED_DATE_D
+    ,JUSTIFICATION_CRT_DATE_D
+    ,JUSTIFICATION_LASTMOD_DATE_D
+FROM HHS_CMS_HR.INCENTIVES_SAM
+;
 
 SELECT FD.PROCID AS PROC_ID, X.*
 FROM TBL_FORM_DTL FD,
@@ -2342,158 +2579,615 @@ END;
 /
 
 
-CREATE OR REPLACE PROCEDURE SP_UPDATE_INCENTIVES_SAM_TABLE
-(
-	I_PROCID            IN      NUMBER
-)
+create or replace PROCEDURE SP_UPDATE_INCENTIVES_SAM_TABLE
+  (
+    I_PROCID            IN      NUMBER
+  )
 IS
-	l_count	int;
+    V_XMLREC_CNT                INTEGER := 0;
+    V_XMLDOC                    XMLTYPE;
 BEGIN
-	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN 
-		SELECT count(*) INTO l_count FROM VW_INCENTIVES_SAM WHERE PROC_ID = I_PROCID;
-		IF 0 < l_count THEN
-			MERGE INTO INCENTIVES_SAM t
-			USING ( SELECT * FROM VW_INCENTIVES_SAM WHERE PROC_ID = I_PROCID ) v
-			ON (t.PROC_ID = v.PROC_ID)
-			WHEN MATCHED THEN
-				UPDATE 
-				SET t.COC_NAME = v.COC_NAME,
-					t.COC_EMAIL = v.COC_EMAIL,
-					t.COC_ID = v.COC_ID,
-					t.COC_TITLE = v.COC_TITLE,
-					t.INIT_SALARY_GRADE = v.INIT_SALARY_GRADE,
-					t.INIT_SALARY_STEP = v.INIT_SALARY_STEP,
-					t.INIT_SALARY_SALARY_PER_ANNUM = v.INIT_SALARY_SALARY_PER_ANNUM,
-					t.INIT_SALARY_LOCALITY_PAY_SCALE = v.INIT_SALARY_LOCALITY_PAY_SCALE,
-					t.SUPPORT_SAM = v.SUPPORT_SAM,
-					t.RCMD_SALARY_GRADE = v.RCMD_SALARY_GRADE,
-					t.RCMD_SALARY_STEP = v.RCMD_SALARY_STEP,
-					t.RCMD_SALARY_SALARY_PER_ANNUM = v.RCMD_SALARY_SALARY_PER_ANNUM,
-					t.RCMD_SALARY_LOCALITY_PAY_SCALE = v.RCMD_SALARY_LOCALITY_PAY_SCALE,
-					t.SELECTEE_SALARY_PER_ANNUM = v.SELECTEE_SALARY_PER_ANNUM,
-					t.SELECTEE_SALARY_TYPE = v.SELECTEE_SALARY_TYPE,
-					t.SELECTEE_BONUS = v.SELECTEE_BONUS,
-					t.SELECTEE_BENEFITS = v.SELECTEE_BENEFITS,
-					t.SELECTEE_TOTAL_COMPENSATION = v.SELECTEE_TOTAL_COMPENSATION,
-					t.SUP_DOC_REQ_DATE = v.SUP_DOC_REQ_DATE,
-					t.SUP_DOC_RCV_DATE = v.SUP_DOC_RCV_DATE,
-					t.JUSTIFICATION_LASTMOD_NAME = v.JUSTIFICATION_LASTMOD_NAME,
-					t.JUSTIFICATION_LASTMOD_ID = v.JUSTIFICATION_LASTMOD_ID,
-					t.JUSTIFICATION_MOD_REASON = v.JUSTIFICATION_MOD_REASON,
-					t.JUSTIFICATION_MOD_SUMMARY = v.JUSTIFICATION_MOD_SUMMARY,
-					t.JUSTIFICATION_MODIFIER_NAME = v.JUSTIFICATION_MODIFIER_NAME,
-					t.JUSTIFICATION_MODIFIER_ID = v.JUSTIFICATION_MODIFIER_ID,
-					t.JUSTIFICATION_MODIFIED_DATE = v.JUSTIFICATION_MODIFIED_DATE,
-					t.JUSTIFICATION_SUPER_QUAL_DESC = v.JUSTIFICATION_SUPER_QUAL_DESC,
-					t.JUSTIFICATION_QUAL_COMP_DESC = v.JUSTIFICATION_QUAL_COMP_DESC,
-					t.JUSTIFICATION_PAY_EQUITY_DESC = v.JUSTIFICATION_PAY_EQUITY_DESC,
-					t.JUSTIFICATION_EXIST_PKG_DESC = v.JUSTIFICATION_EXIST_PKG_DESC,
-					t.JUSTIFICATION_EXPLAIN_CONSID = v.JUSTIFICATION_EXPLAIN_CONSID,
-					t.SELECT_MEET_ELIGIBILITY = v.SELECT_MEET_ELIGIBILITY,
-					t.SELECT_MEET_CRITERIA = v.SELECT_MEET_CRITERIA,
-					t.SUPERIOR_QUAL_REASON = v.SUPERIOR_QUAL_REASON,
-					t.OTHER_FACTORS = v.OTHER_FACTORS,
-					t.SPL_AGENCY_NEED_RSN = v.SPL_AGENCY_NEED_RSN,
-					t.SPL_AGENCY_NEED_RSN_ESS = v.SPL_AGENCY_NEED_RSN_ESS,
-					t.QUAL_REAPPT = v.QUAL_REAPPT,
-					t.OTHER_EXCEPTS = v.OTHER_EXCEPTS,
-					t.BASIC_PAY_RATE_FACTOR1 = v.BASIC_PAY_RATE_FACTOR1,
-					t.BASIC_PAY_RATE_FACTOR2 = v.BASIC_PAY_RATE_FACTOR2,
-					t.BASIC_PAY_RATE_FACTOR3 = v.BASIC_PAY_RATE_FACTOR3,
-					t.BASIC_PAY_RATE_FACTOR4 = v.BASIC_PAY_RATE_FACTOR4,
-					t.BASIC_PAY_RATE_FACTOR5 = v.BASIC_PAY_RATE_FACTOR5,
-					t.BASIC_PAY_RATE_FACTOR6 = v.BASIC_PAY_RATE_FACTOR6,
-					t.BASIC_PAY_RATE_FACTOR7 = v.BASIC_PAY_RATE_FACTOR7,
-					t.BASIC_PAY_RATE_FACTOR8 = v.BASIC_PAY_RATE_FACTOR8,
-					t.BASIC_PAY_RATE_FACTOR9 = v.BASIC_PAY_RATE_FACTOR9,
-					t.BASIC_PAY_RATE_FACTOR10 = v.BASIC_PAY_RATE_FACTOR10,
-					t.OTHER_RLVNT_FACTOR = v.OTHER_RLVNT_FACTOR,
-					t.OTHER_REQ_JUST_APVD = v.OTHER_REQ_JUST_APVD,
-					t.OTHER_REQ_SUFF_INFO_PRVD = v.OTHER_REQ_SUFF_INFO_PRVD,
-					t.OTHER_REQ_INCEN_REQD = v.OTHER_REQ_INCEN_REQD,
-					t.OTHER_REQ_DOC_PRVD = v.OTHER_REQ_DOC_PRVD,
-					t.HRS_RVW_CERT = v.HRS_RVW_CERT,
-					t.HRS_NOT_SPT_RSN = v.HRS_NOT_SPT_RSN,
-					t.RVW_HRS = v.RVW_HRS,
-					t.HRS_RVW_DATE = v.HRS_RVW_DATE,
-					t.RCMD_GRADE = v.RCMD_GRADE,
-					t.RCMD_STEP = v.RCMD_STEP,
-					t.RCMD_SALARY_PER_ANNUM = v.RCMD_SALARY_PER_ANNUM,
-					t.RCMD_LOCALITY_PAY_SCALE = v.RCMD_LOCALITY_PAY_SCALE,
-					t.RCMD_INC_DEC_AMOUNT = v.RCMD_INC_DEC_AMOUNT,
-					t.RCMD_PERC_DIFF = v.RCMD_PERC_DIFF,
-					t.OHC_APPRO_REQ = v.OHC_APPRO_REQ,
-					t.RCMD_APPRO_OHC_NAME = v.RCMD_APPRO_OHC_NAME,
-					t.RCMD_APPRO_OHC_EMAIL = v.RCMD_APPRO_OHC_EMAIL,
-					t.RCMD_APPRO_OHC_ID = v.RCMD_APPRO_OHC_ID,
-					t.RVW_REMARKS = v.RVW_REMARKS,
-					t.APPROVAL_SO_VALUE = v.APPROVAL_SO_VALUE,
-					t.APPROVAL_SO_ACTING = v.APPROVAL_SO_ACTING,
-					t.APPROVAL_SO = v.APPROVAL_SO,
-					t.APPROVAL_SO_RESP_DATE = v.APPROVAL_SO_RESP_DATE,
-					t.APPROVAL_COC_VALUE = v.APPROVAL_COC_VALUE,
-					t.APPROVAL_COC_ACTING = v.APPROVAL_COC_ACTING,
-					t.APPROVAL_COC = v.APPROVAL_COC,
-					t.APPROVAL_COC_RESP_DATE = v.APPROVAL_COC_RESP_DATE,
-					t.APPROVAL_DGHO_VALUE = v.APPROVAL_DGHO_VALUE,
-					t.APPROVAL_DGHO_ACTING = v.APPROVAL_DGHO_ACTING,
-					t.APPROVAL_DGHO = v.APPROVAL_DGHO,
-					t.APPROVAL_DGHO_RESP_DATE = v.APPROVAL_DGHO_RESP_DATE,
-					t.APPROVAL_TABG_VALUE = v.APPROVAL_TABG_VALUE,
-					t.APPROVAL_TABG_ACTING = v.APPROVAL_TABG_ACTING,
-					t.APPROVAL_TABG = v.APPROVAL_TABG,
-					t.APPROVAL_TABG_RESP_DATE = v.APPROVAL_TABG_RESP_DATE,
-					t.APPROVAL_OHC_VALUE = v.APPROVAL_OHC_VALUE,
-					t.APPROVAL_OHC_ACTING = v.APPROVAL_OHC_ACTING,
-					t.APPROVAL_OHC = v.APPROVAL_OHC,
-					t.APPROVAL_OHC_RESP_DATE = v.APPROVAL_OHC_RESP_DATE,
-					t.APPROVER_NOTES = v.APPROVER_NOTES				
-			WHEN NOT MATCHED THEN
-				INSERT (t.PROC_ID, t.COC_NAME, t.COC_EMAIL, t.COC_ID, t.COC_TITLE, t.INIT_SALARY_GRADE, t.INIT_SALARY_STEP, t.INIT_SALARY_SALARY_PER_ANNUM , t.INIT_SALARY_LOCALITY_PAY_SCALE
-					, t.SUPPORT_SAM, t.RCMD_SALARY_GRADE, t.RCMD_SALARY_STEP, t.RCMD_SALARY_SALARY_PER_ANNUM, t.RCMD_SALARY_LOCALITY_PAY_SCALE
-					, t.SELECTEE_SALARY_PER_ANNUM, t.SELECTEE_SALARY_TYPE, t.SELECTEE_BONUS, t.SELECTEE_BENEFITS, t.SELECTEE_TOTAL_COMPENSATION
-					, t.SUP_DOC_REQ_DATE, t.SUP_DOC_RCV_DATE
-					, t.JUSTIFICATION_LASTMOD_NAME, t.JUSTIFICATION_LASTMOD_ID
-					, t.JUSTIFICATION_MOD_REASON, t.JUSTIFICATION_MOD_SUMMARY, t.JUSTIFICATION_MODIFIER_NAME, t.JUSTIFICATION_MODIFIER_ID, t.JUSTIFICATION_MODIFIED_DATE
-					, t.JUSTIFICATION_SUPER_QUAL_DESC, t.JUSTIFICATION_QUAL_COMP_DESC
-					, t.JUSTIFICATION_PAY_EQUITY_DESC, t.JUSTIFICATION_EXIST_PKG_DESC, t.JUSTIFICATION_EXPLAIN_CONSID
-					, t.SELECT_MEET_ELIGIBILITY, t.SELECT_MEET_CRITERIA, t.SUPERIOR_QUAL_REASON, t.OTHER_FACTORS, t.SPL_AGENCY_NEED_RSN, t.SPL_AGENCY_NEED_RSN_ESS
-					, t.QUAL_REAPPT, t.OTHER_EXCEPTS
-					, t.BASIC_PAY_RATE_FACTOR1 , t.BASIC_PAY_RATE_FACTOR2 , t.BASIC_PAY_RATE_FACTOR3 , t.BASIC_PAY_RATE_FACTOR4 , t.BASIC_PAY_RATE_FACTOR5
-					, t.BASIC_PAY_RATE_FACTOR6 , t.BASIC_PAY_RATE_FACTOR7 , t.BASIC_PAY_RATE_FACTOR8 , t.BASIC_PAY_RATE_FACTOR9 , t.BASIC_PAY_RATE_FACTOR10
-					, t.OTHER_RLVNT_FACTOR, t.OTHER_REQ_JUST_APVD, t.OTHER_REQ_SUFF_INFO_PRVD
-					, t.OTHER_REQ_INCEN_REQD, t.OTHER_REQ_DOC_PRVD, t.HRS_RVW_CERT, t.HRS_NOT_SPT_RSN, t.RVW_HRS, t.HRS_RVW_DATE
-					, t.RCMD_GRADE, t.RCMD_STEP, t.RCMD_SALARY_PER_ANNUM, t.RCMD_LOCALITY_PAY_SCALE, t.RCMD_INC_DEC_AMOUNT, t.RCMD_PERC_DIFF
-					, t.OHC_APPRO_REQ, t.RCMD_APPRO_OHC_NAME, t.RCMD_APPRO_OHC_EMAIL, t.RCMD_APPRO_OHC_ID
-					, t.RVW_REMARKS, t.APPROVAL_SO_VALUE, t.APPROVAL_SO_ACTING, t.APPROVAL_SO, t.APPROVAL_SO_RESP_DATE, t.APPROVAL_COC_VALUE, t.APPROVAL_COC_ACTING, t.APPROVAL_COC, t.APPROVAL_COC_RESP_DATE
-					, t.APPROVAL_DGHO_VALUE, t.APPROVAL_DGHO_ACTING, t.APPROVAL_DGHO, t.APPROVAL_DGHO_RESP_DATE, t.APPROVAL_TABG_VALUE, t.APPROVAL_TABG_ACTING, t.APPROVAL_TABG, t.APPROVAL_TABG_RESP_DATE
-					, t.APPROVAL_OHC_VALUE, t.APPROVAL_OHC_ACTING, t.APPROVAL_OHC, t.APPROVAL_OHC_RESP_DATE, t.APPROVER_NOTES)
-					VALUES (v.PROC_ID, v.COC_NAME, v.COC_EMAIL, v.COC_ID, v.COC_TITLE, v.INIT_SALARY_GRADE, v.INIT_SALARY_STEP, v.INIT_SALARY_SALARY_PER_ANNUM , v.INIT_SALARY_LOCALITY_PAY_SCALE
-					, v.SUPPORT_SAM, v.RCMD_SALARY_GRADE, v.RCMD_SALARY_STEP, v.RCMD_SALARY_SALARY_PER_ANNUM, v.RCMD_SALARY_LOCALITY_PAY_SCALE
-					, v.SELECTEE_SALARY_PER_ANNUM, v.SELECTEE_SALARY_TYPE, v.SELECTEE_BONUS, v.SELECTEE_BENEFITS, v.SELECTEE_TOTAL_COMPENSATION
-					, v.SUP_DOC_REQ_DATE, v.SUP_DOC_RCV_DATE
-					, v.JUSTIFICATION_LASTMOD_NAME, v.JUSTIFICATION_LASTMOD_ID
-					, v.JUSTIFICATION_MOD_REASON, v.JUSTIFICATION_MOD_SUMMARY, v.JUSTIFICATION_MODIFIER_NAME, v.JUSTIFICATION_MODIFIER_ID, v.JUSTIFICATION_MODIFIED_DATE
-					, v.JUSTIFICATION_SUPER_QUAL_DESC, v.JUSTIFICATION_QUAL_COMP_DESC
-					, v.JUSTIFICATION_PAY_EQUITY_DESC, v.JUSTIFICATION_EXIST_PKG_DESC, v.JUSTIFICATION_EXPLAIN_CONSID
-					, v.SELECT_MEET_ELIGIBILITY, v.SELECT_MEET_CRITERIA, v.SUPERIOR_QUAL_REASON, v.OTHER_FACTORS, v.SPL_AGENCY_NEED_RSN, v.SPL_AGENCY_NEED_RSN_ESS
-					, v.QUAL_REAPPT, v.OTHER_EXCEPTS
-					, v.BASIC_PAY_RATE_FACTOR1 , v.BASIC_PAY_RATE_FACTOR2 , v.BASIC_PAY_RATE_FACTOR3 , v.BASIC_PAY_RATE_FACTOR4 , v.BASIC_PAY_RATE_FACTOR5
-					, v.BASIC_PAY_RATE_FACTOR6 , v.BASIC_PAY_RATE_FACTOR7 , v.BASIC_PAY_RATE_FACTOR8 , v.BASIC_PAY_RATE_FACTOR9 , v.BASIC_PAY_RATE_FACTOR10
-					, v.OTHER_RLVNT_FACTOR, v.OTHER_REQ_JUST_APVD, v.OTHER_REQ_SUFF_INFO_PRVD
-					, v.OTHER_REQ_INCEN_REQD, v.OTHER_REQ_DOC_PRVD, v.HRS_RVW_CERT, v.HRS_NOT_SPT_RSN, v.RVW_HRS, v.HRS_RVW_DATE
-					, v.RCMD_GRADE, v.RCMD_STEP, v.RCMD_SALARY_PER_ANNUM, v.RCMD_LOCALITY_PAY_SCALE, v.RCMD_INC_DEC_AMOUNT, v.RCMD_PERC_DIFF
-					, v.OHC_APPRO_REQ, v.RCMD_APPRO_OHC_NAME, v.RCMD_APPRO_OHC_EMAIL, v.RCMD_APPRO_OHC_ID
-					, v.RVW_REMARKS, v.APPROVAL_SO_VALUE, v.APPROVAL_SO_ACTING, v.APPROVAL_SO, v.APPROVAL_SO_RESP_DATE, v.APPROVAL_COC_VALUE, v.APPROVAL_COC_ACTING, v.APPROVAL_COC, v.APPROVAL_COC_RESP_DATE
-					, v.APPROVAL_DGHO_VALUE, v.APPROVAL_DGHO_ACTING, v.APPROVAL_DGHO, v.APPROVAL_DGHO_RESP_DATE, v.APPROVAL_TABG_VALUE, v.APPROVAL_TABG_ACTING, v.APPROVAL_TABG, v.APPROVAL_TABG_RESP_DATE
-					, v.APPROVAL_OHC_VALUE, v.APPROVAL_OHC_ACTING, v.APPROVAL_OHC, v.APPROVAL_OHC_RESP_DATE, v.APPROVER_NOTES);
-		END IF;
-	END IF;
 
-	EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
+    --DBMS_OUTPUT.PUT_LINE('SP_UPDATE_INCENTIVES_SAM_TBL2');
+    --DBMS_OUTPUT.PUT_LINE('I_PROCID=' || TO_CHAR(I_PROCID));
+	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+
+        SELECT FIELD_DATA
+          INTO V_XMLDOC
+          FROM TBL_FORM_DTL
+         WHERE PROCID = I_PROCID;
+
+        SELECT COUNT(*)
+          INTO V_XMLREC_CNT
+          FROM TBL_FORM_DTL
+         WHERE PROCID = I_PROCID;
+
+        IF V_XMLREC_CNT > 0 THEN
+			--DBMS_OUTPUT.PUT_LINE('RECORD FOUND PROCID=' || TO_CHAR(I_PROCID));
+            
+			MERGE INTO INCENTIVES_SAM TRG
+			USING
+			(
+                SELECT FD.PROCID AS PROC_ID
+                        ,X.INIT_SALARY_GRADE
+                        ,X.INIT_SALARY_STEP
+                        ,X.INIT_SALARY_SALARY_PER_ANNUM
+                        ,regexp_replace(X."INIT_SALARY_SALARY_PER_ANNUM", '[^0-9|.]', '') as INIT_SALARY_SALARY_PER_ANNUM_N
+                        ,X.INIT_SALARY_LOCALITY_PAY_SCALE
+                        ,X.SUPPORT_SAM
+                        ,X.RCMD_SALARY_GRADE
+                        ,X.RCMD_SALARY_STEP
+                        ,X.RCMD_SALARY_SALARY_PER_ANNUM
+                        ,regexp_replace(X."RCMD_SALARY_SALARY_PER_ANNUM", '[^0-9|.]', '') as RCMD_SALARY_SALARY_PER_ANNUM_N
+                        ,X.RCMD_SALARY_LOCALITY_PAY_SCALE
+                        ,X.SELECTEE_SALARY_PER_ANNUM
+                        ,regexp_replace(X."SELECTEE_SALARY_PER_ANNUM", '[^0-9|.]', '') as SELECTEE_SALARY_PER_ANNUM_N
+                        ,X.SELECTEE_SALARY_TYPE
+                        ,X.SELECTEE_BONUS
+                        ,regexp_replace(X."SELECTEE_BONUS", '[^0-9|.]', '') as SELECTEE_BONUS_N
+                        ,X.SELECTEE_BENEFITS
+                        ,X.SELECTEE_TOTAL_COMPENSATION
+                        ,regexp_replace(X."SELECTEE_TOTAL_COMPENSATION", '[^0-9|.]', '') as SELECTEE_TOTAL_COMPENSATION_N
+                        ,X.SUP_DOC_REQ_DATE
+                        ,TO_DATE(regexp_replace(X."SUP_DOC_REQ_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as SUP_DOC_REQ_DATE_D
+                        ,X.SUP_DOC_RCV_DATE
+                        ,TO_DATE(regexp_replace(X."SUP_DOC_RCV_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as SUP_DOC_RCV_DATE_D
+                        ,X.JUSTIFICATION_SUPER_QUAL_DESC
+                        ,X.JUSTIFICATION_QUAL_COMP_DESC
+                        ,X.JUSTIFICATION_PAY_EQUITY_DESC
+                        ,X.JUSTIFICATION_EXIST_PKG_DESC
+                        ,X.JUSTIFICATION_EXPLAIN_CONSID
+                        ,X.SELECT_MEET_ELIGIBILITY
+                        ,X.SELECT_MEET_CRITERIA
+                        ,X.SUPERIOR_QUAL_REASON
+                        ,X.OTHER_FACTORS
+                        ,X.SPL_AGENCY_NEED_RSN
+                        ,X.SPL_AGENCY_NEED_RSN_ESS
+                        ,X.QUAL_REAPPT
+                        ,X.OTHER_EXCEPTS
+                        ,X.BASIC_PAY_RATE_FACTOR1
+                        ,X.BASIC_PAY_RATE_FACTOR2
+                        ,X.BASIC_PAY_RATE_FACTOR3
+                        ,X.BASIC_PAY_RATE_FACTOR4
+                        ,X.BASIC_PAY_RATE_FACTOR5
+                        ,X.BASIC_PAY_RATE_FACTOR6
+                        ,X.BASIC_PAY_RATE_FACTOR7
+                        ,X.BASIC_PAY_RATE_FACTOR8
+                        ,X.BASIC_PAY_RATE_FACTOR9
+                        ,X.BASIC_PAY_RATE_FACTOR10
+                        ,X.OTHER_RLVNT_FACTOR
+                        ,X.OTHER_REQ_JUST_APVD
+                        ,X.OTHER_REQ_SUFF_INFO_PRVD
+                        ,X.OTHER_REQ_INCEN_REQD
+                        ,X.OTHER_REQ_DOC_PRVD
+                        ,X.HRS_RVW_CERT
+                        ,X.HRS_NOT_SPT_RSN
+                        ,X.RVW_HRS
+                        ,X.HRS_RVW_DATE
+                        ,TO_DATE(regexp_replace(X."HRS_RVW_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as HRS_RVW_DATE_D
+                        ,X.RCMD_GRADE
+                        ,X.RCMD_STEP
+                        ,X.RCMD_SALARY_PER_ANNUM
+                        ,regexp_replace(X."RCMD_SALARY_PER_ANNUM", '[^0-9|.]', '') as RCMD_SALARY_PER_ANNUM_N
+                        ,X.RCMD_LOCALITY_PAY_SCALE
+                        ,X.RCMD_INC_DEC_AMOUNT
+                        ,regexp_replace(X."RCMD_INC_DEC_AMOUNT", '[^0-9|.]', '') as RCMD_INC_DEC_AMOUNT_N
+                        ,X.RCMD_PERC_DIFF
+                        ,X.OHC_APPRO_REQ
+                        ,X.RCMD_APPRO_OHC_NAME
+                        ,X.RCMD_APPRO_OHC_EMAIL
+                        ,X.RCMD_APPRO_OHC_ID
+                        ,X.RVW_REMARKS
+                        ,X.APPROVAL_SO_VALUE
+                        ,X.APPROVAL_SO
+                        ,X.APPROVAL_SO_RESP_DATE
+                        ,TO_DATE(regexp_replace(X."APPROVAL_SO_RESP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_SO_RESP_DATE_D
+                        ,X.APPROVAL_DGHO_VALUE
+                        ,X.APPROVAL_DGHO
+                        ,X.APPROVAL_DGHO_RESP_DATE
+                        ,TO_DATE(regexp_replace(X."APPROVAL_DGHO_RESP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_DGHO_RESP_DATE_D
+                        ,X.APPROVAL_TABG_VALUE
+                        ,X.APPROVAL_TABG
+                        ,X.APPROVAL_TABG_RESP_DATE
+                        ,TO_DATE(regexp_replace(X."APPROVAL_TABG_RESP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_TABG_RESP_DATE_D
+                        ,X.APPROVAL_OHC_VALUE
+                        ,X.APPROVAL_OHC
+                        ,X.APPROVAL_OHC_RESP_DATE
+                        ,TO_DATE(regexp_replace(X."APPROVAL_OHC_RESP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_OHC_RESP_DATE_D
+                        ,X.APPROVER_NOTES
+                        ,X.COC_NAME
+                        ,X.COC_EMAIL
+                        ,X.COC_ID
+                        ,X.COC_TITLE
+                        ,X.APPROVAL_COC_VALUE
+                        ,X.APPROVAL_COC_ACTING
+                        ,X.APPROVAL_COC
+                        ,X.APPROVAL_COC_RESP_DATE
+                        ,TO_DATE(regexp_replace(X."APPROVAL_COC_RESP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_COC_RESP_DATE_D
+                        ,X.APPROVAL_SO_ACTING
+                        ,X.APPROVAL_DGHO_ACTING
+                        ,X.APPROVAL_TABG_ACTING
+                        ,X.APPROVAL_OHC_ACTING
+                        ,X.JUSTIFICATION_MOD_REASON
+                        ,X.JUSTIFICATION_MOD_SUMMARY
+                        ,X.JUSTIFICATION_MODIFIER_NAME
+                        ,X.JUSTIFICATION_MODIFIER_ID
+                        ,X.JUSTIFICATION_MODIFIED_DATE
+                        ,TO_DATE(regexp_replace(X."JUSTIFICATION_MODIFIED_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy hh24:mi:ss') as JUSTIFICATION_MODIFIED_DATE_D
+                        --,X.JUSTIFICATION_VER
+                        --,X.JUSTIFICATION_CRT_NAME
+                        --,X.JUSTIFICATION_CRT_ID
+                        --,X.JUSTIFICATION_CRT_DATE
+                        --,X.JUSTIFICATION_CRT_DATE_D
+                        ,X.JUSTIFICATION_LASTMOD_NAME
+                        ,X.JUSTIFICATION_LASTMOD_ID
+                        --,X.JUSTIFICATION_LASTMOD_DATE
+                        --,X.JUSTIFICATION_LASTMOD_DATE_D                            
+                    FROM TBL_FORM_DTL FD,
+                         XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
+                                INIT_SALARY_GRADE VARCHAR2(5) PATH './item[id="hrInitialSalaryGrade"]/value'
+                                , INIT_SALARY_STEP VARCHAR2(5) PATH './item[id="hrInitialSalaryStep"]/value'
+                                , INIT_SALARY_SALARY_PER_ANNUM VARCHAR2(20) PATH './item[id="hrInitialSalarySalaryPerAnnum"]/value'
+                                , INIT_SALARY_LOCALITY_PAY_SCALE VARCHAR2(200) PATH './item[id="hrInitialSalaryLocalityPayScale"]/value'
+                                , SUPPORT_SAM VARCHAR2(5) PATH './item[id="supportSAM"]/value'
+                                , RCMD_SALARY_GRADE VARCHAR2(5) PATH './item[id="componentRcmdGrade"]/value'
+                                , RCMD_SALARY_STEP VARCHAR2(5) PATH './item[id="componentRcmdStep"]/value'
+                                , RCMD_SALARY_SALARY_PER_ANNUM VARCHAR2(20) PATH './item[id="componentRcmdSalaryPerAnnum"]/value'
+                                , RCMD_SALARY_LOCALITY_PAY_SCALE VARCHAR2(200) PATH './item[id="componentRcmdLocalityPayScale"]/value'
+                                , SELECTEE_SALARY_PER_ANNUM VARCHAR2(20) PATH './item[id="selecteeSalaryPerAnnum"]/value'
+                                , SELECTEE_SALARY_TYPE VARCHAR2(25) PATH './item[id="selecteeSalaryType"]/value'
+                                , SELECTEE_BONUS VARCHAR2(20) PATH './item[id="selecteeBonus"]/value'
+                                , SELECTEE_BENEFITS VARCHAR2(500) PATH './item[id="selecteeBenefits"]/value'
+                                , SELECTEE_TOTAL_COMPENSATION VARCHAR2(20) PATH './item[id="selecteeTotalCompensation"]/value'
+                                , SUP_DOC_REQ_DATE VARCHAR2(10) PATH './item[id="dateSupDocRequested"]/value'
+                                , SUP_DOC_RCV_DATE VARCHAR2(10) PATH './item[id="dateSupDocReceived"]/value'
+                                -- Justification
+                                , JUSTIFICATION_SUPER_QUAL_DESC VARCHAR2(4000) PATH './item[id="justificationSuperQualificationDesc"]/value'
+                                , JUSTIFICATION_QUAL_COMP_DESC VARCHAR2(4000) PATH './item[id="justificationQualificationComparedDesc"]/value'
+                                , JUSTIFICATION_PAY_EQUITY_DESC VARCHAR2(4000) PATH './item[id="justificationPayEquityDesc"]/value'
+                                , JUSTIFICATION_EXIST_PKG_DESC VARCHAR2(4000) PATH './item[id="justificationExistingCompensationPkgDesc"]/value'
+                                , JUSTIFICATION_EXPLAIN_CONSID VARCHAR2(4000) PATH './item[id="justificationExplainIncentiveConsideration"]/value'
+                                -- Review
+                                , SELECT_MEET_ELIGIBILITY VARCHAR2(100) PATH './item[id="selecteeMeetEligibility"]/value'
+                                , SELECT_MEET_CRITERIA VARCHAR2(100) PATH './item[id="selecteeMeetCriteria"]/value'
+                                , SUPERIOR_QUAL_REASON VARCHAR2(100) PATH './item[id="superiorQualificationReason"]/value'
+                                , OTHER_FACTORS VARCHAR2(140) PATH './item[id="otherFactorsAsExplained"]/value'
+                                , SPL_AGENCY_NEED_RSN VARCHAR2(140) PATH './item[id="specialAgencyNeedReason"]/value'
+                                , SPL_AGENCY_NEED_RSN_ESS VARCHAR2(140) PATH './item[id="specialAgencyNeedReasonEssential"]/value'
+                                , QUAL_REAPPT VARCHAR2(50) PATH './item[id="qualifyingReappointment"]/value'
+                                , OTHER_EXCEPTS VARCHAR2(140) PATH './item[id="otherExceptions"]/value'
+                                , BASIC_PAY_RATE_FACTOR1 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[1]/text'
+                                , BASIC_PAY_RATE_FACTOR2 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[2]/text'
+                                , BASIC_PAY_RATE_FACTOR3 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[3]/text'
+                                , BASIC_PAY_RATE_FACTOR4 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[4]/text'
+                                , BASIC_PAY_RATE_FACTOR5 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[5]/text'
+                                , BASIC_PAY_RATE_FACTOR6 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[6]/text'
+                                , BASIC_PAY_RATE_FACTOR7 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[7]/text'
+                                , BASIC_PAY_RATE_FACTOR8 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[8]/text'
+                                , BASIC_PAY_RATE_FACTOR9 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[9]/text'
+                                , BASIC_PAY_RATE_FACTOR10 VARCHAR2(140) PATH './item[id="basicPayRateFactor"]/value[10]/text'
+                                , OTHER_RLVNT_FACTOR VARCHAR2(140) PATH './item[id="otherRelevantFactors"]/value'
+                                , OTHER_REQ_JUST_APVD VARCHAR2(5) PATH './item[id="otherReqJustificationApproved"]/value'
+                                , OTHER_REQ_SUFF_INFO_PRVD VARCHAR2(5) PATH './item[id="otherReqSufficientInformationProvided"]/value'
+                                , OTHER_REQ_INCEN_REQD VARCHAR2(5) PATH './item[id="otherReqIncentiveRequired"]/value'
+                                , OTHER_REQ_DOC_PRVD VARCHAR2(5) PATH './item[id="otherReqDocumentationProvided"]/value'
+                                , HRS_RVW_CERT VARCHAR2(100) PATH './item[id="hrSpecialistReviewCertification"]/value'
+                                , HRS_NOT_SPT_RSN VARCHAR2(100) PATH './item[id="hrSpecialistNotSupportReason"]/value'
+                                , RVW_HRS VARCHAR2(100) PATH './item[id="reviewHRSpecialist"]/value'
+                                , HRS_RVW_DATE VARCHAR2(10) PATH './item[id="hrSpecialistReviewDate"]/value'
+                                , RCMD_GRADE VARCHAR2(5) PATH './item[id="reviewRcmdGrade"]/value'
+                                , RCMD_STEP VARCHAR2(5) PATH './item[id="reviewRcmdStep"]/value'
+                                , RCMD_SALARY_PER_ANNUM VARCHAR2(20) PATH './item[id="reviewRcmdSalaryPerAnnum"]/value'
+                                , RCMD_LOCALITY_PAY_SCALE VARCHAR2(200) PATH './item[id="reviewRcmdLocalityPayScale"]/value'
+                                , RCMD_INC_DEC_AMOUNT VARCHAR2(20) PATH './item[id="reviewRcmdIncDecAmount"]/value'
+                                , RCMD_PERC_DIFF VARCHAR2(10) PATH './item[id="reviewRcmdPercentageDifference"]/value'
+                                , OHC_APPRO_REQ VARCHAR2(5) PATH './item[id="requireOHCApproval"]/value'
+                                -- OHC Director
+                                , RCMD_APPRO_OHC_NAME VARCHAR2(100) PATH './item[id="reviewRcmdApprovalOHCDirector"]/value/name'
+                                , RCMD_APPRO_OHC_EMAIL VARCHAR2(100) PATH './item[id="reviewRcmdApprovalOHCDirector"]/value/email'
+                                , RCMD_APPRO_OHC_ID VARCHAR2(10) PATH './item[id="reviewRcmdApprovalOHCDirector"]/value/id'
+                                , RVW_REMARKS VARCHAR2(500) PATH './item[id="samReviewRemarks"]/value'
+                                , APPROVAL_SO_VALUE VARCHAR2(10) PATH './item[id="approvalSOValue"]/value'
+                                , APPROVAL_SO VARCHAR2(100) PATH './item[id="approvalSO"]/value'
+                                , APPROVAL_SO_RESP_DATE VARCHAR2(10) PATH './item[id="approvalSOResponseDate"]/value'
+                                , APPROVAL_DGHO_VALUE VARCHAR2(10) PATH './item[id="approvalDGHOValue"]/value'
+                                , APPROVAL_DGHO VARCHAR2(100) PATH './item[id="approvalDGHO"]/value'
+                                , APPROVAL_DGHO_RESP_DATE VARCHAR2(10) PATH './item[id="approvalDGHOResponseDate"]/value'
+                                , APPROVAL_TABG_VALUE VARCHAR2(10) PATH './item[id="approvalTABGValue"]/value'
+                                , APPROVAL_TABG VARCHAR2(100) PATH './item[id="approvalTABG"]/value'
+                                , APPROVAL_TABG_RESP_DATE VARCHAR2(10) PATH './item[id="approvalTABGResponseDate"]/value'
+                                , APPROVAL_OHC_VALUE VARCHAR2(10) PATH './item[id="approvalOHCValue"]/value'
+                                , APPROVAL_OHC VARCHAR2(100) PATH './item[id="approvalOHC"]/value'
+                                , APPROVAL_OHC_RESP_DATE VARCHAR2(10) PATH './item[id="approvalOHCResponseDate"]/value'
+                                , APPROVER_NOTES VARCHAR2(500) PATH './item[id="approverNotes"]/value'
+                                , COC_NAME VARCHAR2(100) PATH './item[id="cocDirector"]/value/name'
+                                , COC_EMAIL VARCHAR2(100) PATH './item[id="cocDirector"]/value/email'
+                                , COC_ID VARCHAR2(10) PATH './item[id="cocDirector"]/value/id'
+                                , COC_TITLE VARCHAR2(100) PATH './item[id="cocDirector"]/value/title'
+                                , APPROVAL_COC_VALUE VARCHAR2(10) PATH './item[id="approvalCOCValue"]/value'
+                                , APPROVAL_COC_ACTING VARCHAR2(10) PATH './item[id="approvalCOCActing"]/value'
+                                , APPROVAL_COC VARCHAR2(100) PATH './item[id="approvalCOC"]/value'
+                                , APPROVAL_COC_RESP_DATE VARCHAR2(10) PATH './item[id="approvalCOCResponseDate"]/value'
+                                , APPROVAL_SO_ACTING VARCHAR2(10) PATH './item[id="approvalSOActing"]/value'
+                                , APPROVAL_DGHO_ACTING VARCHAR2(10) PATH './item[id="approvalDGHOActing"]/value'
+                                , APPROVAL_TABG_ACTING VARCHAR2(10) PATH './item[id="approvalTABGActing"]/value'
+                                , APPROVAL_OHC_Acting VARCHAR2(10) PATH './item[id="approvalOHCActing"]/value'
+                                , JUSTIFICATION_MOD_REASON VARCHAR2(200) PATH './item[id="justificationModificationReason"]/value'
+                                , JUSTIFICATION_MOD_SUMMARY VARCHAR2(500) PATH './item[id="justificationModificationSummary"]/value'
+                                , JUSTIFICATION_MODIFIER_NAME VARCHAR2(100) PATH './item[id="justificationModifier"]/value'
+                                , JUSTIFICATION_MODIFIER_ID VARCHAR2(10) PATH './item[id="justificationModifierId"]/value'
+                                , JUSTIFICATION_MODIFIED_DATE VARCHAR2(20) PATH './item[id="justificationModified"]/value'	
+                                --,JUSTIFICATION_VER	NUMBER(10,0)
+                                --,JUSTIFICATION_CRT_NAME	VARCHAR2(100)
+                                --,JUSTIFICATION_CRT_ID	VARCHAR2(10)
+                                --,JUSTIFICATION_CRT_DATE	VARCHAR2(20)
+                                --,JUSTIFICATION_CRT_DATE_D	DATE
+                                , JUSTIFICATION_LASTMOD_NAME VARCHAR2(100) PATH './item[id="currentUser"]/value'
+                                , JUSTIFICATION_LASTMOD_ID VARCHAR2(10) PATH './item[id="currentUserId"]/value'
+                                --,JUSTIFICATION_LASTMOD_DATE	VARCHAR2(20)
+                                --,JUSTIFICATION_LASTMOD_DATE_D	DATE
+                        ) X
+                    WHERE FD.PROCID = I_PROCID
+			) SRC ON (SRC.PROC_ID = TRG.PROC_ID)
+            WHEN MATCHED THEN UPDATE SET
+                            TRG.INIT_SALARY_GRADE = SRC.INIT_SALARY_GRADE
+                            , TRG.INIT_SALARY_STEP = SRC.INIT_SALARY_STEP
+                            , TRG.INIT_SALARY_SALARY_PER_ANNUM = SRC.INIT_SALARY_SALARY_PER_ANNUM
+                            , TRG.INIT_SALARY_SALARY_PER_ANNUM_N = SRC.INIT_SALARY_SALARY_PER_ANNUM_N
+                            , TRG.INIT_SALARY_LOCALITY_PAY_SCALE = SRC.INIT_SALARY_LOCALITY_PAY_SCALE
+                            , TRG.SUPPORT_SAM = SRC.SUPPORT_SAM
+                            , TRG.RCMD_SALARY_GRADE = SRC.RCMD_SALARY_GRADE
+                            , TRG.RCMD_SALARY_STEP = SRC.RCMD_SALARY_STEP
+                            , TRG.RCMD_SALARY_SALARY_PER_ANNUM = SRC.RCMD_SALARY_SALARY_PER_ANNUM
+                            , TRG.RCMD_SALARY_SALARY_PER_ANNUM_N = SRC.RCMD_SALARY_SALARY_PER_ANNUM_N
+                            , TRG.RCMD_SALARY_LOCALITY_PAY_SCALE = SRC.RCMD_SALARY_LOCALITY_PAY_SCALE
+                            , TRG.SELECTEE_SALARY_PER_ANNUM = SRC.SELECTEE_SALARY_PER_ANNUM
+                            , TRG.SELECTEE_SALARY_PER_ANNUM_N = SRC.SELECTEE_SALARY_PER_ANNUM_N
+                            , TRG.SELECTEE_SALARY_TYPE = SRC.SELECTEE_SALARY_TYPE
+                            , TRG.SELECTEE_BONUS = SRC.SELECTEE_BONUS
+                            , TRG.SELECTEE_BONUS_N = SRC.SELECTEE_BONUS_N
+                            , TRG.SELECTEE_BENEFITS = SRC.SELECTEE_BENEFITS
+                            , TRG.SELECTEE_TOTAL_COMPENSATION = SRC.SELECTEE_TOTAL_COMPENSATION
+                            , TRG.SELECTEE_TOTAL_COMPENSATION_N = SRC.SELECTEE_TOTAL_COMPENSATION_N
+                            , TRG.SUP_DOC_REQ_DATE = SRC.SUP_DOC_REQ_DATE
+                            , TRG.SUP_DOC_REQ_DATE_D = SRC.SUP_DOC_REQ_DATE_D
+                            , TRG.SUP_DOC_RCV_DATE = SRC.SUP_DOC_RCV_DATE
+                            , TRG.SUP_DOC_RCV_DATE_D = SRC.SUP_DOC_RCV_DATE_D
+                            , TRG.JUSTIFICATION_SUPER_QUAL_DESC = SRC.JUSTIFICATION_SUPER_QUAL_DESC
+                            , TRG.JUSTIFICATION_QUAL_COMP_DESC = SRC.JUSTIFICATION_QUAL_COMP_DESC
+                            , TRG.JUSTIFICATION_PAY_EQUITY_DESC = SRC.JUSTIFICATION_PAY_EQUITY_DESC
+                            , TRG.JUSTIFICATION_EXIST_PKG_DESC = SRC.JUSTIFICATION_EXIST_PKG_DESC
+                            , TRG.JUSTIFICATION_EXPLAIN_CONSID = SRC.JUSTIFICATION_EXPLAIN_CONSID
+                            , TRG.SELECT_MEET_ELIGIBILITY = SRC.SELECT_MEET_ELIGIBILITY
+                            , TRG.SELECT_MEET_CRITERIA = SRC.SELECT_MEET_CRITERIA
+                            , TRG.SUPERIOR_QUAL_REASON = SRC.SUPERIOR_QUAL_REASON
+                            , TRG.OTHER_FACTORS = SRC.OTHER_FACTORS
+                            , TRG.SPL_AGENCY_NEED_RSN = SRC.SPL_AGENCY_NEED_RSN
+                            , TRG.SPL_AGENCY_NEED_RSN_ESS = SRC.SPL_AGENCY_NEED_RSN_ESS
+                            , TRG.QUAL_REAPPT = SRC.QUAL_REAPPT
+                            , TRG.OTHER_EXCEPTS = SRC.OTHER_EXCEPTS
+                            , TRG.BASIC_PAY_RATE_FACTOR1 = SRC.BASIC_PAY_RATE_FACTOR1
+                            , TRG.BASIC_PAY_RATE_FACTOR2 = SRC.BASIC_PAY_RATE_FACTOR2
+                            , TRG.BASIC_PAY_RATE_FACTOR3 = SRC.BASIC_PAY_RATE_FACTOR3
+                            , TRG.BASIC_PAY_RATE_FACTOR4 = SRC.BASIC_PAY_RATE_FACTOR4
+                            , TRG.BASIC_PAY_RATE_FACTOR5 = SRC.BASIC_PAY_RATE_FACTOR5
+                            , TRG.BASIC_PAY_RATE_FACTOR6 = SRC.BASIC_PAY_RATE_FACTOR6
+                            , TRG.BASIC_PAY_RATE_FACTOR7 = SRC.BASIC_PAY_RATE_FACTOR7
+                            , TRG.BASIC_PAY_RATE_FACTOR8 = SRC.BASIC_PAY_RATE_FACTOR8
+                            , TRG.BASIC_PAY_RATE_FACTOR9 = SRC.BASIC_PAY_RATE_FACTOR9
+                            , TRG.BASIC_PAY_RATE_FACTOR10 = SRC.BASIC_PAY_RATE_FACTOR10
+                            , TRG.OTHER_RLVNT_FACTOR = SRC.OTHER_RLVNT_FACTOR
+                            , TRG.OTHER_REQ_JUST_APVD = SRC.OTHER_REQ_JUST_APVD
+                            , TRG.OTHER_REQ_SUFF_INFO_PRVD = SRC.OTHER_REQ_SUFF_INFO_PRVD
+                            , TRG.OTHER_REQ_INCEN_REQD = SRC.OTHER_REQ_INCEN_REQD
+                            , TRG.OTHER_REQ_DOC_PRVD = SRC.OTHER_REQ_DOC_PRVD
+                            , TRG.HRS_RVW_CERT = SRC.HRS_RVW_CERT
+                            , TRG.HRS_NOT_SPT_RSN = SRC.HRS_NOT_SPT_RSN
+                            , TRG.RVW_HRS = SRC.RVW_HRS
+                            , TRG.HRS_RVW_DATE = SRC.HRS_RVW_DATE
+                            , TRG.HRS_RVW_DATE_D = SRC.HRS_RVW_DATE_D
+                            , TRG.RCMD_GRADE = SRC.RCMD_GRADE
+                            , TRG.RCMD_STEP = SRC.RCMD_STEP
+                            , TRG.RCMD_SALARY_PER_ANNUM = SRC.RCMD_SALARY_PER_ANNUM
+                            , TRG.RCMD_SALARY_PER_ANNUM_N = SRC.RCMD_SALARY_PER_ANNUM_N
+                            , TRG.RCMD_LOCALITY_PAY_SCALE = SRC.RCMD_LOCALITY_PAY_SCALE
+                            , TRG.RCMD_INC_DEC_AMOUNT_N = SRC.RCMD_INC_DEC_AMOUNT_N
+                            , TRG.RCMD_INC_DEC_AMOUNT = SRC.RCMD_INC_DEC_AMOUNT
+                            , TRG.RCMD_PERC_DIFF = SRC.RCMD_PERC_DIFF
+                            , TRG.OHC_APPRO_REQ = SRC.OHC_APPRO_REQ
+                            , TRG.RCMD_APPRO_OHC_NAME = SRC.RCMD_APPRO_OHC_NAME
+                            , TRG.RCMD_APPRO_OHC_EMAIL = SRC.RCMD_APPRO_OHC_EMAIL
+                            , TRG.RCMD_APPRO_OHC_ID = SRC.RCMD_APPRO_OHC_ID
+                            , TRG.RVW_REMARKS = SRC.RVW_REMARKS
+                            , TRG.APPROVAL_SO_VALUE = SRC.APPROVAL_SO_VALUE
+                            , TRG.APPROVAL_SO = SRC.APPROVAL_SO
+                            , TRG.APPROVAL_SO_RESP_DATE = SRC.APPROVAL_SO_RESP_DATE
+                            , TRG.APPROVAL_SO_RESP_DATE_D = SRC.APPROVAL_SO_RESP_DATE_D
+                            , TRG.APPROVAL_DGHO_VALUE = SRC.APPROVAL_DGHO_VALUE
+                            , TRG.APPROVAL_DGHO = SRC.APPROVAL_DGHO
+                            , TRG.APPROVAL_DGHO_RESP_DATE = SRC.APPROVAL_DGHO_RESP_DATE
+                            , TRG.APPROVAL_DGHO_RESP_DATE_D = SRC.APPROVAL_DGHO_RESP_DATE_D
+                            , TRG.APPROVAL_TABG_VALUE = SRC.APPROVAL_TABG_VALUE
+                            , TRG.APPROVAL_TABG = SRC.APPROVAL_TABG
+                            , TRG.APPROVAL_TABG_RESP_DATE = SRC.APPROVAL_TABG_RESP_DATE
+                            , TRG.APPROVAL_TABG_RESP_DATE_D = SRC.APPROVAL_TABG_RESP_DATE_D
+                            , TRG.APPROVAL_OHC_VALUE = SRC.APPROVAL_OHC_VALUE
+                            , TRG.APPROVAL_OHC = SRC.APPROVAL_OHC
+                            , TRG.APPROVAL_OHC_RESP_DATE = SRC.APPROVAL_OHC_RESP_DATE
+                            , TRG.APPROVAL_OHC_RESP_DATE_D = SRC.APPROVAL_OHC_RESP_DATE_D
+                            , TRG.APPROVER_NOTES = SRC.APPROVER_NOTES
+                            , TRG.COC_NAME = SRC.COC_NAME
+                            , TRG.COC_EMAIL = SRC.COC_EMAIL
+                            , TRG.COC_ID = SRC.COC_ID
+                            , TRG.COC_TITLE = SRC.COC_TITLE
+                            , TRG.APPROVAL_COC_VALUE = SRC.APPROVAL_COC_VALUE
+                            , TRG.APPROVAL_COC_ACTING = SRC.APPROVAL_COC_ACTING
+                            , TRG.APPROVAL_COC = SRC.APPROVAL_COC
+                            , TRG.APPROVAL_COC_RESP_DATE = SRC.APPROVAL_COC_RESP_DATE
+                            , TRG.APPROVAL_COC_RESP_DATE_D = SRC.APPROVAL_COC_RESP_DATE_D
+                            , TRG.APPROVAL_SO_ACTING = SRC.APPROVAL_SO_ACTING
+                            , TRG.APPROVAL_DGHO_ACTING = SRC.APPROVAL_DGHO_ACTING
+                            , TRG.APPROVAL_TABG_ACTING = SRC.APPROVAL_TABG_ACTING
+                            , TRG.APPROVAL_OHC_ACTING = SRC.APPROVAL_OHC_ACTING
+                            , TRG.JUSTIFICATION_MOD_REASON = SRC.JUSTIFICATION_MOD_REASON
+                            , TRG.JUSTIFICATION_MOD_SUMMARY = SRC.JUSTIFICATION_MOD_SUMMARY
+                            , TRG.JUSTIFICATION_MODIFIER_NAME = SRC.JUSTIFICATION_MODIFIER_NAME
+                            , TRG.JUSTIFICATION_MODIFIER_ID = SRC.JUSTIFICATION_MODIFIER_ID
+                            , TRG.JUSTIFICATION_MODIFIED_DATE = SRC.JUSTIFICATION_MODIFIED_DATE
+                            , TRG.JUSTIFICATION_MODIFIED_DATE_D = SRC.JUSTIFICATION_MODIFIED_DATE_D
+                            --, TRG.JUSTIFICATION_VER = SRC.JUSTIFICATION_VER
+                            --, TRG.JUSTIFICATION_CRT_NAME = SRC.JUSTIFICATION_CRT_NAME
+                            --, TRG.JUSTIFICATION_CRT_ID = SRC.JUSTIFICATION_CRT_ID
+                            --, TRG.JUSTIFICATION_CRT_DATE = SRC.JUSTIFICATION_CRT_DATE
+                            --, TRG.JUSTIFICATION_CRT_DATE_D = SRC.JUSTIFICATION_CRT_DATE_D
+                            , TRG.JUSTIFICATION_LASTMOD_NAME = SRC.JUSTIFICATION_LASTMOD_NAME
+                            , TRG.JUSTIFICATION_LASTMOD_ID = SRC.JUSTIFICATION_LASTMOD_ID
+                            --, TRG.JUSTIFICATION_LASTMOD_DATE = SRC.JUSTIFICATION_LASTMOD_DATE
+                            --, TRG.JUSTIFICATION_LASTMOD_DATE_D = SRC.JUSTIFICATION_LASTMOD_DATE_D 
+            WHEN NOT MATCHED THEN INSERT (
+                            TRG.PROC_ID
+                            , TRG.INIT_SALARY_GRADE
+                            , TRG.INIT_SALARY_STEP
+                            , TRG.INIT_SALARY_SALARY_PER_ANNUM
+                            , TRG.INIT_SALARY_SALARY_PER_ANNUM_N
+                            , TRG.INIT_SALARY_LOCALITY_PAY_SCALE
+                            , TRG.SUPPORT_SAM
+                            , TRG.RCMD_SALARY_GRADE
+                            , TRG.RCMD_SALARY_STEP
+                            , TRG.RCMD_SALARY_SALARY_PER_ANNUM
+                            , TRG.RCMD_SALARY_SALARY_PER_ANNUM_N
+                            , TRG.RCMD_SALARY_LOCALITY_PAY_SCALE
+                            , TRG.SELECTEE_SALARY_PER_ANNUM
+                            , TRG.SELECTEE_SALARY_PER_ANNUM_N
+                            , TRG.SELECTEE_SALARY_TYPE
+                            , TRG.SELECTEE_BONUS
+                            , TRG.SELECTEE_BONUS_N
+                            , TRG.SELECTEE_BENEFITS
+                            , TRG.SELECTEE_TOTAL_COMPENSATION
+                            , TRG.SELECTEE_TOTAL_COMPENSATION_N
+                            , TRG.SUP_DOC_REQ_DATE
+                            , TRG.SUP_DOC_REQ_DATE_D
+                            , TRG.SUP_DOC_RCV_DATE
+                            , TRG.SUP_DOC_RCV_DATE_D
+                            , TRG.JUSTIFICATION_SUPER_QUAL_DESC
+                            , TRG.JUSTIFICATION_QUAL_COMP_DESC
+                            , TRG.JUSTIFICATION_PAY_EQUITY_DESC
+                            , TRG.JUSTIFICATION_EXIST_PKG_DESC
+                            , TRG.JUSTIFICATION_EXPLAIN_CONSID
+                            , TRG.SELECT_MEET_ELIGIBILITY
+                            , TRG.SELECT_MEET_CRITERIA
+                            , TRG.SUPERIOR_QUAL_REASON
+                            , TRG.OTHER_FACTORS
+                            , TRG.SPL_AGENCY_NEED_RSN
+                            , TRG.SPL_AGENCY_NEED_RSN_ESS
+                            , TRG.QUAL_REAPPT
+                            , TRG.OTHER_EXCEPTS
+                            , TRG.BASIC_PAY_RATE_FACTOR1
+                            , TRG.BASIC_PAY_RATE_FACTOR2
+                            , TRG.BASIC_PAY_RATE_FACTOR3
+                            , TRG.BASIC_PAY_RATE_FACTOR4
+                            , TRG.BASIC_PAY_RATE_FACTOR5
+                            , TRG.BASIC_PAY_RATE_FACTOR6
+                            , TRG.BASIC_PAY_RATE_FACTOR7
+                            , TRG.BASIC_PAY_RATE_FACTOR8
+                            , TRG.BASIC_PAY_RATE_FACTOR9
+                            , TRG.BASIC_PAY_RATE_FACTOR10
+                            , TRG.OTHER_RLVNT_FACTOR
+                            , TRG.OTHER_REQ_JUST_APVD
+                            , TRG.OTHER_REQ_SUFF_INFO_PRVD
+                            , TRG.OTHER_REQ_INCEN_REQD
+                            , TRG.OTHER_REQ_DOC_PRVD
+                            , TRG.HRS_RVW_CERT
+                            , TRG.HRS_NOT_SPT_RSN
+                            , TRG.RVW_HRS
+                            , TRG.HRS_RVW_DATE
+                            , TRG.HRS_RVW_DATE_D
+                            , TRG.RCMD_GRADE
+                            , TRG.RCMD_STEP
+                            , TRG.RCMD_SALARY_PER_ANNUM
+                            , TRG.RCMD_SALARY_PER_ANNUM_N
+                            , TRG.RCMD_LOCALITY_PAY_SCALE
+                            , TRG.RCMD_INC_DEC_AMOUNT_N
+                            , TRG.RCMD_INC_DEC_AMOUNT
+                            , TRG.RCMD_PERC_DIFF
+                            , TRG.OHC_APPRO_REQ
+                            , TRG.RCMD_APPRO_OHC_NAME
+                            , TRG.RCMD_APPRO_OHC_EMAIL
+                            , TRG.RCMD_APPRO_OHC_ID
+                            , TRG.RVW_REMARKS
+                            , TRG.APPROVAL_SO_VALUE
+                            , TRG.APPROVAL_SO
+                            , TRG.APPROVAL_SO_RESP_DATE
+                            , TRG.APPROVAL_SO_RESP_DATE_D
+                            , TRG.APPROVAL_DGHO_VALUE
+                            , TRG.APPROVAL_DGHO
+                            , TRG.APPROVAL_DGHO_RESP_DATE
+                            , TRG.APPROVAL_DGHO_RESP_DATE_D
+                            , TRG.APPROVAL_TABG_VALUE
+                            , TRG.APPROVAL_TABG
+                            , TRG.APPROVAL_TABG_RESP_DATE
+                            , TRG.APPROVAL_TABG_RESP_DATE_D
+                            , TRG.APPROVAL_OHC_VALUE
+                            , TRG.APPROVAL_OHC
+                            , TRG.APPROVAL_OHC_RESP_DATE
+                            , TRG.APPROVAL_OHC_RESP_DATE_D
+                            , TRG.APPROVER_NOTES
+                            , TRG.COC_NAME
+                            , TRG.COC_EMAIL
+                            , TRG.COC_ID
+                            , TRG.COC_TITLE
+                            , TRG.APPROVAL_COC_VALUE
+                            , TRG.APPROVAL_COC_ACTING
+                            , TRG.APPROVAL_COC
+                            , TRG.APPROVAL_COC_RESP_DATE
+                            , TRG.APPROVAL_COC_RESP_DATE_D
+                            , TRG.APPROVAL_SO_ACTING
+                            , TRG.APPROVAL_DGHO_ACTING
+                            , TRG.APPROVAL_TABG_ACTING
+                            , TRG.APPROVAL_OHC_ACTING
+                            , TRG.JUSTIFICATION_MOD_REASON
+                            , TRG.JUSTIFICATION_MOD_SUMMARY
+                            , TRG.JUSTIFICATION_MODIFIER_NAME
+                            , TRG.JUSTIFICATION_MODIFIER_ID
+                            , TRG.JUSTIFICATION_MODIFIED_DATE
+                            , TRG.JUSTIFICATION_MODIFIED_DATE_D
+                            --, TRG.JUSTIFICATION_VER
+                            --, TRG.JUSTIFICATION_CRT_NAME
+                            --, TRG.JUSTIFICATION_CRT_ID
+                            --, TRG.JUSTIFICATION_CRT_DATE
+                            --, TRG.JUSTIFICATION_CRT_DATE_D
+                            , TRG.JUSTIFICATION_LASTMOD_NAME
+                            , TRG.JUSTIFICATION_LASTMOD_ID
+                            --, TRG.JUSTIFICATION_LASTMOD_DATE
+                            --, TRG.JUSTIFICATION_LASTMOD_DATE_D 
+                        ) VALUES (
+                            SRC.PROC_ID
+                            , SRC.INIT_SALARY_GRADE
+                            , SRC.INIT_SALARY_STEP
+                            , SRC.INIT_SALARY_SALARY_PER_ANNUM
+                            , SRC.INIT_SALARY_SALARY_PER_ANNUM_N
+                            , SRC.INIT_SALARY_LOCALITY_PAY_SCALE
+                            , SRC.SUPPORT_SAM
+                            , SRC.RCMD_SALARY_GRADE
+                            , SRC.RCMD_SALARY_STEP
+                            , SRC.RCMD_SALARY_SALARY_PER_ANNUM
+                            , SRC.RCMD_SALARY_SALARY_PER_ANNUM_N
+                            , SRC.RCMD_SALARY_LOCALITY_PAY_SCALE
+                            , SRC.SELECTEE_SALARY_PER_ANNUM
+                            , SRC.SELECTEE_SALARY_PER_ANNUM_N
+                            , SRC.SELECTEE_SALARY_TYPE
+                            , SRC.SELECTEE_BONUS
+                            , SRC.SELECTEE_BONUS_N
+                            , SRC.SELECTEE_BENEFITS
+                            , SRC.SELECTEE_TOTAL_COMPENSATION
+                            , SRC.SELECTEE_TOTAL_COMPENSATION_N
+                            , SRC.SUP_DOC_REQ_DATE
+                            , SRC.SUP_DOC_REQ_DATE_D
+                            , SRC.SUP_DOC_RCV_DATE
+                            , SRC.SUP_DOC_RCV_DATE_D
+                            , SRC.JUSTIFICATION_SUPER_QUAL_DESC
+                            , SRC.JUSTIFICATION_QUAL_COMP_DESC
+                            , SRC.JUSTIFICATION_PAY_EQUITY_DESC
+                            , SRC.JUSTIFICATION_EXIST_PKG_DESC
+                            , SRC.JUSTIFICATION_EXPLAIN_CONSID
+                            , SRC.SELECT_MEET_ELIGIBILITY
+                            , SRC.SELECT_MEET_CRITERIA
+                            , SRC.SUPERIOR_QUAL_REASON
+                            , SRC.OTHER_FACTORS
+                            , SRC.SPL_AGENCY_NEED_RSN
+                            , SRC.SPL_AGENCY_NEED_RSN_ESS
+                            , SRC.QUAL_REAPPT
+                            , SRC.OTHER_EXCEPTS
+                            , SRC.BASIC_PAY_RATE_FACTOR1
+                            , SRC.BASIC_PAY_RATE_FACTOR2
+                            , SRC.BASIC_PAY_RATE_FACTOR3
+                            , SRC.BASIC_PAY_RATE_FACTOR4
+                            , SRC.BASIC_PAY_RATE_FACTOR5
+                            , SRC.BASIC_PAY_RATE_FACTOR6
+                            , SRC.BASIC_PAY_RATE_FACTOR7
+                            , SRC.BASIC_PAY_RATE_FACTOR8
+                            , SRC.BASIC_PAY_RATE_FACTOR9
+                            , SRC.BASIC_PAY_RATE_FACTOR10
+                            , SRC.OTHER_RLVNT_FACTOR
+                            , SRC.OTHER_REQ_JUST_APVD
+                            , SRC.OTHER_REQ_SUFF_INFO_PRVD
+                            , SRC.OTHER_REQ_INCEN_REQD
+                            , SRC.OTHER_REQ_DOC_PRVD
+                            , SRC.HRS_RVW_CERT
+                            , SRC.HRS_NOT_SPT_RSN
+                            , SRC.RVW_HRS
+                            , SRC.HRS_RVW_DATE
+                            , SRC.HRS_RVW_DATE_D
+                            , SRC.RCMD_GRADE
+                            , SRC.RCMD_STEP
+                            , SRC.RCMD_SALARY_PER_ANNUM
+                            , SRC.RCMD_SALARY_PER_ANNUM_N
+                            , SRC.RCMD_LOCALITY_PAY_SCALE
+                            , SRC.RCMD_INC_DEC_AMOUNT_N
+                            , SRC.RCMD_INC_DEC_AMOUNT
+                            , SRC.RCMD_PERC_DIFF
+                            , SRC.OHC_APPRO_REQ
+                            , SRC.RCMD_APPRO_OHC_NAME
+                            , SRC.RCMD_APPRO_OHC_EMAIL
+                            , SRC.RCMD_APPRO_OHC_ID
+                            , SRC.RVW_REMARKS
+                            , SRC.APPROVAL_SO_VALUE
+                            , SRC.APPROVAL_SO
+                            , SRC.APPROVAL_SO_RESP_DATE
+                            , SRC.APPROVAL_SO_RESP_DATE_D
+                            , SRC.APPROVAL_DGHO_VALUE
+                            , SRC.APPROVAL_DGHO
+                            , SRC.APPROVAL_DGHO_RESP_DATE
+                            , SRC.APPROVAL_DGHO_RESP_DATE_D
+                            , SRC.APPROVAL_TABG_VALUE
+                            , SRC.APPROVAL_TABG
+                            , SRC.APPROVAL_TABG_RESP_DATE
+                            , SRC.APPROVAL_TABG_RESP_DATE_D
+                            , SRC.APPROVAL_OHC_VALUE
+                            , SRC.APPROVAL_OHC
+                            , SRC.APPROVAL_OHC_RESP_DATE
+                            , SRC.APPROVAL_OHC_RESP_DATE_D
+                            , SRC.APPROVER_NOTES
+                            , SRC.COC_NAME
+                            , SRC.COC_EMAIL
+                            , SRC.COC_ID
+                            , SRC.COC_TITLE
+                            , SRC.APPROVAL_COC_VALUE
+                            , SRC.APPROVAL_COC_ACTING
+                            , SRC.APPROVAL_COC
+                            , SRC.APPROVAL_COC_RESP_DATE
+                            , SRC.APPROVAL_COC_RESP_DATE_D
+                            , SRC.APPROVAL_SO_ACTING
+                            , SRC.APPROVAL_DGHO_ACTING
+                            , SRC.APPROVAL_TABG_ACTING
+                            , SRC.APPROVAL_OHC_ACTING
+                            , SRC.JUSTIFICATION_MOD_REASON
+                            , SRC.JUSTIFICATION_MOD_SUMMARY
+                            , SRC.JUSTIFICATION_MODIFIER_NAME
+                            , SRC.JUSTIFICATION_MODIFIER_ID
+                            , SRC.JUSTIFICATION_MODIFIED_DATE
+                            , SRC.JUSTIFICATION_MODIFIED_DATE_D
+                            --, SRC.JUSTIFICATION_VER
+                            --, SRC.JUSTIFICATION_CRT_NAME
+                            --, SRC.JUSTIFICATION_CRT_ID
+                            --, SRC.JUSTIFICATION_CRT_DATE
+                            --, SRC.JUSTIFICATION_CRT_DATE_D
+                            , SRC.JUSTIFICATION_LASTMOD_NAME
+                            , SRC.JUSTIFICATION_LASTMOD_ID
+                            --, SRC.JUSTIFICATION_LASTMOD_DATE
+                            --, SRC.JUSTIFICATION_LASTMOD_DATE_D 
+                        );
+
+        END IF;
+    END IF;
+        
+    EXCEPTION
+    WHEN OTHERS THEN
+        --DBMS_OUTPUT.PUT_LINE('EXCEPTION=' || SUBSTR(SQLERRM, 1, 200));
+          --err_code := SQLCODE;
+          --err_msg := SUBSTR(SQLERRM, 1, 200);    
+    SP_ERROR_LOG();
+  END;
 /
 
 
