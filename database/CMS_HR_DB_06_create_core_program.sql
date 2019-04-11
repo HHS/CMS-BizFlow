@@ -286,7 +286,7 @@ IS
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'pcaType', '/formData/items/item[id="pcaType"]/value/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'candidateAccept', '/formData/items/item[id="candiAgreeRenewal"]/value/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requesterRole', '/formData/items/item[id="requesterRole"]/value/text()');
-	 		SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'secondaryHrSpecialist', '/formData/items/item[id="hrSpecialist2"]/value/participantId/text()', '/formData/items/item[id="hrSpecialist2"]/value/name/text()');
+			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'secondaryHrSpecialist', '/formData/items/item[id="hrSpecialist2"]/value/participantId/text()', '/formData/items/item[id="hrSpecialist2"]/value/name/text()');
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'staffingSpecialist', '/formData/items/item[id="staffingSpecialist"]/value/participantId/text()', '/formData/items/item[id="staffingSpecialist"]/value/name/text()');
 
 			SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'execOfficer', '/formData/items/item[id="executiveOfficers"]/value[1]/participantId/text()', '/formData/items/item[id="executiveOfficers"]/value[1]/name/text()');
