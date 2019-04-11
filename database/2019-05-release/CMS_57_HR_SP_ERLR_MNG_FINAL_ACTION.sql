@@ -58,15 +58,15 @@ BEGIN
                  WHERE PROCID = FORM_REC.PROCID;
     
                 SP_UPDATE_ERLR_TABLE(FORM_REC.PROCID);
-                
-                UPDATE TBL_LOOKUP
-                   SET TBL_NAME = I_UPDATED_LABEL,
-                       TBL_LABEL = I_UPDATED_LABEL
-                 WHERE TBL_CATEGORY = 'ERLR'
-                   AND TBL_LABEL = I_LABEL
-                   AND TBL_LTYPE='ERLRCasesCompletedFinalAction'
-                   AND TBL_PARENT_ID = I_CASE_TYPE_ID;
             END IF;
         END LOOP;
+        
+        UPDATE TBL_LOOKUP
+           SET TBL_NAME = I_UPDATED_LABEL,
+               TBL_LABEL = I_UPDATED_LABEL
+         WHERE TBL_CATEGORY = 'ERLR'
+           AND TBL_LABEL = I_LABEL
+           AND TBL_LTYPE='ERLRCasesCompletedFinalAction'
+           AND TBL_PARENT_ID = I_CASE_TYPE_ID;
     END IF;
 END;
