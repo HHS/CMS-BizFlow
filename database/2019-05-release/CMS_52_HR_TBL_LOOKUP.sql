@@ -1,0 +1,1 @@
+update tbl_lookup set tbl_name = 'Agreement Reached (MOA/MOU)', tbl_label = 'Agreement Reached (MOA/MOU)' where tbl_id = 1702;
