@@ -18,7 +18,11 @@
         margin: -10px 0px 0px 12px;
         /* padding: -10px 12px 6px 12px; */
     }
-
+    
+    .day-type {
+        color: red;
+        margin: -5px 0px 0px 12px;
+    }    
 </style>
 
 <div id="reportFilter" ng-form="fReportSection" aria-busy="true">
@@ -26,7 +30,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h1 class="panel-title">
-                    <small>{{$ctrl.report.description}}</small>
+                    <small>Mandatory Filters - You must select values for the following filters that are marked with red asterisk.</small>
                 </h1>
             </div>
             <div class="panel-body">
@@ -115,6 +119,23 @@
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>
                     </div>
+					<!-- //#290605 - Business and Calendar Days filter  //-->
+                    <div class="form-group col-md-3 required" ng-if ="$ctrl.report.name != 'CMS HR Incentives PCA Report - Complete'" >
+                    
+                        <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
+                        <selectize class="form-control" role="combobox" required aria-labelledby="dayTypeLabel"
+                                    ng-required="true"
+                                    placeholder="Select One..."
+                                    name="dateType"
+                                    id="dayType" 
+                                    config="$ctrl.simpleConfig"
+                                    options="$ctrl.dayTypes"
+                                    ng-model="$ctrl.selected.dayType"></selectize>
+                        <div class="day-type" ng-messages="fReportSection.dateType.$error" ng-clock>
+                            <div ng-message="required">Select Business or Calendar Days</div>
+                        </div>
+
+                    </div>					
                 </div>
             </div>
         </div>
@@ -136,7 +157,7 @@
                                     options="$ctrl.group['HR Specialists']" 
                                     ng-model="$ctrl.selected.hrSpecialist"></selectize>
                     </div>
-                    <div class="form-group col-md-5">
+                    <div class="form-group col-md-5" ng-if ="$ctrl.report.name != 'CMS HR Incentives PCA Report - Complete'">
                         <label id="incentiveTypeLabel" for="selectIncentiveType" class="control-label">Incentive Type</label>
                         <selectize class="form-control form-control-lg" role="combobox" id="selectIncentiveType" aria-labelledby="incentiveTypeLabel"
                                    name="selectIncentiveType"
@@ -144,6 +165,14 @@
                                    options="$ctrl.incentiveTypes"
                                    ng-model="$ctrl.selected.incentiveType"></selectize>
                     </div>
+                    <div class="form-group col-md-3" ng-if ="$ctrl.report.name == 'CMS HR Incentives PCA Report - Complete'">
+                        <label id="pcaTypeLabel" for="pcaTypeSelect" class="control-label">PCA Type</label>
+                        <selectize id="pcaTypeSelect"
+                                   name="pcaTypeSelect"
+                                   config="$ctrl.simpleConfig"
+                                   options="$ctrl.pcaTypes"
+                                   ng-model="$ctrl.selected.pcaType"></selectize>
+                    </div>                    
                 </div>
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
