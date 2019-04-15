@@ -1745,260 +1745,462 @@ CREATE OR REPLACE VIEW VW_INCENTIVES_DATA
 --------------------------------------------------------
 --  DDL for Incentives Views
 --------------------------------------------------------
-CREATE OR REPLACE VIEW VW_INCENTIVES_COM AS
-
-SELECT FD.PROCID AS PROC_ID, X.*
-FROM TBL_FORM_DTL FD,
-     XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
-	     INCEN_TYPE VARCHAR2(10) PATH './item[id="incentiveType"]/value'
-	     , REQ_NUM VARCHAR2(15) PATH './item[id="requestNumber"]/value'
-	     , REQ_TYPE VARCHAR2(20) PATH './item[id="requestType"]/value'
-	     , REQ_DATE VARCHAR2(10) PATH './item[id="requestDate"]/value'
-	     , ADMIN_CODE VARCHAR2(10) PATH './item[id="administrativeCode"]/value'
-	     , ORG_NAME VARCHAR2(100) PATH './item[id="organizationName"]/value'
-	     -- candidate
-	     , CANDI_NAME VARCHAR2(150) PATH './item[id="candidateName"]/value'
-	     , CANDI_FIRST VARCHAR2(50) PATH './item[id="candiFirstName"]/value'
-	     , CANDI_MIDDLE VARCHAR2(50) PATH './item[id="candiMiddleName"]/value'
-	     , CANDI_LAST VARCHAR2(50) PATH './item[id="candiLastName"]/value'
-	     -- selectingOfficial
-	     , SO_NAME VARCHAR2(100) PATH './item[id="selectingOfficial"]/value/name'
-	     , SO_EMAIL VARCHAR2(100) PATH './item[id="selectingOfficial"]/value/email'
-	     , SO_ID VARCHAR2(10) PATH './item[id="selectingOfficial"]/value/id'
-	     , SO_TITLE VARCHAR2(100) PATH './item[id="selectingOfficial"]/value/title'
-	     -- executiveOfficers
-	     , XO1_NAME VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[1]/name'
-	     , XO1_EMAIL VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[1]/email'
-	     , XO1_ID VARCHAR2(10) PATH './item[id="executiveOfficers"]/value[1]/id'
-	     , XO2_NAME VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[2]/name'
-	     , XO2_EMAIL VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[2]/email'
-	     , XO2_ID VARCHAR2(10) PATH './item[id="executiveOfficers"]/value[2]/id'
-	     , XO3_NAME VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[3]/name'
-	     , XO3_EMAIL VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[3]/email'
-	     , XO3_ID VARCHAR2(10) PATH './item[id="executiveOfficers"]/value[3]/id'
-	     -- hrLiaisons
-	     , HRL1_NAME VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[1]/name'
-	     , HRL1_EMAIL VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[1]/email'
-	     , HRL1_ID VARCHAR2(10) PATH './item[id="hrLiaisons"]/value[1]/id'
-	     , HRL2_NAME VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[2]/name'
-	     , HRL2_EMAIL VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[2]/email'
-	     , HRL2_ID VARCHAR2(10) PATH './item[id="hrLiaisons"]/value[2]/id'
-	     , HRL3_NAME VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[3]/name'
-	     , HRL3_EMAIL VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[3]/email'
-	     , HRL3_ID VARCHAR2(10) PATH './item[id="hrLiaisons"]/value[3]/id'
-	     -- hrSpecialist
-	     , HRS1_NAME VARCHAR2(100) PATH './item[id="hrSpecialist"]/value/name'
-	     , HRS1_EMAIL VARCHAR2(100) PATH './item[id="hrSpecialist"]/value/email'
-	     , HRS1_ID VARCHAR2(10) PATH './item[id="hrSpecialist"]/value/id'
-	     -- hrSpecialist2
-	     , HRS2_NAME VARCHAR2(100) PATH './item[id="hrSpecialist2"]/value/name'
-	     , HRS2_EMAIL VARCHAR2(100) PATH './item[id="hrSpecialist2"]/value/email'
-	     , HRS2_ID VARCHAR2(10) PATH './item[id="hrSpecialist2"]/value/id'
-	     -- TABG Division Director
-	     , DGHO_NAME VARCHAR2(100) PATH './item[id="dghoDirector"]/value/name'
-	     , DGHO_EMAIL VARCHAR2(100) PATH './item[id="dghoDirector"]/value/email'
-	     , DGHO_ID VARCHAR2(10) PATH './item[id="dghoDirector"]/value/id'
-	     -- TABG Director
-	     , TABG_NAME VARCHAR2(100) PATH './item[id="tabgDirector"]/value/name'
-	     , TABG_EMAIL VARCHAR2(100) PATH './item[id="tabgDirector"]/value/email'
-	     , TABG_ID VARCHAR2(10) PATH './item[id="tabgDirector"]/value/id'
-	     --	 STAFFING SPECIALIST	
-	     , SS_NAME VARCHAR2(100) PATH './item[id="staffingSpecialist"]/value/name'
-	     , SS_EMAIL VARCHAR2(100) PATH './item[id="staffingSpecialist"]/value/email'
-	     , SS_ID VARCHAR2(10) PATH './item[id="staffingSpecialist"]/value/id'
-	     -- position
-	     , POS_TITLE VARCHAR2(140) PATH './item[id="positionTitle"]/value'
-	     , PAY_PLAN VARCHAR2(5) PATH './item[id="payPlan"]/value'
-	     , SERIES VARCHAR2(140) PATH './item[id="series"]/value'
-	     , GRADE VARCHAR2(5) PATH './item[id="grade"]/value'
-	     , POS_DESC_NUM VARCHAR2(20) PATH './item[id="posDescNumber"]/value'
-	     , TYPE_OF_APPT VARCHAR2(20) PATH './item[id="typeOfAppointment"]/value'
-	     -- dutyStation
-	     , DS_STATE VARCHAR2(2) PATH './item[id="dutyStation"]/value[1]/state'
-	     , DS_CITY VARCHAR2(50) PATH './item[id="dutyStation"]/value[1]/city'
-	     -- cancellation
-	     , CANCEL_RESAON VARCHAR2(25) PATH './item[id="cancellationReason"]/value'
-	     , CANCEL_USER_NAME VARCHAR2(100) PATH './item[id="cancellationUser"]/value/name'
-	     , CANCEL_USER_ID VARCHAR2(10) PATH './item[id="cancellationUser"]/value/id'
-	     --vacancy number
-	     , VACANCY_NUMBER  NUMBER(10) PATH './item[id="vacancyNumber"]/value'
-	     ) X
-WHERE FD.FORM_TYPE = 'CMSINCENTIVES'
+CREATE OR REPLACE FORCE VIEW HHS_CMS_HR.VW_INCENTIVES_COM (
+        PROC_ID
+        , INCEN_TYPE
+        , REQ_NUM
+        , REQ_TYPE
+        , REQ_DATE
+        , ADMIN_CODE
+        , ORG_NAME
+        , CANDI_NAME
+        , CANDI_FIRST
+        , CANDI_MIDDLE
+        , CANDI_LAST
+        , SO_NAME
+        , SO_EMAIL
+        , SO_ID
+        , XO1_NAME
+        , XO1_EMAIL
+        , XO1_ID
+        , XO2_NAME
+        , XO2_EMAIL
+        , XO2_ID
+        , XO3_NAME
+        , XO3_EMAIL
+        , XO3_ID
+        , HRL1_NAME
+        , HRL1_EMAIL
+        , HRL1_ID
+        , HRL2_NAME
+        , HRL2_EMAIL
+        , HRL2_ID
+        , HRL3_NAME
+        , HRL3_EMAIL
+        , HRL3_ID
+        , HRS1_NAME
+        , HRS1_EMAIL
+        , HRS1_ID
+        , HRS2_NAME
+        , HRS2_EMAIL
+        , HRS2_ID
+        , DGHO_NAME
+        , DGHO_EMAIL
+        , DGHO_ID
+        , TABG_NAME
+        , TABG_EMAIL
+        , TABG_ID
+        , POS_TITLE
+        , PAY_PLAN
+        , SERIES
+        , GRADE
+        , POS_DESC_NUM
+        , TYPE_OF_APPT
+        , DS_STATE
+        , DS_CITY
+        , CANCEL_RESAON
+        , CANCEL_USER_NAME
+        , CANCEL_USER_ID
+        , SO_TITLE
+        , SS_NAME
+        , SS_EMAIL
+        , SS_ID
+        , VACANCY_NUMBER
+) AS 
+SELECT 
+        PROC_ID
+        , INCEN_TYPE
+        , REQ_NUM
+        , REQ_TYPE
+        , TO_CHAR(REQ_DATE, 'yyyy/mm/dd')
+        , ADMIN_CODE
+        , ORG_NAME
+        , CANDI_NAME
+        , CANDI_FIRST
+        , CANDI_MIDDLE
+        , CANDI_LAST
+        , SO_NAME
+        , SO_EMAIL
+        , SO_ID
+        , XO1_NAME
+        , XO1_EMAIL
+        , XO1_ID
+        , XO2_NAME
+        , XO2_EMAIL
+        , XO2_ID
+        , XO3_NAME
+        , XO3_EMAIL
+        , XO3_ID
+        , HRL1_NAME
+        , HRL1_EMAIL
+        , HRL1_ID
+        , HRL2_NAME
+        , HRL2_EMAIL
+        , HRL2_ID
+        , HRL3_NAME
+        , HRL3_EMAIL
+        , HRL3_ID
+        , HRS1_NAME
+        , HRS1_EMAIL
+        , HRS1_ID
+        , HRS2_NAME
+        , HRS2_EMAIL
+        , HRS2_ID
+        , DGHO_NAME
+        , DGHO_EMAIL
+        , DGHO_ID
+        , TABG_NAME
+        , TABG_EMAIL
+        , TABG_ID
+        , POS_TITLE
+        , PAY_PLAN
+        , SERIES
+        , GRADE
+        , POS_DESC_NUM
+        , TYPE_OF_APPT
+        , DS_STATE
+        , DS_CITY
+        , CANCEL_RESAON
+        , CANCEL_USER_NAME
+        , CANCEL_USER_ID
+        , SO_TITLE
+        , SS_NAME
+        , SS_EMAIL
+        , SS_ID
+        , VACANCY_NUMBER
+FROM HHS_CMS_HR.INCENTIVES_COM
 ;
+
 
 /
 
-CREATE OR REPLACE VIEW VW_INCENTIVES_PCA AS
-
-SELECT FD.PROCID AS PROC_ID, X.*
-FROM TBL_FORM_DTL FD,
-     XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
-	     PCA_TYPE VARCHAR2(10) PATH './item[id="pcaType"]/value'
-	     , CANDI_AGREE VARCHAR2(5) PATH './item[id="candiAgreeRenewal"]/value'
-	     -- Chief Physician
-	     , CP_NAME VARCHAR2(100) PATH './item[id="chiefPhysician"]/value/name'
-	     , CP_EMAIL VARCHAR2(100) PATH './item[id="chiefPhysician"]/value/email'
-	     , CP_ID VARCHAR2(10) PATH './item[id="chiefPhysician"]/value/id'
-	     -- OFM Director
-	     , OFM_NAME VARCHAR2(100) PATH './item[id="ofmDirector"]/value/name'
-	     , OFM_EMAIL VARCHAR2(100) PATH './item[id="ofmDirector"]/value/email'
-	     , OFM_ID VARCHAR2(10) PATH './item[id="ofmDirector"]/value/id'
-	     -- Does the PCA require the Office of the Administrator approval?
-	     , ADMIN_APPROVAL_REQ VARCHAR2(5) PATH './item[id="requireAdminApproval"]/value'
-	     -- OHC Director
-	     , OHC_NAME VARCHAR2(100) PATH './item[id="ohcDirector"]/value/name'
-	     , OHC_EMAIL VARCHAR2(100) PATH './item[id="ohcDirector"]/value/email'
-	     , OHC_ID VARCHAR2(10) PATH './item[id="ohcDirector"]/value/id'
-	     -- Administrator
-	     , OADMIN_NAME VARCHAR2(100) PATH './item[id="offAdmin"]/value/name'
-	     , OADMIN_EMAIL VARCHAR2(100) PATH './item[id="offAdmin"]/value/email'
-	     , OADMIN_ID VARCHAR2(10) PATH './item[id="offAdmin"]/value/id'
-	     -- Position
-	     , WORK_SCHEDULE VARCHAR2(15) PATH './item[id="workSchedule"]/value'
-	     , HOURS_PER_WEEK VARCHAR2(5) PATH './item[id="hoursPerWeek"]/value'
-	     , BD_CERT_REQ VARCHAR2(5) PATH './item[id="requireBoardCert"]/value'
-	     , LIC_INFO VARCHAR2(140) PATH './item[id="licenseInfo"]/value'
-	     -- licenseState
-	     , LIC_STATE1_STATE VARCHAR2(2) PATH './item[id="licenseState"]/value[1]/state'
-	     , LIC_STATE1_NAME VARCHAR2(50) PATH './item[id="licenseState"]/value[1]/name'
-	     , LIC_STATE1_EXP_DATE VARCHAR2(10) PATH './item[id="licenseState"]/value[1]/expDate'
-	     , LIC_STATE2_STATE VARCHAR2(2) PATH './item[id="licenseState"]/value[2]/state'
-	     , LIC_STATE2_NAME VARCHAR2(50) PATH './item[id="licenseState"]/value[2]/name'
-	     , LIC_STATE2_EXP_DATE VARCHAR2(10) PATH './item[id="licenseState"]/value[2]/expDate'
-	     -- boardCertSpecialty
-	     , BD_CERT_SPEC1 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[1]/text'
-	     , BD_CERT_SPEC2 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[2]/text'
-	     , BD_CERT_SPEC3 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[3]/text'
-	     , BD_CERT_SPEC4 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[4]/text'
-	     , BD_CERT_SPEC5 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[5]/text'
-	     , BD_CERT_SPEC6 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[6]/text'
-	     , BD_CERT_SPEC7 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[7]/text'
-	     , BD_CERT_SPEC8 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[8]/text'
-	     , BD_CERT_SPEC9 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[9]/text'
-	     , BD_CERT_SPEC_OTHER VARCHAR2(140) PATH './item[id="otherSpeciality"]/value'
-	     -- allowance
-	     , LEN_SERVED VARCHAR2(25) PATH './item[id="lengthOfServed"]/value'
-	     , LEN_SERVICE VARCHAR2(2) PATH './item[id="lengthOfService"]/value'
-	     , ALW_CATEGORY VARCHAR2(15) PATH './item[id="allowanceCategory"]/value'
-	     , ALW_BD_CERT VARCHAR2(15) PATH './item[id="allowanceBoardCertification"]/value'
-	     , ALW_MULTI_YEAR_AGMT VARCHAR2(15) PATH './item[id="allowanceMultiYearAgreement"]/value'
-	     , ALW_MISSION_SC VARCHAR2(15) PATH './item[id="allowanceMissionSpecificCriteria"]/value'
-	     , ALW_TOTAL VARCHAR2(15) PATH './item[id="allowanceTotal"]/value'
-	     , ALW_TOTAL_PAYABLE VARCHAR2(15) PATH './item[id="totalPayablePCACalculation"]/value'
-	     -- remarks
-	     , DETAIL_REMARKS VARCHAR2(500) PATH './item[id="detailRemarks"]/value'
-	     -- Review
-	     , RVW_SO_NAME VARCHAR2(100) PATH './item[id="reviewSO"]/value'
-	     , RVW_SO_ID VARCHAR2(10) PATH './item[id="reviewSOId"]/value'
-	     , RVW_SO_DATE VARCHAR2(10) PATH './item[id="reviewSODate"]/value'
-	     , RVW_DGHO_NAME VARCHAR2(100) PATH './item[id="reviewDGHO"]/value'
-	     , RVW_DGHO_ID VARCHAR2(10) PATH './item[id="reviewDGHOId"]/value'
-	     , RVW_DGHO_DATE VARCHAR2(10) PATH './item[id="reviewDGHODate"]/value'
-	     , RVW_CP_NAME VARCHAR2(100) PATH './item[id="reviewCP"]/value'
-	     , RVW_CP_ID VARCHAR2(10) PATH './item[id="reviewCPId"]/value'
-	     , RVW_CP_DATE VARCHAR2(10) PATH './item[id="reviewCPDate"]/value'
-	     , RVW_OFM_NAME VARCHAR2(100) PATH './item[id="reviewOFM"]/value'
-	     , RVW_OFM_ID VARCHAR2(10) PATH './item[id="reviewOFMId"]/value'
-	     , RVW_OFM_DATE VARCHAR2(10) PATH './item[id="reviewOFMDate"]/value'
-	     , RVW_TABG_NAME VARCHAR2(100) PATH './item[id="reviewTABG"]/value'
-	     , RVW_TABG_ID VARCHAR2(10) PATH './item[id="reviewTABGId"]/value'
-	     , RVW_TABG_DATE VARCHAR2(10) PATH './item[id="reviewTABGDate"]/value'
-	     , RVW_OHC_NAME VARCHAR2(100) PATH './item[id="reviewOHC"]/value'
-	     , RVW_OHC_ID VARCHAR2(10) PATH './item[id="reviewOHCId"]/value'
-	     , RVW_OHC_DATE VARCHAR2(10) PATH './item[id="reviewOHCDate"]/value'
-	     -- Approvals
-	     , APPROVAL_TABG_NAME VARCHAR2(100) PATH './item[id="pcaApproveTABG"]/value'
-	     , APPROVAL_TABG_ID VARCHAR2(10) PATH './item[id="pcaApproveTABGId"]/value'
-	     , APPROVAL_TABG_DATE VARCHAR2(10) PATH './item[id="pcaApproveTABGDate"]/value'
-	     , APPROVAL_OADMIN_NAME VARCHAR2(100) PATH './item[id="pcaApproveADM"]/value'
-	     , APPROVAL_OADMIN_ID VARCHAR2(10) PATH './item[id="pcaApproveADMId"]/value'
-	     , APPROVAL_OADMIN_DATE VARCHAR2(10) PATH './item[id="pcaApproveADMDate"]/value'
-	     ) X
-WHERE FD.FORM_TYPE = 'CMSINCENTIVES'
+CREATE OR REPLACE FORCE VIEW HHS_CMS_HR.VW_INCENTIVES_PCA (
+    PROC_ID
+    ,PCA_TYPE
+    ,CANDI_AGREE
+    ,CP_NAME
+    ,CP_EMAIL
+    ,CP_ID
+    ,OFM_NAME
+    ,OFM_EMAIL
+    ,OFM_ID
+    ,ADMIN_APPROVAL_REQ
+    ,OHC_NAME
+    ,OHC_EMAIL
+    ,OHC_ID
+    ,OADMIN_NAME
+    ,OADMIN_EMAIL
+    ,OADMIN_ID
+    ,WORK_SCHEDULE
+    ,HOURS_PER_WEEK
+    ,BD_CERT_REQ
+    ,LIC_INFO
+    ,LIC_STATE1_STATE
+    ,LIC_STATE1_NAME
+    ,LIC_STATE1_EXP_DATE --
+    ,LIC_STATE2_STATE
+    ,LIC_STATE2_NAME
+    ,LIC_STATE2_EXP_DATE --
+    ,BD_CERT_SPEC1
+    ,BD_CERT_SPEC2
+    ,BD_CERT_SPEC3
+    ,BD_CERT_SPEC4
+    ,BD_CERT_SPEC5
+    ,BD_CERT_SPEC6
+    ,BD_CERT_SPEC7
+    ,BD_CERT_SPEC8
+    ,BD_CERT_SPEC9
+    ,BD_CERT_SPEC_OTHER
+    ,LEN_SERVED
+    ,LEN_SERVICE
+    ,ALW_CATEGORY  --
+    ,ALW_BD_CERT --
+    ,ALW_MULTI_YEAR_AGMT --
+    ,ALW_MISSION_SC --
+    ,ALW_TOTAL --
+    ,ALW_TOTAL_PAYABLE --
+    ,DETAIL_REMARKS
+    ,RVW_SO_NAME
+    ,RVW_SO_ID
+    ,RVW_SO_DATE --
+    ,RVW_DGHO_NAME
+    ,RVW_DGHO_ID
+    ,RVW_DGHO_DATE --
+    ,RVW_CP_NAME
+    ,RVW_CP_ID
+    ,RVW_CP_DATE --
+    ,RVW_OFM_NAME
+    ,RVW_OFM_ID
+    ,RVW_OFM_DATE --
+    ,RVW_TABG_NAME
+    ,RVW_TABG_ID
+    ,RVW_TABG_DATE --
+    ,RVW_OHC_NAME
+    ,RVW_OHC_ID
+    ,RVW_OHC_DATE --
+    ,APPROVAL_TABG_NAME
+    ,APPROVAL_TABG_ID
+    ,APPROVAL_TABG_DATE --
+    ,APPROVAL_OADMIN_NAME
+    ,APPROVAL_OADMIN_ID
+    ,APPROVAL_OADMIN_DATE --
+    ---- correct data type
+    ,LIC_STATE1_EXP_DATE_D
+    ,LIC_STATE2_EXP_DATE_D
+    ,ALW_CATEGORY_N
+    ,ALW_BD_CERT_N
+    ,ALW_MULTI_YEAR_AGMT_N
+    ,ALW_MISSION_SC_N
+    ,ALW_TOTAL_N
+    ,ALW_TOTAL_PAYABLE_N
+    ,RVW_SO_DATE_D
+    ,RVW_DGHO_DATE_D
+    ,RVW_CP_DATE_D
+    ,RVW_OFM_DATE_D
+    ,RVW_TABG_DATE_D
+    ,RVW_OHC_DATE_D
+    ,APPROVAL_TABG_DATE_D
+    ,APPROVAL_OADMIN_DATE_D
+) AS 
+SELECT 
+    PROC_ID
+    ,PCA_TYPE
+    ,CANDI_AGREE
+    ,CP_NAME
+    ,CP_EMAIL
+    ,CP_ID
+    ,OFM_NAME
+    ,OFM_EMAIL
+    ,OFM_ID
+    ,ADMIN_APPROVAL_REQ
+    ,OHC_NAME
+    ,OHC_EMAIL
+    ,OHC_ID
+    ,OADMIN_NAME
+    ,OADMIN_EMAIL
+    ,OADMIN_ID
+    ,WORK_SCHEDULE
+    ,HOURS_PER_WEEK
+    ,BD_CERT_REQ
+    ,LIC_INFO
+    ,LIC_STATE1_STATE
+    ,LIC_STATE1_NAME
+    ,TO_CHAR(LIC_STATE1_EXP_DATE_D, 'mm/dd/yyyy') as LIC_STATE1_EXP_DATE --
+    ,LIC_STATE2_STATE
+    ,LIC_STATE2_NAME
+    ,TO_CHAR(LIC_STATE2_EXP_DATE_D, 'mm/dd/yyyy') as LIC_STATE2_EXP_DATE --
+    ,BD_CERT_SPEC1
+    ,BD_CERT_SPEC2
+    ,BD_CERT_SPEC3
+    ,BD_CERT_SPEC4
+    ,BD_CERT_SPEC5
+    ,BD_CERT_SPEC6
+    ,BD_CERT_SPEC7
+    ,BD_CERT_SPEC8
+    ,BD_CERT_SPEC9
+    ,BD_CERT_SPEC_OTHER
+    ,LEN_SERVED
+    ,LEN_SERVICE
+    ,TO_CHAR(ALW_CATEGORY_N, '$999,999,999,999,999,999.99' ) as ALW_CATEGORY  --
+    ,TO_CHAR(ALW_BD_CERT_N, '$999,999,999,999,999,999.99' ) as ALW_BD_CERT --
+    ,TO_CHAR(ALW_MULTI_YEAR_AGMT_N, '$999,999,999,999,999,999.99' ) as ALW_MULTI_YEAR_AGMT --
+    ,TO_CHAR(ALW_MISSION_SC_N, '$999,999,999,999,999,999.99' ) as ALW_MISSION_SC --
+    ,TO_CHAR(ALW_TOTAL_N, '$999,999,999,999,999,999.99' ) as ALW_TOTAL --
+    ,TO_CHAR(ALW_TOTAL_PAYABLE_N, '$999,999,999,999,999,999.99' ) as ALW_TOTAL_PAYABLE --
+    ,DETAIL_REMARKS
+    ,RVW_SO_NAME
+    ,RVW_SO_ID
+    ,TO_CHAR(RVW_SO_DATE_D, 'mm/dd/yyyy') as RVW_SO_DATE --
+    ,RVW_DGHO_NAME
+    ,RVW_DGHO_ID
+    ,TO_CHAR(RVW_DGHO_DATE_D, 'mm/dd/yyyy') as RVW_DGHO_DATE --
+    ,RVW_CP_NAME
+    ,RVW_CP_ID
+    ,TO_CHAR(RVW_CP_DATE_D, 'mm/dd/yyyy') as RVW_CP_DATE --
+    ,RVW_OFM_NAME
+    ,RVW_OFM_ID
+    ,TO_CHAR(RVW_OFM_DATE_D, 'mm/dd/yyyy') as RVW_OFM_DATE --
+    ,RVW_TABG_NAME
+    ,RVW_TABG_ID
+    ,TO_CHAR(RVW_TABG_DATE_D, 'mm/dd/yyyy') as RVW_TABG_DATE --
+    ,RVW_OHC_NAME
+    ,RVW_OHC_ID
+    ,TO_CHAR(RVW_OHC_DATE_D, 'mm/dd/yyyy') as RVW_OHC_DATE --
+    ,APPROVAL_TABG_NAME
+    ,APPROVAL_TABG_ID
+    ,TO_CHAR(APPROVAL_TABG_DATE_D, 'mm/dd/yyyy') as APPROVAL_TABG_DATE --
+    ,APPROVAL_OADMIN_NAME
+    ,APPROVAL_OADMIN_ID
+    ,TO_CHAR(APPROVAL_OADMIN_DATE_D, 'mm/dd/yyyy') as APPROVAL_OADMIN_DATE --
+    ---- correct data type
+    ,LIC_STATE1_EXP_DATE_D
+    ,LIC_STATE2_EXP_DATE_D
+    ,ALW_CATEGORY_N
+    ,ALW_BD_CERT_N
+    ,ALW_MULTI_YEAR_AGMT_N
+    ,ALW_MISSION_SC_N
+    ,ALW_TOTAL_N
+    ,ALW_TOTAL_PAYABLE_N
+    ,RVW_SO_DATE_D
+    ,RVW_DGHO_DATE_D
+    ,RVW_CP_DATE_D
+    ,RVW_OFM_DATE_D
+    ,RVW_TABG_DATE_D
+    ,RVW_OHC_DATE_D
+    ,APPROVAL_TABG_DATE_D
+    ,APPROVAL_OADMIN_DATE_D
+FROM HHS_CMS_HR.INCENTIVES_PCA
 ;
 /
 
-CREATE OR REPLACE VIEW VW_INCENTIVES_PDP AS
-
-SELECT FD.PROCID AS PROC_ID, X.*
-FROM TBL_FORM_DTL FD,
-     XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
-	PDP_TYPE VARCHAR2(18) PATH './item[id="pdpType"]/value'
-	,PDP_TYPE_OTHER	VARCHAR2(150)PATH './item[id="pdpTypeOther"]/value'
-	,EXISTINGREQUEST	VARCHAR2(1)PATH './item[id="associatedRequest"]/value'
-	-- Position
-	,WORK_SCHEDULE        VARCHAR2(15) PATH './item[id="workSchedule"]/value'
-	,HOURS_PER_WEEK       VARCHAR2(5) PATH './item[id="hoursPerWeek"]/value'
-	,BD_CERT_REQ          VARCHAR2(5) PATH './item[id="requireBoardCert"]/value'
-	,LIC_INFO             VARCHAR2(140) PATH './item[id="licenseInfo"]/value'
-	--Details
-	,MARKET_PAY_RATE VARCHAR2(9) PATH './item[id="marketPayRate"]/value' 
-	,CURRENT_FED_EMPLOYEE  VARCHAR2(1) PATH './item[id="currentFederalEmployee"]/value' 
-	,LEVEL_RESPONSIBILITY VARCHAR2(50) PATH './item[id="execRespLevelOfResponsability"]/value'
-	,EXEC_RESP_AMT_REQUESTED NUMBER(10) PATH './item[id="execRespAmountRequested"]/value' 
-	,EXEC_RESP_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="execRespJustification"]/value' 
-	,EXPT_QF_Q1_AMT_REQUESTED NUMBER(10) PATH './item[id="excepQualAmountRequested_1"]/value' 
-	,EXPT_QF_Q1_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_1"]/value' 
-	,EXPT_QF_Q2_AMT_REQUESTED NUMBER(10) PATH './item[id="excepQualAmountRequested_2"]/value' 
-	,EXPT_QF_Q2_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_2"]/value' 
-	,EXPT_QF_Q3_AMT_REQUESTED NUMBER(10) PATH './item[id="excepQualAmountRequested_3"]/value' 
-	,EXPT_QF_Q3_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_3"]/value' 
-	,EXPT_QF_Q4_AMT_REQUESTED NUMBER(10) PATH './item[id="excepQualAmountRequested_4"]/value' 
-	,EXPT_QF_Q4_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_4"]/value' 
-	,EXPT_QF_Q5_AMT_REQUESTED NUMBER(10) PATH './item[id="excepQualAmountRequested_5"]/value' 
-	,EXPT_QF_Q5_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_5"]/value' 
-	,TOTAL_AMT_EXPT_QUALIFICATIONS NUMBER(10) PATH './item[id="excepQualTotalAmount"]/value'
-	,CURRENT_PAY_GRADE NUMBER(2) PATH './item[id="currentPayInfoGrade"]/value' 
-	,CURRENT_PAY_STEP NUMBER(2) PATH './item[id="currentPayInfoStep"]/value' 
-	,CURRENT_PAY_POSITION_TITLE VARCHAR2(70) PATH './item[id="currentPayInfoPositionTitle"]/value' 
-	,CURRENT_PAY_TABLE NUMBER(2) PATH './item[id="currentPayInfoTable"]/value' 
-	,CURRENT_PAY_TIER NUMBER(2) PATH './item[id="currentPayInfoTier"]/value' 
-	,CLINICAL_SPECIALTY_BOARD_CERT VARCHAR2(200) PATH './item[id="currentPayInfoSpecialtyCertification"]/value'
-	,OTHER_SPECIALTY VARCHAR2(140) PATH './item[id="needvalue"]/value'
-	,CURRENT_PAY_RECRUITMENT NUMBER(10) PATH './item[id="currentPayInfoRecruitment"]/value' 
-	,CURRENT_PAY_RELOCATION NUMBER(10) PATH './item[id="currentPayInfoRelocation"]/value' 
-	,CURRENT_PAY_RETENTION NUMBER(10) PATH './item[id="currentPayInfoRetention"]/value' 
-	,CURRENT_PAY_3R_TOTAL NUMBER(10) PATH './item[id="currentPayInfoTotal3R"]/value' 
-	,CURRENT_PAY_BASE NUMBER(10) PATH './item[id="currentPayInfoBasePay"]/value' 
-	,CURRENT_PAY_LOCALITY_MARKET NUMBER(10) PATH './item[id="currentPayInfoLocality"]/value' 
-	,CURRENT_PAY_TOTAL_ANNUAL_PAY NUMBER(10) PATH './item[id="currentPayInfoTotalAnnualPay"]/value' 
-	,CURRENT_PAY_TOTAL_COMPENSATION NUMBER(10) PATH './item[id="currentPayInfoTotalAnnualComp"]/value' 
-	,CURRENT_PAY_NOTES VARCHAR2(500) PATH './item[id="currentPayInfoNotes"]/value' 
-	,PROPOSED_PAY_STEP NUMBER(2) PATH './item[id="proposedPayInfoStep"]/value' 
-	,PROPOSED_PAY_TABLE NUMBER(2) PATH './item[id="proposedPayInfoTable"]/value' 
-	,PROPOSED_PAY_TIER NUMBER(2) PATH './item[id="proposedPayInfoTier"]/value' 
-	,PROPOSED_PAY_RECRUITMENT NUMBER(10) PATH './item[id="proposedPayInfoRecruitment"]/value' 
-	,PROPOSED_PAY_RELOCATION NUMBER(10) PATH './item[id="proposedPayInfoRelocation"]/value' 
-	,PROPOSED_PAY_RETENTION NUMBER(10) PATH './item[id="proposedPayInfoRetention"]/value' 
-	,PROPOSED_PAY_TOTAL_3R NUMBER(10) PATH './item[id="proposedPayInfoTotal3R"]/value' 
-	,PROPOSED_GS_BASE_PAY NUMBER(10) PATH './item[id="proposedPayInfoGSBasePay"]/value' 
-	,PROPOSED_MARKET_PAY NUMBER(10) PATH './item[id="proposedPayInfoMarketPay"]/value' 
-	,PROPOSED_TOTAL_ANNUAL_PAY NUMBER(10) PATH './item[id="currentPayInfoTotalAnnualPay_2"]/value'   
-	,PROPOSED_TOTAL_ANNUAL_COMPENS NUMBER(10) PATH './item[id="proposedPayInfoTotalAnnualComp"]/value' 
-	,INCENTIVES_APPROVED_BY_TABG VARCHAR2(3) PATH './item[id="proposedPayInfoIncentivesApprTABG"]/value' 
-	,PROPOSED_PAY_NOTES VARCHAR2(500) PATH './item[id="proposedPayInfoNotes"]/value' 
-	--Panel
-	,DATE_OF_MEETING DATE PATH './item[id="panelDateOfMeeting"]/value' 
-	,PANEL_MEMBER_NAME VARCHAR2(100) PATH './item[id="panelMemberName"]/value' 
-	,PANEL_MEMBER_COMPONENT VARCHAR2(50) PATH './item[id="selectComponent"]/value' 
-	,PANEL_ROLE VARCHAR2(9) PATH './item[id="selectPanelRole"]/value' 
-	,VOTING_STATUS VARCHAR2(16) PATH './item[id="selectVotingStatus"]/value' 
-	,PANEL_RECOMMENDED_COMPENSATION NUMBER(10) PATH './item[id="selectPanelRecommendedCompensation"]/value' 
-	,QUORUM_REACHED VARCHAR2(1) PATH './item[id="selectQuorumReached"]/value'
-	,PANEL_CURRENT_SALARY NUMBER(10) PATH './item[id="currentSalary"]/value' 
-	,PANEL_PDP_AMOUNT NUMBER(10) PATH './item[id="PDPAmount"]/value' 
-	,PANEL_RECOMM_ANNUAL_SALARY NUMBER(10) PATH './item[id="panelRecommendedAnnualSalary"]/value' 
-	--Approval and Review
-	,SELECTING_OFFICIAL_REVIEWER VARCHAR2(100) PATH './item[id="SELECTING_OFFICIAL_REVIEWER"]/value' 
-	,SELECTING_OFFICIAL_REVIEW_DT DATE PATH './item[id="SELECTING_OFFICIAL_REVIEW_DT"]/value' 
-	,TABG_DIVISION_DIR_REVIEW_DT DATE PATH './item[id="TABG_DIVISION_DIR_REVIEW_DT"]/value' 
-	,CMS_CHIEF_PHYSICIAN_REVIEW_DT DATE PATH './item[id="CMS_CHIEF_PHYSICIAN_REVIEW_DT"]/value' 
-	,OFM_REVIEW_DATE DATE PATH './item[id="OFM_REVIEW_DATE"]/value' 
-	,TABG_REVIEW_DATE DATE PATH './item[id="TABG_REVIEW_DATE"]/value' 
-	,OHC_REVIEW_DATE DATE PATH './item[id="OHC_REVIEW_DATE"]/value' 
-	,ADMINISTRATOR_APPROVAL_DATE DATE PATH './item[id="ADMINISTRATOR_APPROVAL_DATE"]/value'		
-	) X
-WHERE FD.FORM_TYPE = 'CMSINCENTIVES'
+CREATE OR REPLACE FORCE VIEW HHS_CMS_HR.VW_INCENTIVES_PDP (
+     PROC_ID
+    , PDP_TYPE
+    , PDP_TYPE_OTHER
+    , EXISTINGREQUEST
+    , WORK_SCHEDULE
+    , HOURS_PER_WEEK
+    , BD_CERT_REQ
+    , LIC_INFO
+    , MARKET_PAY_RATE
+    , CURRENT_FED_EMPLOYEE
+    , LEVEL_RESPONSIBILITY
+    , EXEC_RESP_AMT_REQUESTED
+    , EXEC_RESP_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q1_AMT_REQUESTED
+    , EXPT_QF_Q1_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q2_AMT_REQUESTED
+    , EXPT_QF_Q2_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q3_AMT_REQUESTED
+    , EXPT_QF_Q3_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q4_AMT_REQUESTED
+    , EXPT_QF_Q4_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q5_AMT_REQUESTED
+    , EXPT_QF_Q5_JUSTIF_DETERMIN_AMT
+    , TOTAL_AMT_EXPT_QUALIFICATIONS
+    , CURRENT_PAY_GRADE
+    , CURRENT_PAY_STEP
+    , CURRENT_PAY_POSITION_TITLE
+    , CURRENT_PAY_TABLE
+    , CURRENT_PAY_TIER
+    , CLINICAL_SPECIALTY_BOARD_CERT
+    , OTHER_SPECIALTY
+    , CURRENT_PAY_RECRUITMENT
+    , CURRENT_PAY_RELOCATION
+    , CURRENT_PAY_RETENTION
+    , CURRENT_PAY_3R_TOTAL
+    , CURRENT_PAY_BASE
+    , CURRENT_PAY_LOCALITY_MARKET
+    , CURRENT_PAY_TOTAL_ANNUAL_PAY
+    , CURRENT_PAY_TOTAL_COMPENSATION
+    , CURRENT_PAY_NOTES
+    , PROPOSED_PAY_STEP
+    , PROPOSED_PAY_TABLE
+    , PROPOSED_PAY_TIER
+    , PROPOSED_PAY_RECRUITMENT
+    , PROPOSED_PAY_RELOCATION
+    , PROPOSED_PAY_RETENTION
+    , PROPOSED_PAY_TOTAL_3R
+    , PROPOSED_GS_BASE_PAY
+    , PROPOSED_MARKET_PAY
+    , PROPOSED_TOTAL_ANNUAL_PAY
+    , PROPOSED_TOTAL_ANNUAL_COMPENS
+    , INCENTIVES_APPROVED_BY_TABG
+    , PROPOSED_PAY_NOTES
+    , DATE_OF_MEETING
+    , PANEL_MEMBER_NAME
+    , PANEL_MEMBER_COMPONENT
+    , PANEL_ROLE
+    , VOTING_STATUS
+    , PANEL_RECOMMENDED_COMPENSATION
+    , QUORUM_REACHED
+    , PANEL_CURRENT_SALARY
+    , PANEL_PDP_AMOUNT
+    , PANEL_RECOMM_ANNUAL_SALARY
+    , SELECTING_OFFICIAL_REVIEWER
+    , SELECTING_OFFICIAL_REVIEW_DT
+    , TABG_DIVISION_DIR_REVIEW_DT
+    , CMS_CHIEF_PHYSICIAN_REVIEW_DT
+    , OFM_REVIEW_DATE
+    , TABG_REVIEW_DATE
+    , OHC_REVIEW_DATE
+    , ADMINISTRATOR_APPROVAL_DATE
+    , DATE_OF_RECOMMENDATION
+) AS 
+SELECT 
+     PROC_ID
+    , PDP_TYPE
+    , PDP_TYPE_OTHER
+    , EXISTINGREQUEST
+    , WORK_SCHEDULE
+    , HOURS_PER_WEEK
+    , BD_CERT_REQ
+    , LIC_INFO
+    , MARKET_PAY_RATE
+    , CURRENT_FED_EMPLOYEE
+    , LEVEL_RESPONSIBILITY
+    , EXEC_RESP_AMT_REQUESTED
+    , EXEC_RESP_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q1_AMT_REQUESTED
+    , EXPT_QF_Q1_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q2_AMT_REQUESTED
+    , EXPT_QF_Q2_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q3_AMT_REQUESTED
+    , EXPT_QF_Q3_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q4_AMT_REQUESTED
+    , EXPT_QF_Q4_JUSTIF_DETERMIN_AMT
+    , EXPT_QF_Q5_AMT_REQUESTED
+    , EXPT_QF_Q5_JUSTIF_DETERMIN_AMT
+    , TOTAL_AMT_EXPT_QUALIFICATIONS
+    , CURRENT_PAY_GRADE
+    , CURRENT_PAY_STEP
+    , CURRENT_PAY_POSITION_TITLE
+    , CURRENT_PAY_TABLE
+    , CURRENT_PAY_TIER
+    , CLINICAL_SPECIALTY_BOARD_CERT
+    , OTHER_SPECIALTY
+    , CURRENT_PAY_RECRUITMENT
+    , CURRENT_PAY_RELOCATION
+    , CURRENT_PAY_RETENTION
+    , CURRENT_PAY_3R_TOTAL
+    , CURRENT_PAY_BASE
+    , CURRENT_PAY_LOCALITY_MARKET
+    , CURRENT_PAY_TOTAL_ANNUAL_PAY
+    , CURRENT_PAY_TOTAL_COMPENSATION
+    , CURRENT_PAY_NOTES
+    , PROPOSED_PAY_STEP
+    , PROPOSED_PAY_TABLE
+    , PROPOSED_PAY_TIER
+    , PROPOSED_PAY_RECRUITMENT
+    , PROPOSED_PAY_RELOCATION
+    , PROPOSED_PAY_RETENTION
+    , PROPOSED_PAY_TOTAL_3R
+    , PROPOSED_GS_BASE_PAY
+    , PROPOSED_MARKET_PAY
+    , PROPOSED_TOTAL_ANNUAL_PAY
+    , PROPOSED_TOTAL_ANNUAL_COMPENS
+    , INCENTIVES_APPROVED_BY_TABG
+    , PROPOSED_PAY_NOTES
+    , DATE_OF_MEETING
+    , PANEL_MEMBER_NAME
+    , PANEL_MEMBER_COMPONENT
+    , PANEL_ROLE
+    , VOTING_STATUS
+    , PANEL_RECOMMENDED_COMPENSATION
+    , QUORUM_REACHED
+    , PANEL_CURRENT_SALARY
+    , PANEL_PDP_AMOUNT
+    , PANEL_RECOMM_ANNUAL_SALARY
+    , SELECTING_OFFICIAL_REVIEWER
+    , SELECTING_OFFICIAL_REVIEW_DT
+    , TABG_DIVISION_DIR_REVIEW_DT
+    , CMS_CHIEF_PHYSICIAN_REVIEW_DT
+    , OFM_REVIEW_DATE
+    , TABG_REVIEW_DATE
+    , OHC_REVIEW_DATE
+    , ADMINISTRATOR_APPROVAL_DATE
+    , DATE_OF_RECOMMENDATION
+FROM HHS_CMS_HR.INCENTIVES_PDP
 ;
 /
 
@@ -2432,150 +2634,1173 @@ WHERE FD.FORM_TYPE = 'CMSINCENTIVES'
 ;
 /
 
-CREATE OR REPLACE PROCEDURE SP_UPDATE_INCENTIVES_COM_TABLE
-(
-	I_PROCID            IN      NUMBER
-)
+create or replace PROCEDURE SP_UPDATE_INCENTIVES_COM_TABLE
+  (
+    I_PROCID            IN      NUMBER
+  )
 IS
+    V_XMLREC_CNT                                    INTEGER := 0;
+    V_XMLDOC                                        XMLTYPE;
+    V_SERIES                                        VARCHAR2(140);
+    V_TYPE_OF_APPOINTMENT_SELECT                    VARCHAR2(20);
 BEGIN
-	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
-		DELETE INCENTIVES_COM WHERE PROC_ID = I_PROCID;
-		INSERT INTO INCENTIVES_COM (PROC_ID, INCEN_TYPE, REQ_NUM, REQ_TYPE, ADMIN_CODE, ORG_NAME
-			, CANDI_NAME, CANDI_FIRST, CANDI_MIDDLE, CANDI_LAST
-			, SO_NAME, SO_EMAIL, SO_ID, SO_TITLE
-			, XO1_NAME, XO1_EMAIL, XO1_ID, XO2_NAME, XO2_EMAIL, XO2_ID, XO3_NAME, XO3_EMAIL, XO3_ID
-			, HRL1_NAME, HRL1_EMAIL, HRL1_ID, HRL2_NAME, HRL2_EMAIL, HRL2_ID, HRL3_NAME, HRL3_EMAIL, HRL3_ID
-			, HRS1_NAME, HRS1_EMAIL, HRS1_ID, HRS2_NAME, HRS2_EMAIL, HRS2_ID
-			, DGHO_NAME, DGHO_EMAIL, DGHO_ID
-			, TABG_NAME, TABG_EMAIL, TABG_ID, POS_TITLE
-			, PAY_PLAN, SERIES, GRADE, POS_DESC_NUM, TYPE_OF_APPT, DS_STATE, DS_CITY, CANCEL_RESAON, CANCEL_USER_NAME, CANCEL_USER_ID)
-			SELECT PROC_ID, INCEN_TYPE, REQ_NUM, REQ_TYPE, ADMIN_CODE, ORG_NAME
-			, CANDI_NAME, CANDI_FIRST, CANDI_MIDDLE, CANDI_LAST
-			, SO_NAME, SO_EMAIL, SO_ID, SO_TITLE
-			, XO1_NAME, XO1_EMAIL, XO1_ID, XO2_NAME, XO2_EMAIL, XO2_ID, XO3_NAME, XO3_EMAIL, XO3_ID
-			, HRL1_NAME, HRL1_EMAIL, HRL1_ID, HRL2_NAME, HRL2_EMAIL, HRL2_ID, HRL3_NAME, HRL3_EMAIL, HRL3_ID
-			, HRS1_NAME, HRS1_EMAIL, HRS1_ID, HRS2_NAME, HRS2_EMAIL, HRS2_ID
-			, DGHO_NAME, DGHO_EMAIL, DGHO_ID
-			, TABG_NAME, TABG_EMAIL, TABG_ID, POS_TITLE
-			, PAY_PLAN, SERIES, GRADE, POS_DESC_NUM, TYPE_OF_APPT, DS_STATE, DS_CITY, CANCEL_RESAON, CANCEL_USER_NAME, CANCEL_USER_ID
-			FROM VW_INCENTIVES_COM WHERE PROC_ID = I_PROCID;
-	END IF;
 
-	EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
+    --DBMS_OUTPUT.PUT_LINE('SP_UPDATE_INCENTIVES_SAM_TBL2');
+    --DBMS_OUTPUT.PUT_LINE('I_PROCID=' || TO_CHAR(I_PROCID));
+	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+
+        SELECT COUNT(*)
+          INTO V_XMLREC_CNT
+          FROM TBL_FORM_DTL
+         WHERE PROCID = I_PROCID;
+
+        IF V_XMLREC_CNT > 0 THEN
+			--DBMS_OUTPUT.PUT_LINE('RECORD FOUND PROCID=' || TO_CHAR(I_PROCID));
+
+			MERGE INTO INCENTIVES_COM TRG
+			USING
+			(
+                SELECT FD.PROCID AS PROC_ID
+                        , X.INCEN_TYPE
+                        , X.REQ_NUM
+                        , X.REQ_TYPE
+                        , TO_DATE(regexp_replace(X."REQ_DATE", '[^0-9|/]', ''), 'yyyy/mm/dd hh24:mi:ss') as REQ_DATE
+                        , X.ADMIN_CODE
+                        , X.ORG_NAME
+                        , X.CANDI_NAME
+                        , X.CANDI_FIRST
+                        , X.CANDI_MIDDLE
+                        , X.CANDI_LAST
+                        , X.SO_NAME
+                        , X.SO_EMAIL
+                        , X.SO_ID
+                        , X.XO1_NAME
+                        , X.XO1_EMAIL
+                        , X.XO1_ID
+                        , X.XO2_NAME
+                        , X.XO2_EMAIL
+                        , X.XO2_ID
+                        , X.XO3_NAME
+                        , X.XO3_EMAIL
+                        , X.XO3_ID
+                        , X.HRL1_NAME
+                        , X.HRL1_EMAIL
+                        , X.HRL1_ID
+                        , X.HRL2_NAME
+                        , X.HRL2_EMAIL
+                        , X.HRL2_ID
+                        , X.HRL3_NAME
+                        , X.HRL3_EMAIL
+                        , X.HRL3_ID
+                        , X.HRS1_NAME
+                        , X.HRS1_EMAIL
+                        , X.HRS1_ID
+                        , X.HRS2_NAME
+                        , X.HRS2_EMAIL
+                        , X.HRS2_ID
+                        , X.DGHO_NAME
+                        , X.DGHO_EMAIL
+                        , X.DGHO_ID
+                        , X.TABG_NAME
+                        , X.TABG_EMAIL
+                        , X.TABG_ID
+                        , X.POS_TITLE
+                        , X.PAY_PLAN
+                        , X.SERIES
+                        , X.GRADE
+                        , X.POS_DESC_NUM
+                        , X.TYPE_OF_APPT
+                        , X.DS_STATE
+                        , X.DS_CITY
+                        , X.CANCEL_RESAON
+                        , X.CANCEL_USER_NAME
+                        , X.CANCEL_USER_ID
+                        , X.SO_TITLE
+                        , X.SS_NAME
+                        , X.SS_EMAIL
+                        , X.SS_ID
+                        , X.VACANCY_NUMBER
+                    FROM TBL_FORM_DTL FD,
+                         XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
+                         INCEN_TYPE VARCHAR2(10) PATH './item[id="incentiveType"]/value'
+                         , REQ_NUM VARCHAR2(15) PATH './item[id="requestNumber"]/value'
+                         , REQ_TYPE VARCHAR2(20) PATH './item[id="requestType"]/value'
+                         , REQ_DATE VARCHAR2(10) PATH './item[id="requestDate"]/value'
+                         , ADMIN_CODE VARCHAR2(10) PATH './item[id="administrativeCode"]/value'
+                         , ORG_NAME VARCHAR2(100) PATH './item[id="organizationName"]/value'
+                         -- candidate
+                         , CANDI_NAME VARCHAR2(150) PATH './item[id="candidateName"]/value'
+                         , CANDI_FIRST VARCHAR2(50) PATH './item[id="candiFirstName"]/value'
+                         , CANDI_MIDDLE VARCHAR2(50) PATH './item[id="candiMiddleName"]/value'
+                         , CANDI_LAST VARCHAR2(50) PATH './item[id="candiLastName"]/value'
+                         -- selectingOfficial
+                         , SO_NAME VARCHAR2(100) PATH './item[id="selectingOfficial"]/value/name'
+                         , SO_EMAIL VARCHAR2(100) PATH './item[id="selectingOfficial"]/value/email'
+                         , SO_ID VARCHAR2(10) PATH './item[id="selectingOfficial"]/value/id'
+                         , SO_TITLE VARCHAR2(100) PATH './item[id="selectingOfficial"]/value/title'
+                         -- executiveOfficers
+                         , XO1_NAME VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[1]/name'
+                         , XO1_EMAIL VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[1]/email'
+                         , XO1_ID VARCHAR2(10) PATH './item[id="executiveOfficers"]/value[1]/id'
+                         , XO2_NAME VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[2]/name'
+                         , XO2_EMAIL VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[2]/email'
+                         , XO2_ID VARCHAR2(10) PATH './item[id="executiveOfficers"]/value[2]/id'
+                         , XO3_NAME VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[3]/name'
+                         , XO3_EMAIL VARCHAR2(100) PATH './item[id="executiveOfficers"]/value[3]/email'
+                         , XO3_ID VARCHAR2(10) PATH './item[id="executiveOfficers"]/value[3]/id'
+                         -- hrLiaisons
+                         , HRL1_NAME VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[1]/name'
+                         , HRL1_EMAIL VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[1]/email'
+                         , HRL1_ID VARCHAR2(10) PATH './item[id="hrLiaisons"]/value[1]/id'
+                         , HRL2_NAME VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[2]/name'
+                         , HRL2_EMAIL VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[2]/email'
+                         , HRL2_ID VARCHAR2(10) PATH './item[id="hrLiaisons"]/value[2]/id'
+                         , HRL3_NAME VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[3]/name'
+                         , HRL3_EMAIL VARCHAR2(100) PATH './item[id="hrLiaisons"]/value[3]/email'
+                         , HRL3_ID VARCHAR2(10) PATH './item[id="hrLiaisons"]/value[3]/id'
+                         -- hrSpecialist
+                         , HRS1_NAME VARCHAR2(100) PATH './item[id="hrSpecialist"]/value/name'
+                         , HRS1_EMAIL VARCHAR2(100) PATH './item[id="hrSpecialist"]/value/email'
+                         , HRS1_ID VARCHAR2(10) PATH './item[id="hrSpecialist"]/value/id'
+                         -- hrSpecialist2
+                         , HRS2_NAME VARCHAR2(100) PATH './item[id="hrSpecialist2"]/value/name'
+                         , HRS2_EMAIL VARCHAR2(100) PATH './item[id="hrSpecialist2"]/value/email'
+                         , HRS2_ID VARCHAR2(10) PATH './item[id="hrSpecialist2"]/value/id'
+                         -- TABG Division Director
+                         , DGHO_NAME VARCHAR2(100) PATH './item[id="dghoDirector"]/value/name'
+                         , DGHO_EMAIL VARCHAR2(100) PATH './item[id="dghoDirector"]/value/email'
+                         , DGHO_ID VARCHAR2(10) PATH './item[id="dghoDirector"]/value/id'
+                         -- TABG Director
+                         , TABG_NAME VARCHAR2(100) PATH './item[id="tabgDirector"]/value/name'
+                         , TABG_EMAIL VARCHAR2(100) PATH './item[id="tabgDirector"]/value/email'
+                         , TABG_ID VARCHAR2(10) PATH './item[id="tabgDirector"]/value/id'
+                         --	 STAFFING SPECIALIST	
+                         , SS_NAME VARCHAR2(100) PATH './item[id="staffingSpecialist"]/value/name'
+                         , SS_EMAIL VARCHAR2(100) PATH './item[id="staffingSpecialist"]/value/email'
+                         , SS_ID VARCHAR2(10) PATH './item[id="staffingSpecialist"]/value/id'
+                         -- position
+                         , POS_TITLE VARCHAR2(140) PATH './item[id="positionTitle"]/value'
+                         , PAY_PLAN VARCHAR2(5) PATH './item[id="payPlan"]/value'
+                         , SERIES VARCHAR2(140) PATH './item[id="series"]/value'  --!!!
+                         , GRADE VARCHAR2(5) PATH './item[id="grade"]/value'
+                         , POS_DESC_NUM VARCHAR2(20) PATH './item[id="posDescNumber"]/value'
+                         , TYPE_OF_APPT VARCHAR2(20) PATH './item[id="typeOfAppointment"]/value' --!!!
+                         -- dutyStation
+                         , DS_STATE VARCHAR2(2) PATH './item[id="dutyStation"]/value[1]/state'
+                         , DS_CITY VARCHAR2(50) PATH './item[id="dutyStation"]/value[1]/city'
+                         -- cancellation
+                         , CANCEL_RESAON VARCHAR2(25) PATH './item[id="cancellationReason"]/value'
+                         , CANCEL_USER_NAME VARCHAR2(100) PATH './item[id="cancellationUser"]/value/name'
+                         , CANCEL_USER_ID VARCHAR2(10) PATH './item[id="cancellationUser"]/value/id'
+                         --vacancy number
+                         , VACANCY_NUMBER  NUMBER(10) PATH './item[id="vacancyNumber"]/value'
+                        ) X
+                    WHERE FD.PROCID = I_PROCID
+			) SRC ON (SRC.PROC_ID = TRG.PROC_ID)
+            WHEN MATCHED THEN UPDATE SET
+                        TRG.INCEN_TYPE = SRC.INCEN_TYPE
+                        ,TRG.REQ_NUM = SRC.REQ_NUM
+                        ,TRG.REQ_TYPE = SRC.REQ_TYPE
+                        ,TRG.REQ_DATE = SRC.REQ_DATE
+                        ,TRG.ADMIN_CODE = SRC.ADMIN_CODE
+                        ,TRG.ORG_NAME = SRC.ORG_NAME
+                        ,TRG.CANDI_NAME = SRC.CANDI_NAME
+                        ,TRG.CANDI_FIRST = SRC.CANDI_FIRST
+                        ,TRG.CANDI_MIDDLE = SRC.CANDI_MIDDLE
+                        ,TRG.CANDI_LAST = SRC.CANDI_LAST
+                        ,TRG.SO_NAME = SRC.SO_NAME
+                        ,TRG.SO_EMAIL = SRC.SO_EMAIL
+                        ,TRG.SO_ID = SRC.SO_ID
+                        ,TRG.XO1_NAME = SRC.XO1_NAME
+                        ,TRG.XO1_EMAIL = SRC.XO1_EMAIL
+                        ,TRG.XO1_ID = SRC.XO1_ID
+                        ,TRG.XO2_NAME = SRC.XO2_NAME
+                        ,TRG.XO2_EMAIL = SRC.XO2_EMAIL
+                        ,TRG.XO2_ID = SRC.XO2_ID
+                        ,TRG.XO3_NAME = SRC.XO3_NAME
+                        ,TRG.XO3_EMAIL = SRC.XO3_EMAIL
+                        ,TRG.XO3_ID = SRC.XO3_ID
+                        ,TRG.HRL1_NAME = SRC.HRL1_NAME
+                        ,TRG.HRL1_EMAIL = SRC.HRL1_EMAIL
+                        ,TRG.HRL1_ID = SRC.HRL1_ID
+                        ,TRG.HRL2_NAME = SRC.HRL2_NAME
+                        ,TRG.HRL2_EMAIL = SRC.HRL2_EMAIL
+                        ,TRG.HRL2_ID = SRC.HRL2_ID
+                        ,TRG.HRL3_NAME = SRC.HRL3_NAME
+                        ,TRG.HRL3_EMAIL = SRC.HRL3_EMAIL
+                        ,TRG.HRL3_ID = SRC.HRL3_ID
+                        ,TRG.HRS1_NAME = SRC.HRS1_NAME
+                        ,TRG.HRS1_EMAIL = SRC.HRS1_EMAIL
+                        ,TRG.HRS1_ID = SRC.HRS1_ID
+                        ,TRG.HRS2_NAME = SRC.HRS2_NAME
+                        ,TRG.HRS2_EMAIL = SRC.HRS2_EMAIL
+                        ,TRG.HRS2_ID = SRC.HRS2_ID
+                        ,TRG.DGHO_NAME = SRC.DGHO_NAME
+                        ,TRG.DGHO_EMAIL = SRC.DGHO_EMAIL
+                        ,TRG.DGHO_ID = SRC.DGHO_ID
+                        ,TRG.TABG_NAME = SRC.TABG_NAME
+                        ,TRG.TABG_EMAIL = SRC.TABG_EMAIL
+                        ,TRG.TABG_ID = SRC.TABG_ID
+                        ,TRG.POS_TITLE = SRC.POS_TITLE
+                        ,TRG.PAY_PLAN = SRC.PAY_PLAN
+                        ,TRG.SERIES = SRC.SERIES
+                        ,TRG.GRADE = SRC.GRADE
+                        ,TRG.POS_DESC_NUM = SRC.POS_DESC_NUM
+                        ,TRG.TYPE_OF_APPT = SRC.TYPE_OF_APPT
+                        ,TRG.DS_STATE = SRC.DS_STATE
+                        ,TRG.DS_CITY = SRC.DS_CITY
+                        ,TRG.CANCEL_RESAON = SRC.CANCEL_RESAON
+                        ,TRG.CANCEL_USER_NAME = SRC.CANCEL_USER_NAME
+                        ,TRG.CANCEL_USER_ID = SRC.CANCEL_USER_ID
+                        ,TRG.SO_TITLE = SRC.SO_TITLE
+                        ,TRG.SS_NAME = SRC.SS_NAME
+                        ,TRG.SS_EMAIL = SRC.SS_EMAIL
+                        ,TRG.SS_ID = SRC.SS_ID
+                        ,TRG.VACANCY_NUMBER = SRC.VACANCY_NUMBER
+            WHEN NOT MATCHED THEN INSERT (
+                        TRG.PROC_ID
+                        ,TRG.INCEN_TYPE
+                        ,TRG.REQ_NUM
+                        ,TRG.REQ_TYPE
+                        ,TRG.REQ_DATE
+                        ,TRG.ADMIN_CODE
+                        ,TRG.ORG_NAME
+                        ,TRG.CANDI_NAME
+                        ,TRG.CANDI_FIRST
+                        ,TRG.CANDI_MIDDLE
+                        ,TRG.CANDI_LAST
+                        ,TRG.SO_NAME
+                        ,TRG.SO_EMAIL
+                        ,TRG.SO_ID
+                        ,TRG.XO1_NAME
+                        ,TRG.XO1_EMAIL
+                        ,TRG.XO1_ID
+                        ,TRG.XO2_NAME
+                        ,TRG.XO2_EMAIL
+                        ,TRG.XO2_ID
+                        ,TRG.XO3_NAME
+                        ,TRG.XO3_EMAIL
+                        ,TRG.XO3_ID
+                        ,TRG.HRL1_NAME
+                        ,TRG.HRL1_EMAIL
+                        ,TRG.HRL1_ID
+                        ,TRG.HRL2_NAME
+                        ,TRG.HRL2_EMAIL
+                        ,TRG.HRL2_ID
+                        ,TRG.HRL3_NAME
+                        ,TRG.HRL3_EMAIL
+                        ,TRG.HRL3_ID
+                        ,TRG.HRS1_NAME
+                        ,TRG.HRS1_EMAIL
+                        ,TRG.HRS1_ID
+                        ,TRG.HRS2_NAME
+                        ,TRG.HRS2_EMAIL
+                        ,TRG.HRS2_ID
+                        ,TRG.DGHO_NAME
+                        ,TRG.DGHO_EMAIL
+                        ,TRG.DGHO_ID
+                        ,TRG.TABG_NAME
+                        ,TRG.TABG_EMAIL
+                        ,TRG.TABG_ID
+                        ,TRG.POS_TITLE
+                        ,TRG.PAY_PLAN
+                        ,TRG.SERIES
+                        ,TRG.GRADE
+                        ,TRG.POS_DESC_NUM
+                        ,TRG.TYPE_OF_APPT
+                        ,TRG.DS_STATE
+                        ,TRG.DS_CITY
+                        ,TRG.CANCEL_RESAON
+                        ,TRG.CANCEL_USER_NAME
+                        ,TRG.CANCEL_USER_ID
+                        ,TRG.SO_TITLE
+                        ,TRG.SS_NAME
+                        ,TRG.SS_EMAIL
+                        ,TRG.SS_ID
+                        ,TRG.VACANCY_NUMBER
+                    ) VALUES (
+                        SRC.PROC_ID
+                        ,SRC.INCEN_TYPE
+                        ,SRC.REQ_NUM
+                        ,SRC.REQ_TYPE
+                        ,SRC.REQ_DATE
+                        ,SRC.ADMIN_CODE
+                        ,SRC.ORG_NAME
+                        ,SRC.CANDI_NAME
+                        ,SRC.CANDI_FIRST
+                        ,SRC.CANDI_MIDDLE
+                        ,SRC.CANDI_LAST
+                        ,SRC.SO_NAME
+                        ,SRC.SO_EMAIL
+                        ,SRC.SO_ID
+                        ,SRC.XO1_NAME
+                        ,SRC.XO1_EMAIL
+                        ,SRC.XO1_ID
+                        ,SRC.XO2_NAME
+                        ,SRC.XO2_EMAIL
+                        ,SRC.XO2_ID
+                        ,SRC.XO3_NAME
+                        ,SRC.XO3_EMAIL
+                        ,SRC.XO3_ID
+                        ,SRC.HRL1_NAME
+                        ,SRC.HRL1_EMAIL
+                        ,SRC.HRL1_ID
+                        ,SRC.HRL2_NAME
+                        ,SRC.HRL2_EMAIL
+                        ,SRC.HRL2_ID
+                        ,SRC.HRL3_NAME
+                        ,SRC.HRL3_EMAIL
+                        ,SRC.HRL3_ID
+                        ,SRC.HRS1_NAME
+                        ,SRC.HRS1_EMAIL
+                        ,SRC.HRS1_ID
+                        ,SRC.HRS2_NAME
+                        ,SRC.HRS2_EMAIL
+                        ,SRC.HRS2_ID
+                        ,SRC.DGHO_NAME
+                        ,SRC.DGHO_EMAIL
+                        ,SRC.DGHO_ID
+                        ,SRC.TABG_NAME
+                        ,SRC.TABG_EMAIL
+                        ,SRC.TABG_ID
+                        ,SRC.POS_TITLE
+                        ,SRC.PAY_PLAN
+                        ,SRC.SERIES
+                        ,SRC.GRADE
+                        ,SRC.POS_DESC_NUM
+                        ,SRC.TYPE_OF_APPT
+                        ,SRC.DS_STATE
+                        ,SRC.DS_CITY
+                        ,SRC.CANCEL_RESAON
+                        ,SRC.CANCEL_USER_NAME
+                        ,SRC.CANCEL_USER_ID
+                        ,SRC.SO_TITLE
+                        ,SRC.SS_NAME
+                        ,SRC.SS_EMAIL
+                        ,SRC.SS_ID
+                        ,SRC.VACANCY_NUMBER
+                    );
+
+                /*
+                
+                -- GET XML VALUE;
+                SELECT FIELD_DATA
+                  INTO V_XMLDOC
+                  FROM TBL_FORM_DTL
+                 WHERE PROCID = I_PROCID;         
+
+                SELECT -- FN_EXTRACT_STR(V_XMLDOC, 'series') AS SERIES
+                       --, FN_EXTRACT_STR(V_XMLDOC, 'typeOfAppointment') AS TYPE_OF_APPOINTMENT
+                       FN_EXTRACT_STR(V_XMLDOC, 'seriesSelect ') AS SERIES_SELECT
+                       ,FN_EXTRACT_STR(V_XMLDOC, 'typeOfAppointmentSelect') AS TYPE_OF_APPOINTMENT_SELECT 
+                  INTO V_SERIES
+                        ,V_TYPE_OF_APPOINTMENT_SELECT
+                FROM DUAL;
+
+                IF V_SERIES IS NOT NULL AND TRIM(V_SERIES) != '' THEN
+                    UPDATE INCENTIVES_COM
+                       SET SERIES = SUBSTR(V_SERIES, 1, 140)
+                     WHERE PROC_ID = I_PROCID;
+                END IF;
+                
+                IF V_TYPE_OF_APPOINTMENT_SELECT IS NOT NULL AND TRIM(V_TYPE_OF_APPOINTMENT_SELECT) != '' THEN
+                    UPDATE INCENTIVES_COM
+                       SET TYPE_OF_APPT = SUBSTR(V_TYPE_OF_APPOINTMENT_SELECT, 1, 20)
+                     WHERE PROC_ID = I_PROCID;
+                END IF;
+               
+               */
+        END IF;
+    END IF;
+
+    EXCEPTION
+    WHEN OTHERS THEN
+        --DBMS_OUTPUT.PUT_LINE('EXCEPTION=' || SUBSTR(SQLERRM, 1, 200));
+          --err_code := SQLCODE;
+          --err_msg := SUBSTR(SQLERRM, 1, 200);    
+    SP_ERROR_LOG();
+  END;
 /
 
 
-CREATE OR REPLACE PROCEDURE SP_UPDATE_INCENTIVES_PCA_TABLE
-(
-	I_PROCID            IN      NUMBER
-)
+create or replace PROCEDURE SP_UPDATE_INCENTIVES_PCA_TABLE
+  (
+    I_PROCID            IN      NUMBER
+  )
 IS
+    V_XMLREC_CNT                INTEGER := 0;
 BEGIN
-	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
-		DELETE INCENTIVES_PCA WHERE PROC_ID = I_PROCID;
-		INSERT INTO INCENTIVES_PCA (PROC_ID, PCA_TYPE, CANDI_AGREE
-			, CP_NAME, CP_EMAIL, CP_ID , OFM_NAME, OFM_EMAIL, OFM_ID
-			, ADMIN_APPROVAL_REQ, OHC_NAME, OHC_EMAIL, OHC_ID, OADMIN_NAME, OADMIN_EMAIL, OADMIN_ID
-			, WORK_SCHEDULE, HOURS_PER_WEEK, BD_CERT_REQ, LIC_INFO
-			, LIC_STATE1_STATE, LIC_STATE1_NAME, LIC_STATE1_EXP_DATE, LIC_STATE2_STATE, LIC_STATE2_NAME, LIC_STATE2_EXP_DATE
-			, BD_CERT_SPEC1, BD_CERT_SPEC2, BD_CERT_SPEC3, BD_CERT_SPEC4, BD_CERT_SPEC5
-			, BD_CERT_SPEC6, BD_CERT_SPEC7, BD_CERT_SPEC8, BD_CERT_SPEC9, BD_CERT_SPEC_OTHER
-			, LEN_SERVED, LEN_SERVICE, ALW_CATEGORY, ALW_BD_CERT, ALW_MULTI_YEAR_AGMT, ALW_MISSION_SC , ALW_TOTAL, ALW_TOTAL_PAYABLE
-			, DETAIL_REMARKS, RVW_SO_NAME, RVW_SO_ID, RVW_SO_DATE, RVW_DGHO_NAME, RVW_DGHO_ID, RVW_DGHO_DATE
-			, RVW_CP_NAME, RVW_CP_ID, RVW_CP_DATE, RVW_OFM_NAME, RVW_OFM_ID, RVW_OFM_DATE, RVW_TABG_NAME, RVW_TABG_ID, RVW_TABG_DATE
-			, RVW_OHC_NAME, RVW_OHC_ID, RVW_OHC_DATE, APPROVAL_TABG_NAME, APPROVAL_TABG_ID, APPROVAL_TABG_DATE
-			, APPROVAL_OADMIN_NAME, APPROVAL_OADMIN_ID, APPROVAL_OADMIN_DATE)
-			SELECT PROC_ID, PCA_TYPE, CANDI_AGREE
-			, CP_NAME, CP_EMAIL, CP_ID , OFM_NAME, OFM_EMAIL, OFM_ID
-			, ADMIN_APPROVAL_REQ, OHC_NAME, OHC_EMAIL, OHC_ID, OADMIN_NAME, OADMIN_EMAIL, OADMIN_ID
-			, WORK_SCHEDULE, HOURS_PER_WEEK, BD_CERT_REQ, LIC_INFO
-			, LIC_STATE1_STATE, LIC_STATE1_NAME, LIC_STATE1_EXP_DATE, LIC_STATE2_STATE, LIC_STATE2_NAME, LIC_STATE2_EXP_DATE
-			, BD_CERT_SPEC1, BD_CERT_SPEC2, BD_CERT_SPEC3, BD_CERT_SPEC4, BD_CERT_SPEC5
-			, BD_CERT_SPEC6, BD_CERT_SPEC7, BD_CERT_SPEC8, BD_CERT_SPEC9, BD_CERT_SPEC_OTHER
-			, LEN_SERVED, LEN_SERVICE, ALW_CATEGORY, ALW_BD_CERT, ALW_MULTI_YEAR_AGMT, ALW_MISSION_SC , ALW_TOTAL, ALW_TOTAL_PAYABLE
-			, DETAIL_REMARKS, RVW_SO_NAME, RVW_SO_ID, RVW_SO_DATE, RVW_DGHO_NAME, RVW_DGHO_ID, RVW_DGHO_DATE
-			, RVW_CP_NAME, RVW_CP_ID, RVW_CP_DATE, RVW_OFM_NAME, RVW_OFM_ID, RVW_OFM_DATE, RVW_TABG_NAME, RVW_TABG_ID, RVW_TABG_DATE
-			, RVW_OHC_NAME, RVW_OHC_ID, RVW_OHC_DATE, APPROVAL_TABG_NAME, APPROVAL_TABG_ID, APPROVAL_TABG_DATE
-			, APPROVAL_OADMIN_NAME, APPROVAL_OADMIN_ID, APPROVAL_OADMIN_DATE
-			FROM VW_INCENTIVES_PCA WHERE PROC_ID = I_PROCID;
-	END IF;
 
-	EXCEPTION
-	WHEN OTHERS THEN
-		SP_ERROR_LOG();
-END;
+    --DBMS_OUTPUT.PUT_LINE('SP_UPDATE_INCENTIVES_LE_TBL2');
+    --DBMS_OUTPUT.PUT_LINE('I_PROCID=' || TO_CHAR(I_PROCID));
+	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+
+        SELECT COUNT(*)
+          INTO V_XMLREC_CNT
+          FROM TBL_FORM_DTL
+         WHERE PROCID = I_PROCID;
+        
+        IF V_XMLREC_CNT > 0 THEN
+			--DBMS_OUTPUT.PUT_LINE('RECORD FOUND PROCID=' || TO_CHAR(I_PROCID));
+            
+			MERGE INTO INCENTIVES_PCA TRG
+			USING
+			(
+                     SELECT FD.PROCID AS PROC_ID
+                            , X.PCA_TYPE
+                            , X.CANDI_AGREE
+                            , X.CP_NAME
+                            , X.CP_EMAIL
+                            , X.CP_ID
+                            , X.OFM_NAME
+                            , X.OFM_EMAIL
+                            , X.OFM_ID
+                            , X.ADMIN_APPROVAL_REQ
+                            , X.OHC_NAME
+                            , X.OHC_EMAIL
+                            , X.OHC_ID
+                            , X.OADMIN_NAME
+                            , X.OADMIN_EMAIL
+                            , X.OADMIN_ID
+                            , X.WORK_SCHEDULE
+                            , X.HOURS_PER_WEEK
+                            , X.BD_CERT_REQ
+                            , X.LIC_INFO
+                            , X.LIC_STATE1_STATE
+                            , X.LIC_STATE1_NAME
+                            , X.LIC_STATE1_EXP_DATE
+                            , X.LIC_STATE2_STATE
+                            , X.LIC_STATE2_NAME
+                            , X.LIC_STATE2_EXP_DATE
+                            , X.BD_CERT_SPEC1
+                            , X.BD_CERT_SPEC2
+                            , X.BD_CERT_SPEC3
+                            , X.BD_CERT_SPEC4
+                            , X.BD_CERT_SPEC5
+                            , X.BD_CERT_SPEC6
+                            , X.BD_CERT_SPEC7
+                            , X.BD_CERT_SPEC8
+                            , X.BD_CERT_SPEC9
+                            , X.BD_CERT_SPEC_OTHER
+                            , X.LEN_SERVED
+                            , X.LEN_SERVICE
+                            , X.ALW_CATEGORY
+                            , X.ALW_BD_CERT
+                            , X.ALW_MULTI_YEAR_AGMT
+                            , X.ALW_MISSION_SC
+                            , X.ALW_TOTAL
+                            , X.ALW_TOTAL_PAYABLE
+                            , X.DETAIL_REMARKS
+                            , X.RVW_SO_NAME
+                            , X.RVW_SO_ID
+                            , X.RVW_SO_DATE
+                            , X.RVW_DGHO_NAME
+                            , X.RVW_DGHO_ID
+                            , X.RVW_DGHO_DATE
+                            , X.RVW_CP_NAME
+                            , X.RVW_CP_ID
+                            , X.RVW_CP_DATE
+                            , X.RVW_OFM_NAME
+                            , X.RVW_OFM_ID
+                            , X.RVW_OFM_DATE
+                            , X.RVW_TABG_NAME
+                            , X.RVW_TABG_ID
+                            , X.RVW_TABG_DATE
+                            , X.RVW_OHC_NAME
+                            , X.RVW_OHC_ID
+                            , X.RVW_OHC_DATE
+                            , X.APPROVAL_TABG_NAME
+                            , X.APPROVAL_TABG_ID
+                            , X.APPROVAL_TABG_DATE
+                            , X.APPROVAL_OADMIN_NAME
+                            , X.APPROVAL_OADMIN_ID
+                            , X.APPROVAL_OADMIN_DATE
+                            -- new columsn for data type fixes
+                            , TO_DATE(regexp_replace(X."LIC_STATE1_EXP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as LIC_STATE1_EXP_DATE_D
+                            , TO_DATE(regexp_replace(X."LIC_STATE2_EXP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as LIC_STATE2_EXP_DATE_D
+                            , regexp_replace(X."ALW_CATEGORY", '[^0-9|.]', '') as ALW_CATEGORY_N
+                            , regexp_replace(X."ALW_BD_CERT", '[^0-9|.]', '') as ALW_BD_CERT_N
+                            , regexp_replace(X."ALW_MULTI_YEAR_AGMT", '[^0-9|.]', '') as ALW_MULTI_YEAR_AGMT_N
+                            , regexp_replace(X."ALW_MISSION_SC", '[^0-9|.]', '') as ALW_MISSION_SC_N
+                            , regexp_replace(X."ALW_TOTAL", '[^0-9|.]', '') as ALW_TOTAL_N
+                            , regexp_replace(X."ALW_TOTAL_PAYABLE", '[^0-9|.]', '') as ALW_TOTAL_PAYABLE_N
+                            , TO_DATE(regexp_replace(X."RVW_SO_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as RVW_SO_DATE_D
+                            , TO_DATE(regexp_replace(X."RVW_DGHO_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as RVW_DGHO_DATE_D
+                            , TO_DATE(regexp_replace(X."RVW_CP_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as RVW_CP_DATE_D
+                            , TO_DATE(regexp_replace(X."RVW_OFM_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as RVW_OFM_DATE_D
+                            , TO_DATE(regexp_replace(X."RVW_TABG_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as RVW_TABG_DATE_D
+                            , TO_DATE(regexp_replace(X."RVW_OHC_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as RVW_OHC_DATE_D
+                            , TO_DATE(regexp_replace(X."APPROVAL_TABG_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_TABG_DATE_D
+                            , TO_DATE(regexp_replace(X."APPROVAL_OADMIN_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') as APPROVAL_OADMIN_DATE_D
+                            
+                    FROM TBL_FORM_DTL FD,
+                         XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
+                        PCA_TYPE VARCHAR2(10) PATH './item[id="pcaType"]/value'
+                        , CANDI_AGREE VARCHAR2(5) PATH './item[id="candiAgreeRenewal"]/value'
+                        -- Chief Physician
+                        , CP_NAME VARCHAR2(100) PATH './item[id="chiefPhysician"]/value/name'
+                        , CP_EMAIL VARCHAR2(100) PATH './item[id="chiefPhysician"]/value/email'
+                        , CP_ID VARCHAR2(10) PATH './item[id="chiefPhysician"]/value/id'
+                        -- OFM Director
+                        , OFM_NAME VARCHAR2(100) PATH './item[id="ofmDirector"]/value/name'
+                        , OFM_EMAIL VARCHAR2(100) PATH './item[id="ofmDirector"]/value/email'
+                        , OFM_ID VARCHAR2(10) PATH './item[id="ofmDirector"]/value/id'
+                        -- Does the PCA require the Office of the Administrator approval?
+                        , ADMIN_APPROVAL_REQ VARCHAR2(5) PATH './item[id="requireAdminApproval"]/value'
+                        -- OHC Director
+                        , OHC_NAME VARCHAR2(100) PATH './item[id="ohcDirector"]/value/name'
+                        , OHC_EMAIL VARCHAR2(100) PATH './item[id="ohcDirector"]/value/email'
+                        , OHC_ID VARCHAR2(10) PATH './item[id="ohcDirector"]/value/id'
+                        -- Administrator
+                        , OADMIN_NAME VARCHAR2(100) PATH './item[id="offAdmin"]/value/name'
+                        , OADMIN_EMAIL VARCHAR2(100) PATH './item[id="offAdmin"]/value/email'
+                        , OADMIN_ID VARCHAR2(10) PATH './item[id="offAdmin"]/value/id'
+                        -- Position
+                        , WORK_SCHEDULE VARCHAR2(15) PATH './item[id="workSchedule"]/value'
+                        , HOURS_PER_WEEK VARCHAR2(5) PATH './item[id="hoursPerWeek"]/value'
+                        , BD_CERT_REQ VARCHAR2(5) PATH './item[id="requireBoardCert"]/value'
+                        , LIC_INFO VARCHAR2(140) PATH './item[id="licenseInfo"]/value'
+                        -- licenseState
+                        , LIC_STATE1_STATE VARCHAR2(2) PATH './item[id="licenseState"]/value[1]/state'
+                        , LIC_STATE1_NAME VARCHAR2(50) PATH './item[id="licenseState"]/value[1]/name'
+                        , LIC_STATE1_EXP_DATE VARCHAR2(10) PATH './item[id="licenseState"]/value[1]/expDate'
+                        , LIC_STATE2_STATE VARCHAR2(2) PATH './item[id="licenseState"]/value[2]/state'
+                        , LIC_STATE2_NAME VARCHAR2(50) PATH './item[id="licenseState"]/value[2]/name'
+                        , LIC_STATE2_EXP_DATE VARCHAR2(10) PATH './item[id="licenseState"]/value[2]/expDate'
+                        -- boardCertSpecialty
+                        , BD_CERT_SPEC1 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[1]/text'
+                        , BD_CERT_SPEC2 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[2]/text'
+                        , BD_CERT_SPEC3 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[3]/text'
+                        , BD_CERT_SPEC4 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[4]/text'
+                        , BD_CERT_SPEC5 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[5]/text'
+                        , BD_CERT_SPEC6 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[6]/text'
+                        , BD_CERT_SPEC7 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[7]/text'
+                        , BD_CERT_SPEC8 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[8]/text'
+                        , BD_CERT_SPEC9 VARCHAR2(30) PATH './item[id="boardCertSpecialty"]/value[9]/text'
+                        , BD_CERT_SPEC_OTHER VARCHAR2(140) PATH './item[id="otherSpeciality"]/value'
+                        -- allowance
+                        , LEN_SERVED VARCHAR2(25) PATH './item[id="lengthOfServed"]/value'
+                        , LEN_SERVICE VARCHAR2(2) PATH './item[id="lengthOfService"]/value'
+                        , ALW_CATEGORY VARCHAR2(15) PATH './item[id="allowanceCategory"]/value'
+                        , ALW_BD_CERT VARCHAR2(15) PATH './item[id="allowanceBoardCertification"]/value'
+                        , ALW_MULTI_YEAR_AGMT VARCHAR2(15) PATH './item[id="allowanceMultiYearAgreement"]/value'
+                        , ALW_MISSION_SC VARCHAR2(15) PATH './item[id="allowanceMissionSpecificCriteria"]/value'
+                        , ALW_TOTAL VARCHAR2(15) PATH './item[id="allowanceTotal"]/value'
+                        , ALW_TOTAL_PAYABLE VARCHAR2(15) PATH './item[id="totalPayablePCACalculation"]/value'
+                        -- remarks
+                        , DETAIL_REMARKS VARCHAR2(500) PATH './item[id="detailRemarks"]/value'
+                        -- Review
+                        , RVW_SO_NAME VARCHAR2(100) PATH './item[id="reviewSO"]/value'
+                        , RVW_SO_ID VARCHAR2(10) PATH './item[id="reviewSOId"]/value'
+                        , RVW_SO_DATE VARCHAR2(10) PATH './item[id="reviewSODate"]/value'
+                        , RVW_DGHO_NAME VARCHAR2(100) PATH './item[id="reviewDGHO"]/value'
+                        , RVW_DGHO_ID VARCHAR2(10) PATH './item[id="reviewDGHOId"]/value'
+                        , RVW_DGHO_DATE VARCHAR2(10) PATH './item[id="reviewDGHODate"]/value'
+                        , RVW_CP_NAME VARCHAR2(100) PATH './item[id="reviewCP"]/value'
+                        , RVW_CP_ID VARCHAR2(10) PATH './item[id="reviewCPId"]/value'
+                        , RVW_CP_DATE VARCHAR2(10) PATH './item[id="reviewCPDate"]/value'
+                        , RVW_OFM_NAME VARCHAR2(100) PATH './item[id="reviewOFM"]/value'
+                        , RVW_OFM_ID VARCHAR2(10) PATH './item[id="reviewOFMId"]/value'
+                        , RVW_OFM_DATE VARCHAR2(10) PATH './item[id="reviewOFMDate"]/value'
+                        , RVW_TABG_NAME VARCHAR2(100) PATH './item[id="reviewTABG"]/value'
+                        , RVW_TABG_ID VARCHAR2(10) PATH './item[id="reviewTABGId"]/value'
+                        , RVW_TABG_DATE VARCHAR2(10) PATH './item[id="reviewTABGDate"]/value'
+                        , RVW_OHC_NAME VARCHAR2(100) PATH './item[id="reviewOHC"]/value'
+                        , RVW_OHC_ID VARCHAR2(10) PATH './item[id="reviewOHCId"]/value'
+                        , RVW_OHC_DATE VARCHAR2(10) PATH './item[id="reviewOHCDate"]/value'
+                        -- Approvals
+                        , APPROVAL_TABG_NAME VARCHAR2(100) PATH './item[id="pcaApproveTABG"]/value'
+                        , APPROVAL_TABG_ID VARCHAR2(10) PATH './item[id="pcaApproveTABGId"]/value'
+                        , APPROVAL_TABG_DATE VARCHAR2(10) PATH './item[id="pcaApproveTABGDate"]/value'
+                        , APPROVAL_OADMIN_NAME VARCHAR2(100) PATH './item[id="pcaApproveADM"]/value'
+                        , APPROVAL_OADMIN_ID VARCHAR2(10) PATH './item[id="pcaApproveADMId"]/value'
+                        , APPROVAL_OADMIN_DATE VARCHAR2(10) PATH './item[id="pcaApproveADMDate"]/value'
+                        ) X
+                    WHERE FD.PROCID = I_PROCID
+			) SRC ON (SRC.PROC_ID = TRG.PROC_ID)
+            WHEN MATCHED THEN UPDATE SET
+                        TRG.PCA_TYPE = SRC.PCA_TYPE
+                        ,TRG.CANDI_AGREE = SRC.CANDI_AGREE
+                        ,TRG.CP_NAME = SRC.CP_NAME
+                        ,TRG.CP_EMAIL = SRC.CP_EMAIL
+                        ,TRG.CP_ID = SRC.CP_ID
+                        ,TRG.OFM_NAME = SRC.OFM_NAME
+                        ,TRG.OFM_EMAIL = SRC.OFM_EMAIL
+                        ,TRG.OFM_ID = SRC.OFM_ID
+                        ,TRG.ADMIN_APPROVAL_REQ = SRC.ADMIN_APPROVAL_REQ
+                        ,TRG.OHC_NAME = SRC.OHC_NAME
+                        ,TRG.OHC_EMAIL = SRC.OHC_EMAIL
+                        ,TRG.OHC_ID = SRC.OHC_ID
+                        ,TRG.OADMIN_NAME = SRC.OADMIN_NAME
+                        ,TRG.OADMIN_EMAIL = SRC.OADMIN_EMAIL
+                        ,TRG.OADMIN_ID = SRC.OADMIN_ID
+                        ,TRG.WORK_SCHEDULE = SRC.WORK_SCHEDULE
+                        ,TRG.HOURS_PER_WEEK = SRC.HOURS_PER_WEEK
+                        ,TRG.BD_CERT_REQ = SRC.BD_CERT_REQ
+                        ,TRG.LIC_INFO = SRC.LIC_INFO
+                        ,TRG.LIC_STATE1_STATE = SRC.LIC_STATE1_STATE
+                        ,TRG.LIC_STATE1_NAME = SRC.LIC_STATE1_NAME
+                        ,TRG.LIC_STATE1_EXP_DATE = SRC.LIC_STATE1_EXP_DATE
+                        ,TRG.LIC_STATE2_STATE = SRC.LIC_STATE2_STATE
+                        ,TRG.LIC_STATE2_NAME = SRC.LIC_STATE2_NAME
+                        ,TRG.LIC_STATE2_EXP_DATE = SRC.LIC_STATE2_EXP_DATE
+                        ,TRG.BD_CERT_SPEC1 = SRC.BD_CERT_SPEC1
+                        ,TRG.BD_CERT_SPEC2 = SRC.BD_CERT_SPEC2
+                        ,TRG.BD_CERT_SPEC3 = SRC.BD_CERT_SPEC3
+                        ,TRG.BD_CERT_SPEC4 = SRC.BD_CERT_SPEC4
+                        ,TRG.BD_CERT_SPEC5 = SRC.BD_CERT_SPEC5
+                        ,TRG.BD_CERT_SPEC6 = SRC.BD_CERT_SPEC6
+                        ,TRG.BD_CERT_SPEC7 = SRC.BD_CERT_SPEC7
+                        ,TRG.BD_CERT_SPEC8 = SRC.BD_CERT_SPEC8
+                        ,TRG.BD_CERT_SPEC9 = SRC.BD_CERT_SPEC9
+                        ,TRG.BD_CERT_SPEC_OTHER = SRC.BD_CERT_SPEC_OTHER
+                        ,TRG.LEN_SERVED = SRC.LEN_SERVED
+                        ,TRG.LEN_SERVICE = SRC.LEN_SERVICE
+                        ,TRG.ALW_CATEGORY = SRC.ALW_CATEGORY
+                        ,TRG.ALW_BD_CERT = SRC.ALW_BD_CERT
+                        ,TRG.ALW_MULTI_YEAR_AGMT = SRC.ALW_MULTI_YEAR_AGMT
+                        ,TRG.ALW_MISSION_SC = SRC.ALW_MISSION_SC
+                        ,TRG.ALW_TOTAL = SRC.ALW_TOTAL
+                        ,TRG.ALW_TOTAL_PAYABLE = SRC.ALW_TOTAL_PAYABLE
+                        ,TRG.DETAIL_REMARKS = SRC.DETAIL_REMARKS
+                        ,TRG.RVW_SO_NAME = SRC.RVW_SO_NAME
+                        ,TRG.RVW_SO_ID = SRC.RVW_SO_ID
+                        ,TRG.RVW_SO_DATE = SRC.RVW_SO_DATE
+                        ,TRG.RVW_DGHO_NAME = SRC.RVW_DGHO_NAME
+                        ,TRG.RVW_DGHO_ID = SRC.RVW_DGHO_ID
+                        ,TRG.RVW_DGHO_DATE = SRC.RVW_DGHO_DATE
+                        ,TRG.RVW_CP_NAME = SRC.RVW_CP_NAME
+                        ,TRG.RVW_CP_ID = SRC.RVW_CP_ID
+                        ,TRG.RVW_CP_DATE = SRC.RVW_CP_DATE
+                        ,TRG.RVW_OFM_NAME = SRC.RVW_OFM_NAME
+                        ,TRG.RVW_OFM_ID = SRC.RVW_OFM_ID
+                        ,TRG.RVW_OFM_DATE = SRC.RVW_OFM_DATE
+                        ,TRG.RVW_TABG_NAME = SRC.RVW_TABG_NAME
+                        ,TRG.RVW_TABG_ID = SRC.RVW_TABG_ID
+                        ,TRG.RVW_TABG_DATE = SRC.RVW_TABG_DATE
+                        ,TRG.RVW_OHC_NAME = SRC.RVW_OHC_NAME
+                        ,TRG.RVW_OHC_ID = SRC.RVW_OHC_ID
+                        ,TRG.RVW_OHC_DATE = SRC.RVW_OHC_DATE
+                        ,TRG.APPROVAL_TABG_NAME = SRC.APPROVAL_TABG_NAME
+                        ,TRG.APPROVAL_TABG_ID = SRC.APPROVAL_TABG_ID
+                        ,TRG.APPROVAL_TABG_DATE = SRC.APPROVAL_TABG_DATE
+                        ,TRG.APPROVAL_OADMIN_NAME = SRC.APPROVAL_OADMIN_NAME
+                        ,TRG.APPROVAL_OADMIN_ID = SRC.APPROVAL_OADMIN_ID
+                        ,TRG.APPROVAL_OADMIN_DATE = SRC.APPROVAL_OADMIN_DATE
+                        ------------
+                        ,TRG.LIC_STATE1_EXP_DATE_D = SRC.LIC_STATE1_EXP_DATE_D
+                        ,TRG.LIC_STATE2_EXP_DATE_D = SRC.LIC_STATE2_EXP_DATE_D
+                        ,TRG.ALW_CATEGORY_N = SRC.ALW_CATEGORY_N
+                        ,TRG.ALW_BD_CERT_N = SRC.ALW_BD_CERT_N
+                        ,TRG.ALW_MULTI_YEAR_AGMT_N = SRC.ALW_MULTI_YEAR_AGMT_N
+                        ,TRG.ALW_MISSION_SC_N = SRC.ALW_MISSION_SC_N
+                        ,TRG.ALW_TOTAL_N = SRC.ALW_TOTAL_N
+                        ,TRG.ALW_TOTAL_PAYABLE_N = SRC.ALW_TOTAL_PAYABLE_N
+                        ,TRG.RVW_SO_DATE_D = SRC.RVW_SO_DATE_D
+                        ,TRG.RVW_DGHO_DATE_D = SRC.RVW_DGHO_DATE_D
+                        ,TRG.RVW_CP_DATE_D = SRC.RVW_CP_DATE_D
+                        ,TRG.RVW_OFM_DATE_D = SRC.RVW_OFM_DATE_D
+                        ,TRG.RVW_TABG_DATE_D = SRC.RVW_TABG_DATE_D
+                        ,TRG.RVW_OHC_DATE_D = SRC.RVW_OHC_DATE_D
+                        ,TRG.APPROVAL_TABG_DATE_D = SRC.APPROVAL_TABG_DATE_D
+                        ,TRG.APPROVAL_OADMIN_DATE_D = SRC.APPROVAL_OADMIN_DATE_D                  
+            WHEN NOT MATCHED THEN INSERT (
+                            TRG.PROC_ID
+                            ,TRG.PCA_TYPE
+                            ,TRG.CANDI_AGREE
+                            ,TRG.CP_NAME
+                            ,TRG.CP_EMAIL
+                            ,TRG.CP_ID
+                            ,TRG.OFM_NAME
+                            ,TRG.OFM_EMAIL
+                            ,TRG.OFM_ID
+                            ,TRG.ADMIN_APPROVAL_REQ
+                            ,TRG.OHC_NAME
+                            ,TRG.OHC_EMAIL
+                            ,TRG.OHC_ID
+                            ,TRG.OADMIN_NAME
+                            ,TRG.OADMIN_EMAIL
+                            ,TRG.OADMIN_ID
+                            ,TRG.WORK_SCHEDULE
+                            ,TRG.HOURS_PER_WEEK
+                            ,TRG.BD_CERT_REQ
+                            ,TRG.LIC_INFO
+                            ,TRG.LIC_STATE1_STATE
+                            ,TRG.LIC_STATE1_NAME
+                            ,TRG.LIC_STATE1_EXP_DATE
+                            ,TRG.LIC_STATE2_STATE
+                            ,TRG.LIC_STATE2_NAME
+                            ,TRG.LIC_STATE2_EXP_DATE
+                            ,TRG.BD_CERT_SPEC1
+                            ,TRG.BD_CERT_SPEC2
+                            ,TRG.BD_CERT_SPEC3
+                            ,TRG.BD_CERT_SPEC4
+                            ,TRG.BD_CERT_SPEC5
+                            ,TRG.BD_CERT_SPEC6
+                            ,TRG.BD_CERT_SPEC7
+                            ,TRG.BD_CERT_SPEC8
+                            ,TRG.BD_CERT_SPEC9
+                            ,TRG.BD_CERT_SPEC_OTHER
+                            ,TRG.LEN_SERVED
+                            ,TRG.LEN_SERVICE
+                            ,TRG.ALW_CATEGORY
+                            ,TRG.ALW_BD_CERT
+                            ,TRG.ALW_MULTI_YEAR_AGMT
+                            ,TRG.ALW_MISSION_SC
+                            ,TRG.ALW_TOTAL
+                            ,TRG.ALW_TOTAL_PAYABLE
+                            ,TRG.DETAIL_REMARKS
+                            ,TRG.RVW_SO_NAME
+                            ,TRG.RVW_SO_ID
+                            ,TRG.RVW_SO_DATE
+                            ,TRG.RVW_DGHO_NAME
+                            ,TRG.RVW_DGHO_ID
+                            ,TRG.RVW_DGHO_DATE
+                            ,TRG.RVW_CP_NAME
+                            ,TRG.RVW_CP_ID
+                            ,TRG.RVW_CP_DATE
+                            ,TRG.RVW_OFM_NAME
+                            ,TRG.RVW_OFM_ID
+                            ,TRG.RVW_OFM_DATE
+                            ,TRG.RVW_TABG_NAME
+                            ,TRG.RVW_TABG_ID
+                            ,TRG.RVW_TABG_DATE
+                            ,TRG.RVW_OHC_NAME
+                            ,TRG.RVW_OHC_ID
+                            ,TRG.RVW_OHC_DATE
+                            ,TRG.APPROVAL_TABG_NAME
+                            ,TRG.APPROVAL_TABG_ID
+                            ,TRG.APPROVAL_TABG_DATE
+                            ,TRG.APPROVAL_OADMIN_NAME
+                            ,TRG.APPROVAL_OADMIN_ID
+                            ,TRG.APPROVAL_OADMIN_DATE
+                            ----------
+                            ,TRG.LIC_STATE1_EXP_DATE_D
+                            ,TRG.LIC_STATE2_EXP_DATE_D
+                            ,TRG.ALW_CATEGORY_N
+                            ,TRG.ALW_BD_CERT_N
+                            ,TRG.ALW_MULTI_YEAR_AGMT_N
+                            ,TRG.ALW_MISSION_SC_N
+                            ,TRG.ALW_TOTAL_N
+                            ,TRG.ALW_TOTAL_PAYABLE_N
+                            ,TRG.RVW_SO_DATE_D
+                            ,TRG.RVW_DGHO_DATE_D
+                            ,TRG.RVW_CP_DATE_D
+                            ,TRG.RVW_OFM_DATE_D
+                            ,TRG.RVW_TABG_DATE_D
+                            ,TRG.RVW_OHC_DATE_D
+                            ,TRG.APPROVAL_TABG_DATE_D
+                            ,TRG.APPROVAL_OADMIN_DATE_D                             
+                        ) VALUES (
+                            SRC.PROC_ID
+                            ,SRC.PCA_TYPE
+                            ,SRC.CANDI_AGREE
+                            ,SRC.CP_NAME
+                            ,SRC.CP_EMAIL
+                            ,SRC.CP_ID
+                            ,SRC.OFM_NAME
+                            ,SRC.OFM_EMAIL
+                            ,SRC.OFM_ID
+                            ,SRC.ADMIN_APPROVAL_REQ
+                            ,SRC.OHC_NAME
+                            ,SRC.OHC_EMAIL
+                            ,SRC.OHC_ID
+                            ,SRC.OADMIN_NAME
+                            ,SRC.OADMIN_EMAIL
+                            ,SRC.OADMIN_ID
+                            ,SRC.WORK_SCHEDULE
+                            ,SRC.HOURS_PER_WEEK
+                            ,SRC.BD_CERT_REQ
+                            ,SRC.LIC_INFO
+                            ,SRC.LIC_STATE1_STATE
+                            ,SRC.LIC_STATE1_NAME
+                            ,SRC.LIC_STATE1_EXP_DATE
+                            ,SRC.LIC_STATE2_STATE
+                            ,SRC.LIC_STATE2_NAME
+                            ,SRC.LIC_STATE2_EXP_DATE
+                            ,SRC.BD_CERT_SPEC1
+                            ,SRC.BD_CERT_SPEC2
+                            ,SRC.BD_CERT_SPEC3
+                            ,SRC.BD_CERT_SPEC4
+                            ,SRC.BD_CERT_SPEC5
+                            ,SRC.BD_CERT_SPEC6
+                            ,SRC.BD_CERT_SPEC7
+                            ,SRC.BD_CERT_SPEC8
+                            ,SRC.BD_CERT_SPEC9
+                            ,SRC.BD_CERT_SPEC_OTHER
+                            ,SRC.LEN_SERVED
+                            ,SRC.LEN_SERVICE
+                            ,SRC.ALW_CATEGORY
+                            ,SRC.ALW_BD_CERT
+                            ,SRC.ALW_MULTI_YEAR_AGMT
+                            ,SRC.ALW_MISSION_SC
+                            ,SRC.ALW_TOTAL
+                            ,SRC.ALW_TOTAL_PAYABLE
+                            ,SRC.DETAIL_REMARKS
+                            ,SRC.RVW_SO_NAME
+                            ,SRC.RVW_SO_ID
+                            ,SRC.RVW_SO_DATE
+                            ,SRC.RVW_DGHO_NAME
+                            ,SRC.RVW_DGHO_ID
+                            ,SRC.RVW_DGHO_DATE
+                            ,SRC.RVW_CP_NAME
+                            ,SRC.RVW_CP_ID
+                            ,SRC.RVW_CP_DATE
+                            ,SRC.RVW_OFM_NAME
+                            ,SRC.RVW_OFM_ID
+                            ,SRC.RVW_OFM_DATE
+                            ,SRC.RVW_TABG_NAME
+                            ,SRC.RVW_TABG_ID
+                            ,SRC.RVW_TABG_DATE
+                            ,SRC.RVW_OHC_NAME
+                            ,SRC.RVW_OHC_ID
+                            ,SRC.RVW_OHC_DATE
+                            ,SRC.APPROVAL_TABG_NAME
+                            ,SRC.APPROVAL_TABG_ID
+                            ,SRC.APPROVAL_TABG_DATE
+                            ,SRC.APPROVAL_OADMIN_NAME
+                            ,SRC.APPROVAL_OADMIN_ID
+                            ,SRC.APPROVAL_OADMIN_DATE
+                            ----------
+                            ,SRC.LIC_STATE1_EXP_DATE_D
+                            ,SRC.LIC_STATE2_EXP_DATE_D
+                            ,SRC.ALW_CATEGORY_N
+                            ,SRC.ALW_BD_CERT_N
+                            ,SRC.ALW_MULTI_YEAR_AGMT_N
+                            ,SRC.ALW_MISSION_SC_N
+                            ,SRC.ALW_TOTAL_N
+                            ,SRC.ALW_TOTAL_PAYABLE_N
+                            ,SRC.RVW_SO_DATE_D
+                            ,SRC.RVW_DGHO_DATE_D
+                            ,SRC.RVW_CP_DATE_D
+                            ,SRC.RVW_OFM_DATE_D
+                            ,SRC.RVW_TABG_DATE_D
+                            ,SRC.RVW_OHC_DATE_D
+                            ,SRC.APPROVAL_TABG_DATE_D
+                            ,SRC.APPROVAL_OADMIN_DATE_D                       
+                        );
+        END IF;
+
+    END IF;
+        
+    EXCEPTION
+    WHEN OTHERS THEN
+        --DBMS_OUTPUT.PUT_LINE('EXCEPTION=' || SUBSTR(SQLERRM, 1, 200));
+          --err_code := SQLCODE;
+          --err_msg := SUBSTR(SQLERRM, 1, 200);    
+    SP_ERROR_LOG();
+  END;
 /
 
-CREATE OR REPLACE PROCEDURE SP_UPDATE_INCENTIVES_PDP_TABLE
+
+create or replace PROCEDURE SP_UPDATE_INCENTIVES_PDP_TABLE
 (
 	I_PROCID            IN      NUMBER
 )
 IS
+    V_XMLDOC                            XMLTYPE;
+    V_CLINICAL_SPCLTY_BOARD_CERT        VARCHAR2(2000);
+    V_INCENTIVES_APPRVD_BY_TABG         VARCHAR2(2000);
 BEGIN
+    --DBMS_OUTPUT.PUT_LINE('SP_UPDATE_INCENTIVES_PDP_TBL2');
+    --DBMS_OUTPUT.PUT_LINE('I_PROCID=' || TO_CHAR(I_PROCID));
+
 	IF I_PROCID IS NOT NULL AND I_PROCID > 0 THEN
+
+        SELECT FIELD_DATA
+          INTO V_XMLDOC
+          FROM TBL_FORM_DTL
+         WHERE PROCID = I_PROCID;
+         
+        --DBMS_OUTPUT.PUT_LINE('DELETE INCENTIVES_PDP');
 		DELETE INCENTIVES_PDP WHERE PROC_ID = I_PROCID;
-		INSERT INTO INCENTIVES_PDP (PROC_ID,PDP_TYPE,PDP_TYPE_OTHER,EXISTINGREQUEST,WORK_SCHEDULE
-			,HOURS_PER_WEEK,BD_CERT_REQ,LIC_INFO,MARKET_PAY_RATE
-			,CURRENT_FED_EMPLOYEE,LEVEL_RESPONSIBILITY,EXEC_RESP_AMT_REQUESTED
-			,EXEC_RESP_JUSTIF_DETERMIN_AMT,EXPT_QF_Q1_AMT_REQUESTED
-			,EXPT_QF_Q1_JUSTIF_DETERMIN_AMT,EXPT_QF_Q2_AMT_REQUESTED
-			,EXPT_QF_Q2_JUSTIF_DETERMIN_AMT,EXPT_QF_Q3_AMT_REQUESTED
-			,EXPT_QF_Q3_JUSTIF_DETERMIN_AMT,EXPT_QF_Q4_AMT_REQUESTED
-			,EXPT_QF_Q4_JUSTIF_DETERMIN_AMT,EXPT_QF_Q5_AMT_REQUESTED
-			,EXPT_QF_Q5_JUSTIF_DETERMIN_AMT,TOTAL_AMT_EXPT_QUALIFICATIONS
-			,CURRENT_PAY_GRADE,CURRENT_PAY_STEP,CURRENT_PAY_POSITION_TITLE
-			,CURRENT_PAY_TABLE,CURRENT_PAY_TIER,CLINICAL_SPECIALTY_BOARD_CERT
-			,OTHER_SPECIALTY,CURRENT_PAY_RECRUITMENT,CURRENT_PAY_RELOCATION
-			,CURRENT_PAY_RETENTION,CURRENT_PAY_3R_TOTAL,CURRENT_PAY_BASE
-			,CURRENT_PAY_LOCALITY_MARKET,CURRENT_PAY_TOTAL_ANNUAL_PAY
-			,CURRENT_PAY_TOTAL_COMPENSATION,CURRENT_PAY_NOTES,PROPOSED_PAY_STEP
-			,PROPOSED_PAY_TABLE,PROPOSED_PAY_TIER,PROPOSED_PAY_RECRUITMENT
-			,PROPOSED_PAY_RELOCATION,PROPOSED_PAY_RETENTION,PROPOSED_PAY_TOTAL_3R
-			,PROPOSED_GS_BASE_PAY,PROPOSED_MARKET_PAY,PROPOSED_TOTAL_ANNUAL_PAY
-			,PROPOSED_TOTAL_ANNUAL_COMPENS,INCENTIVES_APPROVED_BY_TABG
-			,PROPOSED_PAY_NOTES,DATE_OF_MEETING,PANEL_MEMBER_NAME
-			,PANEL_MEMBER_COMPONENT,PANEL_ROLE,VOTING_STATUS
-			,PANEL_RECOMMENDED_COMPENSATION,QUORUM_REACHED
-			,PANEL_CURRENT_SALARY,PANEL_PDP_AMOUNT,PANEL_RECOMM_ANNUAL_SALARY
-			,SELECTING_OFFICIAL_REVIEWER,SELECTING_OFFICIAL_REVIEW_DT
-			,TABG_DIVISION_DIR_REVIEW_DT,CMS_CHIEF_PHYSICIAN_REVIEW_DT
-			,OFM_REVIEW_DATE,TABG_REVIEW_DATE,OHC_REVIEW_DATE,ADMINISTRATOR_APPROVAL_DATE)
-			SELECT PROC_ID,PDP_TYPE,PDP_TYPE_OTHER,EXISTINGREQUEST,WORK_SCHEDULE
-			,HOURS_PER_WEEK,BD_CERT_REQ,LIC_INFO,MARKET_PAY_RATE
-			,CURRENT_FED_EMPLOYEE,LEVEL_RESPONSIBILITY,EXEC_RESP_AMT_REQUESTED
-			,EXEC_RESP_JUSTIF_DETERMIN_AMT,EXPT_QF_Q1_AMT_REQUESTED
-			,EXPT_QF_Q1_JUSTIF_DETERMIN_AMT,EXPT_QF_Q2_AMT_REQUESTED
-			,EXPT_QF_Q2_JUSTIF_DETERMIN_AMT,EXPT_QF_Q3_AMT_REQUESTED
-			,EXPT_QF_Q3_JUSTIF_DETERMIN_AMT,EXPT_QF_Q4_AMT_REQUESTED
-			,EXPT_QF_Q4_JUSTIF_DETERMIN_AMT,EXPT_QF_Q5_AMT_REQUESTED
-			,EXPT_QF_Q5_JUSTIF_DETERMIN_AMT,TOTAL_AMT_EXPT_QUALIFICATIONS
-			,CURRENT_PAY_GRADE,CURRENT_PAY_STEP,CURRENT_PAY_POSITION_TITLE
-			,CURRENT_PAY_TABLE,CURRENT_PAY_TIER,CLINICAL_SPECIALTY_BOARD_CERT
-			,OTHER_SPECIALTY,CURRENT_PAY_RECRUITMENT,CURRENT_PAY_RELOCATION
-			,CURRENT_PAY_RETENTION,CURRENT_PAY_3R_TOTAL,CURRENT_PAY_BASE
-			,CURRENT_PAY_LOCALITY_MARKET,CURRENT_PAY_TOTAL_ANNUAL_PAY
-			,CURRENT_PAY_TOTAL_COMPENSATION,CURRENT_PAY_NOTES,PROPOSED_PAY_STEP
-			,PROPOSED_PAY_TABLE,PROPOSED_PAY_TIER,PROPOSED_PAY_RECRUITMENT
-			,PROPOSED_PAY_RELOCATION,PROPOSED_PAY_RETENTION,PROPOSED_PAY_TOTAL_3R
-			,PROPOSED_GS_BASE_PAY,PROPOSED_MARKET_PAY,PROPOSED_TOTAL_ANNUAL_PAY
-			,PROPOSED_TOTAL_ANNUAL_COMPENS,INCENTIVES_APPROVED_BY_TABG
-			,PROPOSED_PAY_NOTES,DATE_OF_MEETING,PANEL_MEMBER_NAME
-			,PANEL_MEMBER_COMPONENT,PANEL_ROLE,VOTING_STATUS
-			,PANEL_RECOMMENDED_COMPENSATION,QUORUM_REACHED
-			,PANEL_CURRENT_SALARY,PANEL_PDP_AMOUNT,PANEL_RECOMM_ANNUAL_SALARY
-			,SELECTING_OFFICIAL_REVIEWER,SELECTING_OFFICIAL_REVIEW_DT
-			,TABG_DIVISION_DIR_REVIEW_DT,CMS_CHIEF_PHYSICIAN_REVIEW_DT
-			,OFM_REVIEW_DATE,TABG_REVIEW_DATE,OHC_REVIEW_DATE,ADMINISTRATOR_APPROVAL_DATE
-			FROM VW_INCENTIVES_PDP WHERE PROC_ID = I_PROCID;
+
+        --DBMS_OUTPUT.PUT_LINE('INSERT INTO INCENTIVES_PDP');
+		INSERT INTO INCENTIVES_PDP (
+                            PROC_ID
+                            ,PDP_TYPE
+                            ,PDP_TYPE_OTHER
+                            ,EXISTINGREQUEST
+                            ,WORK_SCHEDULE
+                            ,HOURS_PER_WEEK
+                            ,BD_CERT_REQ
+                            ,LIC_INFO
+                            ,MARKET_PAY_RATE
+                            ,CURRENT_FED_EMPLOYEE
+                            ,LEVEL_RESPONSIBILITY
+                            ,EXEC_RESP_AMT_REQUESTED
+                            ,EXEC_RESP_JUSTIF_DETERMIN_AMT
+                            ,EXPT_QF_Q1_AMT_REQUESTED
+                            ,EXPT_QF_Q1_JUSTIF_DETERMIN_AMT
+                            ,EXPT_QF_Q2_AMT_REQUESTED
+                            ,EXPT_QF_Q2_JUSTIF_DETERMIN_AMT
+                            ,EXPT_QF_Q3_AMT_REQUESTED
+                            ,EXPT_QF_Q3_JUSTIF_DETERMIN_AMT
+                            ,EXPT_QF_Q4_AMT_REQUESTED
+                            ,EXPT_QF_Q4_JUSTIF_DETERMIN_AMT
+                            ,EXPT_QF_Q5_AMT_REQUESTED
+                            ,EXPT_QF_Q5_JUSTIF_DETERMIN_AMT
+                            ,TOTAL_AMT_EXPT_QUALIFICATIONS
+                            ,CURRENT_PAY_GRADE
+                            ,CURRENT_PAY_STEP
+                            ,CURRENT_PAY_POSITION_TITLE
+                            ,CURRENT_PAY_TABLE
+                            ,CURRENT_PAY_TIER
+                            --,CLINICAL_SPECIALTY_BOARD_CERT --converted multiple value type
+                          ,OTHER_SPECIALTY
+                            ,CURRENT_PAY_RECRUITMENT
+                            ,CURRENT_PAY_RELOCATION
+                            ,CURRENT_PAY_RETENTION
+                            ,CURRENT_PAY_3R_TOTAL
+                            ,CURRENT_PAY_BASE
+                            ,CURRENT_PAY_LOCALITY_MARKET
+                            ,CURRENT_PAY_TOTAL_ANNUAL_PAY
+                            ,CURRENT_PAY_TOTAL_COMPENSATION
+                           ,CURRENT_PAY_NOTES
+                           ,PROPOSED_PAY_STEP
+                            ,PROPOSED_PAY_TABLE
+                            ,PROPOSED_PAY_TIER
+                            ,PROPOSED_PAY_RECRUITMENT
+                            ,PROPOSED_PAY_RELOCATION
+                            ,PROPOSED_PAY_RETENTION
+                            ,PROPOSED_PAY_TOTAL_3R
+                            ,PROPOSED_GS_BASE_PAY,PROPOSED_MARKET_PAY
+                            ,PROPOSED_TOTAL_ANNUAL_PAY
+                            ,PROPOSED_TOTAL_ANNUAL_COMPENS
+                            --,INCENTIVES_APPROVED_BY_TABG --converted multiple value type
+                            ,PROPOSED_PAY_NOTES
+                            --Panel Tab
+                             ,DATE_OF_MEETING
+                            ,DATE_OF_RECOMMENDATION --added
+                            ,QUORUM_REACHED
+                            ,PANEL_CURRENT_SALARY
+                            ,PANEL_PDP_AMOUNT
+                            ,PANEL_RECOMM_ANNUAL_SALARY
+
+                            ,SELECTING_OFFICIAL_REVIEWER
+                            ,SELECTING_OFFICIAL_REVIEW_DT
+                            ,TABG_DIVISION_DIR_REVIEW_DT
+                            ,CMS_CHIEF_PHYSICIAN_REVIEW_DT
+                            ,OFM_REVIEW_DATE
+                            ,TABG_REVIEW_DATE
+                            ,OHC_REVIEW_DATE
+                            ,ADMINISTRATOR_APPROVAL_DATE 
+                            )
+                    SELECT FD.PROCID AS PROC_ID
+                            ,X."PDP_TYPE"
+                            ,X."PDP_TYPE_OTHER"
+                            ,X."EXISTINGREQUEST"
+                            ,X."WORK_SCHEDULE"
+                            ,X."HOURS_PER_WEEK"
+                            ,X."BD_CERT_REQ"
+                            ,X."LIC_INFO"
+                            ,X."MARKET_PAY_RATE"
+                            ,X."CURRENT_FED_EMPLOYEE"
+                            ,X."LEVEL_RESPONSIBILITY"
+                            ,regexp_replace(X."EXEC_RESP_AMT_REQUESTED", '[^0-9|.]', '')
+                            ,X."EXEC_RESP_JUSTIF_DETERMIN_AMT"
+                            ,regexp_replace(X."EXPT_QF_Q1_AMT_REQUESTED", '[^0-9|.]', '')
+                            ,X."EXPT_QF_Q1_JUSTIF_DETERMIN_AMT"
+                            ,regexp_replace(X."EXPT_QF_Q2_AMT_REQUESTED", '[^0-9|.]', '')
+                            ,X."EXPT_QF_Q2_JUSTIF_DETERMIN_AMT"
+                            ,regexp_replace(X."EXPT_QF_Q3_AMT_REQUESTED", '[^0-9|.]', '')
+                            ,X."EXPT_QF_Q3_JUSTIF_DETERMIN_AMT"
+                            ,regexp_replace(X."EXPT_QF_Q4_AMT_REQUESTED", '[^0-9|.]', '')
+                            ,X."EXPT_QF_Q4_JUSTIF_DETERMIN_AMT"
+                            ,regexp_replace(X."EXPT_QF_Q5_AMT_REQUESTED", '[^0-9|.]', '')
+                            ,X."EXPT_QF_Q5_JUSTIF_DETERMIN_AMT"
+                           ,regexp_replace(X."TOTAL_AMT_EXPT_QUALIFICATIONS", '[^0-9|.]', '')
+                            ,X."CURRENT_PAY_GRADE"
+                            ,X."CURRENT_PAY_STEP"
+                            ,X."CURRENT_PAY_POSITION_TITLE"
+                            ,X."CURRENT_PAY_TABLE"
+                            ,X."CURRENT_PAY_TIER"
+                            --,X."CLINICAL_SPECIALTY_BOARD_CERT" --converted multiple value type
+                            ,X."OTHER_SPECIALTY"
+                            ,regexp_replace(X."CURRENT_PAY_RECRUITMENT", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_RELOCATION", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_RETENTION", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_3R_TOTAL", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_BASE", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_LOCALITY_MARKET", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_TOTAL_ANNUAL_PAY", '[^0-9|.]', '')
+                            ,regexp_replace(X."CURRENT_PAY_TOTAL_COMPENSATION", '[^0-9|.]', '')
+                            ,X."CURRENT_PAY_NOTES"
+                            ,X."PROPOSED_PAY_STEP"
+                            ,X."PROPOSED_PAY_TABLE"
+                            ,X."PROPOSED_PAY_TIER"
+                            ,regexp_replace(X."PROPOSED_PAY_RECRUITMENT", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_PAY_RELOCATION", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_PAY_RETENTION", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_PAY_TOTAL_3R", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_GS_BASE_PAY", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_MARKET_PAY", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_TOTAL_ANNUAL_PAY", '[^0-9|.]', '')
+                            ,regexp_replace(X."PROPOSED_TOTAL_ANNUAL_COMPENS", '[^0-9|.]', '')
+                            --,X."INCENTIVES_APPROVED_BY_TABG" --converted multiple value type
+                            ,X."PROPOSED_PAY_NOTES"
+                            --Panel tab
+                             ,TO_DATE(regexp_replace(X."DATE_OF_MEETING", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."DATE_OF_RECOMMENDATION", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,X."QUORUM_REACHED"
+                            ,regexp_replace(X."PANEL_CURRENT_SALARY", '[^0-9|.]', '')
+                            ,regexp_replace(X."PANEL_PDP_AMOUNT", '[^0-9|.]', '')
+                            ,regexp_replace(X."PANEL_RECOMM_ANNUAL_SALARY", '[^0-9|.]', '') 
+                            ,X."SELECTING_OFFICIAL_REVIEWER"
+                            ,TO_DATE(regexp_replace(X."SELECTING_OFFICIAL_REVIEW_DT", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."TABG_DIVISION_DIR_REVIEW_DT", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."CMS_CHIEF_PHYSICIAN_REVIEW_DT", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."OFM_REVIEW_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."TABG_REVIEW_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."OHC_REVIEW_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy')
+                            ,TO_DATE(regexp_replace(X."ADMINISTRATOR_APPROVAL_DATE", '[^0-9|/]', ''), 'mm/dd/yyyy') 
+                FROM TBL_FORM_DTL FD,
+                     XMLTABLE('/formData/items' PASSING FD.FIELD_DATA COLUMNS
+                    PDP_TYPE VARCHAR2(18) PATH './item[id="pdpType"]/value'
+                    ,PDP_TYPE_OTHER	VARCHAR2(150)PATH './item[id="pdpTypeOther"]/value'
+                    ,EXISTINGREQUEST	VARCHAR2(1)PATH './item[id="associatedRequest"]/value'
+                    -- Position
+                    ,WORK_SCHEDULE        VARCHAR2(15) PATH './item[id="workSchedule"]/value'
+                    ,HOURS_PER_WEEK       VARCHAR2(5) PATH './item[id="hoursPerWeek"]/value'
+                    ,BD_CERT_REQ          VARCHAR2(5) PATH './item[id="requireBoardCert"]/value'
+                    ,LIC_INFO             VARCHAR2(140) PATH './item[id="licenseInfo"]/value'
+                    --Details
+                    ,MARKET_PAY_RATE VARCHAR2(9) PATH './item[id="marketPayRate"]/value' 
+                    ,CURRENT_FED_EMPLOYEE  VARCHAR2(1) PATH './item[id="currentFederalEmployee"]/value' 
+                    ,LEVEL_RESPONSIBILITY VARCHAR2(50) PATH './item[id="execRespLevelOfResponsability"]/value'
+                    ,EXEC_RESP_AMT_REQUESTED VARCHAR2(50) PATH './item[id="execRespAmountRequested"]/value' 
+                    ,EXEC_RESP_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="execRespJustification"]/value' 
+                    ,EXPT_QF_Q1_AMT_REQUESTED VARCHAR2(50) PATH './item[id="excepQualAmountRequested_1"]/value' 
+                    ,EXPT_QF_Q1_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_1"]/value' 
+                    ,EXPT_QF_Q2_AMT_REQUESTED VARCHAR2(50) PATH './item[id="excepQualAmountRequested_2"]/value' 
+                    ,EXPT_QF_Q2_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_2"]/value' 
+                    ,EXPT_QF_Q3_AMT_REQUESTED VARCHAR2(50) PATH './item[id="excepQualAmountRequested_3"]/value' 
+                    ,EXPT_QF_Q3_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_3"]/value' 
+                    ,EXPT_QF_Q4_AMT_REQUESTED VARCHAR2(50) PATH './item[id="excepQualAmountRequested_4"]/value' 
+                    ,EXPT_QF_Q4_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_4"]/value' 
+                    ,EXPT_QF_Q5_AMT_REQUESTED VARCHAR2(50) PATH './item[id="excepQualAmountRequested_5"]/value' 
+                    ,EXPT_QF_Q5_JUSTIF_DETERMIN_AMT VARCHAR2(1000) PATH './item[id="excepQualJustification_5"]/value' 
+                    ,TOTAL_AMT_EXPT_QUALIFICATIONS VARCHAR2(50) PATH './item[id="excepQualTotalAmount"]/value'
+                    ,CURRENT_PAY_GRADE VARCHAR2(20) PATH './item[id="currentPayInfoGrade"]/value' 
+                    ,CURRENT_PAY_STEP VARCHAR2(20) PATH './item[id="currentPayInfoStep"]/value' 
+                    ,CURRENT_PAY_POSITION_TITLE VARCHAR2(70) PATH './item[id="currentPayInfoPositionTitle"]/value' 
+                    ,CURRENT_PAY_TABLE VARCHAR2(20) PATH './item[id="currentPayInfoTable"]/value' 
+                    ,CURRENT_PAY_TIER VARCHAR2(20) PATH './item[id="currentPayInfoTier"]/value' 
+                    --,CLINICAL_SPECIALTY_BOARD_CERT VARCHAR2(200) PATH './item[id="currentPayInfoSpecialtyCertification"]/value' --converted multiple value type
+                     ,OTHER_SPECIALTY VARCHAR2(140) PATH './item[id="currentPayOtherSpecialty"]/value'
+                     ,CURRENT_PAY_RECRUITMENT VARCHAR2(50) PATH './item[id="currentPayInfoRecruitment"]/value' 
+                    ,CURRENT_PAY_RELOCATION VARCHAR2(50) PATH './item[id="currentPayInfoRelocation"]/value' 
+                    ,CURRENT_PAY_RETENTION VARCHAR2(50) PATH './item[id="currentPayInfoRetention"]/value' 
+                    ,CURRENT_PAY_3R_TOTAL VARCHAR2(50) PATH './item[id="currentPayInfoTotal3R"]/value' 
+                    ,CURRENT_PAY_BASE VARCHAR2(50) PATH './item[id="currentPayInfoBasePay"]/value' 
+                    ,CURRENT_PAY_LOCALITY_MARKET VARCHAR2(50) PATH './item[id="currentPayInfoLocality"]/value' 
+                    ,CURRENT_PAY_TOTAL_ANNUAL_PAY VARCHAR2(50) PATH './item[id="currentPayInfoTotalAnnualPay"]/value' 
+                    ,CURRENT_PAY_TOTAL_COMPENSATION VARCHAR2(50) PATH './item[id="currentPayInfoTotalAnnualComp"]/value' 
+                    ,CURRENT_PAY_NOTES VARCHAR2(500) PATH './item[id="currentPayInfoNotes"]/value' 
+                   ,PROPOSED_PAY_STEP VARCHAR2(20) PATH './item[id="proposedPayInfoStep"]/value' 
+                    ,PROPOSED_PAY_TABLE VARCHAR2(20) PATH './item[id="proposedPayInfoTable"]/value' 
+                    ,PROPOSED_PAY_TIER VARCHAR2(20) PATH './item[id="proposedPayInfoTier"]/value' 
+                    ,PROPOSED_PAY_RECRUITMENT VARCHAR2(50) PATH './item[id="proposedPayInfoRecruitment"]/value' 
+                    ,PROPOSED_PAY_RELOCATION VARCHAR2(50) PATH './item[id="proposedPayInfoRelocation"]/value' 
+                    ,PROPOSED_PAY_RETENTION VARCHAR2(50) PATH './item[id="proposedPayInfoRetention"]/value' 
+                    ,PROPOSED_PAY_TOTAL_3R VARCHAR2(50) PATH './item[id="proposedPayInfoTotal3R"]/value' 
+                    ,PROPOSED_GS_BASE_PAY VARCHAR2(50) PATH './item[id="proposedPayInfoGSBasePay"]/value' 
+                    ,PROPOSED_MARKET_PAY VARCHAR2(50) PATH './item[id="proposedPayInfoMarketPay"]/value' 
+                    ,PROPOSED_TOTAL_ANNUAL_PAY VARCHAR2(50) PATH './item[id="proposedPayInfoTotalAnnualPay"]/value'  
+                    ,PROPOSED_TOTAL_ANNUAL_COMPENS VARCHAR2(50) PATH './item[id="proposedPayInfoTotalAnnualComp"]/value' 
+                    --,INCENTIVES_APPROVED_BY_TABG VARCHAR2(3) PATH './item[id="proposedPayInfoIncentivesApprTABG"]/value' --converted multiple value type
+                    ,PROPOSED_PAY_NOTES VARCHAR2(500) PATH './item[id="proposedPayInfoNotes"]/value' 
+                    --Panel
+                    ,DATE_OF_MEETING VARCHAR2(10) PATH './item[id="panelDateOfMeeting"]/value' 
+                    ,DATE_OF_RECOMMENDATION VARCHAR2(10) PATH './item[id="panelDateOfRecommendation"]/value' 
+                    ,QUORUM_REACHED VARCHAR2(1) PATH './item[id="selectQuorumReached"]/value'
+                    ,PANEL_CURRENT_SALARY VARCHAR2(20) PATH './item[id="panelCurrentSalaryGP"]/value' 
+                    ,PANEL_PDP_AMOUNT VARCHAR2(20) PATH './item[id="panelPDPAmount"]/value' 
+                    ,PANEL_RECOMM_ANNUAL_SALARY VARCHAR2(20) PATH './item[id="panelRecommendedAnnualSalary"]/value' 
+                    --Approval and Review
+                    ,SELECTING_OFFICIAL_REVIEWER VARCHAR2(100) PATH './item[id="SELECTING_OFFICIAL_REVIEWER"]/value' 
+                    ,SELECTING_OFFICIAL_REVIEW_DT VARCHAR2(10) PATH './item[id="SELECTING_OFFICIAL_REVIEW_DT"]/value' 
+                    ,TABG_DIVISION_DIR_REVIEW_DT VARCHAR2(10) PATH './item[id="TABG_DIVISION_DIR_REVIEW_DT"]/value' 
+                    ,CMS_CHIEF_PHYSICIAN_REVIEW_DT VARCHAR2(10) PATH './item[id="CMS_CHIEF_PHYSICIAN_REVIEW_DT"]/value' 
+                    ,OFM_REVIEW_DATE VARCHAR2(10) PATH './item[id="OFM_REVIEW_DATE"]/value' 
+                    ,TABG_REVIEW_DATE VARCHAR2(10) PATH './item[id="TABG_REVIEW_DATE"]/value' 
+                    ,OHC_REVIEW_DATE VARCHAR2(10) PATH './item[id="OHC_REVIEW_DATE"]/value' 
+                    ,ADMINISTRATOR_APPROVAL_DATE VARCHAR2(10) PATH './item[id="ADMINISTRATOR_APPROVAL_DATE"]/value'
+                    ) X
+            WHERE FD.PROCID = I_PROCID;
+
+        --------------------
+        -- Details Tab / Muti value (used same methods in other workstream implementation).    
+        SELECT XMLQUERY('for $i in /formData/items/item[id="currentPayInfoSpecialtyCertification"]/value[string-length(value/text()) > 0] return concat($i/value/text(), ", ")'
+               PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL() INTO V_CLINICAL_SPCLTY_BOARD_CERT FROM DUAL;
+        V_CLINICAL_SPCLTY_BOARD_CERT := SUBSTR(V_CLINICAL_SPCLTY_BOARD_CERT, 0, LENGTH(V_CLINICAL_SPCLTY_BOARD_CERT)-2);
+        --DBMS_OUTPUT.PUT_LINE('V_CLINICAL_SPCLTY_BOARD_CERT=[' || V_CLINICAL_SPCLTY_BOARD_CERT || ']');
+
+        SELECT XMLQUERY('for $i in /formData/items/item[id="proposedPayInfoIncentivesApprTABG"]/value[string-length(value/text()) > 0] return concat($i/value/text(), ", ")'
+               PASSING V_XMLDOC RETURNING CONTENT).GETSTRINGVAL() INTO V_INCENTIVES_APPRVD_BY_TABG FROM DUAL;
+        V_INCENTIVES_APPRVD_BY_TABG := SUBSTR(V_INCENTIVES_APPRVD_BY_TABG, 0, LENGTH(V_INCENTIVES_APPRVD_BY_TABG)-2);
+        --DBMS_OUTPUT.PUT_LINE('V_INCENTIVES_APPRVD_BY_TABG=[' || V_INCENTIVES_APPRVD_BY_TABG || ']');
+
+        UPDATE INCENTIVES_PDP
+           SET CLINICAL_SPECIALTY_BOARD_CERT = V_CLINICAL_SPCLTY_BOARD_CERT
+               , INCENTIVES_APPROVED_BY_TABG = V_INCENTIVES_APPRVD_BY_TABG
+         WHERE PROC_ID = I_PROCID;
+
+        --------------------
+        --Panel Tab
+        --DBMS_OUTPUT.PUT_LINE('PANEL TAB');
+        --DBMS_OUTPUT.PUT_LINE('PANEL TAB-DELETE');
+        DELETE FROM HHS_CMS_HR.INCENTIVES_PDP_PANEL
+        WHERE PROC_ID = I_PROCID;
+
+        --DBMS_OUTPUT.PUT_LINE('PANEL TAB-INSERT');
+        INSERT INTO INCENTIVES_PDP_PANEL
+                                (
+                                PROC_ID
+                                ,SEQ_NUM
+                                ,FULL_NAME
+                                ,COMPONENT_NAME
+                                ,EMAIL
+                                ,HHSID
+                                ,ADMIN_CODE
+                                ,PANEL_ROLE
+                                ,VOTING_STATUS
+                                ,PANEL_REC_COMP
+                                )
+                    SELECT FD.PROCID
+                           ,ROWNUM
+                           ,x.FULL_NAME
+                           ,x.COMPONENT_NAME
+                           ,x.EMAIL
+                           ,x.HHSID
+                           ,x.ADMIN_CODE
+                           ,x.PANEL_ROLE
+                           ,x.VOTING_STATUS
+                           ,x.PANEL_REC_COMP        
+                    FROM TBL_FORM_DTL FD,
+                         XMLTABLE('/formData/items/item[id="panelItems"]/value' PASSING FD.FIELD_DATA COLUMNS
+                            FULL_NAME			VARCHAR2(200) PATH './name'
+                            ,COMPONENT_NAME		VARCHAR2(200) PATH './component'
+                            ,EMAIL		        VARCHAR2(100) PATH './email'
+                            ,HHSID		        VARCHAR2(20) PATH './HHSID'
+                            ,ADMIN_CODE		    VARCHAR2(20) PATH './adminCode'
+                            ,PANEL_ROLE		    VARCHAR2(20) PATH './role'
+                            ,VOTING_STATUS		VARCHAR2(50) PATH './votingStatus'
+                            ,PANEL_REC_COMP	    VARCHAR2(50) PATH './recCompensation'
+                        ) X
+                    WHERE FD.PROCID = I_PROCID;
+
 	END IF;
 
 	EXCEPTION
 	WHEN OTHERS THEN
+        --DBMS_OUTPUT.PUT_LINE('EXCEPTION=' || SUBSTR(SQLERRM, 1, 200));
+          --err_code := SQLCODE;
+          --err_msg := SUBSTR(SQLERRM, 1, 200);
+
 		SP_ERROR_LOG();
 END;
+
 /
 
 
