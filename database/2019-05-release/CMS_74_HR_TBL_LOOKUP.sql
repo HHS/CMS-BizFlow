@@ -30,4 +30,6 @@ BEGIN
     SP_ERLR_MNG_FINAL_ACTION('UPDATE', '1773', 'Med- Arb Union Win', 'Mediation/Arbitration Union Prevailed');
 END;
 
+update ERLR_INVESTIGATION set INVESTIGATION_TYPE = TRIM(INVESTIGATION_TYPE);
+
 Commit;
