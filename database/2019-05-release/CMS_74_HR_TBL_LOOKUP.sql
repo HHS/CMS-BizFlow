@@ -33,6 +33,8 @@ BEGIN
     SP_ERLR_MNG_FINAL_ACTION('UPDATE', '750', 'WIGI Denied', 'WGI Denied');
 END;
 
+update tbl_lookup set tbl_disp_order = 999 WHERE tbl_ltype='ERLRCasesCompletedFinalAction' and tbl_label = 'Other';
+
 update ERLR_INVESTIGATION set INVESTIGATION_TYPE = TRIM(INVESTIGATION_TYPE);
 
 Commit;
