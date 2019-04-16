@@ -378,4 +378,26 @@ public class CMSUtility
 
 		return orgName;
 	}
+
+	static public String getValue(Node document, String pathString) {
+		StopWatch watch = new StopWatch(CMSUtility.class, "getValue");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("getValue START");
+			logger.debug(" - document [" + LogUtility.getNullCheckString(document) + "]");
+			logger.debug(" - xpath [" + pathString + "]");
+		}
+
+		XPathFactory xPathFactory = XPathFactory.newInstance();
+		XPath xpath = xPathFactory.newXPath();
+
+		String value = XMLUtility.getValue(xpath, document, pathString);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("getValue END [" + value +  "]");
+		}
+
+		return value;
+
+	}
 }
