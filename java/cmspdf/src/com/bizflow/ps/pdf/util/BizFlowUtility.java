@@ -14,6 +14,7 @@ public class BizFlowUtility
 
 	private static final String[] documentMergeOrder = {
 		"PD Coversheet",
+		"OF 8",
 		"New Position Description (PD)",
 		"Proposed Position Description (PD)",
 		"Existing Position Description (PD)",
