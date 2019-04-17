@@ -22,6 +22,7 @@ public class PDFTool
 	public static final String CMS_PDFTYPE_FLSA_NONEXEMPT	= "FLSANONEXEMPT";
 	public static final String CMS_PDFTYPE_PD_COVERSHEET	= "PDCOVERSHEET";
 	public static final String CMS_PDFTYPE_FINAL_PACKAGE	= "PACKAGE";
+	public static final String CMS_PDFTYPE_OF_8             = "OF 8";
 
 	private ArrayList<PDFOverlay> overlays = new ArrayList<PDFOverlay>();
 
