@@ -313,6 +313,9 @@ IS
 
 			IF 'PCA' = V_INCENTIVE_TYPE THEN
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="ohcDirector"]/value/participantId/text()', '/formData/items/item[id="ohcDirector"]/value/name/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'lengthServiceYear', '/formData/items/item[id="lengthOfService"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'approvedPCAAmount', '/formData/items/item[id="totalPayablePCACalculation"]/value/text()');
+				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancellationReason', '/formData/items/item[id="cancellationReason"]/value/text()');
 			ELSIF 'SAM' = V_INCENTIVE_TYPE THEN
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'samSupport', '/formData/items/item[id="supportSAM"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/participantId/text()', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/name/text()');
