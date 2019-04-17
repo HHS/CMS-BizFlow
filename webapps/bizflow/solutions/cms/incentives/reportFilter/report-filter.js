@@ -19,7 +19,11 @@
 
         // Primitive Options - Not for Selectize
         vm._components = ['By Request Number', 'By Admin Code', 'Office of the Administrator (OA) Only'];
-        vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
+        vm._incentiveTypes = [];
+        vm._incentiveTypes_All = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},
+            {value: "SAM", key: "Salary Above Minimum (SAM)"},{value: "PDP", key: "Physician and Dentist Pay (PDP)"}];
+        vm._incentiveTypes_SAM_LE = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
+        vm._incentiveTypes_PCA_PDP = [{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "PDP", key: "Physician and Dentist Pay (PDP)"}];
         vm._pcaTypes = ['All', 'New', 'Renewal'];
         vm._includeSubOrgs = ['Yes', 'No'];
         //vm._requestStatus = ["Completed", "Active", "Both"];
@@ -28,7 +32,7 @@
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
 		vm._dayTypes = ['Business', 'Calendar']; //#290605 - Business and Calendar Days filter 
-		
+        
         vm.reportMap = [
 			{
 				'name': 'CMS HR Incentives Time to Completion Report - SAM & LE',
@@ -43,6 +47,11 @@
 			{
 				'name': 'CMS HR Incentives PCA Report - Complete',
 				'description': 'Incentives PCA Report - Complete',
+				'dateLabel': 'Date Request Entered'
+			},
+			{
+				'name': 'CMS HR Incentives Time to Completion Report for PCA & PDP - Completed',
+				'description': 'Incentives Time to Completion Report for PCA & PDP - Completed',
 				'dateLabel': 'Date Request Entered'
 			},
 			{
@@ -88,7 +97,7 @@
 
         // Date From - To
         vm.dateLabel = "Date Request Completed";
-
+        
         vm.fromDateOpened = false;
         vm.toDateOpened = false;
         vm.dateOptionFrom = {showWeeks: false, maxDate: new Date()};
@@ -261,18 +270,9 @@
                     url = url + '&ADMIN_CD=~NULL~';
                 }
             }
-
-
-			var date_from = "DATE_FROM";
+			
+            var date_from = "DATE_FROM";
 			var date_to = "DATE_TO";
-			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE" || CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_HR_Time_to_SAM_LE_Report___Completed" || CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_HR_Incentives_PCA_Report___Complete") {
-				date_from = "COMP_DATE_FROM";
-				date_to = "COMP_DATE_TO";
-			} else {
-				date_from = "DATE_FROM";
-				date_to = "DATE_TO";
-			}
-
             if (vm.selected.fromDate != null) {
                 var from = vm.getDateString(vm.selected.fromDate);
                 url = url + '&' + date_from + '=' + from;
@@ -286,42 +286,27 @@
                 url = url + '&' + date_to + '=2050-12-31';
             }
 
-            //if (vm.selected.requestStatus) {
-            //    url = url + '&REQ_STATUS=' + vm.selected.requestStatus;
-            //}
             if (vm.selected.hrSpecialist) {
                 url = url + '&HRS_ID=' + vm.selected.hrSpecialist; // HR Specialist
             }
             if (vm.selected.incentiveType) {
-				var incentiveTypeArray = [];
-    incentiveTypeArray.push(vm.selected.incentiveType);
-    //vm.selected.incentiveType;
+				var incentiveTypeArray = vm.selected.incentiveType;
 				if(incentiveTypeArray.length > 0) {
 					var incentiveType = incentiveTypeArray.join(",");
 					if(incentiveType != "") {
-						url = url + '&INCEN_TYPE=' + incentiveType; // Incentive Type
+                        url = url + '&INCEN_TYPE=' + encodeURIComponent(incentiveType); // Incentive Type -- EncodeD
 					}
 				}
             }
             if (vm.selected.pcaType) {
-				url = url + '&PCA_TYPE=' + vm.selected.pcaType; // PCA Type
+				url = url + '&PCA_TYPE=' + vm.selected.pcaType;
             }            
             if (vm.selected.requestType) {
-				url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
+				url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type 
             }
-            // url = url + '&CLSF_TYPE=' + vm.selected.classificationType; // Classification Type
             if (vm.selected.appointmentType) {
-				url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
+                url = url + '&APPT_TYPE=' + encodeURIComponent(vm.selected.appointmentType); // Appointment Type -- EncodeD
             }
-            // url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
-            // url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
-            //url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
-            // url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
-            // url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
-            // url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
-            // url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
-            //$log.debug('Report URL [' + url + ']');
-			
             if (vm.selected.dayType) {
 				url = url + '&DAYS=' + vm.selected.dayType; // Type of Days [Business Days | Calendar Days]
             }			
@@ -374,15 +359,25 @@
                             vm.orgSelected.requestType = vm._requestTypes[0]
                         }
                     }
-                    if (foundReportMap.pcaType && foundReportMap.pcaType.length > 0) {
-                        vm.copyItems(vm._pcaTypes, foundReportMap.pcaType);
-                        if (vm._pcaTypes.length == 1) {
-                            vm.orgSelected.pcaType = vm._pcaTypes[0]
-                        }
-                    }
+
                     if (foundReportMap.dateLabel && foundReportMap.dateLabel.length > 0) {
                         vm.dateLabel = foundReportMap.dateLabel
                     }
+                    
+                    // Setting the allowable multi-select Incentive Options
+                    if (CMS_REPORT_FILTER.REPORTNAME == 'CMS HR Incentives Time to Completion Report - SAM & LE' 
+                        || CMS_REPORT_FILTER.REPORTNAME == "CMS HR Time to SAM/LE Report - Completed") {
+                        vm._incentiveTypes = vm._incentiveTypes_SAM_LE;
+                    } else if (CMS_REPORT_FILTER.REPORTNAME == "CMS HR Incentives PCA Report - Complete") {
+                        vm._incentiveTypes = [];
+                        vm.orgSelected.pcaType = vm._pcaTypes[0];
+                    } else if (CMS_REPORT_FILTER.REPORTNAME == "CMS HR Incentives Time to Completion Report for PCA & PDP - Completed") {
+                        vm._incentiveTypes = vm._incentiveTypes_PCA_PDP;
+                    } else {
+                        vm._incentiveTypes = vm._incentiveTypes_All;
+                    }
+                        
+                    
                 } else {
                     $log.info('No report found from report map. [' + CMS_REPORT_FILTER.REPORTNAME + ']');
                 }
@@ -395,18 +390,10 @@
             vm.initReportMap();
             vm.initUserGroups();
 
-            //vm.adjustBizCoveUI();
-            //vm.selected = _.assign({}, vm.orgSelected);
+            vm.adjustBizCoveUI();
+            vm.selected = _.assign({}, vm.orgSelected);
+            
             $('#reportFilter').attr('aria-busy', 'false');
-
-            if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE" || CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_HR_Time_to_SAM_LE_Report___Completed") {
-              vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
-            } else if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_HR_Incentives_PCA_Report___Complete") {
-              vm.orgSelected.pcaType = vm._pcaTypes[0]
-            } else {
-              vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
-            }
-
             vm.requestTypes = vm.getSelectizeOptions(vm._requestTypes);
             //vm.requestStatus = vm.getSelectizeOptions(vm._requestStatus);
             vm.appointmentTypes = vm.getSelectizeOptions(vm._appointmentTypes);
@@ -416,9 +403,7 @@
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
             vm.incentiveTypes = vm.getSelectizeOptionsEx(vm._incentiveTypes);
             vm.pcaTypes = vm.getSelectizeOptions(vm._pcaTypes);            
-			         vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
-            vm.adjustBizCoveUI();
-            vm.selected = _.assign({}, vm.orgSelected);   
+			vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
         };
 
         vm.$onDestroy = function () {
