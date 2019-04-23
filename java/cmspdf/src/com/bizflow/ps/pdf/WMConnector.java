@@ -86,7 +86,6 @@ public class WMConnector
 		{
 			PDFTool pdfUtility = new PDFTool();
 			pdfUtility.generatePackagePDF(sessionInfoXML, processID, grade, fileName, IDs);
-
 		}
 		catch(Exception e)
 		{
@@ -158,6 +157,7 @@ public class WMConnector
 
 			List<Grade> grades = CMSUtility.getGrades(document);
 			int gradeCount = grades.size();
+			URLUtility urlUtility = new URLUtility();
 
 			for (int index = 0; index < gradeCount; index++)
 			{
@@ -165,13 +165,13 @@ public class WMConnector
 				String gradeString = (grade.grade >= 0 && grade.grade < 10 ? "0" : "") + Integer.toString(grade.grade);
 				String filename = "OF 8 Grade " + gradeString + ".pdf";
 
-				File of8File = URLUtility.downloadOF8(memberID, loginID, requestNumber, gradeString);
+				File of8File = urlUtility.downloadOF8(memberID, loginID, requestNumber, gradeString);
 
 				if (of8File != null) {
 					String filePath = of8File.getPath();
 					toBeDeletedFiles.add(filePath);
 
-					BizFlowUtility.addAttachment(attachments, "OF 8", filename, filePath, "Grade " + gradeString, PDFTool.CMS_PDFTYPE_OF_8, 0);
+					BizFlowUtility.addAttachment(attachments, "OF 8", filename, filePath, "Grade " + gradeString, PDFTool.CMS_PDFTYPE_OF_8, grade.grade);
 
 				} else {
 					logger.error("Failed to download OF 8 form. Process ID [" + processID + "] Request Number [" + requestNumber + "] Grade [" + gradeString + "]");
@@ -214,18 +214,10 @@ public class WMConnector
 				if (index < positionCount)
 				{
 					valueMap.put("#POS_INFORMATION_" + Integer.toString(index + 1), positionInformation.get(index));
-					if(logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position added - [#POS_INFORMATION_" + Integer.toString(index + 1) + "] ==> [" + positionInformation.get(index) + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#POS_INFORMATION_" + Integer.toString(index + 1), "");
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position added - [#POS_INFORMATION_" + Integer.toString(index + 1) + "] ==> []");
-					}
 				}
 			}
 
@@ -237,18 +229,10 @@ public class WMConnector
 				if (index < stadardCount)
 				{
 					valueMap.put("#PD_CLS_STANDARDS_" + Integer.toString(index + 1), standards.get(index));
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position standard added - [#PD_CLS_STANDARDS_" + Integer.toString(index + 1) +"] ==> [" + standards.get(index) + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#PD_CLS_STANDARDS_" + Integer.toString(index + 1), "");
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position standard added [#PD_CLS_STANDARDS_" + Integer.toString(index + 1) + "] ==> []");
-					}
 				}
 			}
 
@@ -267,25 +251,13 @@ public class WMConnector
 				if (grade.grade == 0)
 				{
 					valueMap.put("#CS_GR_ID", "");
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Grade added - [#CS_GR_ID] ==> []");
-					}
 				}
 				else
 				{
 					valueMap.put("#CS_GR_ID", (grade.grade > 9 ? "" : "0") + Integer.toString(grade.grade));
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Grade added - [#CS_GR_ID] ==> [" + Integer.toString(grade.grade) + "]");
-					}
 				}
 
 				valueMap.put("#CS_FLSA_DETERM_ID", grade.exempt);
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("New Item in ValueMap: FLSA Exempt added - [#CS_FLSA_DETERM_ID] ==> [" + grade.exempt + "]");
-				}
 
 				PDFTool pdfUtility = new PDFTool();
 
@@ -344,10 +316,6 @@ public class WMConnector
 			{
 				Map<String, String> valueMap = XMLUtility.generateValueMap(FileUtility.translatePath("/PDF_Configuration/map/PDF_FLSA_EXEMPT_MAP.xml"), document);
 				valueMap.put("#JOB_CODE", exemptJobCode);
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("New Item in ValueMap: ob Code added - [#JOB_CODE] ==> [" + exemptJobCode + "]");
-				}
 
 				//#PAYPLAN_SERIES
 				String payPlanSeries = valueMap.get("#PAYPLAN_SERIES");
@@ -355,18 +323,10 @@ public class WMConnector
 				if (codes.length() > 0)
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries + "-" + codes);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "-" + codes + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "]");
-					}
 				}
 
 				//3rd level organization - #OFFICE_ORGANIZATION
@@ -378,10 +338,6 @@ public class WMConnector
 				if (classificationDate != null && classificationDate.length() > 0)
 				{
 					valueMap.put("#PD_CLS_SPEC_DT", classificationDate);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Classification Date added - [#PD_CLS_SPEC_DT] ==> [" + classificationDate + "]");
-					}
 				}
 
 				PDFTool pdfUtility = new PDFTool();
@@ -410,10 +366,6 @@ public class WMConnector
 				Map<String, String> valueMap = XMLUtility.generateValueMap(FileUtility.translatePath("/PDF_Configuration/map/PDF_FLSA_NONEXEMPT_MAP.xml"), document);
 
 				valueMap.put("#JOB_CODE", nonExemptJobCode);
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("New Item in ValueMap: Job Code added - [#JOB_CODE] ==> [" + nonExemptJobCode + "]");
-				}
 
 				//#PAYPLAN_SERIES
 				String payPlanSeries = valueMap.get("#PAYPLAN_SERIES");
@@ -421,18 +373,10 @@ public class WMConnector
 				if (codes.length() > 0)
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries + "-" + codes);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "-" + codes + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "]");
-					}
 				}
 
 				//3rd level organization - #OFFICE_ORGANIZATION
@@ -445,10 +389,6 @@ public class WMConnector
 				if (classificationDate != null && classificationDate.length() > 0)
 				{
 					valueMap.put("#PD_CLS_SPEC_DT", classificationDate);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Classification Date added - [#PD_CLS_SPEC_DT] ==> [" + classificationDate + "]");
-					}
 				}
 
 				PDFTool pdfUtility = new PDFTool();
@@ -485,6 +425,9 @@ public class WMConnector
 
 	public static void main(String[] args) throws IOException, Exception
 	{
+		URLUtility utility = new URLUtility();
+		utility.get("https://www.bizflow.com");
+		utility.get("http://cms.bizflow.com/bizflow");
 //		File xmlFile = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_DATA.xml");
 //		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 //		DocumentBuilder builder = dbFactory.newDocumentBuilder();
