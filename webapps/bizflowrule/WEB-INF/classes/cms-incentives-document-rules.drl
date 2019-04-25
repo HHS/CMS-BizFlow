@@ -178,7 +178,7 @@ rule "Incentives / SAM Required Documents / Package"
         $workflowDocuments : ArrayList()
 
     then
-        addDocument($workflowDocuments,"Final Position Description Package", true);
+        addDocument($workflowDocuments,"Final Position Description Package", false);
 end
 
 rule "Incentives / SAM Required Documents "

@@ -29,11 +29,11 @@
 
 <%!
     static final String DEFAULT_DOCUMENT_TYPE_691 = "HHS 691";
-    static final String DEFAULT_FILE_NAME_691 = "HHS-691.pdf";
+    static final String DEFAULT_FILE_NAME_691 = "HHS 691.pdf";
     static final String DEFAULT_DOCUMENT_TYPE_JUST_COMPUTATION = "PDP Justification-Computation";
-    static final String DEFAULT_FILE_NAME_JUST_COMPUTATION  = "PDP-Justification-Computation.pdf";
+    static final String DEFAULT_FILE_NAME_JUST_COMPUTATION  = "PDP Justification Computation.pdf";
     static final String DEFAULT_DOCUMENT_TYPE_PANEL = "PDP Panel Documentation";
-    static final String DEFAULT_FILE_NAME_PANEL = "PDP-Panel-Documentation.pdf";
+    static final String DEFAULT_FILE_NAME_PANEL = "PDP Panel Documentation.pdf";
 	
     static final String RUNNING_PROCESS_STATE = "R";
     static Properties properties = null;
@@ -281,7 +281,7 @@
                 xrs.setFieldValueAt(r, "CATEGORY", documentType_691);
                 xrs.setFieldValueAt(r, "DISPLAYNAME", fileName_691);
                 xrs.setFieldValueAt(r, "FILENAME", fileName_691);
-				xrs.setFieldValueAt(r, "DESCRIPTION", "Auto-generated when to send offer");
+				//xrs.setFieldValueAt(r, "DESCRIPTION", "Auto-generated when to send offer");
                 xrs.setFieldValueAt(r, "SIZE", String.valueOf(worksheetFile691.length()));
 
 				r = xrs.add();
@@ -299,7 +299,7 @@
                 xrs.setFieldValueAt(r, "CATEGORY", documentType_JustComputation);
                 xrs.setFieldValueAt(r, "DISPLAYNAME", fileName_JustComputation);
                 xrs.setFieldValueAt(r, "FILENAME", fileName_JustComputation);
-				xrs.setFieldValueAt(r, "DESCRIPTION", "Auto-generated when to send offer");
+				//xrs.setFieldValueAt(r, "DESCRIPTION", "Auto-generated when to send offer");
                 xrs.setFieldValueAt(r, "SIZE", String.valueOf(worksheetFileJustComputation.length()));
 
 				r = xrs.add();
@@ -317,7 +317,7 @@
                 xrs.setFieldValueAt(r, "CATEGORY", documentType_Panel);
                 xrs.setFieldValueAt(r, "DISPLAYNAME", fileName_Panel);
                 xrs.setFieldValueAt(r, "FILENAME", fileName_Panel);
-				xrs.setFieldValueAt(r, "DESCRIPTION", "Auto-generated when to send offer");
+				//xrs.setFieldValueAt(r, "DESCRIPTION", "Auto-generated when to send offer");
                 xrs.setFieldValueAt(r, "SIZE", String.valueOf(worksheetFilePanel.length()));
 				
                 String[] attachFiles = {worksheetFile691.getPath(), worksheetFileJustComputation.getPath(), worksheetFilePanel.getPath()};
@@ -342,7 +342,6 @@
         }
     }
 
-	//errorMsg = "FAIL!!!";
     if (errorMsg != null) {
         ret.put("fail", false);
         ret.put("message", errorMsg);
