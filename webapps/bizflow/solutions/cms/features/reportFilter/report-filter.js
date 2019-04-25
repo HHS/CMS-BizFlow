@@ -79,6 +79,21 @@
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
                 'requestType': ["Appointment"],
                 'appointmentType': ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)']
+            }, {
+                'name': 'CMS USA Staffing Active Requests', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Request Created'
+            }, {
+                'name': 'CMS Time of Possession End to End Report - Active', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Request Created'
+            }, {
+                'name': 'CMS Time of Possession End to End Report - Completed', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Verify New Hire Completed'
             }
         ];
         
