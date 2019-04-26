@@ -159,6 +159,7 @@
             }
         }
 
+        vm.classTypesForAll = [];
         vm.classTypesForClass = [];
         vm.classTypesForRecruitment = [];
         vm.classTypesForAppointment = [];
@@ -171,7 +172,22 @@
 
         // Functions
         vm.getClassificationTypes = function () {
-            if (vm.selected.requestType === 'All' || vm.selected.requestType === 'Classification Only') {
+            if (vm.selected.requestType === 'All') {
+                if (vm.classTypesForAll.length == 0) {
+                    for (var i=0; i<vm._requestTypes.length; ++i) {
+                        if (vm._requestTypes[i] === 'Classification Only') {
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.allClassificationTypes);        
+                        } else if (vm._requestTypes[i] === 'Recruitment'){
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.recruitmentClassificationTypes);        
+                        } else if (vm._requestTypes[i] === 'Appointment') {
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.recruitmentClassificationTypes);        
+                        }                        
+                    }                    
+                    vm.classTypesForAll.sort();
+                    vm.classTypesForAll = vm.getSelectizeOptions(vm.classTypesForAll);
+                }
+                return vm.classTypesForAll;                
+            } else if (vm.selected.requestType === 'Classification Only') {
                 if (vm.classTypesForClass.length == 0) {
                     vm.classTypesForClass = vm.classTypesForClass.concat(vm.allClassificationTypes);
                     vm.classTypesForClass.sort();
