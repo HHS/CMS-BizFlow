@@ -24,12 +24,12 @@
               font="TIMES_ROMAN" fontSize="10" x="20"  y="641.5">#PD_ORG_POS_TITLE</item>
 
         <item name="9. Subject to Identical Additional (IA)"
-              font="TIMES_ROMAN" fontSize="10" x="20"  y="615">#PD_SUBJECT_IA</item>
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="617.7">#PD_SUBJECT_IA</item>
 
         <item name="10. Administrative Code"
-              font="TIMES_ROMAN" fontSize="10" x="231"  y="615">#CS_AC_ID_LABEL</item>
+              font="TIMES_ROMAN" fontSize="10" x="234"  y="617.7">#CS_AC_ID_LABEL</item>
         <item name="Component-wide"
-              font="TIMES_ROMAN" fontSize="10" x="468.5"  y="615">#PD_SCOPE</item>
+              font="TIMES_ROMAN" fontSize="10" x="493"  y="617.7">#PD_SCOPE</item>
 
 
         <item name="Second sub-organization"
@@ -103,7 +103,7 @@
               font="TIMES_ROMAN" fontSize="10" x="20"  y="167">#PD_CLS_STANDARDS_7</item>
 
         <item name="Remarks"
-              font="TIMES_ROMAN" fontSize="8" x="20"  y="140.4" multipleLine="true" width="570" height="11.5">#PD_REMARKS</item>
+              font="TIMES_ROMAN" fontSize="10" x="20"  y="140.4" multipleLine="true" width="570" height="11.5">#PD_REMARKS</item>
 
     </overlay>
 </overlays>

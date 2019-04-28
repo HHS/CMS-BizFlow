@@ -36,7 +36,7 @@
     </item>
     <item name="Subject to Identical Addition (IA)">
         <key>#PD_SUBJECT_IA</key>
-        <value displayValues="Yes|No" whenValueIs="true">/FORM_DATA/DOCUMENT/GENERAL/PD_SUBJECT_IA</value>
+        <value displayValues="Yes|No" whenValueIs="1">/FORM_DATA/DOCUMENT/GENERAL/PD_SUBJECT_IA</value>
     </item>
     <item name="Administrative Code">
         <key>#CS_AC_ID_LABEL</key>
@@ -45,7 +45,7 @@
 
     <item name="Component-wide">
         <key>#PD_SCOPE</key>
-        <value displayValues="Component-wide|" whenValueIs="Yes">/FORM_DATA/DOCUMENT/GENERAL/PD_SCOPE</value>
+        <value>/FORM_DATA/DOCUMENT/GENERAL/STD_PD_TYPE</value>
     </item>
     <item name="Second sub-organization">
         <key>#PD_SUB_ORG_2_LABEL</key>
@@ -80,7 +80,7 @@
 
     <item name="Cyber Security Code">
         <key>#PD_CYB_SEC_CD</key>
-        <value>/FORM_DATA/DOCUMENT/CLASSIFICATION_CODE/PD_CYB_SEC_CD</value>
+        <value lookup="true" lookupField="name">/FORM_DATA/DOCUMENT/CLASSIFICATION_CODE/PD_CYB_SEC_CD</value>
     </item>
 
     <item name="Position Sensitivity">
