@@ -1757,7 +1757,8 @@ CREATE OR REPLACE FORCE VIEW HHS_CMS_HR.VW_INCENTIVES_COM (
         , REQ_DATE
         , ADMIN_CODE
         , ORG_NAME
-        , CANDI_NAME
+        , CANDI_NAME --Last, First Middle
+        , CANDI_NAME2 --Last, First
         , CANDI_FIRST
         , CANDI_MIDDLE
         , CANDI_LAST
@@ -1800,6 +1801,7 @@ CREATE OR REPLACE FORCE VIEW HHS_CMS_HR.VW_INCENTIVES_COM (
         , GRADE
         , POS_DESC_NUM
         , TYPE_OF_APPT
+        , NOT_TO_EXCEED_DT
         , DS_STATE
         , DS_CITY
         , CANCEL_RESAON
@@ -1820,6 +1822,7 @@ SELECT
         , ADMIN_CODE
         , ORG_NAME
         , CANDI_NAME
+        , CANDI_NAME2
         , CANDI_FIRST
         , CANDI_MIDDLE
         , CANDI_LAST
@@ -1862,6 +1865,7 @@ SELECT
         , GRADE
         , POS_DESC_NUM
         , TYPE_OF_APPT
+        , NOT_TO_EXCEED_DT
         , DS_STATE
         , DS_CITY
         , CANCEL_RESAON
@@ -2629,6 +2633,7 @@ WHERE FD.FORM_TYPE = 'CMSINCENTIVES'
 ;
 /
 
+
 create or replace PROCEDURE SP_UPDATE_INCENTIVES_COM_TABLE
   (
     I_PROCID            IN      NUMBER
@@ -2705,6 +2710,7 @@ BEGIN
                         , X.GRADE
                         , X.POS_DESC_NUM
                         , X.TYPE_OF_APPT
+                        , X.NOT_TO_EXCEED_DT --
                         , X.DS_STATE
                         , X.DS_CITY
                         , X.CANCEL_RESAON
@@ -2780,6 +2786,7 @@ BEGIN
                          , GRADE VARCHAR2(5) PATH './item[id="grade"]/value'
                          , POS_DESC_NUM VARCHAR2(20) PATH './item[id="posDescNumber"]/value'
                          , TYPE_OF_APPT VARCHAR2(20) PATH './item[id="typeOfAppointment"]/value' --!!!
+                         , NOT_TO_EXCEED_DT VARCHAR2(100) PATH './item[id="notToExceedDate"]/value' --!!!
                          -- dutyStation
                          , DS_STATE VARCHAR2(2) PATH './item[id="dutyStation"]/value[1]/state'
                          , DS_CITY VARCHAR2(50) PATH './item[id="dutyStation"]/value[1]/city'
@@ -2800,6 +2807,7 @@ BEGIN
                         ,TRG.ADMIN_CODE = SRC.ADMIN_CODE
                         ,TRG.ORG_NAME = SRC.ORG_NAME
                         ,TRG.CANDI_NAME = SRC.CANDI_NAME
+                        ,TRG.CANDI_NAME2 = NVL(SRC.CANDI_LAST, '') || ', ' || NVL(SRC.CANDI_FIRST, '')
                         ,TRG.CANDI_FIRST = SRC.CANDI_FIRST
                         ,TRG.CANDI_MIDDLE = SRC.CANDI_MIDDLE
                         ,TRG.CANDI_LAST = SRC.CANDI_LAST
@@ -2842,6 +2850,7 @@ BEGIN
                         ,TRG.GRADE = SRC.GRADE
                         ,TRG.POS_DESC_NUM = SRC.POS_DESC_NUM
                         ,TRG.TYPE_OF_APPT = SRC.TYPE_OF_APPT
+                        ,TRG.NOT_TO_EXCEED_DT = SRC.NOT_TO_EXCEED_DT
                         ,TRG.DS_STATE = SRC.DS_STATE
                         ,TRG.DS_CITY = SRC.DS_CITY
                         ,TRG.CANCEL_RESAON = SRC.CANCEL_RESAON
@@ -2861,6 +2870,7 @@ BEGIN
                         ,TRG.ADMIN_CODE
                         ,TRG.ORG_NAME
                         ,TRG.CANDI_NAME
+                        ,TRG.CANDI_NAME2
                         ,TRG.CANDI_FIRST
                         ,TRG.CANDI_MIDDLE
                         ,TRG.CANDI_LAST
@@ -2903,6 +2913,7 @@ BEGIN
                         ,TRG.GRADE
                         ,TRG.POS_DESC_NUM
                         ,TRG.TYPE_OF_APPT
+                        ,TRG.NOT_TO_EXCEED_DT
                         ,TRG.DS_STATE
                         ,TRG.DS_CITY
                         ,TRG.CANCEL_RESAON
@@ -2921,7 +2932,8 @@ BEGIN
                         ,SRC.REQ_DATE
                         ,SRC.ADMIN_CODE
                         ,SRC.ORG_NAME
-                        ,SRC.CANDI_NAME
+                        ,SRC.CANDI_NAME --Last, First Middle
+                        ,NVL(SRC.CANDI_LAST, '') || ', ' || NVL(SRC.CANDI_FIRST, '') -- Last, First (Performance Tunning when to join HHS_HR.DSS_TIME_TO_OFFER.NEW_HIRE_NAME
                         ,SRC.CANDI_FIRST
                         ,SRC.CANDI_MIDDLE
                         ,SRC.CANDI_LAST
@@ -2964,6 +2976,7 @@ BEGIN
                         ,SRC.GRADE
                         ,SRC.POS_DESC_NUM
                         ,SRC.TYPE_OF_APPT
+                        ,SRC.NOT_TO_EXCEED_DT
                         ,SRC.DS_STATE
                         ,SRC.DS_CITY
                         ,SRC.CANCEL_RESAON
@@ -3713,14 +3726,14 @@ BEGIN
                     ,PANEL_PDP_AMOUNT VARCHAR2(20) PATH './item[id="panelPDPAmount"]/value' 
                     ,PANEL_RECOMM_ANNUAL_SALARY VARCHAR2(20) PATH './item[id="panelRecommendedAnnualSalary"]/value' 
                     --Approval and Review
-                    ,SELECTING_OFFICIAL_REVIEWER VARCHAR2(100) PATH './item[id="SELECTING_OFFICIAL_REVIEWER"]/value' 
-                    ,SELECTING_OFFICIAL_REVIEW_DT VARCHAR2(10) PATH './item[id="SELECTING_OFFICIAL_REVIEW_DT"]/value' 
-                    ,TABG_DIVISION_DIR_REVIEW_DT VARCHAR2(10) PATH './item[id="TABG_DIVISION_DIR_REVIEW_DT"]/value' 
-                    ,CMS_CHIEF_PHYSICIAN_REVIEW_DT VARCHAR2(10) PATH './item[id="CMS_CHIEF_PHYSICIAN_REVIEW_DT"]/value' 
-                    ,OFM_REVIEW_DATE VARCHAR2(10) PATH './item[id="OFM_REVIEW_DATE"]/value' 
-                    ,TABG_REVIEW_DATE VARCHAR2(10) PATH './item[id="TABG_REVIEW_DATE"]/value' 
-                    ,OHC_REVIEW_DATE VARCHAR2(10) PATH './item[id="OHC_REVIEW_DATE"]/value' 
-                    ,ADMINISTRATOR_APPROVAL_DATE VARCHAR2(10) PATH './item[id="ADMINISTRATOR_APPROVAL_DATE"]/value'
+                    ,SELECTING_OFFICIAL_REVIEWER VARCHAR2(100) PATH './item[id="pdp_reviewSO"]/value' 
+                    ,SELECTING_OFFICIAL_REVIEW_DT VARCHAR2(10) PATH './item[id="pdp_reviewSODate"]/value' 
+                    ,TABG_DIVISION_DIR_REVIEW_DT VARCHAR2(10) PATH './item[id="pdp_reviewDGODate"]/value' 
+                    ,CMS_CHIEF_PHYSICIAN_REVIEW_DT VARCHAR2(10) PATH './item[id="pdp_reviewCPDate"]/value' 
+                    ,OFM_REVIEW_DATE VARCHAR2(10) PATH './item[id="pdp_reviewOFMDate"]/value' 
+                    ,TABG_REVIEW_DATE VARCHAR2(10) PATH './item[id="pdp_reviewTABGDate"]/value' 
+                    ,OHC_REVIEW_DATE VARCHAR2(10) PATH './item[id="pdp_reviewOHCDate"]/value' 
+                    ,ADMINISTRATOR_APPROVAL_DATE VARCHAR2(10) PATH './item[id="pdp_adminApprovalDate"]/value'
                     ) X
             WHERE FD.PROCID = I_PROCID;
 
@@ -3792,10 +3805,12 @@ BEGIN
         --DBMS_OUTPUT.PUT_LINE('EXCEPTION=' || SUBSTR(SQLERRM, 1, 200));
           --err_code := SQLCODE;
           --err_msg := SUBSTR(SQLERRM, 1, 200);
-
 		SP_ERROR_LOG();
 END;
+/
 
+GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_INCENTIVES_PDP_TABLE TO HHS_CMS_HR_RW_ROLE;
+GRANT EXECUTE ON HHS_CMS_HR.SP_UPDATE_INCENTIVES_PDP_TABLE TO HHS_CMS_HR_DEV_ROLE;
 /
 
 
