@@ -25,6 +25,7 @@
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
         vm.dayTypes = [{key:'Business',value: 'Business Days'}, {key:'Calendar', value: 'Calendar Days'}];
+        vm._standardPDs = ['All', 'N/A', 'HHS-wide', 'CMS-wide', 'Consortia-wide', 'Component-wide', 'Group-wide or below'];
 
         vm.reportMap = [{
                 'name': 'CMS Time of Possession - Classification Only Report - Completed', 
@@ -32,10 +33,12 @@
                 'requestType': ["Classification Only"]
             },{
                 'name': 'CMS Time to Consult Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.',
+                'showTypeOfStandardPD': 'true'
             },{
                 'name': 'CMS Time to Classify Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.',
+                'showTypeOfStandardPD': 'true'
             },{
                 'name': 'CMS Time to Appoint Report - Completed', 
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
@@ -57,7 +60,8 @@
                 'name': 'CMS Time to Hire End to End Report - Completed', 
                 'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the entire process. Time starts when a new request is created in NEIL, and tracks through the Send Official Offer Complete date.',
 				'requestType': ['All','Appointment', 'Recruitment'],
-				'dateLabel': 'Date Send Official Completed'
+                'dateLabel': 'Date Send Official Completed',
+                'showTypeOfStandardPD': 'true'
             }, {
 				'name': 'CMS My Monitor - Active Requests Report', 
                 'description': 'Mandatory filters required to run the report.',				
@@ -79,9 +83,24 @@
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
                 'requestType': ["Appointment"],
                 'appointmentType': ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)']
+            }, {
+                'name': 'CMS USA Staffing Active Requests', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Request Created'
+            }, {
+                'name': 'CMS Time of Possession End to End Report - Active', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Request Created'
+            }, {
+                'name': 'CMS Time of Possession End to End Report - Completed', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Verify New Hire Completed'
             }
         ];
-        
+
         // Default Values
         vm.orgSelected = {
             component: '',
@@ -98,7 +117,8 @@
             executiveOfficer: 'All',
             hrLiaison: 'All',
             staffSpecialist: 'All',
-            classSpecialist: 'All'
+            classSpecialist: 'All',
+            standardPD: 'All'
         };
         // Selected Values
         vm.selected = {};
@@ -137,13 +157,13 @@
                 if (targets.length > 0) {
                     targets.length = 0;
                 }
-
                 for (var i = 0; i < sources.length; i++) {
                     targets.push(sources[i]);
                 }
             }
         }
 
+        vm.classTypesForAll = [];
         vm.classTypesForClass = [];
         vm.classTypesForRecruitment = [];
         vm.classTypesForAppointment = [];
@@ -156,7 +176,22 @@
 
         // Functions
         vm.getClassificationTypes = function () {
-            if (vm.selected.requestType === 'All' || vm.selected.requestType === 'Classification Only') {
+            if (vm.selected.requestType === 'All') {
+                if (vm.classTypesForAll.length == 0) {
+                    for (var i=0; i<vm._requestTypes.length; ++i) {
+                        if (vm._requestTypes[i] === 'Classification Only') {
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.allClassificationTypes);        
+                        } else if (vm._requestTypes[i] === 'Recruitment'){
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.recruitmentClassificationTypes);        
+                        } else if (vm._requestTypes[i] === 'Appointment') {
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.recruitmentClassificationTypes);        
+                        }                        
+                    }                    
+                    vm.classTypesForAll.sort();
+                    vm.classTypesForAll = vm.getSelectizeOptions(vm.classTypesForAll);
+                }
+                return vm.classTypesForAll;                
+            } else if (vm.selected.requestType === 'Classification Only') {
                 if (vm.classTypesForClass.length == 0) {
                     vm.classTypesForClass = vm.classTypesForClass.concat(vm.allClassificationTypes);
                     vm.classTypesForClass.sort();
@@ -371,6 +406,7 @@
             vm.volunteerTypes = vm.getSelectizeOptions(vm._volunteerTypes);
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
+            vm.standardPDs = vm.getSelectizeOptions(vm._standardPDs);
         };
 
         vm.$onDestroy = function () {

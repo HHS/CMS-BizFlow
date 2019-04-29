@@ -110,16 +110,15 @@
                         <selectize  required
                                     ng-required="true"
                                     placeholder="Select One"
-                                    name="dateType"
+                                    name="dayType"
                                     id="dayType" 
                                     config="$ctrl.simpleConfig"
                                     role="combobox" 
                                     options="$ctrl.dayTypes" 
                                     ng-model="$ctrl.selected.dayType"></selectize>
 
-                        <div class="date-message" ng-messages="fReportSection.dayType.$error" ng-clock>
-                            <div ng-message="required">Set the end date for the report date range</div>
-                            <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
+                        <div class="field-message" ng-messages="fReportSection.dayType.$error" ng-clock>
+                            <div ng-message="required">Select Business or Calendar Days</div>
                         </div>                        
                     </div>                    
                 </div>
@@ -145,7 +144,7 @@
                         
                     </div>
                     <div class="form-group col-md-3" 
-                        ng-if="$ctrl.selected.appointmentType != 'Expert/Consultant' && $ctrl.selected.appointmentType != 'Volunteer'">
+                        ng-if="$ctrl.selected.requestType != 'Appointment' || ($ctrl.selected.appointmentType != 'Expert/Consultant' && $ctrl.selected.appointmentType != 'Volunteer')">
                         <label id="classificationTypeLabel" for="classificationTypeSelect" class="control-label">Classification Type</label>
                         <selectize role="combobox" id="classificationTypeSelect" aria-labelledby="classificationTypeLabel" required
                                     ng-model ="$ctrl.selected.classificationType" 
@@ -153,6 +152,15 @@
                                     config="$ctrl.simpleConfig"></selectize>
                       
                     </div>
+
+                    <div class="form-group col-md-3" ng-if="$ctrl.report.showTypeOfStandardPD == 'true'">
+                        <label id="standardPDLabel" for="standardPDSelect" class="control-label">Type of Standard PD</label>
+                        <selectize role="combobox" id="standardPDSelect" aria-labelledby="standardPDLabel" required
+                                    ng-model ="$ctrl.selected.standardPD" 
+                                    options = "$ctrl.standardPDs"
+                                    config="$ctrl.simpleConfig"></selectize>
+                    </div>
+
                 </div>
 
                 <div class="row container-fluid" ng-if="$ctrl.selected.requestType == 'Appointment'">
