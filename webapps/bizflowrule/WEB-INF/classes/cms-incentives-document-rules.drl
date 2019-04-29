@@ -178,7 +178,7 @@ rule "Incentives / SAM Required Documents / Package"
         $workflowDocuments : ArrayList()
 
     then
-        addDocument($workflowDocuments,"Final Position Description Package", true);
+        addDocument($workflowDocuments,"Final Position Description Package", false);
 end
 
 rule "Incentives / SAM Required Documents "
@@ -200,6 +200,28 @@ rule "Incentives / SAM Required Documents "
         addDocument($workflowDocuments,"Additional Compensation", false);
         addDocument($workflowDocuments,"Vacancy Announcement", false);
         addDocument($workflowDocuments,"Final Position Description Package", false);
+end
+
+rule "Incentives / PDP Required Documents"
+    when
+        $docSearch: WorkflowRuleSearch (
+                            $procName: procName
+                            , $actName: actName
+                            , $fields : fields
+                            )
+         $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
+         $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "PDP" ) from $fields
+
+        $workflowDocuments : ArrayList()
+
+    then
+        addDocument($workflowDocuments,"Resume/CV", false);
+        addDocument($workflowDocuments,"Salary Surveys", false);
+        addDocument($workflowDocuments,"Medical License", false);
+        addDocument($workflowDocuments,"Board Certification", false);
+        addDocument($workflowDocuments,"Position Description", false);
+        addDocument($workflowDocuments,"Supporting Documents", false);
+        addDocument($workflowDocuments,"Vacancy Announcement", false);
 end
 
 //------------------------------

@@ -1,0 +1,5 @@
+./js-export.bat --output-zip ./hhscmsreport_test.zip --uris /organizations/organization_1/datasources/BizFlow_Data_Source, /organizations/organization_1/reports/CMS/Active_USA_Staffing_Requests,/organizations/organization_1/reports/CMS/CMS_Time_to_Offer_Report, /organizations/organization_1/reports/CMS/CMS_Time_to_Staff_Report,/organizations/organization_1/reports/CMS/CMS_Time_to_Hire_End_to_End_Report___Completed,/organizations/organization_1/dashboards/groupDashboards/CMS/CMS_Time_to_Hire_Dashboard
+
+/reports/CMS/Time_to_Hire_Dashboard/CMS_TTH_Completed_Requests_by_Phase___Chart
+/reports/CMS/Time_to_Hire_Dashboard/CMS_TTH_Percentage_Within_Goal_by_Phase___Chart
+/reports/CMS/Time_to_Hire_Dashboard/CMS_TTH_Dashboard_Section_Header___Completed

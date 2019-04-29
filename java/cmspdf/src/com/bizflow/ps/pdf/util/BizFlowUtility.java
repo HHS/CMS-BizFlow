@@ -14,6 +14,7 @@ public class BizFlowUtility
 
 	private static final String[] documentMergeOrder = {
 		"PD Coversheet",
+		"OF 8",
 		"New Position Description (PD)",
 		"Proposed Position Description (PD)",
 		"Existing Position Description (PD)",
@@ -22,7 +23,7 @@ public class BizFlowUtility
 		"FLSA Exempt",
 		"FLSA Non-Exempt",
 		"Office of the Administrator Approval",
-		"Organization Chart",
+		"Staffing Chart",
 		"Medical License",
 
 		"Resume",
@@ -46,32 +47,33 @@ public class BizFlowUtility
 
 	public static String getSessionString()
 	{
-		StopWatch watch = new StopWatch(BizFlowUtility.class, "getSessionString");
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("getSessionString START");
-		}
-
-		String sessionInfoXML = null;
-		try
-		{
-			HWSessionFactory hwSessionFactory = new HWSessionFactory();
-			HWSession hwSession = hwSessionFactory.newInstance();
-			hwSession.setServerIP("cms.bizflow.com");
-			hwSession.setServerPort(7201);
-			sessionInfoXML = hwSession.login("plee", "1", true);
-		}
-		catch(HWException e)
-		{
-			logger.fatal("Failed to log on into BizFlow.", e);
-		}
-
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("getSessionString END [" + sessionInfoXML + "]");
-		}
-		watch.check();
-		return sessionInfoXML;
+//		StopWatch watch = new StopWatch(BizFlowUtility.class, "getSessionString");
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("getSessionString START");
+//		}
+//
+//		String sessionInfoXML = null;
+//		try
+//		{
+//			HWSessionFactory hwSessionFactory = new HWSessionFactory();
+//			HWSession hwSession = hwSessionFactory.newInstance();
+//			hwSession.setServerIP("cms.bizflow.com");
+//			hwSession.setServerPort(7201);
+//			sessionInfoXML = hwSession.login("plee", "1", true);
+//		}
+//		catch(HWException e)
+//		{
+//			logger.fatal("Failed to log on into BizFlow.", e);
+//		}
+//
+//		if (logger.isDebugEnabled())
+//		{
+//			logger.debug("getSessionString END [" + sessionInfoXML + "]");
+//		}
+//		watch.check();
+//		return sessionInfoXML;
+		return "";
 	}
 
 	public static int getAttachmentIndex(HWAttachments attachments, String pdfKey)
@@ -80,7 +82,7 @@ public class BizFlowUtility
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("getAttachmentIndex START");
-			logger.debug(" - attachments [" + attachments + "]");
+			logger.debug(" - attachments [" + (attachments != null ? "NOT NULL" : "NULL") + "]");
 			logger.debug(" - pdfKey [" + pdfKey + "]");
 		}
 
@@ -209,7 +211,7 @@ public class BizFlowUtility
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("adjustAttachmentOrder START");
-			logger.debug(" - attachments [" + attachments + "]");
+			logger.debug(" - attachments [" + (attachments != null ? "NOT NULL" : "NULL") + "]");
 			logger.debug(" - IDs [" + IDs + "]");
 		}
 
@@ -258,7 +260,7 @@ public class BizFlowUtility
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("downloadAttachments START");
-			logger.debug(" - attachments [" + attachments + "]");
+			logger.debug(" - attachments [" + (attachments != null ? "NOT NULL" : "NULL") + "]");
 			logger.debug(" - IDs [" + IDs + "]");
 		}
 
@@ -330,7 +332,7 @@ public class BizFlowUtility
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("removeAttachmentsByETCInfo START");
-			logger.debug(" - attachments [" + attachments + "]");
+			logger.debug(" - attachments [" + (attachments != null ? "NOT NULL" : "NULL") + "]");
 			logger.debug(" - documentType [" + documentType + "]");
 		}
 
@@ -361,7 +363,7 @@ public class BizFlowUtility
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("removeAttachmentsByType START");
-			logger.debug(" - attachments [" + attachments + "]");
+			logger.debug(" - attachments [" + (attachments != null ? "NOT NULL" : "NULL") + "]");
 			logger.debug(" - documentType [" + documentType + "]");
 		}
 
@@ -394,7 +396,7 @@ public class BizFlowUtility
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("addAttachment START");
-			logger.debug(" - attachments [" + attachments + "]");
+			logger.debug(" - attachments [" + (attachments != null ? "NOT NULL" : "NULL") + "]");
 			logger.debug(" - documentType [" + documentType + "]");
 			logger.debug(" - fileName [" + fileName + "]");
 			logger.debug(" - filePath [" + filePath + "]");

@@ -3,3 +3,6 @@ java/**/*.class
 java/**/out/**
 **/log/**
 **/logs/**
+**/.idea/**
+desktop.ini
+*.iml

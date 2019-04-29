@@ -1,12 +1,12 @@
 package com.bizflow.ps.pdf;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.bizflow.ps.pdf.model.Grade;
 import com.bizflow.ps.pdf.util.*;
+import com.hs.bf.web.beans.HWSessionInfo;
 import com.hs.bf.wf.jo.HWAttachments;
 import com.hs.bf.wf.jo.HWAttachmentsImpl;
 import org.w3c.dom.*;
@@ -96,7 +96,7 @@ public class WMConnector
 		watch.check();
 	}
 
-	static public void generatePDFDocuments(String sessionInfoXML, int processID, Node document) throws Exception
+	static public void generatePDFDocuments(String sessionInfoXML, int processID, Node document, Node witemDocument) throws Exception
 	{
 		StopWatch watch = new StopWatch(WMConnector.class, "generatePDFDocuments");
 		logger.info("generatePDFDocuments START");
@@ -104,7 +104,8 @@ public class WMConnector
 		{
 			logger.debug(" - sessionInfoXML [" + sessionInfoXML + "]");
 			logger.debug(" - processID [" + Integer.toString(processID) + "]");
-			logger.debug(" - documentXMLString [" + LogUtility.getString(document) + "]");
+			logger.debug(" - document [" + LogUtility.getString(document) + "]");
+			logger.debug(" - witemDocument [" + LogUtility.getString(witemDocument) + "]");
 		}
 
 		try
@@ -118,7 +119,7 @@ public class WMConnector
 
 		try
 		{
-			WMConnector.generatePDCoversheet(sessionInfoXML, processID, document);
+			WMConnector.generatePDCoversheet(sessionInfoXML, processID, document, witemDocument);
 		}
 		catch(Exception e)
 		{
@@ -129,9 +130,70 @@ public class WMConnector
 		watch.check();
 	}
 
-	static public void generatePDCoversheet(String sessionInfoXML, int processID, Node document) throws Exception
+	static private void generateOF8(String sessionInfoXML, int processID, Node document, Node witemDocument) throws Exception
 	{
 		StopWatch watch = new StopWatch(WMConnector.class, "generatePDCoversheet");
+		logger.info("generateOF8 START");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug(" - sessionInfoXML [" + sessionInfoXML + "]");
+			logger.debug(" - processID [" + Integer.toString(processID) + "]");
+			logger.debug(" - documentXMLString [" + LogUtility.getString(document) + "]");
+			logger.debug(" - witemDocument [" + LogUtility.getString(witemDocument) + "]");
+		}
+
+		List<String> toBeDeletedFiles = new ArrayList<String>();
+
+		try
+		{
+			HWAttachments attachments = new HWAttachmentsImpl(sessionInfoXML, processID);
+
+			// Should remove existing documents before generating new one.
+			BizFlowUtility.removeAttachmentsByETCInfo(attachments, "OF 8");
+
+			String memberID = CMSUtility.getValue(witemDocument, "/WorkitemContext/User/MemberID");
+			String loginID = CMSUtility.getValue(witemDocument, "/WorkitemContext/User/LoginID");
+			String requestNumber = CMSUtility.getValue(witemDocument, "/WorkitemContext/Process/ProcessVariables/requestNum");
+
+			List<Grade> grades = CMSUtility.getGrades(document);
+			int gradeCount = grades.size();
+			URLUtility urlUtility = new URLUtility();
+
+			for (int index = 0; index < gradeCount; index++)
+			{
+				Grade grade = grades.get(index);
+				String gradeString = (grade.grade >= 0 && grade.grade < 10 ? "0" : "") + Integer.toString(grade.grade);
+				String filename = "OF 8 Grade " + gradeString + ".pdf";
+
+				File of8File = urlUtility.downloadOF8(memberID, loginID, requestNumber, gradeString);
+
+				if (of8File != null) {
+					String filePath = of8File.getPath();
+					toBeDeletedFiles.add(filePath);
+
+					BizFlowUtility.addAttachment(attachments, "OF 8", filename, filePath, "Grade " + gradeString, PDFTool.CMS_PDFTYPE_OF_8, grade.grade);
+
+				} else {
+					logger.error("Failed to download OF 8 form. Process ID [" + processID + "] Request Number [" + requestNumber + "] Grade [" + gradeString + "]");
+				}
+			}
+
+			watch.checkPoint("Before attachment update");
+			attachments.update();
+			watch.checkPoint("After attachment update");
+		}
+		finally
+		{
+			FileUtility.removeFiles(toBeDeletedFiles);
+		}
+
+		logger.info("generateOF8 END");
+		watch.check();
+	}
+
+	static private void generateCoversheet(String sessionInfoXML, int processID, Node document) throws Exception
+	{
+		StopWatch watch = new StopWatch(WMConnector.class, "generateCoversheet");
 		logger.info("generatePDCoversheet START");
 
 		List<String> toBeDeletedFiles = new ArrayList<String>();
@@ -152,18 +214,10 @@ public class WMConnector
 				if (index < positionCount)
 				{
 					valueMap.put("#POS_INFORMATION_" + Integer.toString(index + 1), positionInformation.get(index));
-					if(logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position added - [#POS_INFORMATION_" + Integer.toString(index + 1) + "] ==> [" + positionInformation.get(index) + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#POS_INFORMATION_" + Integer.toString(index + 1), "");
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position added - [#POS_INFORMATION_" + Integer.toString(index + 1) + "] ==> []");
-					}
 				}
 			}
 
@@ -175,18 +229,10 @@ public class WMConnector
 				if (index < stadardCount)
 				{
 					valueMap.put("#PD_CLS_STANDARDS_" + Integer.toString(index + 1), standards.get(index));
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position standard added - [#PD_CLS_STANDARDS_" + Integer.toString(index + 1) +"] ==> [" + standards.get(index) + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#PD_CLS_STANDARDS_" + Integer.toString(index + 1), "");
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Position standard added [#PD_CLS_STANDARDS_" + Integer.toString(index + 1) + "] ==> []");
-					}
 				}
 			}
 
@@ -205,25 +251,13 @@ public class WMConnector
 				if (grade.grade == 0)
 				{
 					valueMap.put("#CS_GR_ID", "");
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Grade added - [#CS_GR_ID] ==> []");
-					}
 				}
 				else
 				{
 					valueMap.put("#CS_GR_ID", (grade.grade > 9 ? "" : "0") + Integer.toString(grade.grade));
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Grade added - [#CS_GR_ID] ==> [" + Integer.toString(grade.grade) + "]");
-					}
 				}
 
 				valueMap.put("#CS_FLSA_DETERM_ID", grade.exempt);
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("New Item in ValueMap: FLSA Exempt added - [#CS_FLSA_DETERM_ID] ==> [" + grade.exempt + "]");
-				}
 
 				PDFTool pdfUtility = new PDFTool();
 
@@ -251,8 +285,14 @@ public class WMConnector
 			FileUtility.removeFiles(toBeDeletedFiles);
 		}
 
-		logger.info("generatePDCoversheet END");
+		logger.info("generateCoversheet END");
 		watch.check();
+	}
+
+	static public void generatePDCoversheet(String sessionInfoXML, int processID, Node document, Node witemDocument) throws Exception
+	{
+		WMConnector.generateCoversheet(sessionInfoXML, processID, document);
+		WMConnector.generateOF8(sessionInfoXML, processID, document, witemDocument);
 	}
 
 	static public void generateFLSA(String sessionInfoXML, int processID, Node document) throws Exception
@@ -276,10 +316,6 @@ public class WMConnector
 			{
 				Map<String, String> valueMap = XMLUtility.generateValueMap(FileUtility.translatePath("/PDF_Configuration/map/PDF_FLSA_EXEMPT_MAP.xml"), document);
 				valueMap.put("#JOB_CODE", exemptJobCode);
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("New Item in ValueMap: ob Code added - [#JOB_CODE] ==> [" + exemptJobCode + "]");
-				}
 
 				//#PAYPLAN_SERIES
 				String payPlanSeries = valueMap.get("#PAYPLAN_SERIES");
@@ -287,18 +323,10 @@ public class WMConnector
 				if (codes.length() > 0)
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries + "-" + codes);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "-" + codes + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "]");
-					}
 				}
 
 				//3rd level organization - #OFFICE_ORGANIZATION
@@ -310,10 +338,6 @@ public class WMConnector
 				if (classificationDate != null && classificationDate.length() > 0)
 				{
 					valueMap.put("#PD_CLS_SPEC_DT", classificationDate);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Classification Date added - [#PD_CLS_SPEC_DT] ==> [" + classificationDate + "]");
-					}
 				}
 
 				PDFTool pdfUtility = new PDFTool();
@@ -342,10 +366,6 @@ public class WMConnector
 				Map<String, String> valueMap = XMLUtility.generateValueMap(FileUtility.translatePath("/PDF_Configuration/map/PDF_FLSA_NONEXEMPT_MAP.xml"), document);
 
 				valueMap.put("#JOB_CODE", nonExemptJobCode);
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("New Item in ValueMap: Job Code added - [#JOB_CODE] ==> [" + nonExemptJobCode + "]");
-				}
 
 				//#PAYPLAN_SERIES
 				String payPlanSeries = valueMap.get("#PAYPLAN_SERIES");
@@ -353,18 +373,10 @@ public class WMConnector
 				if (codes.length() > 0)
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries + "-" + codes);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "-" + codes + "]");
-					}
 				}
 				else
 				{
 					valueMap.put("#PAYPLAN_SERIES_GRADE", payPlanSeries);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Payplan/Series added - [#PAYPLAN_SERIES_GRADE] ==> [" + payPlanSeries + "]");
-					}
 				}
 
 				//3rd level organization - #OFFICE_ORGANIZATION
@@ -377,10 +389,6 @@ public class WMConnector
 				if (classificationDate != null && classificationDate.length() > 0)
 				{
 					valueMap.put("#PD_CLS_SPEC_DT", classificationDate);
-					if (logger.isDebugEnabled())
-					{
-						logger.debug("New Item in ValueMap: Classification Date added - [#PD_CLS_SPEC_DT] ==> [" + classificationDate + "]");
-					}
 				}
 
 				PDFTool pdfUtility = new PDFTool();
@@ -417,25 +425,28 @@ public class WMConnector
 
 	public static void main(String[] args) throws IOException, Exception
 	{
-		File xmlFile = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_DATA.xml");
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = dbFactory.newDocumentBuilder();
-		Document document = builder.parse(xmlFile);
-		document.getDocumentElement().normalize();
-
-		File xmlFile2 = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_LOOKUP.xml");
-		DocumentBuilderFactory dbFactory2 = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder2 = dbFactory2.newDocumentBuilder();
-		Document document2 = builder2.parse(xmlFile2);
-		document2.getDocumentElement().normalize();
-
-		LookupUtility.initialize(document2);
-
-		String sessionInfoXML = BizFlowUtility.getSessionString();
-		//WMConnector.generateFLSA(sessionInfoXML, 219, document);
-		WMConnector.generatePDFDocuments(sessionInfoXML, 753, document);
-
-		StopWatch.printArchive();
+		URLUtility utility = new URLUtility();
+		utility.get("https://www.bizflow.com");
+		utility.get("http://cms.bizflow.com/bizflow");
+//		File xmlFile = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_DATA.xml");
+//		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder builder = dbFactory.newDocumentBuilder();
+//		Document document = builder.parse(xmlFile);
+//		document.getDocumentElement().normalize();
+//
+//		File xmlFile2 = new File("/Users/jolinhama/repo/CMS-BizFlow/java/cmspdf/PDF_Configuration/map/TEST_LOOKUP.xml");
+//		DocumentBuilderFactory dbFactory2 = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder builder2 = dbFactory2.newDocumentBuilder();
+//		Document document2 = builder2.parse(xmlFile2);
+//		document2.getDocumentElement().normalize();
+//
+//		LookupUtility.initialize(document2);
+//
+//		String sessionInfoXML = BizFlowUtility.getSessionString();
+//		//WMConnector.generateFLSA(sessionInfoXML, 219, document);
+//		WMConnector.generatePDFDocuments(sessionInfoXML, 753, document, "HELLO");
+//
+//		StopWatch.printArchive();
 	}
 /*
 

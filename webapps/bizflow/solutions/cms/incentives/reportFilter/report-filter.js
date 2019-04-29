@@ -32,7 +32,7 @@
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
 		vm._dayTypes = ['Business', 'Calendar']; //#290605 - Business and Calendar Days filter 
-        
+
         vm.reportMap = [
 			{
 				'name': 'CMS HR Incentives Time to Completion Report - SAM & LE',
@@ -307,6 +307,16 @@
             if (vm.selected.appointmentType) {
                 url = url + '&APPT_TYPE=' + encodeURIComponent(vm.selected.appointmentType); // Appointment Type -- EncodeD
             }
+
+            // url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
+            // url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
+            //url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
+            // url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
+            // url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
+            // url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
+            // url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
+            //$log.debug('Report URL [' + url + ']');
+			
             if (vm.selected.dayType) {
 				url = url + '&DAYS=' + vm.selected.dayType; // Type of Days [Business Days | Calendar Days]
             }			
@@ -403,7 +413,7 @@
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
             vm.incentiveTypes = vm.getSelectizeOptionsEx(vm._incentiveTypes);
             vm.pcaTypes = vm.getSelectizeOptions(vm._pcaTypes);            
-			vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
+      			vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
         };
 
         vm.$onDestroy = function () {

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2019-02-19T12:34:32 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives Dashboard Section Header - Active" pageWidth="1024" pageHeight="35" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1024" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d8e267ff-df13-4930-96e6-ad7974a1778e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_Dashboard_Section_Header___Active_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_Dashboard_Section_Header___Active"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Recruitment"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="1024" height="35" forecolor="#074FAD" uuid="cac7747b-7bed-412c-b93a-b7de7da5333a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All ACTIVE SAM & LE Incentives requests for CMS"
+			: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? "All ACTIVE SAM & LE Incentives requests for the Office of the Administrator (OA)" 
+					: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? "All ACTIVE SAM & LE Incentives requests for " + $P{ADMIN_CD} + " and its sub-organizations" 
+					: "All ACTIVE SAM & LE Incentives requests for " + $P{ADMIN_CD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

@@ -24,6 +24,7 @@
         vm._appointmentTypes = ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Volunteer'];
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
+        vm.dayTypes = [{key:'Business',value: 'Business Days'}, {key:'Calendar', value: 'Calendar Days'}];
 
         vm.reportMap = [{
                 'name': 'CMS Time of Possession - Classification Only Report - Completed', 
@@ -73,7 +74,27 @@
                 'description': 'Mandatory filters required to run the report.',
 				'requestType': ["Appointment"],
 				'dateLabel': 'Date Request Created'
-			}
+			},{
+                'name': 'CMS Appointment Eligibility Qual Review', 
+                'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
+                'requestType': ["Appointment"],
+                'appointmentType': ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)']
+            }, {
+                'name': 'CMS USA Staffing Active Requests', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Request Created'
+            }, {
+                'name': 'CMS Time of Possession End to End Report - Active', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Request Created'
+            }, {
+                'name': 'CMS Time of Possession End to End Report - Completed', 
+                'description': 'Mandatory filters required to run the report.',				
+                'requestType': ["All", "Appointment", "Recruitment"],
+				'dateLabel': 'Date Verify New Hire Completed'
+            }
         ];
         
         // Default Values
@@ -138,6 +159,7 @@
             }
         }
 
+        vm.classTypesForAll = [];
         vm.classTypesForClass = [];
         vm.classTypesForRecruitment = [];
         vm.classTypesForAppointment = [];
@@ -150,7 +172,22 @@
 
         // Functions
         vm.getClassificationTypes = function () {
-            if (vm.selected.requestType === 'All' || vm.selected.requestType === 'Classification Only') {
+            if (vm.selected.requestType === 'All') {
+                if (vm.classTypesForAll.length == 0) {
+                    for (var i=0; i<vm._requestTypes.length; ++i) {
+                        if (vm._requestTypes[i] === 'Classification Only') {
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.allClassificationTypes);        
+                        } else if (vm._requestTypes[i] === 'Recruitment'){
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.recruitmentClassificationTypes);        
+                        } else if (vm._requestTypes[i] === 'Appointment') {
+                            vm.classTypesForAll = _.union(vm.classTypesForAll, vm.recruitmentClassificationTypes);        
+                        }                        
+                    }                    
+                    vm.classTypesForAll.sort();
+                    vm.classTypesForAll = vm.getSelectizeOptions(vm.classTypesForAll);
+                }
+                return vm.classTypesForAll;                
+            } else if (vm.selected.requestType === 'Classification Only') {
                 if (vm.classTypesForClass.length == 0) {
                     vm.classTypesForClass = vm.classTypesForClass.concat(vm.allClassificationTypes);
                     vm.classTypesForClass.sort();
@@ -272,6 +309,7 @@
             url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
             url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg; // Include Requests for Sub-Org
+            url = url + '&DAYS=' + vm.selected.dayType; // Business day or Calendar day
             //$log.debug('Report URL [' + url + ']');
             return url;
         };
@@ -328,6 +366,13 @@
                         vm.copyItems(vm._requestTypes, foundReportMap.requestType);
                         if (vm._requestTypes.length == 1) {
                             vm.orgSelected.requestType = vm._requestTypes[0]
+                        }
+                    }
+                    if (foundReportMap.appointmentType && foundReportMap.appointmentType.length > 0) {
+                        // vm._appointmentTypes = foundReportMap.appointmentType;
+                        vm.copyItems(vm._appointmentTypes, foundReportMap.appointmentType);
+                        if (vm._appointmentTypes.length == 1) {
+                            vm.orgSelected.appointmentType = vm._appointmentTypes[0]
                         }
                     }
 

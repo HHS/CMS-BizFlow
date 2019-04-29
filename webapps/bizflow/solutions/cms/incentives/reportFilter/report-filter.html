@@ -120,21 +120,29 @@
                         </div>
                     </div>
 					<!-- //#290605 - Business and Calendar Days filter  //-->
+
                     <div class="form-group col-md-3 required" ng-if ="$ctrl.report.name != 'CMS HR Incentives PCA Report - Complete'" >
                     
                         <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
                         <selectize class="form-control" role="combobox" required aria-labelledby="dayTypeLabel"
+                    <div class="form-group col-md-3 required">
+                        <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
+                        <selectize  required
                                     ng-required="true"
                                     placeholder="Select One..."
                                     name="dateType"
                                     id="dayType" 
                                     config="$ctrl.simpleConfig"
+
                                     options="$ctrl.dayTypes"
                                     ng-model="$ctrl.selected.dayType"></selectize>
                         <div class="day-type" ng-messages="fReportSection.dateType.$error" ng-clock>
                             <div ng-message="required">Select Business or Calendar Days</div>
                         </div>
 
+                                    role="combobox" 
+                                    options="$ctrl.dayTypes"
+                                    ng-model="$ctrl.selected.dayType"></selectize>								   
                     </div>					
                 </div>
             </div>
