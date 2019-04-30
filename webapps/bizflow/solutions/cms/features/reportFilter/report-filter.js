@@ -25,6 +25,7 @@
         vm._scheduleATypes = ['All', 'CMS Fellows-Paid (R)', 'Digital Services', 'Disability (U)', 'Innovator-In-Residence', 'Interpreters (LL)', 'WRP (Summer Hire)'];
         vm._volunteerTypes = ['All', 'CMS Fellows-Unpaid', 'Student Volunteer', 'Wounded Warriors', 'Youth Works'];
         vm.dayTypes = [{key:'Business',value: 'Business Days'}, {key:'Calendar', value: 'Calendar Days'}];
+        vm._standardPDs = ['All', 'N/A', 'HHS-wide', 'CMS-wide', 'Consortia-wide', 'Component-wide', 'Group-wide or below'];
 
         vm.reportMap = [{
                 'name': 'CMS Time of Possession - Classification Only Report - Completed', 
@@ -32,10 +33,12 @@
                 'requestType': ["Classification Only"]
             },{
                 'name': 'CMS Time to Consult Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Strategic Consultation process.',
+                'showTypeOfStandardPD': 'true'
             },{
                 'name': 'CMS Time to Classify Report - Completed', 
-                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.'
+                'description': 'Calculates the number of business days it took for a job request to complete the Classification process.',
+                'showTypeOfStandardPD': 'true'
             },{
                 'name': 'CMS Time to Appoint Report - Completed', 
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
@@ -57,7 +60,8 @@
                 'name': 'CMS Time to Hire End to End Report - Completed', 
                 'description': 'Calculates the number of business days it took a recruitment and/or appointment request to go through the entire process. Time starts when a new request is created in NEIL, and tracks through the Send Official Offer Complete date.',
 				'requestType': ['All','Appointment', 'Recruitment'],
-				'dateLabel': 'Date Send Official Completed'
+                'dateLabel': 'Date Send Official Completed',
+                'showTypeOfStandardPD': 'true'
             }, {
 				'name': 'CMS My Monitor - Active Requests Report', 
                 'description': 'Mandatory filters required to run the report.',				
@@ -96,7 +100,7 @@
 				'dateLabel': 'Date Verify New Hire Completed'
             }
         ];
-        
+
         // Default Values
         vm.orgSelected = {
             component: '',
@@ -113,7 +117,8 @@
             executiveOfficer: 'All',
             hrLiaison: 'All',
             staffSpecialist: 'All',
-            classSpecialist: 'All'
+            classSpecialist: 'All',
+            standardPD: 'All'
         };
         // Selected Values
         vm.selected = {};
@@ -152,7 +157,6 @@
                 if (targets.length > 0) {
                     targets.length = 0;
                 }
-
                 for (var i = 0; i < sources.length; i++) {
                     targets.push(sources[i]);
                 }
@@ -402,6 +406,7 @@
             vm.volunteerTypes = vm.getSelectizeOptions(vm._volunteerTypes);
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
+            vm.standardPDs = vm.getSelectizeOptions(vm._standardPDs);
         };
 
         vm.$onDestroy = function () {
