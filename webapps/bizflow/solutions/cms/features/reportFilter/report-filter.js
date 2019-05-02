@@ -79,7 +79,7 @@
 				'requestType': ["Appointment"],
 				'dateLabel': 'Date Request Created'
 			},{
-                'name': 'CMS Appointment Eligibility Qual Review', 
+                'name': 'CMS Appointment Eligibility and Qual Review', 
                 'description': 'Calculates the number of business days it took to complete a job request through the Appointment Only process.',
                 'requestType': ["Appointment"],
                 'appointmentType': ['All', '30% or more disabled veterans', 'Expert/Consultant', 'Schedule A', 'Veteran Recruitment Appointment (VRA)']
