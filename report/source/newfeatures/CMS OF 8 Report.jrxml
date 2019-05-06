@@ -1,0 +1,2246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-05-06T11:04:35 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OF8" pageWidth="612" pageHeight="792" columnWidth="576" leftMargin="18" rightMargin="18" topMargin="35" bottomMargin="14" uuid="ad99f4ec-557a-45c2-a236-1cad223c3e88">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_OF8_Report"/>
+	<style name="remark_font">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{PD_REMARKS}.length() < 100 ? true : false]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{PD_REMARKS}.length() > 250 ? true : false]]></conditionExpression>
+			<style fontSize="5"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="REQ_NUM" class="java.lang.String"/>
+	<parameter name="Checked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/reports/CMS/CMS_OF8_Report_files/Checkbox_Yes.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Unchecked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/reports/CMS/CMS_OF8_Report_files/Checkbox_No.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GRADE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[--Grade 1
+SELECT DISTINCT
+	CLS.REQ_JOB_REQ_NUMBER,
+	CS_PD_NUMBER_JOBCD_1 AS POSITION_NO,
+	SG_CT_DSCR  AS RSN_SBMSSN,
+	PD_EMPLOYING_OFFICE_DSCR AS EMPLOY_LOCATION,
+	'Varies' AS DUTY_STATION,
+	CS_FLSA_DETERM_DSCR_1 AS FLSA,
+	CS_FIN_STMT_REQ_DSCR AS FINANCIAL_STMT,
+	PD_SUBJECT_IA,
+	CS_SUPERVISORY_DSCR AS POSITION_IS,
+	CS_SEC_DSCR AS SENSITIVITY,
+	PD_COMPET_LVL_CD,
+	CS_TITLE AS POSITION_TITLE,
+	CS_PAY_PLAN_DSCR AS PAY_PLAN,
+	SUBSTR(CS_SR_DSCR, 0, 4) AS SERIES,
+	CS_GR_ID_1 AS GRADE,
+	PD_ORG_POS_TITLE,
+	'DEPARTMENT OF HEALTH AND HUMAN SERVICES' AS DEPARTMENT,
+	UPPER(PD_SUB_ORG_DSCR_1) AS PD_SUB_ORG_DSCR_1,
+	PD_SUB_ORG_DSCR_2,
+	PD_SUB_ORG_DSCR_3,
+	PD_SUB_ORG_DSCR_4,
+	PD_SUB_ORG_DSCR_5,
+	PD_CLS_STANDARDS_DSCR,
+	NVL(PD_REMARKS, ' ') AS PD_REMARKS,
+	HHS_CMS_HR.FN_PARSENAME(SCA_CLASS_SPEC_SIG,'INITIAL') AS CS_SIG,
+	SCA_CLASS_SPEC_SIG_DT,
+	HHS_CMS_HR.FN_PARSENAME(SCA_SO_SIG,'INITIAL') AS SO_SIG,
+	SCA_SO_SIG_DT
+FROM HHS_CMS_HR.VW_CLASSIFICATION CLS
+	LEFT JOIN HHS_CMS_HR.VW_STRATCON STRAT
+		ON CLS.REQ_JOB_REQ_NUMBER = STRAT.REQ_JOB_REQ_NUMBER
+WHERE CLS.REQ_JOB_REQ_NUMBER = $P{REQ_NUM}
+AND (CS_GR_ID_1 = $P{GRADE}
+	OR (CS_GR_ID_1 IS NULL AND $P{GRADE} = '00'))
+UNION
+--Grade 2
+SELECT DISTINCT
+	CLS.REQ_JOB_REQ_NUMBER,
+	CS_PD_NUMBER_JOBCD_2 AS POSITION_NO,
+	SG_CT_DSCR  AS RSN_SBMSSN,
+	PD_EMPLOYING_OFFICE_DSCR AS EMPLOY_LOCATION,
+	'Varies' AS DUTY_STATION,
+	CS_FLSA_DETERM_DSCR_2 AS FLSA,
+	CS_FIN_STMT_REQ_DSCR AS FINANCIAL_STMT,
+	PD_SUBJECT_IA,
+	CS_SUPERVISORY_DSCR AS POSITION_IS,
+	CS_SEC_DSCR AS SENSITIVITY,
+	PD_COMPET_LVL_CD,
+	CS_TITLE AS POSITION_TITLE,
+	CS_PAY_PLAN_DSCR AS PAY_PLAN,
+	SUBSTR(CS_SR_DSCR, 0, 4) AS SERIES,
+	CS_GR_ID_2 AS GRADE,
+	PD_ORG_POS_TITLE,
+	'DEPARTMENT OF HEALTH AND HUMAN SERVICES' AS DEPARTMENT,
+	UPPER(PD_SUB_ORG_DSCR_1) AS PD_SUB_ORG_DSCR_1,
+	PD_SUB_ORG_DSCR_2,
+	PD_SUB_ORG_DSCR_3,
+	PD_SUB_ORG_DSCR_4,
+	PD_SUB_ORG_DSCR_5,
+	PD_CLS_STANDARDS_DSCR,
+	NVL(PD_REMARKS, ' ') AS PD_REMARKS,
+	HHS_CMS_HR.FN_PARSENAME(SCA_CLASS_SPEC_SIG,'INITIAL') AS CS_SIG,
+	SCA_CLASS_SPEC_SIG_DT,
+	HHS_CMS_HR.FN_PARSENAME(SCA_SO_SIG,'INITIAL') AS SO_SIG,
+	SCA_SO_SIG_DT
+FROM HHS_CMS_HR.VW_CLASSIFICATION CLS
+	LEFT JOIN HHS_CMS_HR.VW_STRATCON STRAT
+		ON CLS.REQ_JOB_REQ_NUMBER = STRAT.REQ_JOB_REQ_NUMBER
+WHERE CLS.REQ_JOB_REQ_NUMBER = $P{REQ_NUM}
+AND CS_GR_ID_2 = $P{GRADE}
+UNION
+--Grade 3
+SELECT DISTINCT
+	CLS.REQ_JOB_REQ_NUMBER,
+	CS_PD_NUMBER_JOBCD_3 AS POSITION_NO,
+	SG_CT_DSCR  AS RSN_SBMSSN,
+	PD_EMPLOYING_OFFICE_DSCR AS EMPLOY_LOCATION,
+	'Varies' AS DUTY_STATION,
+	CS_FLSA_DETERM_DSCR_3 AS FLSA,
+	CS_FIN_STMT_REQ_DSCR AS FINANCIAL_STMT,
+	PD_SUBJECT_IA,
+	CS_SUPERVISORY_DSCR AS POSITION_IS,
+	CS_SEC_DSCR AS SENSITIVITY,
+	PD_COMPET_LVL_CD,
+	CS_TITLE AS POSITION_TITLE,
+	CS_PAY_PLAN_DSCR AS PAY_PLAN,
+	SUBSTR(CS_SR_DSCR, 0, 4) AS SERIES,
+	CS_GR_ID_3 AS GRADE,
+	PD_ORG_POS_TITLE,
+	'DEPARTMENT OF HEALTH AND HUMAN SERVICES' AS DEPARTMENT,
+	UPPER(PD_SUB_ORG_DSCR_1) AS PD_SUB_ORG_DSCR_1,
+	PD_SUB_ORG_DSCR_2,
+	PD_SUB_ORG_DSCR_3,
+	PD_SUB_ORG_DSCR_4,
+	PD_SUB_ORG_DSCR_5,
+	PD_CLS_STANDARDS_DSCR,
+	NVL(PD_REMARKS, ' ') AS PD_REMARKS,
+	HHS_CMS_HR.FN_PARSENAME(SCA_CLASS_SPEC_SIG,'INITIAL') AS CS_SIG,
+	SCA_CLASS_SPEC_SIG_DT,
+	HHS_CMS_HR.FN_PARSENAME(SCA_SO_SIG,'INITIAL') AS SO_SIG,
+	SCA_SO_SIG_DT
+FROM HHS_CMS_HR.VW_CLASSIFICATION CLS
+	LEFT JOIN HHS_CMS_HR.VW_STRATCON STRAT
+		ON CLS.REQ_JOB_REQ_NUMBER = STRAT.REQ_JOB_REQ_NUMBER
+WHERE CLS.REQ_JOB_REQ_NUMBER = $P{REQ_NUM}
+AND CS_GR_ID_3 = $P{GRADE}
+UNION
+--Grade 4
+SELECT DISTINCT
+	CLS.REQ_JOB_REQ_NUMBER,
+	CS_PD_NUMBER_JOBCD_4 AS POSITION_NO,
+	SG_CT_DSCR  AS RSN_SBMSSN,
+	PD_EMPLOYING_OFFICE_DSCR AS EMPLOY_LOCATION,
+	'Varies' AS DUTY_STATION,
+	CS_FLSA_DETERM_DSCR_4 AS FLSA,
+	CS_FIN_STMT_REQ_DSCR AS FINANCIAL_STMT,
+	PD_SUBJECT_IA,
+	CS_SUPERVISORY_DSCR AS POSITION_IS,
+	CS_SEC_DSCR AS SENSITIVITY,
+	PD_COMPET_LVL_CD,
+	CS_TITLE AS POSITION_TITLE,
+	CS_PAY_PLAN_DSCR AS PAY_PLAN,
+	SUBSTR(CS_SR_DSCR, 0, 4) AS SERIES,
+	CS_GR_ID_4 AS GRADE,
+	PD_ORG_POS_TITLE,
+	'DEPARTMENT OF HEALTH AND HUMAN SERVICES' AS DEPARTMENT,
+	UPPER(PD_SUB_ORG_DSCR_1) AS PD_SUB_ORG_DSCR_1,
+	PD_SUB_ORG_DSCR_2,
+	PD_SUB_ORG_DSCR_3,
+	PD_SUB_ORG_DSCR_4,
+	PD_SUB_ORG_DSCR_5,
+	PD_CLS_STANDARDS_DSCR,
+	NVL(PD_REMARKS, ' ') AS PD_REMARKS,
+	HHS_CMS_HR.FN_PARSENAME(SCA_CLASS_SPEC_SIG,'INITIAL') AS CS_SIG,
+	SCA_CLASS_SPEC_SIG_DT,
+	HHS_CMS_HR.FN_PARSENAME(SCA_SO_SIG,'INITIAL') AS SO_SIG,
+	SCA_SO_SIG_DT
+FROM HHS_CMS_HR.VW_CLASSIFICATION CLS
+	LEFT JOIN HHS_CMS_HR.VW_STRATCON STRAT
+		ON CLS.REQ_JOB_REQ_NUMBER = STRAT.REQ_JOB_REQ_NUMBER
+WHERE CLS.REQ_JOB_REQ_NUMBER = $P{REQ_NUM}
+AND CS_GR_ID_4 = $P{GRADE}
+UNION
+--Grade 5
+SELECT DISTINCT
+	CLS.REQ_JOB_REQ_NUMBER,
+	CS_PD_NUMBER_JOBCD_5 AS POSITION_NO,
+	SG_CT_DSCR  AS RSN_SBMSSN,
+	PD_EMPLOYING_OFFICE_DSCR AS EMPLOY_LOCATION,
+	'Varies' AS DUTY_STATION,
+	CS_FLSA_DETERM_DSCR_5 AS FLSA,
+	CS_FIN_STMT_REQ_DSCR AS FINANCIAL_STMT,
+	PD_SUBJECT_IA,
+	CS_SUPERVISORY_DSCR AS POSITION_IS,
+	CS_SEC_DSCR AS SENSITIVITY,
+	PD_COMPET_LVL_CD,
+	CS_TITLE AS POSITION_TITLE,
+	CS_PAY_PLAN_DSCR AS PAY_PLAN,
+	SUBSTR(CS_SR_DSCR, 0, 4) AS SERIES,
+	CS_GR_ID_5 AS GRADE,
+	PD_ORG_POS_TITLE,
+	'DEPARTMENT OF HEALTH AND HUMAN SERVICES' AS DEPARTMENT,
+	UPPER(PD_SUB_ORG_DSCR_1) AS PD_SUB_ORG_DSCR_1,
+	PD_SUB_ORG_DSCR_2,
+	PD_SUB_ORG_DSCR_3,
+	PD_SUB_ORG_DSCR_4,
+	PD_SUB_ORG_DSCR_5,
+	PD_CLS_STANDARDS_DSCR,
+	NVL(PD_REMARKS, ' ') AS PD_REMARKS,
+	HHS_CMS_HR.FN_PARSENAME(SCA_CLASS_SPEC_SIG,'INITIAL') AS CS_SIG,
+	SCA_CLASS_SPEC_SIG_DT,
+	HHS_CMS_HR.FN_PARSENAME(SCA_SO_SIG,'INITIAL') AS SO_SIG,
+	SCA_SO_SIG_DT
+FROM HHS_CMS_HR.VW_CLASSIFICATION CLS
+	LEFT JOIN HHS_CMS_HR.VW_STRATCON STRAT
+		ON CLS.REQ_JOB_REQ_NUMBER = STRAT.REQ_JOB_REQ_NUMBER
+WHERE CLS.REQ_JOB_REQ_NUMBER = $P{REQ_NUM}
+AND CS_GR_ID_5 = $P{GRADE}
+ORDER BY GRADE]]>
+	</queryString>
+	<field name="REQ_JOB_REQ_NUMBER" class="java.lang.String"/>
+	<field name="POSITION_NO" class="java.lang.String"/>
+	<field name="RSN_SBMSSN" class="java.lang.String"/>
+	<field name="EMPLOY_LOCATION" class="java.lang.String"/>
+	<field name="DUTY_STATION" class="java.lang.String"/>
+	<field name="FLSA" class="java.lang.String"/>
+	<field name="FINANCIAL_STMT" class="java.lang.String"/>
+	<field name="PD_SUBJECT_IA" class="java.lang.String"/>
+	<field name="POSITION_IS" class="java.lang.String"/>
+	<field name="SENSITIVITY" class="java.lang.String"/>
+	<field name="PD_COMPET_LVL_CD" class="java.lang.String"/>
+	<field name="POSITION_TITLE" class="java.lang.String"/>
+	<field name="PAY_PLAN" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="GRADE" class="java.lang.String"/>
+	<field name="PD_ORG_POS_TITLE" class="java.lang.String"/>
+	<field name="DEPARTMENT" class="java.lang.String"/>
+	<field name="PD_SUB_ORG_DSCR_1" class="java.lang.String"/>
+	<field name="PD_SUB_ORG_DSCR_2" class="java.lang.String"/>
+	<field name="PD_SUB_ORG_DSCR_3" class="java.lang.String"/>
+	<field name="PD_SUB_ORG_DSCR_4" class="java.lang.String"/>
+	<field name="PD_SUB_ORG_DSCR_5" class="java.lang.String"/>
+	<field name="PD_CLS_STANDARDS_DSCR" class="java.lang.String"/>
+	<field name="PD_REMARKS" class="java.lang.String"/>
+	<field name="CS_SIG" class="java.lang.String"/>
+	<field name="SCA_CLASS_SPEC_SIG_DT" class="java.sql.Timestamp"/>
+	<field name="SO_SIG" class="java.lang.String"/>
+	<field name="SCA_SO_SIG_DT" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<detail>
+		<band height="741" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="-1" y="0" width="576" height="720" uuid="d15cb773-5212-440e-abfa-1bde7df7b74d">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="190" height="22" uuid="3a98d42f-9594-48cb-a952-51d699d7af1a">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="3" spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[POSITION DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="153" y="0" width="250" height="21" uuid="f266d809-c28f-4933-9bc9-d123761f9bb5">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="10" isBold="false" isItalic="true"/>
+					<paragraph spacingBefore="2"/>
+				</textElement>
+				<text><![CDATA[(Please Read Instructions on the Back)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="21" width="576" height="1" uuid="73f98121-8c94-4aab-a5b6-4426102c574c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="472" y="0" width="103" height="22" uuid="e490549d-5e13-4f5a-9bc9-a48853eddc18">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[1. Agency Position No.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="471" y="0" width="1" height="267" uuid="a1293ab4-b47e-43c6-8c36-ab5e2cb56a91">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="472" y="22" width="103" height="25" uuid="60725491-e60c-4c4c-8ffc-0dd8d3e49108">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[6. OPM Certification No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="22" width="110" height="12" uuid="d2193f08-3e45-4361-b171-e704db553725">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[2. Reason for Submission]]></text>
+			</staticText>
+			<line>
+				<reportElement x="115" y="47" width="461" height="1" uuid="667dafa4-5efd-48d0-bbc4-72d06a7550c9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="37" width="11" height="11" uuid="069dd117-6b04-4454-bf8b-11833b076047">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{RSN_SBMSSN}.equals( "Update Major Duties" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="11" y="37" width="56" height="11" uuid="8cf32724-4637-4ca5-9ee0-c05b248b920b">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Redescription]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="53" width="64" height="11" uuid="e9b22330-33b1-4ca1-8ae4-bac988d56330">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Reestablishment]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="52" width="11" height="11" uuid="0305ff75-b2a1-4df7-a3a5-0f6375e49332">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="472" y="48" width="103" height="25" uuid="62cc7b23-e713-4db3-91f2-1606756c0cd9">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[9. Subject to IA Action]]></text>
+			</staticText>
+			<line>
+				<reportElement x="198" y="73" width="378" height="1" uuid="90567fa1-559a-4afd-a6c8-6252b96f5ffb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="472" y="74" width="103" height="24" uuid="f737a29c-b474-477c-9d19-a7a9996c2996">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[13. Competitive Level Code]]></text>
+			</staticText>
+			<line>
+				<reportElement x="472" y="98" width="104" height="1" uuid="a4fea26e-104b-428f-b736-8503bcc61aa2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="472" y="99" width="103" height="24" uuid="11ff7a2d-40fd-4ea4-bc0e-8f968fc53694">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[14. Agency Use]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="123" width="576" height="1" uuid="d1805013-2229-46a9-8bbe-0ee9419db8b4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="314" y="22" width="157" height="25" uuid="a30680a2-f6cd-4255-bafe-a54c95475b0b">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[5. Duty Station]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="48" width="158" height="25" uuid="19da3f3a-f97e-446f-905b-c7195c60b665">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[8. Financial Statements Required]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="74" width="58" height="12" uuid="8e83befc-9487-4591-9fa9-a5093c6e43a6">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[11. Position Is]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="74" width="60" height="12" uuid="34e44cff-ebd6-4ede-80ad-b099c8a88401">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[12. Sensitivity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="22" width="82" height="25" uuid="eb6c8677-1b7e-49d4-99b4-7598bb56d4ff">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[3. Service]]></text>
+			</staticText>
+			<line>
+				<reportElement x="115" y="22" width="1" height="25" uuid="be500aa6-96e5-459c-9b45-740e5db9681a">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="78" y="37" width="11" height="11" uuid="1f603385-7232-4502-9401-2e28a035fab3">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{RSN_SBMSSN}.equals( "Create New Position Description" ) || $F{RSN_SBMSSN}.equals( "Reorganization for New Position" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="89" y="37" width="22" height="11" uuid="d2e1e06a-0f43-4d8c-84d8-e59d912672cb"/>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[New]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="78" y="53" width="11" height="11" uuid="b9058a20-b12b-4220-9bff-8b6c7420eca0">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{RSN_SBMSSN}.equals( "Update Coversheet" ) || $F{RSN_SBMSSN}.equals( "Reorganization Pen & Ink" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="89" y="54" width="40" height="11" uuid="78009f45-77ae-43cc-a7d6-0b1597111af6">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Other]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="153" height="12" uuid="f3c539ec-b4aa-407f-affe-4dfbfd8e7081">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<text><![CDATA[Explanation <style isItalic="true">(Show any positions replaced)</style>]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="119" y="32" width="11" height="11" uuid="a6e3406a-c9af-4a2e-862c-bbb37ee0b829">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="130" y="32" width="30" height="11" uuid="a643e0cc-3ede-47a9-9e48-952571c47203">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Hdqtrs]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="163" y="32" width="11" height="11" uuid="73a85ac2-7214-4409-ac48-8f08537fbd3d">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="174" y="32" width="22" height="11" uuid="30da91b4-0068-45c8-8aa8-54aa7478ca21"/>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Field]]></text>
+			</staticText>
+			<line>
+				<reportElement x="197" y="22" width="1" height="101" uuid="a75936d7-7e43-4cf6-8a38-2fee643d1ac9">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="198" y="22" width="116" height="25" uuid="c112b571-ca0a-4b15-97d5-3ff55a2be9f6">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[4. Employing Office Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="48" width="115" height="25" uuid="2513edaf-f85a-4b7c-8a17-24b8e54ec0c3">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[7. Fair Labor Standards Act]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="73" width="80" height="12" uuid="fae1452a-45f6-4427-bcd0-3f3df880bc24">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[10. Position Status]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="201" y="84" width="11" height="11" uuid="4ef9508c-45b7-4920-9448-87bfc44b05e7">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="212" y="84" width="56" height="11" uuid="991544eb-1de4-4b0a-81d1-1665139e25b3">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Competitive]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="97" width="114" height="11" uuid="d91b5a77-13db-4512-a7af-ca4b1f184813"/>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Excepted <style isItalic="true">(Specify in Remarks)</style>]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="201" y="97" width="11" height="11" uuid="45fa6234-532e-421b-91ab-87e5eb643d6c">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="201" y="110" width="11" height="11" uuid="1bc46c8d-09de-4730-9554-2157c9455050">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="212" y="110" width="45" height="11" uuid="282ad094-eb52-4bf3-81e2-2552fc0fcbb4"/>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[SES (Gen.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="274" y="110" width="36" height="11" uuid="3bbff075-65d0-4aef-848d-8722b8a9f959">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[SES (CR)]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="263" y="110" width="11" height="11" uuid="7b2ee60f-f17c-4e71-9394-7e5de9ff63fb">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<line>
+				<reportElement x="313" y="22" width="1" height="270" uuid="92505740-5ba9-41b5-9627-b28155da382e">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="316" y="84" width="11" height="11" uuid="40c73c99-51d0-49ab-910a-96d497eb74fa">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{POSITION_IS}.equals( "Supervisor/Manager (Code 2)" ) || $F{POSITION_IS}.equals( "Supervisor-CSRA (Code 4)" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="327" y="84" width="46" height="11" uuid="69f23f9b-1731-45df-ac8c-3e47b30e8061">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Supervisory]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="316" y="97" width="11" height="11" uuid="3b0ca6e6-890b-477b-9e8d-568aded62a18">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="327" y="97" width="37" height="11" uuid="786773c4-2b0a-4b98-ac96-f941a16337a3">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Managerial]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="316" y="110" width="11" height="11" uuid="8e72c18f-f328-4d0f-b3e6-59c15bfe45ff">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</image>
+			<staticText>
+				<reportElement x="327" y="110" width="37" height="11" uuid="60a22446-4557-44e2-a7fc-7c787f6ea436">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Neither]]></text>
+			</staticText>
+			<line>
+				<reportElement x="369" y="74" width="1" height="193" uuid="1f984982-9817-463e-a462-12c8f5bc7932">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="-3" y="124" width="90" height="11" uuid="5cad563b-2d2c-4f8b-a5ab-c36224ce46fb">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[15. Classified/Graded by]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="479" y="59" width="11" height="11" uuid="61226e42-6593-4108-8de9-fea2d24adc2c">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{PD_SUBJECT_IA}.equals( "Yes" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="490" y="59" width="30" height="11" uuid="9b820bfb-ae81-4fe1-8566-8960f96d28b4">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Yes]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="523" y="59" width="11" height="11" uuid="eb777b11-b5dd-45b1-9d2b-50215d4db322">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{PD_SUBJECT_IA}.equals( "No" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="534" y="59" width="22" height="11" uuid="e558289d-c6b8-4c18-a600-7e6a84833f50"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="205" y="58" width="11" height="11" uuid="df1742d7-49cf-425e-9688-f21c5aa8ccf7">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{FLSA}.equals( "Exempt" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="216" y="58" width="30" height="11" uuid="71ff9a2c-5942-410b-afed-355966adb47b">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Exempt]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="249" y="58" width="11" height="11" uuid="126d3cc3-02e1-4bc9-b766-52d9b2f6e3cb">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{FLSA}.equals( "Non-exempt" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="260" y="58" width="50" height="11" uuid="d556a959-0dbd-4f49-83ed-ccdb531c79d2"/>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Nonexempt]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="317" y="59" width="11" height="11" uuid="5f1d6376-103c-4a09-92d3-6d31cdc735ce"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{FINANCIAL_STMT}.equals( "OGE-278" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="328" y="57" width="64" height="16" uuid="f4a36f1d-8cc7-497e-8db9-6b0a2587f82f">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Executive Personnel <br/>Financial Disclosure]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="393" y="59" width="11" height="11" uuid="214d5da8-e9c2-4d5b-b884-3e04000490d4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{FINANCIAL_STMT}.equals( "OGE-450" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="404" y="57" width="62" height="16" uuid="b7fa02a9-1922-4aae-b448-fc396da844a2">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Employment and <br/>Financial Services]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="373" y="88" width="11" height="11" uuid="a284800d-d588-4e76-81fa-12bdf1a14449">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{SENSITIVITY}.equals( "1 - Nonsensitive" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="384" y="84" width="40" height="19" uuid="49362413-1d6f-4295-8f6d-ded37c6f1d78">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[1--Non-<br/>    Sensitive]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="373" y="107" width="11" height="11" uuid="ff50ba7c-9952-4dae-b8f9-a7825bc23009">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{SENSITIVITY}.equals( "2 - Noncritical Sensitive" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="384" y="103" width="45" height="19" uuid="de2c38fa-6a97-4f48-a15d-621a0ea0e883">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="2" spacingBefore="0" tabStopWidth="40"/>
+				</textElement>
+				<text><![CDATA[2--Noncritical <br/>    Sensitive]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="84" width="40" height="19" uuid="5098f8a8-63f9-46a9-8a05-9886d4803ef2"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[3--Critical]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="424" y="88" width="11" height="11" uuid="75622819-9537-47cf-82a1-cd8ce786913e">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{SENSITIVITY}.equals( "3 - Critical Sensitive" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="435" y="103" width="45" height="19" uuid="a36142e3-9fd7-4b76-8355-a4fb0d3d1929"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[4--Special <br/>     Sensitive]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="424" y="107" width="11" height="11" uuid="5d4a2e66-ea1d-4cb1-a69d-58f0d5c9ecdb">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{SENSITIVITY}.equals( "4 - Special Sensitive" ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="134" width="576" height="1" uuid="459c49ec-388a-4d91-aec5-d1eada262e4c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="83" y="124" width="230" height="11" uuid="1f79bdb2-0437-4c3d-8800-a2cd7f48b17b">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Official Title of Position]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="124" width="56" height="11" uuid="c19dfbf7-b0b7-4067-9b99-4c81db5a40f7">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Pay Plan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="366" y="124" width="75" height="11" uuid="08c4641b-a5ff-4931-b748-4a26d74ea2b8">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Occupational Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="124" width="35" height="11" uuid="d335e3dd-f139-404b-a2d1-42b864362ae8">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="124" width="30" height="11" uuid="a5e9c2f8-b456-4327-a26c-012b092c8ae2">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Initials]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="124" width="74" height="11" uuid="b7f2320a-a896-4925-93fd-9ce3c981ef15">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="436" y="124" width="1" height="143" uuid="d70ed489-2c1d-4b11-b720-bf4bcfe44b37">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="502" y="124" width="1" height="143" uuid="f8b16cac-4428-4f1c-a0cf-1e4b9aa914b8">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="82" y="124" width="1" height="143" uuid="9d5a9692-fcc9-439d-8ac9-86f3835149b0">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="135" width="82" height="26" uuid="261c4603-986b-48aa-a22b-756ad8b6e8c5">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="3" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[a. Office of Personnel 	Management]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="160" width="576" height="1" uuid="3d572f2b-8f6d-4d80-850d-0d8e8ab5beda">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="161" width="82" height="28" uuid="de381d88-a955-4c35-b177-8b5d58144ebb">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="0" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[b. Department, 
+	Agency or 
+	Establishment]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="188" width="576" height="1" uuid="9f63f206-bf9e-4b3d-82fc-e61a152cc427">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="241" width="82" height="38" uuid="be1f563d-183a-4b2c-ad1c-de38d1e13e63">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="0" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[e. Recommended by
+	Supervisor or 
+	Initiating Office]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="189" width="82" height="26" uuid="c6b5db46-5050-4126-a0cb-1a896d037876">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="3" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[c. Second Level 
+	Review
+	]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="214" width="576" height="1" uuid="050d51b0-c48e-4b11-aec4-865471397674">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="215" width="82" height="26" uuid="6db37252-8993-48d7-b1b1-0d6dca1ae9b9">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="3" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[d. First Level 
+	Review
+	]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="240" width="576" height="1" uuid="713fda19-104a-45e3-bdda-4fba3b53f5e3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="267" width="576" height="1" uuid="d47d1cf4-ec3f-48c1-bb89-f38474a20ce6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="268" width="312" height="24" uuid="991fd751-be20-41cb-866f-5a0a68bef6ae">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[16. Organizational Title of Position <style isItalic="true">(if different from official title)</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="268" width="262" height="24" uuid="daa80c8c-9126-42d0-a7a9-0bba09c1491f">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[17. Name of Employee <style isItalic="true">(if vacant, specify)</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="292" width="576" height="1" uuid="f222a9d8-9807-48bd-93ce-a1cd8972930e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="293" width="288" height="24" uuid="8f51d681-859b-4338-be6d-3427cf51e26c">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[18. Department, Agency, or Establishment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="288" y="293" width="288" height="24" uuid="c058cd7e-2fe7-454c-80f9-67533b138c36">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[c. Third Subdivision]]></text>
+			</staticText>
+			<line>
+				<reportElement x="288" y="293" width="1" height="72" uuid="b8555170-9c4a-411d-b04d-4e0b6b57ff80">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="316" width="576" height="1" uuid="e067b54b-8973-47e1-a063-f702065244ee">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="317" width="288" height="24" uuid="9b79dd9c-b118-4136-9b39-780c69d32ec3">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[a. First Subdivision]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="341" width="288" height="24" uuid="9ec07be0-652a-467c-9c83-b07aad8498d0">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[b. Second Subdivision]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="288" y="317" width="288" height="24" uuid="938f8ab3-92e9-4898-8d94-c67cf0958d78">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[d. Fourth Subdivision]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="340" width="576" height="1" uuid="7fb63890-5662-4a97-ab69-67013adc2eed">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="288" y="365" width="288" height="33" uuid="df114116-2e42-478f-ab76-f9e2925d189b">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Signature of Employee  <style isItalic="true">(optional)</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="364" width="576" height="1" uuid="1940e619-237e-4f4b-a589-0d18db85a4c3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="365" width="288" height="33" uuid="5f855662-32ef-431a-b308-652f9bc27b4f">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[19. Employee Review- This is an accurate description of the major <br/>      duties and responsiblities of my position.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="398" width="576" height="1" uuid="c94ebcd8-656c-4d5a-b131-364946907cc5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="288" y="364" width="1" height="33" uuid="d9309b1b-9dd1-4cd1-a94f-f1dee2526ea9">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="288" y="341" width="288" height="24" uuid="feeec52a-a605-41a7-b7d7-23433c35da09">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[e. Fifth Subdivision]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="399" width="288" height="42" uuid="f5ea7149-8173-400a-94e9-59fc3f3a2c26">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="12"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="6.5"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" firstLineIndent="-15" leftIndent="3" rightIndent="25" tabStopWidth="0"/>
+				</textElement>
+				<text><![CDATA[20. <style size="7.5" isBold="true"> Supervisory Certification.</style><style size="7.5" isItalic="true"> I certify that this is an accurate statement of the major duties and responsibilities of this position and its organizational relationships, and that the position is necessary to carry our Government functions for which I am responsible. This certification is made with the knowledge that </style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="441" width="576" height="1" uuid="9bcd50f0-4a5c-4179-bf46-743d90e2e64f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="442" width="288" height="34" uuid="f4731e23-007e-4cda-82fb-36a4305f7bf3">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[a. Typed Name and Title of Immediate Supervisor]]></text>
+			</staticText>
+			<line>
+				<reportElement x="290" y="441" width="1" height="69" uuid="75f7f571-f0fc-42e4-a93c-13593699e6db">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="475" width="576" height="1" uuid="a1654c3a-9be2-4a1b-9e79-f5cf47015434">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="289" y="442" width="287" height="34" uuid="8712512d-47c4-42e3-a7dc-4ab16f9f6d75">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[b. Typed Name and Title of Higher-Level Supervisor or Manager <style isItalic="true">(optional)</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="476" width="224" height="35" uuid="3d052ed4-7a53-4461-a6cd-716e728cd1b5">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="225" y="476" width="63" height="35" uuid="2be20c19-a70a-48b9-95be-fea402407768">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="224" y="475" width="1" height="35" uuid="24444605-1f0e-43fe-9272-80fe1b757146">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="291" y="476" width="224" height="35" uuid="e4a87a55-5402-4344-9c8e-3360fa7afdb9">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="516" y="476" width="60" height="35" uuid="8a645367-42e8-4dfa-92d0-24255fb5ff6a">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="515" y="476" width="1" height="35" uuid="fbb8828d-3fc2-4997-9af5-7e6324e97cad">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="510" width="576" height="1" uuid="876cdafb-018d-46d6-8e26-3f32230543ab">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="511" width="290" height="39" uuid="777568ab-dea7-4895-b65f-d80cc356de67">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<box leftPadding="12" rightPadding="14"/>
+				<textElement markup="styled">
+					<font size="7" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="5.0" firstLineIndent="-36" leftIndent="2" spacingBefore="0" spacingAfter="0" tabStopWidth="10"/>
+				</textElement>
+				<text><![CDATA[21. <style size="7.5" isBold="true">Classification/Job Grading Certification.</style> <style size="7.5" isItalic="true">I certify that this position has been classified/ graded as required by Title 5, U.S. Code, in conformance with standards published by the U.S. Office of Personnel Management or, if no published standards apply directly, consistently with the most applicable published standards.</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="550" width="290" height="1" uuid="897feef5-2eb2-4f25-99ac-29864ed43fc1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="551" width="290" height="34" uuid="81d55190-fed0-4743-ac4b-686061eb1945">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Typed Name and Title of Official Taking Action]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="585" width="230" height="35" uuid="91f7a181-4b70-4d42-ac7c-4474bf48ecfd">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="584" width="290" height="1" uuid="e8543a3b-ddb5-4326-8aa5-2278c833b8e7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="230" y="585" width="60" height="35" uuid="8b164737-0ade-4a78-8849-8a2b736bedfd">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="290" y="510" width="1" height="171" uuid="0c85b6cf-2151-483b-852b-a30e3767f287">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="291" y="511" width="284" height="48" uuid="a358af02-1e6a-432b-959a-e6c9f70ed043">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[22. Position Classification Standards Used in Classifying/Grading Position]]></text>
+			</staticText>
+			<line>
+				<reportElement x="291" y="558" width="285" height="1" uuid="2d5f0fe8-adeb-461f-89ea-9a3f89e14f30">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="291" y="559" width="284" height="62" uuid="36b945d6-1dfb-4e2b-9bd7-a818a77f9f56">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="styled">
+					<font size="8"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" leftIndent="3" rightIndent="5" tabStopWidth="10"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true">Information for Employees.</style>  The standards, and information on their application, are available in the personnel office. The classification of the position may be reviewed and corrected by the agency or the U.S. Office of Personnel Management. Information on classification/job grading appeals, and complaints on exemption from FSLA, is available from the personnel office or the U.S. Office of Personnel Management.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="620" width="576" height="1" uuid="685fee4c-3d9f-429c-8c96-e875ae41e2d6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="621" width="96" height="9" uuid="cb2b2037-4279-4a03-ba01-91ab5e00f110">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[23. Position Review]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="96" y="621" width="36" height="9" uuid="d0d78e26-9302-430e-8cbc-fa5ff47b2a14">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Initials]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="132" y="621" width="56" height="9" uuid="ae12fea2-4631-4762-90ad-8b961d8c5650">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="621" width="60" height="9" uuid="57ee8b5a-39f0-4e6e-a550-c282b3a62905">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="621" width="42" height="9" uuid="19364b70-d6c8-4f9a-b1b9-2c6b8dd82653">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Initials]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="621" width="35" height="9" uuid="4ee66fef-b8a7-447f-bb81-093b21a3e0d1">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Initials]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="621" width="59" height="9" uuid="a790bcae-33ae-4b95-8552-f3474de70e70">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="621" width="35" height="9" uuid="b6dddbd0-8d71-4f19-ab39-b2df6f3cc9f1"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Initials]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="419" y="621" width="59" height="9" uuid="9505a5ba-6f80-416b-8936-1556691e3e7b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="513" y="621" width="63" height="9" uuid="32d2beea-1a34-4605-8de7-e64f64574d9e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="621" width="35" height="9" uuid="8c5d87d8-f3bc-430a-a821-7ae55f6f1ba2"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Initials]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="630" width="576" height="1" uuid="c90f99be-fd7d-46c2-b3a2-f7695202c3ad">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="631" width="96" height="16" uuid="afd09910-2c31-4640-95d1-0da89cbc3dbd">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="3" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[a. Employee <style isItalic="true">(optional)</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="648" width="96" height="16" uuid="0e979fc4-e58f-43e4-85b6-9fea360bb90c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="3" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[b. Supervisor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="665" width="96" height="16" uuid="55fe26ac-5aa2-4b37-907e-c1330e4c0996">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph firstLineIndent="0" leftIndent="3" spacingBefore="3" tabStopWidth="7"/>
+				</textElement>
+				<text><![CDATA[c. Classifier]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="647" width="576" height="1" uuid="265a353b-f2b8-42d0-8fc2-2cecec537667">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="664" width="576" height="1" uuid="dd79130a-e73e-4fb3-b6c8-db4c355769e2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="681" width="576" height="1" uuid="587d78f3-264b-4d6b-beb6-b20c78c05a39">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="230" y="585" width="1" height="96" uuid="b004e939-75bb-48e2-b561-c6792fb1e0c4">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="131" y="621" width="1" height="60" uuid="3212f13c-c440-4a26-a776-c5e85dc8e93b">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="96" y="620" width="1" height="61" uuid="57c671d7-97cf-4e14-b2dc-823568d6cac7">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="188" y="621" width="1" height="60" uuid="a9ccb8ff-19ed-4cff-9b97-c52623492cd9">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="325" y="621" width="1" height="60" uuid="e70c8674-719d-4db6-9bcd-c30901a774b4">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="384" y="621" width="1" height="60" uuid="eddf80f5-2b62-4f3a-bd0e-5b3ba6d1b637">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="419" y="621" width="1" height="60" uuid="3f4cda85-0419-4199-8d9d-eaf6852f2239">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="478" y="621" width="1" height="60" uuid="72ba4993-bcd2-40a6-8491-31bddfbf3897">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="513" y="621" width="1" height="60" uuid="187b8029-445c-4a42-ba8f-e4a1f3a1088d">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="682" width="90" height="10" uuid="ab3bdc7e-d76d-477e-82b0-d6113f0acee6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[24. Remarks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="711" width="240" height="10" uuid="0bf969f1-705b-43b9-959d-3b2109b9d52b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="7"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[25. Description of Major Duties and Responsibilities <style isItalic="true">(See Attached)</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="710" width="576" height="1" uuid="4334129f-1d1d-488f-9d9a-feaab4348d94">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="721" width="90" height="10" uuid="16d0abcf-44ed-481f-b641-5a3a74f21d65">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[NSN 7540-00-634-4265]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="721" width="90" height="10" uuid="8f5d8bf1-4200-4839-b06d-40d6dc295054">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Previous Edition Usable]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="576" height="1" uuid="e107ac11-9459-4992-b0d1-1b45d1802b1b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="720" width="576" height="1" uuid="25384849-07e8-4cbd-8c5f-04d5d4a5d3bf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="237" y="721" width="90" height="10" uuid="8f0861a1-88a9-45ec-966b-bcd8b2d530f1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[5008-106]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="443" y="720" width="105" height="20" uuid="d502090e-a6a8-41a0-b10a-a9518ac39c52">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="5"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="4.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[OF 8 (Rev. 1-85)<br/>U.S. Office of Personnel Management<br/>FPM Chapter 295
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="288" y="399" width="288" height="42" uuid="3fee19b6-17a8-4a45-976a-393e228c8159">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<box leftPadding="12"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="6.5"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" firstLineIndent="0" leftIndent="3" rightIndent="20" tabStopWidth="0"/>
+				</textElement>
+				<text><![CDATA[<style size="7.5" isItalic="true">this information is to be used for statutory purposes relating to appointment and payment of public funds, and that false or misleading statements may constitute violations of such statutes or their implementing regulations.</style>]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="474" y="9" width="100" height="12" uuid="474c39dd-b331-4628-9d12-dd4128e648b4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POSITION_NO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="83" width="195" height="38" uuid="4b984561-fcd6-4fa7-8d98-397767df8228">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RSN_SBMSSN}.equals( "Update Coversheet" ) || $F{RSN_SBMSSN}.equals( "Reorganization Pen & Ink" ) ? $F{RSN_SBMSSN} : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="34" width="111" height="12" uuid="d7d0c2a7-2ce8-4278-9913-09d6b66b8ae1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMPLOY_LOCATION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="316" y="34" width="154" height="12" uuid="b1873b47-bbdd-45b6-b5c8-1b7a113f8924">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DUTY_STATION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="remark_font" x="0" y="691" width="574" height="19" uuid="65a87c61-2739-4a5d-8ca6-38c0412d5370">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="6"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="5.0" leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SENSITIVITY}.equals( "5 - Public Trust/Moderate" ) || $F{SENSITIVITY}.equals( "6 - Public Trust/High Risk" ) ? $F{SENSITIVITY} + ". " + $F{PD_REMARKS} : $F{PD_REMARKS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="474" y="85" width="100" height="12" uuid="d0b667a6-c793-44cc-8e6a-a602a5e0d67c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_COMPET_LVL_CD}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="84" y="163" width="228" height="23" uuid="e698768b-5c44-4fa5-81b1-7a5ef3a7eaae">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POSITION_TITLE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="316" y="163" width="50" height="23" uuid="525a7678-92f7-4da5-bb8c-43047df6133c">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAY_PLAN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="372" y="163" width="62" height="23" uuid="76ba225c-cb3e-4c83-a3e0-521fae562e14">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SERIES}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="439" y="163" width="30" height="23" uuid="62c77b38-2b8f-4898-a7e6-10ea795c04c1">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GRADE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="279" width="310" height="12" uuid="b5f9fa31-8121-4e1d-ac2d-6de60e2f7dc5">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_ORG_POS_TITLE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="303" width="282" height="12" uuid="7b031bc0-d37f-4f99-a25e-01f64f33831f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPARTMENT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="303" width="280" height="12" uuid="5a8c3a79-5217-48e9-b762-1db1533e6831">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_SUB_ORG_DSCR_3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="327" width="280" height="12" uuid="2d72ef99-11dc-4c12-9e27-00cf5e46d39e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_SUB_ORG_DSCR_4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="327" width="280" height="12" uuid="6c1c3799-36de-4d53-9eda-6a46de9a1574">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_SUB_ORG_DSCR_1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="351" width="280" height="12" uuid="218685d7-29f0-4d4d-a190-d5ece77887fc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_SUB_ORG_DSCR_2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="351" width="280" height="12" uuid="9840b6d7-7b0e-4d07-8285-9b80a88388b2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_SUB_ORG_DSCR_5}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="520" width="282" height="38" uuid="4ba1472e-8357-48c8-907e-a0b7041a0a05">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="none">
+					<font size="6.5"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="5.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PD_CLS_STANDARDS_DSCR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="163" width="27" height="23" uuid="fde20a97-0cbc-4a5c-a30f-772a1c2e5bd2">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CS_SIG}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="504" y="163" width="70" height="23" uuid="e00b5b07-5b34-4c20-809f-ebf980048e5e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{SCA_CLASS_SPEC_SIG_DT},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="101" y="651" width="30" height="15" uuid="769bc083-002f-46cf-9465-b9226c3f7895">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SO_SIG}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="138" y="651" width="50" height="15" uuid="8e70930b-254c-4c0d-9a12-e22c1999d1f3">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{SCA_SO_SIG_DT},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="101" y="668" width="30" height="15" uuid="6b119a52-7ccf-4696-afc0-a3b9ca0ac634">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CS_SIG}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="138" y="668" width="50" height="15" uuid="e56da705-abb9-4a82-abb5-1b0b5d9577e3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{SCA_CLASS_SPEC_SIG_DT},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
