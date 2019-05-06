@@ -40,6 +40,13 @@ if (logger.isDebugEnabled()) startedTime = System.currentTimeMillis();
 <bf:parameter id="REPORTNAME" name="REPORTNAME" value="" valuePattern="Alphabet"/>
 <bf:parameter id="REPORTPATH" name="REPORTPATH" value="" valuePattern="Alphabet"/>
 <bf:parameter id="OPTION" name="OPTION" value="" valuePattern="Alphabet"/>
+<bf:parameter id="DESCRIPTION" name="DESCRIPTION" value="" valuePattern="Alphabet"/>
+<bf:parameter id="REQUESTTYPE" name="REQUESTTYPE" value="" valuePattern="Alphabet"/>
+<bf:parameter id="APPOINTMENTTYPE" name="APPOINTMENTTYPE" value="" valuePattern="Alphabet"/>
+
+<bf:parameter id="SHOW_TYPEOFSTANDARDPD" name="SHOW_TYPEOFSTANDARDPD" value="" valuePattern="Alphabet"/>
+
+<bf:parameter id="DATELABEL" name="DATELABEL" value="" valuePattern="Alphabet"/>
 
 <%!
 private Connection getBizFlowDBConnection() throws Exception {
@@ -134,9 +141,7 @@ private String getCMSUserGroups() throws Exception
     <link rel="stylesheet" href="./bower_components/angular-block-ui/dist/angular-block-ui.min.css">
     <link rel="stylesheet" href="./bower_components/angular-ui-grid/ui-grid.css">
     <link rel="stylesheet" href="./bower_components/json-formatter/dist/json-formatter.min.css">
-    <!-- <link rel="stylesheet" href="./bower_components/jstree/dist/themes/default/style.min.css"> -->
     <link rel="stylesheet" href="./bower_components/selectize/dist/css/selectize.bootstrap3.css ">
-
     <link rel="stylesheet" href="common/css/bootstrap-ext.css">
     <link rel="stylesheet" href="common/css/app.css">
 
@@ -145,13 +150,12 @@ private String getCMSUserGroups() throws Exception
     <script src="./bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script src="./bower_components/lodash/dist/lodash.min.js"></script>
     <script src="./bower_components/microplugin/src/microplugin.js"></script>
-
+    
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./bower_components/sifter/sifter.js"></script>
     <script src="./bower_components/selectize/dist/js/selectize.js"></script>
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-selectize2/dist/angular-selectize.js"></script>
-    <!-- <script src="./bower_components/angular-aria/angular-aria.min.js"></script> -->
     <script src="./bower_components/angular-route/angular-route.min.js"></script>
     <script src="./bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script src="./bower_components/angular-inform/dist/angular-inform.min.js"></script>
@@ -163,10 +167,8 @@ private String getCMSUserGroups() throws Exception
     <script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="./bower_components/angular-messages/angular-messages.min.js"></script>
     <script src="./bower_components/x2js/xml2json.min.js"></script>
-    <!-- <script src="./bower_components/json-formatter/dist/json-formatter.min.js"></script> -->
     <script src="./bower_components/angular-ui-grid/ui-grid.min.js"></script>
     <script src="./bower_components/bootbox/bootbox.js"></script>
-    <!-- <script src="./bower_components/jstree/dist/jstree.min.js"></script> -->
 
     <script src="./common/common.js"></script>
     <script src="./common/js/angular-ext.js"></script>
@@ -185,7 +187,6 @@ private String getCMSUserGroups() throws Exception
 
     <script src="app.main.js"></script>
     <script src="features/reportFilter/report-filter.js"></script>
-    <script src="incentives/reportFilter/report-filter.js"></script>
 </head>
 <script language="javascript">
 <!--
@@ -197,8 +198,19 @@ CMS_REPORT_FILTER.SESSION = '<%= SESSION %>';
 CMS_REPORT_FILTER.REPORTNAME = '<%= REPORTNAME %>';
 CMS_REPORT_FILTER.GROUPS = '<%= groupResult %>';
 CMS_REPORT_FILTER.REPORTPATH = '<%= REPORTPATH %>';
-CMS_REPORT_FILTER.OPTION = '<%= OPTION %>';
--->
+
+CMS_REPORT_FILTER.DESCRIPTION = '<%= DESCRIPTION %>';
+CMS_REPORT_FILTER.REQUESTTYPE = '<%= REQUESTTYPE %>';
+CMS_REPORT_FILTER.APPOINTMENTTYPE = '<%= APPOINTMENTTYPE %>';
+
+CMS_REPORT_FILTER.SHOW = {};
+CMS_REPORT_FILTER.SHOW.TYPE_OF_STANDARD_PD = '<%= SHOW_TYPEOFSTANDARDPD %>';
+
+CMS_REPORT_FILTER.LABEL = {};
+CMS_REPORT_FILTER.LABEL.DATE = '<%= DATELABEL %>';
+
+
+-->    
 </script>
 
 <body ng-app="bizflow.app" ng-controller="CtrlAppMain">

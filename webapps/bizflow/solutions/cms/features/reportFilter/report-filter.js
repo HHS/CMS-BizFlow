@@ -228,9 +228,6 @@
         };
 
         vm.initUserGroups = function () {
-            var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
-            CMS_REPORT_FILTER.GROUPS = null;
-            vm.group = _.groupBy(groups, 'grpname');
             for (var prop in vm.group) {
                 if (vm.group.hasOwnProperty(prop)) {
                     vm.group[prop].unshift({grpname: '', grpid: '', memberid: 'All', name: 'All'});
@@ -283,7 +280,7 @@
             url = url + '&j_username=' + CMS_REPORT_FILTER.CURLOGINID; // j_username
             url = url + '&reportUnit=' + CMS_REPORT_FILTER.REPORTPATH; // reportUnit
             if (vm.selected.component.length > 0) { // Component
-                url = url + '&COMPONENT=' + vm.selected.component;
+                url = url + '&COMPONENT=' + encodeURI(vm.selected.component);
             }
             if (vm.selected.adminCode.length > 0) { // Admin Code
                 url = url + '&ADMIN_CD=' + vm.selected.adminCode.toUpperCase();
@@ -302,11 +299,11 @@
             } else {
                 url = url + '&COMP_DATE_TO=2050-12-31';
             }
-            url = url + '&REQ_TYPE=' + vm.selected.requestType; // Request Type
-            url = url + '&CLSF_TYPE=' + vm.selected.classificationType; // Classification Type
-            url = url + '&APPT_TYPE=' + vm.selected.appointmentType; // Appointment Type
-            url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
-            url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
+            url = url + '&REQ_TYPE=' + encodeURI(vm.selected.requestType); // Request Type
+            url = url + '&CLSF_TYPE=' + encodeURI(vm.selected.classificationType); // Classification Type
+            url = url + '&APPT_TYPE=' + encodeURI(vm.selected.appointmentType); // Appointment Type
+            url = url + '&SCHDA_TYPE=' + encodeURI(vm.selected.scheduleAType); // Schedula A Type
+            url = url + '&VOL_TYPE=' + encodeURI(vm.selected.volunteerType); // Volunteer Type
             url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
             url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
             url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
@@ -314,6 +311,7 @@
             url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
             url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg; // Include Requests for Sub-Org
             url = url + '&DAYS=' + vm.selected.dayType; // Business day or Calendar day
+            url = url + '&STANDARD_PD=' + encodeURI(vm.selected.standardPD);
             //$log.debug('Report URL [' + url + ']');
             return url;
         };
@@ -389,10 +387,96 @@
             }
         };
 
+        vm.checkParameter = function() {
+            // CMS_REPORT_FILTER.REQUESTTYPE = '<%= REQUESTTYPE %>';
+            // CMS_REPORT_FILTER.APPOINTMENTTYPE = '<%= APPOINTMENTTYPE %>';
+            
+            var message = '';
+            var validParameter = true;
+            var mandatoryParameters = ['CURUSERID', 'CURUSERNAME', 'CURLOGINID', 'SESSION', 'GROUPS','REPORTPATH','DESCRIPTION'];
+
+            mandatoryParameters.forEach(function(parameter) {
+                var value = CMS_REPORT_FILTER[parameter];
+                if (value == null || value == '') {
+                    message = message + '<li>' + 'Parameter [' + parameter + '] is mandatory, but has null or empty value.' + '</li>';
+                    validParameter = false;
+                }
+            })
+
+            vm.report.user = {};
+            vm.report.user.memberID = CMS_REPORT_FILTER['CURUSERID'];
+            vm.report.user.loginID = CMS_REPORT_FILTER['CURLOGINID'];
+            vm.report.user.name = CMS_REPORT_FILTER['CURUSERNAME'];
+            vm.report.user.session = CMS_REPORT_FILTER['SESSION'];
+
+            vm.report.name = CMS_REPORT_FILTER['REPORTNAME'];
+            vm.report.path = CMS_REPORT_FILTER['REPORTPATH'];
+            vm.report.description = CMS_REPORT_FILTER['DESCRIPTION'];
+
+            var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
+            CMS_REPORT_FILTER.GROUPS = null;
+            vm.group = _.groupBy(groups, 'grpname');            
+
+            vm.report.element = {};
+            vm.report.element.Date = {};
+            vm.report.element.TypeOfStandardPD = {};
+
+            // LABEL.DATE
+            if (CMS_REPORT_FILTER.LABEL.DATE.length > 0) {
+                vm.report.element.Date.label = CMS_REPORT_FILTER.LABEL.DATE;
+            } else {
+                vm.report.element.Date.label = 'Date Request Completed';
+            }
+
+            // SHOW.TYPE_OF_STANDARD_PD
+            vm.report.element.TypeOfStandardPD.show = false; // Default
+            vm.report.element.TypeOfStandardPD.hide = true;  // Default
+            if (CMS_REPORT_FILTER.SHOW.TYPE_OF_STANDARD_PD && CMS_REPORT_FILTER.SHOW.TYPE_OF_STANDARD_PD.length > 0) {
+                if (CMS_REPORT_FILTER.SHOW.TYPE_OF_STANDARD_PD.toUpperCase() == 'TRUE') {
+                    vm.report.element.TypeOfStandardPD.show = true;
+                    vm.report.element.TypeOfStandardPD.hide = false;
+                }
+            }
+
+            // Request Type
+            if (CMS_REPORT_FILTER.REQUESTTYPE && CMS_REPORT_FILTER.REQUESTTYPE.length > 0) {
+                vm._requestTypes = JSON.parse(CMS_REPORT_FILTER.REQUESTTYPE);
+                if (vm._requestTypes.length > 0) { 
+                    if (vm._requestTypes.length == 1) {
+                        vm.orgSelected.requestType = vm._requestTypes[0]
+                    }
+                } else {
+                    validParameter = false;
+                    message = message + '<li>' + 'Parameter [REQUESTTYPE] has empty list or invalid.' + '</li>';
+                }
+            }
+
+            // Appointment Type
+            if (CMS_REPORT_FILTER.APPOINTMENTTYPE && CMS_REPORT_FILTER.APPOINTMENTTYPE.length > 0) {
+                vm._appointmentTypes = JSON.parse(CMS_REPORT_FILTER.APPOINTMENTTYPE);
+                if (vm._appointmentTypes.length > 0) {
+                    if (vm._appointmentTypes.length == 1) {
+                        vm.orgSelected.appointmentType = vm._appointmentTypes[0]
+                    }
+                } else {
+                    validParameter = false;
+                    message = message + '<li>' + 'Parameter [APPOINTMENTTYPE] has empty list or invalid.' + '</li>';
+                }
+            }
+
+            if (validParameter == false) {
+                var errorMessage = "<h4 style='color:red'>Invalid Report Filter UI Configuration</h4><p><h5>Please check following parameter(s).</h5></p><ul>";
+                errorMessage = errorMessage + message + '</ul>';
+    
+                bootbox.alert(errorMessage);
+            }
+        };
+
         vm.$onInit = function () {
             $log.info('reportFilter $onInit');
             // This should be called first.
-            vm.initReportMap();
+            vm.checkParameter();
+            //vm.initReportMap();
             vm.initUserGroups();
             
             vm.adjustBizCoveUI();
