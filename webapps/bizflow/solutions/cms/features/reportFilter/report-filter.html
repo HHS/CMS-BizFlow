@@ -65,7 +65,7 @@
                 </div>
                 <div class="row container-fluid">
                     <div class="col-md-3">
-                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput dateRCompletedFromButton" class="control-label">{{$ctrl.dateLabel}}</label>
+                        <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput dateRCompletedFromButton" class="control-label">{{$ctrl.report.element.Date.label}}</label>
                     </div>
                 </div>
                 <div class="row container-fluid">
@@ -153,7 +153,7 @@
                       
                     </div>
 
-                    <div class="form-group col-md-3" ng-if="$ctrl.report.showTypeOfStandardPD == 'true'">
+                    <div class="form-group col-md-3" ng-if="$ctrl.report.element.TypeOfStandardPD.show">
                         <label id="standardPDLabel" for="standardPDSelect" class="control-label">Type of Standard PD</label>
                         <selectize role="combobox" id="standardPDSelect" aria-labelledby="standardPDLabel" required
                                     ng-model ="$ctrl.selected.standardPD" 
