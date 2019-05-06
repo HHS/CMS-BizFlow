@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-05-06T11:07:24 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PDP Panel Documentation Forms" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="35" bottomMargin="18" uuid="797b5232-d5e5-4fef-b30f-a1c321f4eefa">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_PDP_Panel_Documentation_Forms_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_PDP_Panel_Documentation_Forms"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Panel" uuid="884b1f7d-dc21-4e54-8472-1379dbc5ba5d">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - HHS DEV"/>
+		<parameter name="PROCID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+	PROC_ID,
+	FULL_NAME AS PANEL_MEMBER_NAME,
+	COMPONENT_NAME,
+	VOTING_STATUS,
+	PANEL_REC_COMP
+FROM HHS_CMS_HR.INCENTIVES_PDP_PANEL
+WHERE PROC_ID = $P{PROCID}]]>
+		</queryString>
+		<field name="PROC_ID" class="java.math.BigDecimal"/>
+		<field name="PANEL_MEMBER_NAME" class="java.lang.String"/>
+		<field name="COMPONENT_NAME" class="java.lang.String"/>
+		<field name="VOTING_STATUS" class="java.lang.String"/>
+		<field name="PANEL_REC_COMP" class="java.lang.String"/>
+		<variable name="V_QUORUM" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[new Boolean($F{VOTING_STATUS}.equals("Voting")) ? 1 : 0]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="PROCID" class="java.lang.String"/>
+	<parameter name="Checked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/reports/CMS/CMS_PDP_Panel_Documentation_Forms_files/Checkbox_Yes.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Unchecked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/reports/CMS/CMS_PDP_Panel_Documentation_Forms_files/Checkbox_No.png"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	COM.PROC_ID,
+	DATE_OF_MEETING,
+	CANDI_FIRST || ' ' || CANDI_MIDDLE || ' ' || CANDI_LAST AS NAME,
+	CURRENT_FED_EMPLOYEE,
+	POS_TITLE,
+	PAY_PLAN,
+	SERIES,
+	GRADE,
+	CURRENT_PAY_STEP AS STEP,
+	ORG_NAME,
+	POS_DESC_NUM,
+	PROPOSED_GS_BASE_PAY,
+	PROPOSED_MARKET_PAY,
+	PROPOSED_TOTAL_ANNUAL_COMPENS,
+	PANEL_CURRENT_SALARY,
+	PANEL_PDP_AMOUNT,
+	PANEL_RECOMM_ANNUAL_SALARY
+FROM HHS_CMS_HR.VW_INCENTIVES_COM COM
+	JOIN HHS_CMS_HR.VW_INCENTIVES_PDP PDP
+		ON COM.PROC_ID = PDP.PROC_ID
+WHERE INCEN_TYPE = 'PDP'
+AND COM.PROC_ID = $P{PROCID}]]>
+	</queryString>
+	<field name="PROC_ID" class="java.math.BigDecimal"/>
+	<field name="DATE_OF_MEETING" class="java.sql.Timestamp"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="CURRENT_FED_EMPLOYEE" class="java.lang.String"/>
+	<field name="POS_TITLE" class="java.lang.String"/>
+	<field name="PAY_PLAN" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="GRADE" class="java.lang.String"/>
+	<field name="STEP" class="java.math.BigDecimal"/>
+	<field name="ORG_NAME" class="java.lang.String"/>
+	<field name="POS_DESC_NUM" class="java.lang.String"/>
+	<field name="PROPOSED_GS_BASE_PAY" class="java.math.BigDecimal"/>
+	<field name="PROPOSED_MARKET_PAY" class="java.math.BigDecimal"/>
+	<field name="PROPOSED_TOTAL_ANNUAL_COMPENS" class="java.math.BigDecimal"/>
+	<field name="PANEL_CURRENT_SALARY" class="java.math.BigDecimal"/>
+	<field name="PANEL_PDP_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="PANEL_RECOMM_ANNUAL_SALARY" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<detail>
+		<band height="738" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="240" y="208" width="350" height="15" uuid="168414c7-0fd1-4671-bb5a-5d648f68face"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">$ ___________ Computation Sheet Attached to HHS-691 Form</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="528" width="250" height="20" uuid="101d2024-c0c2-4bab-9ff0-31af3e22dc8b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Panel’s Recommended Annual Salary</style>
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="0" width="221" height="29" uuid="387a9660-66d7-4aec-8a67-cc6b0ead7309"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Bold">PHYSICIANS’ SPECIAL PAY
+COMPENSATION PANEL</style>
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="266" width="221" height="15" uuid="6e5b2f2b-6fc7-4a2e-8439-6f4ddbbedd84">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Bold">Panel Members</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="447" width="530" height="40" uuid="7d0ff33b-dbd0-4dae-9bf1-5435ea9bc1fe"/>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">*Alternate
+In addition to the physician’s base salary (not including locality pay), the</style> <style isBold="true" isItalic="true"  pdfFontName="Times-BoldItalic">panel</style> <style pdfFontName="Times-Roman">recommends that the physician’s total compensation include the following:</style>
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="498" width="592" height="30" uuid="3476711f-149a-43a6-804e-132d3d4017cc"/>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[            <style pdfFontName="Times-Roman">Current Salary – GP-			$__________     Base Salary (not including locality pay)
+            PDP in the amount of			$__________</style>     
+]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="22" y="500" width="11" height="11" uuid="2becf234-df9e-4de1-aad0-7d0d4c1c94ea">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{PANEL_CURRENT_SALARY}!=null ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="22" y="513" width="11" height="11" uuid="4db58b58-495b-41ae-b445-edd2f8084f74">
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{PANEL_PDP_AMOUNT}!=null ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="568" width="570" height="40" uuid="cdb3a206-5f9c-4c06-89f5-970eb1379f28"/>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">NOTE:  Chief Medical Officer (Panel Chair) &amp; OFM (funding clearance) signatures are documented on HHS-691 “Request for Title 38 Physicians and Dentists Pay.</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="32" width="136" height="15" uuid="d0e08cde-7734-4e36-86a4-9501646af6ea"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Date of Meeting:</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="83" width="310" height="60" uuid="9c935c44-e850-42fc-b700-70eb71b3d833"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Position Information:	</style>
+<style pdfFontName="Times-Roman">Title, Pay Plan, Series, Grade, Step (if applicable):	 
+Organization:						
+Position Description Number:</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="57" width="210" height="15" uuid="1c6cd4dd-f235-439a-9674-77768dd66355"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Current Federal Employee:</style> ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="57" width="160" height="15" uuid="27e01641-0539-42b3-8ee3-1af56540a0d1"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Name of Physician:</style> <style pdfFontName="Times-Roman" isUnderline="true">Dr.</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="146" width="210" height="15" uuid="f51b6c4c-194d-4a35-896a-0f51d87a1b51"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Representative from Component:</style>	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="171" width="590" height="15" uuid="340935d4-3e95-4a7c-ae4e-69d00cf93f03"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">The</style> <style isBold="true" isItalic="true" pdfFontName="Times-BoldItalic">manager</style> <style pdfFontName="Times-Roman">recommends that the physician’s total compensation include the following incentives:</style> ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="196" width="350" height="15" uuid="9385f3e5-12ac-4b28-8fe0-6da98d8fd1ba"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">$ ___________ Base salary (does not include locality pay)</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="209" width="250" height="15" uuid="1fb4d2fd-fac6-496f-916c-3b5b818b1f67"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">PDP (market pay)  in the amount of</style> ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="235" width="370" height="15" uuid="d67a831c-929d-4730-9300-388dfadd1727"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Manager’s Recommended Annual Salary</style>]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="93" y="32" width="130" height="15" uuid="e64f8c66-bede-4968-b61b-7efc570aa7a7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{DATE_OF_MEETING},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="124" y="56" width="190" height="15" uuid="c88d882a-f7ac-447d-aa8e-14eac071bcb5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="454" y="57" width="110" height="15" uuid="a61c9631-725b-410d-8a80-a1ed90a90d29">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean($F{CURRENT_FED_EMPLOYEE}.equals("Y")) ? "Yes" : new Boolean($F{CURRENT_FED_EMPLOYEE}.equals("N")) ? "No" : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###" isBlankWhenNull="true">
+				<reportElement x="263" y="196" width="62" height="12" uuid="7e533637-5e82-4a69-b408-5a5309bde5dc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="0" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROPOSED_GS_BASE_PAY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###" isBlankWhenNull="true">
+				<reportElement x="263" y="232" width="62" height="15" uuid="842c2130-b324-4aeb-965e-e2fc592d23c2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="0" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROPOSED_TOTAL_ANNUAL_COMPENS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###" isBlankWhenNull="true">
+				<reportElement x="263" y="209" width="62" height="12" uuid="0f9cf397-20fc-4a96-b11b-5186757f9cf7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="0" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROPOSED_MARKET_PAY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="108" width="404" height="15" uuid="11ce54f6-e0aa-42ed-a15c-df32df80e915">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORG_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="120" width="330" height="15" uuid="e1e3fbe1-1c1a-40ab-a608-02e28ebacf88">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POS_DESC_NUM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="237" y="95" width="340" height="15" uuid="06da01c3-854b-4f2a-927d-8b6d865f966b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POS_TITLE} + ", " + $F{PAY_PLAN} + ", " + $F{SERIES} + ", " + $F{GRADE} + ", " + $F{STEP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="245" y="498" width="62" height="12" uuid="7b006f42-b969-4062-9d2c-da7a889341ce">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="0" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PANEL_CURRENT_SALARY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="245" y="510" width="62" height="12" uuid="b4b26635-55af-463c-a560-38fecc3c80f5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="0" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PANEL_PDP_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="245" y="528" width="62" height="12" uuid="f2729a0d-00de-4c8b-861d-9862da91f6aa">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="0" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PANEL_RECOMM_ANNUAL_SALARY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="195" width="190" height="15" uuid="16d59197-d3a6-4d34-a6e3-27ba102d6d2a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAY_PLAN}+"-"+$F{GRADE}+", Step " + $F{STEP}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="2" y="282" width="540" height="128" uuid="e4bb646a-5c62-4d79-941b-de722a99db66">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Panel" uuid="e63103db-54a3-4e51-87fd-42321d38c6b3">
+						<datasetParameter name="PROCID">
+							<datasetParameterExpression><![CDATA[$F{PROC_ID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="d4dd4b95-7375-4b51-ab71-7a9cfde1c628">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="65">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="65" uuid="f083eee6-7a8b-4921-8a69-69b31f2b3e30"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<text><![CDATA[
+<style pdfFontName="Times-Roman">Name</style>
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="90" height="30" uuid="13a8e2e9-f5b8-4175-83cd-9275c41f7aec"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{PANEL_MEMBER_NAME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="189" uuid="ccffc0fb-b888-424f-b62d-6f0a8988eb3c">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableFooter style="Table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="189" height="30" uuid="2903414c-546a-4a50-b016-3d9c2f5d8794"/>
+								<textElement textAlignment="Right" markup="styled">
+									<font fontName="Times New Roman"/>
+									<paragraph rightIndent="5"/>
+								</textElement>
+								<text><![CDATA[
+<style pdfFontName="Times-Roman">Quorum</style>
+]]></text>
+							</staticText>
+						</jr:tableFooter>
+						<jr:columnHeader style="Table_CH" height="65">
+							<staticText>
+								<reportElement x="0" y="0" width="189" height="65" uuid="317ca8ed-753e-4ea1-90c9-078a6db90650"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<text><![CDATA[
+<style pdfFontName="Times-Roman">Component</style>
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="189" height="30" uuid="cefca08e-8e2b-4efe-98a0-56640c5dda5c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{COMPONENT_NAME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="45" uuid="88207ca5-9847-403f-8ab3-9868c1f4dc30">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:tableFooter style="Table_TH" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="45" height="30" uuid="4184a61d-5755-4cc2-9988-8a62bb1d9700"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_QUORUM}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnHeader style="Table_CH" height="65">
+							<staticText>
+								<reportElement x="0" y="0" width="45" height="65" uuid="98785abd-c449-4a8d-80ad-e3671f68805e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<text><![CDATA[<style pdfFontName="Times-Roman">PDP
+Voting Member</style>
+
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="45" height="30" uuid="4c3fc7a3-538b-44ce-b8c5-7edc0f0c567b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Boolean($F{VOTING_STATUS}.equals("Voting")) ? "Yes" : new Boolean($F{VOTING_STATUS}.equals("Non-voting")) ? "No" : ""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="63" uuid="d5c42832-7d7f-4fa4-8137-cfd101145421">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="65">
+							<staticText>
+								<reportElement x="0" y="0" width="63" height="65" uuid="5656c226-a0df-431f-86bf-57ea04246a4a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<text><![CDATA[
+<style pdfFontName="Times-Roman">In
+Attendance</style>
+
+
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="63" height="30" uuid="8e530e92-f20d-47f6-b335-1d1630b3d3f2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="75" uuid="7f8d1460-e55e-4c2d-b067-2e3145dd8c56">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="65">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="75" height="65" uuid="5f5245ad-ea2c-441c-9ed6-fcd90d772513"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<text><![CDATA[<style pdfFontName="Times-Roman">Concur
+w/Panel
+Recommended
+Compensation</style>
+
+
+
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="75" height="30" uuid="5f11c9fa-d38c-4b14-bdf6-9a1c36f4edba"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Boolean($F{PANEL_REC_COMP}.equals("Concurrence w/ Panel Recommended Compensation")) ? "X" : ""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="75" uuid="ab7e3694-c843-476f-966d-aef22f4a5342">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:columnHeader style="Table_CH" height="65">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="75" height="65" uuid="235691ad-8ed2-45c9-b336-0d651be1508d">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<text><![CDATA[<style pdfFontName="Times-Roman">Non-Concur
+w/Panel
+Recommended
+Compensation</style>
+
+
+
+
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="75" height="30" uuid="5f3a9443-af7e-4ba9-ba30-df22d93836a2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Boolean($F{PANEL_REC_COMP}.equals("Non-concurrence w/ Panel Recommended Compensation")) ? "X" : ""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="240" y="235" width="320" height="15" uuid="ed987c42-2196-4685-8a46-83154bb64e04"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">$____________</style>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="243" y="528" width="90" height="20" uuid="abfc7bc0-fe0d-4aea-b069-a7b01ab2cf4d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Roman">$__________</style>
+]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="738" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="159" y="0" width="221" height="29" uuid="4b44a293-1802-4f13-b384-888f9cff1f94"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Bold">PHYSICIANS’ SPECIAL PAY
+COMPENSATION PANEL</style>
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="150" height="30" uuid="0a2ed746-da16-46b6-a542-7e6b218209ce"/>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Bold">Date of Meeting: 	 
+Notes:</style>
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="78" width="570" height="640" uuid="f98425a3-7dc3-49f7-99d7-dc3c35ce1199"/>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" leftIndent="3" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[<style pdfFontName="Times-Bold">______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/>______________________________________________________________________________________________________<br/></style>]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="81" y="40" width="130" height="15" uuid="2650c0ec-28c6-4d08-a950-8d018568a2c8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{DATE_OF_MEETING},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
