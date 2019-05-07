@@ -40,6 +40,8 @@ if (logger.isDebugEnabled()) startedTime = System.currentTimeMillis();
 <bf:parameter id="REPORTNAME" name="REPORTNAME" value="" valuePattern="Alphabet"/>
 <bf:parameter id="REPORTPATH" name="REPORTPATH" value="" valuePattern="Alphabet"/>
 <bf:parameter id="OPTION" name="OPTION" value="" valuePattern="Alphabet"/>
+<bf:parameter id="DATELABEL" name="DATELABEL" value="" valuePattern="Alphabet"/>
+<bf:parameter id="DESCRIPTION" name="DESCRIPTION" value="" valuePattern="Alphabet"/>
 
 <%!
 private Connection getBizFlowDBConnection() throws Exception {
@@ -276,9 +278,14 @@ CMS_REPORT_FILTER.CURLOGINID = "<%= CURLOGINID %>";
 CMS_REPORT_FILTER.SESSION = '<%= SESSION %>';    
 CMS_REPORT_FILTER.REPORTNAME = '<%= REPORTNAME %>';
 CMS_REPORT_FILTER.GROUPS = '<%= groupResult %>';
-CMS_REPORT_FILTER.ERLRTYPE = '<%= erlrType %>';
 CMS_REPORT_FILTER.REPORTPATH = '<%= REPORTPATH %>';
-CMS_REPORT_FILTER.OPTION = '<%= OPTION %>';
+CMS_REPORT_FILTER.DESCRIPTION = '<%= DESCRIPTION %>';
+
+CMS_REPORT_FILTER.LABEL = {};
+CMS_REPORT_FILTER.LABEL.DATE = '<%= DATELABEL %>';
+
+CMS_REPORT_FILTER.ERLRTYPE = '<%= erlrType %>';
+
 -->    
 </script>
 

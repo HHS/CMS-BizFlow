@@ -49,7 +49,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h1 class="panel-title">
-                    <small>Mandatory Filters - You must select values for the following filters to run the report.</small>
+                    <small>{{$ctrl.report.description}}</small>
                 </h1>
             </div>
             <div class="panel-body">
@@ -89,7 +89,7 @@
                     <div class="col-md-3">
                         <label id="dateRCompletedFromLabel" 
                                for="dateRCompletedFromInput dateRCompletedFromButton" 
-                               class="control-label">Date Range</label>
+                               class="control-label">{{$ctrl.report.element.Date.label}}</label>
                     </div>
                 </div>
                 <div class="row container-fluid">
@@ -152,7 +152,7 @@
                                typeahead-min-length=3
                                typeahead-wait-ms=500> 
                         <div ng-show="NotFoundEmployee">
-                            <i class="glyphicon glyphicon-remove"></i> No Emmployee Found
+                            <i class="glyphicon glyphicon-remove"></i> No Employee Found
                         </div>
                     </div>                               
                     
