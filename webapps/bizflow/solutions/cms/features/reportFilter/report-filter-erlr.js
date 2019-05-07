@@ -325,9 +325,6 @@
         };
 
         vm.initUserGroups = function () {
-            var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
-            CMS_REPORT_FILTER.GROUPS = null;
-            vm.group = _.groupBy(groups, 'grpname');
             for (var prop in vm.group) {
                 if (vm.group.hasOwnProperty(prop)) {
                     vm.group[prop] = _.sortBy(vm.group[prop], ['name']);
@@ -335,10 +332,10 @@
                 }
             }
             var amIDCOManagerLeads = _.filter(vm.group['DCO Managers and Leads'], function (item) {
-                return item.memberid === CMS_REPORT_FILTER.CURUSERID;
+                return item.memberid === vm.report.user.memberID;
             });
             var amIAdminTeam = _.filter(vm.group['Admin Team'], function (item) {
-                return item.memberid === CMS_REPORT_FILTER.CURUSERID;
+                return item.memberid === vm.report.user.memberID;
             });
             if (amIDCOManagerLeads.length > 0 || amIAdminTeam.length > 0) {
                 vm._components = ['By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
@@ -346,10 +343,6 @@
         };
 
         vm.initERLRTypes = function() {
-            var types = JSON.parse(CMS_REPORT_FILTER.ERLRTYPE).erlrType;
-            vm.ERLRTypeMap = _.groupBy(types, 'PNAME');
-            vm.ERLRTypes = ['All'];
-
             for (var prop in vm.ERLRTypeMap) {
                 if (vm.ERLRTypeMap.hasOwnProperty(prop)) {
                     vm.ERLRTypes.push(prop);
@@ -370,7 +363,6 @@
                 }
             }
 
-
             vm._allCategories = _.sortBy(vm._allCategories, ['NAME']).map(function(item) {
                 return {key: item.NAME, value: item.NAME};
             });
@@ -385,26 +377,27 @@
             vm.ERLRTypes.sort();
 
             // Initialization per Report
-            if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Grievance Report') {
+            if (vm.report.name == 'CMS Grievance Report') {
                 vm.ERLRTypes = ['Grievance'];
                 vm.orgSelected.caseType = 'Grievance';
-            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS HPC Report') {
+            } else if (vm.report.name == 'CMS HPC Report') {
                 vm.ERLRTypes = ['Investigation'];
                 vm.orgSelected.caseType = 'Investigation';
-            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Performance Improvement Plan (PIP) Report') {
+            } else if (vm.report.name == 'CMS Performance Improvement Plan (PIP) Report') {
                 vm.ERLRTypes = ['Performance Issue'];
                 vm.orgSelected.caseType = 'Performance Issue';
-            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Standards of Conduct Case') {
+            } else if (vm.report.name == 'CMS Standards of Conduct Case') {
                 vm.ERLRTypes = ['Conduct Issue'];
                 vm.orgSelected.caseType = 'Conduct Issue';
-            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Travel Card Case Report') {
+            } else if (vm.report.name == 'CMS Travel Card Case Report') {
                 vm.ERLRTypes = ['All', 'Conduct Issue', 'Probationary Period Action'];
                 vm.orgSelected.caseType = 'All';
-            } else if (CMS_REPORT_FILTER.REPORTNAME == 'CMS Trends Report') {
+            } else if (vm.report.name == 'CMS Trends Report') {
                 vm._components = ['CMS-wide'];
                 vm.orgSelected.component = 'CMS-wide';
+            } else if (vm.report.name = 'CMS Trends Number of Cases By Component Report') {
+                vm._components = ['CMS-wide'];
             }
-            
         }
 
         // Calendar functions & configuration
@@ -446,12 +439,11 @@
             return result;
         }
 
-
         vm.getTargetReportURL = function () {
             var url = '/bizflowadvreport/flow.html?_flowId=viewReportFlow&decorate=no';
-            url = url + '&j_memberid=' + CMS_REPORT_FILTER.CURUSERID; // j_memberid
-            url = url + '&j_username=' + CMS_REPORT_FILTER.CURLOGINID; // j_username
-            url = url + '&reportUnit=' + CMS_REPORT_FILTER.REPORTPATH; // reportUnit
+            url = url + '&j_memberid=' + vm.report.user.memberID; // j_memberid
+            url = url + '&j_username=' + vm.report.user.loginID; // j_username
+            url = url + '&reportUnit=' + vm.report.path; // reportUnit
             if (vm.selected.component.length > 0) { // Component
                 url = url + '&COMPONENT=' + encodeURI(vm.selected.component);
             }
@@ -497,7 +489,6 @@
 			} else {
 				url = url + vm.translateMultipleOptions('CASE_STATUS', vm.selected.statusList); // Case Status
 			}
-			
 			
             $log.debug('Report URL [' + url + ']');
 
@@ -621,6 +612,74 @@
             })
         }                
 
+
+        vm.checkParameter = function() {
+            var message = '';
+            var validParameter = true;
+            var mandatoryParameters = ['CURUSERID', 'CURUSERNAME', 'CURLOGINID', 'SESSION', 'GROUPS','REPORTPATH'];
+
+            mandatoryParameters.forEach(function(parameter) {
+                var value = CMS_REPORT_FILTER[parameter];
+                if (value == null || value == '') {
+                    message = message + '<li>' + 'Parameter [' + parameter + '] is mandatory, but has null or empty value.' + '</li>';
+                    validParameter = false;
+                }
+            })
+
+            vm.report.user = {};
+            vm.report.user.memberID = CMS_REPORT_FILTER['CURUSERID'];
+            vm.report.user.loginID = CMS_REPORT_FILTER['CURLOGINID'];
+            vm.report.user.name = CMS_REPORT_FILTER['CURUSERNAME'];
+            vm.report.user.session = CMS_REPORT_FILTER['SESSION'];
+
+            vm.report.name = CMS_REPORT_FILTER['REPORTNAME'];
+            vm.report.path = CMS_REPORT_FILTER['REPORTPATH'];
+            if (CMS_REPORT_FILTER.DESCRIPTION.length > 0) {
+                vm.report.description = CMS_REPORT_FILTER['DESCRIPTION'];
+            } else {
+                vm.report.description = 'Mandatory Filters - You must select values for the following filters to run the report.';
+            }
+
+            vm.report.element = {};
+            vm.report.element.Date = {};
+
+            // LABEL.DATE
+            if (CMS_REPORT_FILTER.LABEL.DATE.length > 0) {
+                vm.report.element.Date.label = CMS_REPORT_FILTER.LABEL.DATE;
+            } else {
+                vm.report.element.Date.label = 'Initial Contact Date Range';
+            }
+
+            // // Request Type
+            // if (CMS_REPORT_FILTER.REQUESTTYPE && CMS_REPORT_FILTER.REQUESTTYPE.length > 0) {
+            //     vm._requestTypes = JSON.parse(CMS_REPORT_FILTER.REQUESTTYPE);
+            //     if (vm._requestTypes.length > 0) { 
+            //         if (vm._requestTypes.length == 1) {
+            //             vm.orgSelected.requestType = vm._requestTypes[0]
+            //         }
+            //     } else {
+            //         validParameter = false;
+            //         message = message + '<li>' + 'Parameter [REQUESTTYPE] has empty list or invalid.' + '</li>';
+            //     }
+            // }
+
+            var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
+            CMS_REPORT_FILTER.GROUPS = null;
+            vm.group = _.groupBy(groups, 'grpname');            
+
+            var types = JSON.parse(CMS_REPORT_FILTER.ERLRTYPE).erlrType;
+            CMS_REPORT_FILTER.ERLRTYPE = null;
+            vm.ERLRTypeMap = _.groupBy(types, 'PNAME');
+            vm.ERLRTypes = ['All'];
+
+            if (validParameter == false) {
+                var errorMessage = "<h4 style='color:red'>Invalid Report Filter UI Configuration</h4><p><h5>Please check following parameter(s).</h5></p><ul>";
+                errorMessage = errorMessage + message + '</ul>';
+    
+                bootbox.alert(errorMessage);
+            }
+        };
+
         vm.$onDestroy = function () {
             $log.info('reportFilter $onDestroy');
         };
@@ -629,11 +688,9 @@
             $log.info('reportFilter $onInit');
 
             // This should be called first.
+            vm.checkParameter();
             vm.initUserGroups();
             vm.initERLRTypes();
-            if (CMS_REPORT_FILTER.REPORTNAME && CMS_REPORT_FILTER.REPORTNAME.length > 0) {
-                vm.report.name = CMS_REPORT_FILTER.REPORTNAME;
-            }
 
             $.ajaxSetup({
                 cache:false
