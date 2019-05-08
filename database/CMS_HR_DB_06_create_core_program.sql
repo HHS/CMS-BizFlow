@@ -319,6 +319,8 @@ IS
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancellationReason', '/formData/items/item[id="cancellationReason"]/value/text()');
 			ELSIF 'PDP' = V_INCENTIVE_TYPE THEN
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'cancellationReason', '/formData/items/item[id="cancellationReason"]/value/text()');
+                SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'proposedTotalAnnualCompAmount', '/formData/items/item[id="proposedPayInfoTotalAnnualComp"]/value/text()');
+                
 			ELSIF 'SAM' = V_INCENTIVE_TYPE THEN
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'samSupport', '/formData/items/item[id="supportSAM"]/value/text()');
 				SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'ohcDirector', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/participantId/text()', '/formData/items/item[id="reviewRcmdApprovalOHCDirector"]/value/name/text()');
