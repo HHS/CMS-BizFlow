@@ -311,7 +311,7 @@ IS
             IF V_VALUE IS NULL THEN
                 V_VALUE := V_VALUE2;
             ELSE    
-                V_VALUE := V_VALUE || ', ' || V_VALUE2;
+                V_VALUE := V_VALUE || '; ' || V_VALUE2;
             END IF;
         END IF;
     END LOOP;
