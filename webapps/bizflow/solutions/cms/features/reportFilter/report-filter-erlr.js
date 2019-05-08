@@ -395,7 +395,7 @@
             } else if (vm.report.name == 'CMS Trends Report') {
                 vm._components = ['CMS-wide'];
                 vm.orgSelected.component = 'CMS-wide';
-            } else if (vm.report.name = 'CMS Trends Number of Cases By Component Report') {
+            } else if (vm.report.name == 'CMS Trends Number of Cases By Component Report') {
                 vm._components = ['CMS-wide'];
                 vm.orgSelected.component = 'CMS-wide';
             }

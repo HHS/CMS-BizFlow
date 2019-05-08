@@ -657,7 +657,9 @@ IS
   V_XMLVALUE             XMLTYPE;
   V_VALUE1               NVARCHAR2(2000);
   V_VALUE2               NVARCHAR2(2000);
-  V_VALUE3               NVARCHAR2(2000);
+  V_VALUE3               NVARCHAR2(2000);  
+  lcntr                  NUMBER(2);
+  
   BEGIN
     --DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
     --DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -852,8 +854,7 @@ IS
       --DBMS_OUTPUT.PUT_LINE('    V_RLVNTDATANAME = ' || V_RLVNTDATANAME);
       --DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
       UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
-
-
+    
       --V_RLVNTDATANAME := 'memIdExecOff';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_XO_ID/text()');
       IF V_XMLVALUE IS NOT NULL THEN
@@ -940,7 +941,26 @@ IS
 
       END IF;
        
-
+    V_RLVNTDATANAME := 'posNumber';
+    V_VALUE := NULL;
+    FOR lcntr IN 1 .. 5
+    LOOP
+        V_VALUE1 := '/DOCUMENT/POSITION/POS_DESC_NUMBER_' || lcntr || '/text()';
+        V_XMLVALUE := I_FIELD_DATA.EXTRACT(V_VALUE1);
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE2 := V_XMLVALUE.GETSTRINGVAL();
+            IF V_VALUE IS NULL THEN
+                V_VALUE := V_VALUE2;
+            ELSE    
+                V_VALUE := V_VALUE || ', ' || V_VALUE2;
+            END IF;
+        END IF;
+    END LOOP;
+    IF V_VALUE IS NULL THEN
+        V_VALUE := 'N/A';
+    END IF;
+    UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+    
       V_RLVNTDATANAME := 'posIs';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/POSITION/POS_SUPERVISORY/text()');
       IF V_XMLVALUE IS NOT NULL THEN
@@ -1327,7 +1347,6 @@ IS
     SP_ERROR_LOG();
     --DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_PV_STRATCON -------------------');
   END;
-
 
 
 
@@ -3946,6 +3965,8 @@ IS
   V_VALUE1               NVARCHAR2(2000);
   V_VALUE2               NVARCHAR2(2000);
   V_VALUE3               NVARCHAR2(2000);
+  lcntr                  NUMBER(2);
+
   BEGIN
     --DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
     --DBMS_OUTPUT.PUT_LINE('    I_PROCID IS NULL?  = ' || (CASE WHEN I_PROCID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -4097,6 +4118,26 @@ IS
 
       --posGrade
 
+    V_RLVNTDATANAME := 'posNumber';
+    V_VALUE := NULL;
+    FOR lcntr IN 1 .. 5
+    LOOP
+        V_VALUE1 := '/DOCUMENT/GENERAL/CS_PD_NUMBER_JOBCD_' || lcntr || '/text()';
+        V_XMLVALUE := I_FIELD_DATA.EXTRACT(V_VALUE1);
+        IF V_XMLVALUE IS NOT NULL THEN
+            V_VALUE2 := V_XMLVALUE.GETSTRINGVAL();
+            IF V_VALUE IS NULL THEN
+                V_VALUE := V_VALUE2;
+            ELSE    
+                V_VALUE := V_VALUE || ', ' || V_VALUE2;
+            END IF;
+        END IF;
+    END LOOP;
+    IF V_VALUE IS NULL THEN
+        V_VALUE := 'N/A';
+    END IF;
+    UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+
       V_RLVNTDATANAME := 'posIs';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/CS_SUPERVISORY/text()');
       IF V_XMLVALUE IS NOT NULL THEN
@@ -4210,10 +4251,10 @@ IS
       V_RLVNTDATANAME := 'posTitle';
       V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/CS_TITLE/text()');
       IF V_XMLVALUE IS NOT NULL THEN
-        V_VALUE := REPLACE(V_XMLVALUE.GETSTRINGVAL(), '&amp;', '&');
-        V_VALUE := REPLACE(V_VALUE, '&lt;', '<');
-        V_VALUE := REPLACE(V_VALUE, '&gt;', '>');
-        V_VALUE := REPLACE(V_VALUE, '&quot;', '"');
+        V_VALUE := REPLACE(V_XMLVALUE.GETSTRINGVAL(), 'null;', '&');
+        V_VALUE := REPLACE(V_VALUE, 'null;', '<');
+        V_VALUE := REPLACE(V_VALUE, 'null;', '>');
+        V_VALUE := REPLACE(V_VALUE, 'null;', '"');
       ELSE
         V_VALUE := NULL;
       END IF;
