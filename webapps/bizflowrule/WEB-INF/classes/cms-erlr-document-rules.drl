@@ -177,7 +177,7 @@ rule "ERLR / Medical Documentation"
                             , $fields : fields
                             )
          $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
-         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Medical Documentation" ) from $fields
+         $field2: WorkflowField ( fieldId == "CaseType", fieldValue == "Medical Documentation/Exam" ) from $fields
 
         $workflowDocuments : ArrayList()
 
