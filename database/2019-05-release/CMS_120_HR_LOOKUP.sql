@@ -5,6 +5,4 @@ BEGIN
     SP_ERLR_UPDATE_FINAL_RATING('Achieved More Than Expected Results', '4 - Achieved More Than Expected Results');
     SP_ERLR_UPDATE_FINAL_RATING('Achieved Outstanding Results',	       '5 - Achieved Outstanding Results');
 END;
-
-COMMIT;
 /

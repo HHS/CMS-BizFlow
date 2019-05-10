@@ -7,5 +7,4 @@ UPDATE
     and value <> 'Request Cancelled'
 ) T
 SET T.OLD_VALUE = 'Completed', T.OLD_INDEXVALUE = 'Completed'
-
-COMMIT;
+;
