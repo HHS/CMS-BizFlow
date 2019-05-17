@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-05-16T15:03:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StackedGroupBarChart2" pageWidth="600" pageHeight="350" orientation="Landscape" columnWidth="560" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f1330a07-bf82-4371-8537-6e0ce73e3d6b">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="HHS_CMS_DB"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="HHS_CMS_DB"/>
+	<queryString>
+		<![CDATA[SELECT MONOFSALE, PRODUCT, SALES, MONNUM
+FROM (
+        SELECT 10 AS SALES, 'Product 1 (US)' as PRODUCT, 'January Year 2019 - Sales' as MONOFSALE, 1 as MONNUM FROM DUAL
+        UNION ALL SELECT 10, 'Product 1 (US)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 10, 'Product 1 (US)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 10, 'Product 1 (US)', 'April Year 2019 - Sales', 4 FROM DUAL
+        UNION ALL SELECT 15, 'Product 1 (Europe)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 15, 'Product 1 (Europe)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 15, 'Product 1 (Europe)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 15, 'Product 1 (Europe)', 'April Year 2019 - Sales', 4 FROM DUAL
+        UNION ALL SELECT 20, 'Product 1 (Asia)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 20, 'Product 1 (Asia)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 20, 'Product 1 (Asia)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 20, 'Product 1 (Asia)', 'April Year 2019 - Sales', 4 FROM DUAL
+        
+        UNION ALL SELECT 30, 'Product 2 (Asia)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 30, 'Product 2 (Asia)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 30, 'Product 2 (Asia)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 30, 'Product 2 (Asia)', 'April Year 2019 - Sales', 4 FROM DUAL
+        UNION ALL SELECT 20, 'Product 2 (Europe)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 20, 'Product 2 (Europe)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 20, 'Product 2 (Europe)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 20, 'Product 2 (Europe)', 'April Year 2019 - Sales', 4 FROM DUAL
+        UNION ALL SELECT 10, 'Product 2 (US)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 10, 'Product 2 (US)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 10, 'Product 2 (US)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 10, 'Product 2 (US)', 'April Year 2019 - Sales', 4 FROM DUAL
+        
+        UNION ALL SELECT 20, 'Product 3 (Europe)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 20, 'Product 3 (Europe)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 20, 'Product 3 (Europe)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 20, 'Product 3 (Europe)', 'April Year 2019 - Sales', 4 FROM DUAL
+        UNION ALL SELECT 40, 'Product 3 (US)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 40, 'Product 3 (US)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 40, 'Product 3 (US)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 40, 'Product 3 (US)', 'April Year 2019 - Sales', 4 FROM DUAL
+        UNION ALL SELECT 5, 'Product 3 (Asia)', 'January Year 2019 - Sales', 1 FROM DUAL
+        UNION ALL SELECT 5, 'Product 3 (Asia)', 'February Year 2019 - Sales', 2 FROM DUAL
+        UNION ALL SELECT 5, 'Product 3 (Asia)', 'March Year 2019 - Sales', 3 FROM DUAL
+        UNION ALL SELECT 5, 'Product 3 (Asia)', 'April Year 2019 - Sales', 4 FROM DUAL
+) TBL
+ORDER BY MONNUM, PRODUCT]]>
+	</queryString>
+	<field name="SALES" class="java.math.BigDecimal"/>
+	<field name="PRODUCT" class="java.lang.String"/>
+	<field name="MONOFSALE" class="java.lang.String"/>
+	<field name="MONNUM" class="java.math.BigDecimal"/>
+	<group name="MONOFSALE">
+		<groupExpression><![CDATA[$F{MONOFSALE}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="209" splitType="Stretch">
+			<stackedBarChart>
+				<chart evaluationTime="Report" customizerClass="com.bizflow.jaspersoft.chart.HWStackedBarChartCustomizer">
+					<reportElement x="0" y="0" width="560" height="209" uuid="9dbd723b-35c3-4bba-90b3-d17ee063e238">
+						<property name="MaximumCategoryLabelWidthRatio" value="1"/>
+						<property name="ItemMargin" value="0.05"/>
+						<property name="CategoryMargin" value="0.2"/>
+						<property name="MaximumCategoryLabelLines" value="2"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="CategoryTitle" value="Product / Month"/>
+						<property name="Groups" value="P1;P2;P3"/>
+						<property name="SeriesGroups" value="Product 1 (US):G1;Product 1 (Europe):G1;Product 1 (Asia):G1;Product 2 (US):G2;Product 2 (Europe):G2;Product 2 (Asia):G2;Product 3 (US):G3;Product 3 (Europe):G3;Product 3 (Asia):G3"/>
+						<property name="SeriesColors" value="Product 1 (US):#015A84;Product 1 (Europe):#0085B0;Product 1 (Asia):#F8EB33;Product 2 (US):#015A84;Product 2 (Europe):#0085B0;Product 2 (Asia):#F8EB33;Product 3 (US):#015A84;Product 3 (Europe):#0085B0;Product 3 (Asia):#F8EB33;"/>
+						<property name="LegendColors" value="US:#015A84;Europe:#0085B0;Asia:#F8EB33; :#FFFFFF;P1-Product 1:#FFFFFF;P2 Product-2:#FFFFFF;P3-Product 3:#FFFFFF;"/>
+						<property name="SubLabelFont" value="Arial"/>
+						<property name="SubLabelFontSize" value="11"/>
+						<property name="SubLabelFontColor" value="#C52603"/>
+						<property name="LegendPosition" value="RIGHT"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{PRODUCT}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{MONOFSALE}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{SALES}]]></valueExpression>
+						<labelExpression><![CDATA[$F{PRODUCT}]]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</stackedBarChart>
+		</band>
+	</title>
+</jasperReport>
