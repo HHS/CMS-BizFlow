@@ -1,13 +1,3 @@
-----------------------------------------------------------------------------
---Create Fiscal calendar View 
-----------------------------------------------------------------------------
-----------------------------------------------------------------------------
-   
----------------------------------------------
---DDL for VW_FISCAL_CALENDAR
----------------------------------------------
-   
-
   CREATE OR REPLACE FORCE VIEW "HHS_CMS_HR"."VW_FISCAL_CALENDAR" (SVRID, DAYTYPE, DAYOFWEEK
         , CALDTIME, "FISCAL_YEAR", "FISCAL_YEAR_NAME", "FISCAL_QUARTER", "FISCAL_QUARTER_NAME") AS 
 
@@ -19,4 +9,8 @@
          , 'Q' || TO_CHAR(ADD_MONTHS(CALDTIME, 3), 'Q') FISCAL_QUARTER_NAME
   FROM BIZFLOW.CAL
   ORDER BY CALDTIME DESC;
+/
 
+GRANT SELECT ON HHS_CMS_HR.VW_FISCAL_CALENDAR TO HHS_CMS_HR_RW_ROLE;
+GRANT SELECT ON HHS_CMS_HR.VW_FISCAL_CALENDAR TO HHS_CMS_HR_DEV_ROLE;
+/
