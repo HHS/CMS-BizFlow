@@ -157,6 +157,7 @@ rule "Incentives / SAM Required Documents / Resume"
          $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
          $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "SAM" ) from $fields
          $field3: WorkflowField ( fieldId == "doesHaveResume", fieldValue == false ) from $fields
+         $field4: WorkflowField ( fieldId == "supportSAM", fieldValue != "No" ) from $fields
 
         $workflowDocuments : ArrayList()
 
@@ -174,6 +175,7 @@ rule "Incentives / SAM Required Documents / Package"
          $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
          $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "SAM" ) from $fields
          $field3: WorkflowField ( fieldId == "doesHavePackage", fieldValue == false ) from $fields
+         $field4: WorkflowField ( fieldId == "supportSAM", fieldValue != "No" ) from $fields		 
 
         $workflowDocuments : ArrayList()
 
@@ -190,7 +192,8 @@ rule "Incentives / SAM Required Documents "
                             )
          $field1: WorkflowField ( fieldId == "rule", fieldValue == "RequiredDocuments" ) from $fields
          $field2: WorkflowField ( fieldId == "incentiveType", fieldValue == "SAM" ) from $fields
-
+         $field3: WorkflowField ( fieldId == "supportSAM", fieldValue != "No" ) from $fields
+		 
         $workflowDocuments : ArrayList()
 
     then
