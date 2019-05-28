@@ -1,6 +1,3 @@
---------------------------------------------------------
---  DDL for Package SLA_PKS
---------------------------------------------------------
 create or replace PACKAGE SLA_PKS as
     
     FUNCTION GET_HIRING_TIMELINE_SLA
@@ -12,7 +9,8 @@ create or replace PACKAGE SLA_PKS as
 
     FUNCTION GET_HIRING_TIMELINE (
         I_REQUEST_NUMBER IN VARCHAR2,
-        I_CALENDAR_TYPE  IN VARCHAR2 DEFAULT 'Calendar'    
+        I_CALENDAR_TYPE  IN VARCHAR2 DEFAULT 'Calendar',
+        I_TIMEZONE       IN VARCHAR2 DEFAULT 'America/New_York'
     ) RETURN HIRING_TIMELINE_TABLE;
 
     FUNCTION GET_ACT_DATETIME 
@@ -37,12 +35,8 @@ create or replace PACKAGE SLA_PKS as
     RETURN VARCHAR2;
 
 END;
-
 /
---------------------------------------------------------
---  DDL for Package Body SLA_PKS
---------------------------------------------------------
-create or replace PACKAGE BODY "HHS_CMS_HR"."SLA_PKS" as
+create or replace PACKAGE BODY              "SLA_PKS" as
 
 FUNCTION LOOKUP_LABEL 
 (
@@ -66,6 +60,7 @@ FUNCTION TO_REPORT
 (
     I_SLA_RESULT_RECORD SLA_RESULT_RECORD,
     I_DATE_TYPE     VARCHAR2
+    
 ) RETURN VARCHAR2
 IS
     V_RESULT VARCHAR2(20);
@@ -124,11 +119,11 @@ IS
     V_REQUEST_TYPE_ID      NUMBER(10);
     V_REQUEST_STATUS_USA_STAFF VARCHAR2(50);
     V_ADMIN_CODE            VARCHAR2(50);
-    
+
     V_CLASS_TYPE_ID         NUMBER(10);
     V_APPOINTMENT_TYPE_ID   NUMBER(10);
     V_CLASS_MAJOR_FLAG      CHAR(1);
-    
+
     IDX                     INT;
 
 BEGIN
@@ -166,7 +161,7 @@ BEGIN
     EXCEPTION WHEN NO_DATA_FOUND THEN
         RETURN NULL;
     END;
-    
+
     -- Get USA Staffing data
     BEGIN
         SELECT REQUEST_STATUS
@@ -197,12 +192,12 @@ BEGIN
     FOR IDX IN V_SLA_RESULT_TBL.FIRST..V_SLA_RESULT_TBL.LAST LOOP
         IF V_REQUEST_STATUS_USA_STAFF = 'Request Cancelled' THEN
             -- Eligibility and Qualifications Review, and Offer section 
-            IF V_SLA_RESULT_TBL(IDX).SLA_ID LIKE '_\_EQRA%' ESCAPE '\' OR V_SLA_RESULT_TBL(IDX).SLA_ID LIKE '_\_O\_%' ESCAPE '\' THEN
+            --IF V_SLA_RESULT_TBL(IDX).SLA_ID LIKE '_\_EQRA%' ESCAPE '\' OR V_SLA_RESULT_TBL(IDX).SLA_ID LIKE '_\_O\_%' ESCAPE '\' THEN
                 V_SLA_RESULT_TBL(IDX).ASD_STR := 'N/A';
                 V_SLA_RESULT_TBL(IDX).ACD_STR := 'N/A';
                 V_SLA_RESULT_TBL(IDX).TCD_STR := 'N/A';
                 CONTINUE;
-            END IF; 
+            --END IF; 
         END IF;
         IF V_REQUEST_TYPE_ID = REQ_TYPE_CLASSIFICATION_ONLY THEN
             IF V_CLASS_TYPE_ID in (70,73) THEN --Update Coversheet, Reorganization Pen & Ink
@@ -253,10 +248,11 @@ BEGIN
                 END IF; 
             END IF;
         END IF;
-    
+
         V_SLA_RESULT_TBL(IDX).ASD := GET_ACT_DATETIME(I_REQUEST_NUMBER, V_SLA_RESULT_TBL(IDX).PROCESS_NAME, V_SLA_RESULT_TBL(IDX).ACTIVITY_NAME, 'START');
+        V_SLA_RESULT_TBL(IDX).ACD := GET_ACT_DATETIME(I_REQUEST_NUMBER, V_SLA_RESULT_TBL(IDX).PROCESS_NAME, V_SLA_RESULT_TBL(IDX).ACTIVITY_NAME, 'END');
+
         IF V_SLA_RESULT_TBL(IDX).ASD IS NOT NULL THEN
-            V_SLA_RESULT_TBL(IDX).ACD := GET_ACT_DATETIME(I_REQUEST_NUMBER, V_SLA_RESULT_TBL(IDX).PROCESS_NAME, V_SLA_RESULT_TBL(IDX).ACTIVITY_NAME, 'END');
             IF I_CALENDAR_TYPE = 'Calendar' THEN
                 V_SLA_RESULT_TBL(IDX).TCD :=  V_SLA_RESULT_TBL(IDX).ASD + V_SLA_RESULT_TBL(IDX).TOTAL_CALENDAR_DAY;
             ELSE
@@ -264,16 +260,21 @@ BEGIN
             END IF;
         END IF;
 
+
+        --DBMS_OUTPUT.PUT_LINE('V_PREV_TCD='||TO_CHAR(V_PREV_TCD, 'MM/DD/YYYY'));
+                
         IF V_SLA_RESULT_TBL(IDX).TCD IS NULL THEN
             IF I_CALENDAR_TYPE = 'Calendar' THEN
+                --DBMS_OUTPUT.PUT_LINE(IDX||': '||V_SLA_RESULT_TBL(IDX).SLA_ID||': TOTAL_CALENDAR_DAY='||V_SLA_RESULT_TBL(IDX).TOTAL_CALENDAR_DAY);
                 V_SLA_RESULT_TBL(IDX).TCD :=  V_PREV_TCD + V_SLA_RESULT_TBL(IDX).TOTAL_CALENDAR_DAY;
             ELSE
+                --DBMS_OUTPUT.PUT_LINE(IDX||': '||V_SLA_RESULT_TBL(IDX).SLA_ID||': TARGET_BUSINESS_DAY='||V_SLA_RESULT_TBL(IDX).TARGET_BUSINESS_DAY);
                 V_SLA_RESULT_TBL(IDX).TCD :=  BIZFLOW.HHS_FN_ADD_BUSDAY(V_PREV_TCD, V_SLA_RESULT_TBL(IDX).TARGET_BUSINESS_DAY);
-            END IF;            
+            END IF;
         END IF;
 
         V_PREV_TCD := V_SLA_RESULT_TBL(IDX).TCD;
-        
+
         IF V_SLA_RESULT_TBL(IDX).ASD_STR IS NULL THEN
             V_SLA_RESULT_TBL(IDX).ASD_STR := TO_REPORT(V_SLA_RESULT_TBL(IDX), 'ASD');
         END IF;
@@ -283,7 +284,7 @@ BEGIN
         IF V_SLA_RESULT_TBL(IDX).TCD_STR IS NULL THEN
             V_SLA_RESULT_TBL(IDX).TCD_STR := TO_REPORT(V_SLA_RESULT_TBL(IDX), 'TCD');
         END IF;
-        
+
     END LOOP;
 
     RETURN V_SLA_RESULT_TBL;
@@ -292,7 +293,8 @@ END GET_HIRING_TIMELINE_SLA;
 FUNCTION GET_HIRING_TIMELINE 
   (
     I_REQUEST_NUMBER IN VARCHAR2,
-    I_CALENDAR_TYPE  IN VARCHAR2 DEFAULT 'Calendar'    
+    I_CALENDAR_TYPE  IN VARCHAR2 DEFAULT 'Calendar',
+    I_TIMEZONE       IN VARCHAR2 DEFAULT 'America/New_York'
   )
 RETURN HIRING_TIMELINE_TABLE 
 IS
@@ -343,7 +345,7 @@ BEGIN
     EXCEPTION WHEN NO_DATA_FOUND THEN
         RETURN NULL;
     END;
-    
+
     -- Get USA Staffing data
     BEGIN
         SELECT REQUEST_STATUS
@@ -363,12 +365,12 @@ BEGIN
     ELSE
         V_TH_REC.SUMMARY := V_TH_REC.SUMMARY || ' ' || V_TH_REC.REQUEST_TYPE ||' Request Created on '|| V_TH_REC.CREATE_DATE;
     END IF;
-    
+
     IF V_TH_REC.ADMIN_CODE IS NOT NULL THEN
         V_TH_REC.SUMMARY := V_TH_REC.SUMMARY || ' for ' || V_TH_REC.ADMIN_CODE ;
     END IF;
-    
-    
+
+
     -- Set section title
     IF V_TH_REC.REQUEST_TYPE_ID = REQ_TYPE_APPOINTMENT THEN
         V_TH_REC.TTL_STRATEGIC_CONSULTATION := 'Strategic Consultation (Appointment Actions)';
@@ -380,7 +382,7 @@ BEGIN
     V_TH_REC.TTL_CLASSIFICATION := 'Classification';
     V_TH_REC.TTL_RECRUITMENT := 'Recruitment';
     V_TH_REC.TTL_OFFER := 'Offer';
-    
+
     -- Show/hide section
     V_TH_REC.SHOW_STRATEGIC_CONSULTATION := 'T';
     V_TH_REC.SHOW_CLASSIFICATION := 'T';
@@ -491,7 +493,7 @@ BEGIN
             V_TH_REC.O_6_TCD := TO_REPORT(V_SLA_RESULT_TBL(IDX), 'TCD');
         END IF;
     END LOOP;
-    
+
     V_RESULT.EXTEND;
     V_RESULT(1) := V_TH_REC;
 
@@ -507,7 +509,7 @@ FUNCTION GET_ACT_DATETIME
 ) 
 RETURN DATE 
 IS
-    PROCID INTEGER;
+    V_PROCID INTEGER;
     PROCNM VARCHAR2(500);
     DATA_SRC VARCHAR2(10);
     DEBUG_MSG VARCHAR2(1000);
@@ -583,22 +585,21 @@ BEGIN
 
     IF UPPER(I_SLA_PROCNM) = 'STRATEGIC CONSULTATION' THEN
         PROCNM := 'Strategic Consultation';
-    ELSIF UPPER(I_SLA_PROCNM) = 'ELIGIBILITY AND QUALIFICATIONS REVIEW ACTIVITIES ' THEN
+    ELSIF UPPER(I_SLA_PROCNM) = 'ELIGIBILITY AND QUALIFICATIONS REVIEW ACTIVITIES' THEN
         PROCNM := 'Eligibility and Qualifications Review';
     ELSIF UPPER(I_SLA_PROCNM) = 'CLASSIFICATION - MAJOR' THEN
         PROCNM := 'Classification';
-    ELSIF UPPER(I_SLA_PROCNM) = 'CLASSIFICATION - MINOR	' THEN
+    ELSIF UPPER(I_SLA_PROCNM) = 'CLASSIFICATION - MINOR' THEN
         PROCNM := 'Classification';
     END IF;
-    
-
 
     IF UPPER(I_SLA_PROCNM) = 'OFFER' OR UPPER(I_SLA_PROCNM) = 'RECRUITMENT' THEN
         DATA_SRC := 'USAS'; --USA Staffing table
     ELSE
         DATA_SRC := 'EWITS';
     END IF;
-
+    
+    DBMS_OUTPUT.PUT_LINE('PROCNM=' || PROCNM);
     DBMS_OUTPUT.PUT_LINE('DATA_SRC=' || DATA_SRC);
 
     ----------------------------------------------------------------------------------------------------
@@ -606,7 +607,7 @@ BEGIN
 
         BEGIN
             SELECT P.PROCID
-              INTO PROCID
+              INTO V_PROCID
               FROM BIZFLOW.RLVNTDATA PV
                     JOIN BIZFLOW.PROCS P ON P.PROCID = PV.PROCID
              WHERE PV.RLVNTDATANAME = 'requestNum'
@@ -615,7 +616,7 @@ BEGIN
         EXCEPTION WHEN NO_DATA_FOUND THEN
             RETURN NULL;
         END;
-        DBMS_OUTPUT.PUT_LINE('PROCID=' || PROCID);
+        DBMS_OUTPUT.PUT_LINE('PROCID=' || V_PROCID);
 
         --MAP between SLA ACT to BizFlow ACT
         IF UPPER(I_SLA_PROCNM) = 'STRATEGIC CONSULTATION' THEN
@@ -665,23 +666,23 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('ACTNM_5=' || ACTNM_5);
 
         IF UPPER(I_DATE_TP) = 'START' THEN
-
+            DBMS_OUTPUT.PUT_LINE('GETTING MIN STARTDTIME PROCID=' || TO_CHAR(V_PROCID));
             SELECT MIN(STARTDTIME)
               INTO DT_START
               FROM BIZFLOW.ACT
              WHERE TYPE = 'P'
                AND STATE != 'D'
-               AND PROCID = PROCID
+               AND PROCID = V_PROCID
                AND NAME IN (ACTNM_1, ACTNM_2, ACTNM_3, ACTNM_4, ACTNM_5);
 
         ELSE
-
+            DBMS_OUTPUT.PUT_LINE('GETTING max cmpltdtime');
             SELECT MAX(cmpltdtime)
               INTO DT_COMPLETION
               FROM BIZFLOW.ACT
              WHERE TYPE = 'P'
                AND STATE != 'D'
-               AND PROCID = PROCID
+               AND PROCID = V_PROCID
                AND NAME IN (ACTNM_1, ACTNM_2, ACTNM_3, ACTNM_4, ACTNM_5);
 
          END IF;
@@ -898,7 +899,6 @@ BEGIN
 END GET_ACT_DATETIME;
 
 END;
-
 /
 
 GRANT EXECUTE ON HHS_CMS_HR.SLA_PKS TO BIZFLOW WITH GRANT OPTION;
