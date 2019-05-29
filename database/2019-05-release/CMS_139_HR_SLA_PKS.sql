@@ -1,3 +1,5 @@
+SET DEFINE OFF;
+
 create or replace PACKAGE SLA_PKS as
     
     FUNCTION GET_HIRING_TIMELINE_SLA
