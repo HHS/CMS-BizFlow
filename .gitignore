@@ -6,3 +6,4 @@ java/**/out/**
 **/.idea/**
 desktop.ini
 *.iml
+Thumbs.db
