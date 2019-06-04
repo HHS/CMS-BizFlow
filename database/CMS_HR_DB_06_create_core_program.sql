@@ -686,7 +686,7 @@ IS
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'meetingResched',  '/DOCUMENT/PROCESS_VARIABLE/meetingResched/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdClassSpec', '/DOCUMENT/GENERAL/SG_CS_ID/text()', null);      
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdSelectOff', '/DOCUMENT/GENERAL/SG_SO_ID/text()', null);
-      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdStaffSpec', '/DOCUMENT/GENERAL/SG_SS_ID/text()', null);
+      HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'memIdStaffSpec', '/DOCUMENT/GENERAL/SG_SS_ID_PV/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posLocation', '/DOCUMENT/POSITION/POS_LOCATION/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'posTitle', '/DOCUMENT/POSITION/POS_TITLE/text()', null);
       HHS_CMS_HR.SP_UPDATE_PV_BY_XPATH(I_PROCID, I_FIELD_DATA, 'requestNum', '/DOCUMENT/PROCESS_VARIABLE/requestNum/text()', null);
@@ -1265,13 +1265,13 @@ IS
       UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 
       V_RLVNTDATANAME := 'staffSpecialist';
-      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_SS_ID/text()');
+      V_XMLVALUE := I_FIELD_DATA.EXTRACT('/DOCUMENT/GENERAL/SG_SS_ID_PV/text()');
       IF V_XMLVALUE IS NOT NULL THEN
         -------------------------------
         -- participant prefix
         -------------------------------
         --V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-        -- If the Job Request is for Special Program, SG_SS_ID may point to User Group,
+        -- If the Job Request is for Special Program, SG_SS_ID_PV may point to User Group,
         -- rather than individual user.  Therefore, lookup
         V_VALUE := V_XMLVALUE.GETSTRINGVAL();
         BEGIN
@@ -6546,7 +6546,7 @@ END;
 /**
  * Updates initial Eligiblity and Qualification process data.
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_INIT_ELIGQUAL
+create or replace PROCEDURE SP_UPDATE_INIT_ELIGQUAL
 (
 	I_PROCID               IN  NUMBER
 )
@@ -6626,6 +6626,33 @@ BEGIN
 	END IF;
 
 
+	V_RLVNTDATANAME := 'staffSpecialist';
+    V_XMLVALUE := V_XMLDOC.EXTRACT('/DOCUMENT/GENERAL/SS_ID/text()');
+    IF V_XMLVALUE IS NOT NULL THEN
+        -------------------------------
+        -- participant prefix
+        -------------------------------
+        --V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
+        -- If the Job Request is for Special Program, SG_SS_ID_PV may point to User Group,
+        -- rather than individual user.  Therefore, lookup
+        V_VALUE := V_XMLVALUE.GETSTRINGVAL();
+        BEGIN
+          SELECT TYPE INTO V_VALUE_LOOKUP FROM BIZFLOW.MEMBER WHERE MEMBERID = V_VALUE;
+          EXCEPTION
+          WHEN OTHERS THEN
+          V_VALUE_LOOKUP := NULL;
+        END;
+
+        IF V_VALUE_LOOKUP IS NOT NULL THEN
+          V_VALUE := '[' || V_VALUE_LOOKUP || ']' || V_XMLVALUE.GETSTRINGVAL();
+        ELSE
+          V_VALUE := NULL;
+        END IF;
+    ELSE
+        V_VALUE := NULL;
+    END IF;
+	UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
+      
 	SP_UPDATE_FORM_DATA(V_ID, 'CMSELIGQUAL'
 		, V_XMLDOC.GETCLOBVAL()
 		, 'SYSTEM'
