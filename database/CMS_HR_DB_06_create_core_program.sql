@@ -6624,34 +6624,6 @@ BEGIN
 		--DBMS_OUTPUT.PUT_LINE('    V_VALUE         = ' || V_VALUE);
 		UPDATE BIZFLOW.RLVNTDATA SET VALUE = V_VALUE WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
 	END IF;
-
-
-	V_RLVNTDATANAME := 'staffSpecialist';
-    V_XMLVALUE := V_XMLDOC.EXTRACT('/DOCUMENT/GENERAL/SS_ID/text()');
-    IF V_XMLVALUE IS NOT NULL THEN
-        -------------------------------
-        -- participant prefix
-        -------------------------------
-        --V_VALUE := '[U]' || V_XMLVALUE.GETSTRINGVAL();
-        -- If the Job Request is for Special Program, SG_SS_ID_PV may point to User Group,
-        -- rather than individual user.  Therefore, lookup
-        V_VALUE := V_XMLVALUE.GETSTRINGVAL();
-        BEGIN
-          SELECT TYPE INTO V_VALUE_LOOKUP FROM BIZFLOW.MEMBER WHERE MEMBERID = V_VALUE;
-          EXCEPTION
-          WHEN OTHERS THEN
-          V_VALUE_LOOKUP := NULL;
-        END;
-
-        IF V_VALUE_LOOKUP IS NOT NULL THEN
-          V_VALUE := '[' || V_VALUE_LOOKUP || ']' || V_XMLVALUE.GETSTRINGVAL();
-        ELSE
-          V_VALUE := NULL;
-        END IF;
-    ELSE
-        V_VALUE := NULL;
-    END IF;
-	UPDATE BIZFLOW.RLVNTDATA SET VALUE = UTL_I18N.UNESCAPE_REFERENCE(V_VALUE) WHERE RLVNTDATANAME = V_RLVNTDATANAME AND PROCID = I_PROCID;
       
 	SP_UPDATE_FORM_DATA(V_ID, 'CMSELIGQUAL'
 		, V_XMLDOC.GETCLOBVAL()
