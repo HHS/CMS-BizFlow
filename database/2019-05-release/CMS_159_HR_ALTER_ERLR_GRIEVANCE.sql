@@ -1,0 +1,6 @@
+ALTER TABLE ERLR_GRIEVANCE
+  ADD GI_GRIEVANCE_RELATED_2_PMAP_2 nvarchar2(3);
+ 
+COMMENT ON COLUMN ERLR_GRIEVANCE.GI_GRIEVANCE_RELATED_2_PMAP_2 IS 'Whether Grievance was Related to a PMAP or not for Negotiated type of Grievance'; 
+ 
+COMMIT;
