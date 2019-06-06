@@ -1,22 +1,23 @@
 
 INSERT INTO HHS_CMS_HR.TBL_LOOKUP (TBL_ID, TBL_PARENT_ID, TBL_LTYPE, TBL_NAME, TBL_LABEL, TBL_ACTIVE, TBL_DISP_ORDER, TBL_MANDATORY, TBL_REGION, TBL_CATEGORY, TBL_EFFECTIVE_DT, TBL_EXPIRATION_DT) 
-VALUES (1870, 0, 'Incentives-Locality', 'Birmingham-Hoover-Talladega, AL', 'Birmingham-Hoover-Talladega, AL', '1', 999, 'N', null, 'ERLR', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+VALUES (1870, 0, 'Incentives-Locality', 'Birmingham-Hoover-Talladega, AL', 'Birmingham-Hoover-Talladega, AL', '1', 999, 'N', null, 'IN', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO HHS_CMS_HR.TBL_LOOKUP (TBL_ID, TBL_PARENT_ID, TBL_LTYPE, TBL_NAME, TBL_LABEL, TBL_ACTIVE, TBL_DISP_ORDER, TBL_MANDATORY, TBL_REGION, TBL_CATEGORY, TBL_EFFECTIVE_DT, TBL_EXPIRATION_DT) 
-VALUES (1871, 0, 'Incentives-Locality', 'Burlington-South Burlington, VT', 'Burlington-South Burlington, VT', '1', 999, 'N', null, 'ERLR', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+VALUES (1871, 0, 'Incentives-Locality', 'Burlington-South Burlington, VT', 'Burlington-South Burlington, VT', '1', 999, 'N', null, 'IN', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO HHS_CMS_HR.TBL_LOOKUP (TBL_ID, TBL_PARENT_ID, TBL_LTYPE, TBL_NAME, TBL_LABEL, TBL_ACTIVE, TBL_DISP_ORDER, TBL_MANDATORY, TBL_REGION, TBL_CATEGORY, TBL_EFFECTIVE_DT, TBL_EXPIRATION_DT) 
-VALUES (1872, 0, 'Incentives-Locality', 'Corpus Christi-Kingsville-Alice, TX', 'Corpus Christi-Kingsville-Alice, TX', '1', 999, 'N', null, 'ERLR', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+VALUES (1872, 0, 'Incentives-Locality', 'Corpus Christi-Kingsville-Alice, TX', 'Corpus Christi-Kingsville-Alice, TX', '1', 999, 'N', null, 'IN', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO HHS_CMS_HR.TBL_LOOKUP (TBL_ID, TBL_PARENT_ID, TBL_LTYPE, TBL_NAME, TBL_LABEL, TBL_ACTIVE, TBL_DISP_ORDER, TBL_MANDATORY, TBL_REGION, TBL_CATEGORY, TBL_EFFECTIVE_DT, TBL_EXPIRATION_DT) 
-VALUES (1873, 0, 'Incentives-Locality', 'Omaha-Council Bluffs-Fremont, NE-IA', 'Omaha-Council Bluffs-Fremont, NE-IA', '1', 999, 'N', null, 'ERLR', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+VALUES (1873, 0, 'Incentives-Locality', 'Omaha-Council Bluffs-Fremont, NE-IA', 'Omaha-Council Bluffs-Fremont, NE-IA', '1', 999, 'N', null, 'IN', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO HHS_CMS_HR.TBL_LOOKUP (TBL_ID, TBL_PARENT_ID, TBL_LTYPE, TBL_NAME, TBL_LABEL, TBL_ACTIVE, TBL_DISP_ORDER, TBL_MANDATORY, TBL_REGION, TBL_CATEGORY, TBL_EFFECTIVE_DT, TBL_EXPIRATION_DT) 
-VALUES (1874, 0, 'Incentives-Locality', 'San Antonio-New Braunfels-Pearsall, TX', 'San Antonio-New Braunfels-Pearsall, TX', '1', 999, 'N', null, 'ERLR', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+VALUES (1874, 0, 'Incentives-Locality', 'San Antonio-New Braunfels-Pearsall, TX', 'San Antonio-New Braunfels-Pearsall, TX', '1', 999, 'N', null, 'IN', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 INSERT INTO HHS_CMS_HR.TBL_LOOKUP (TBL_ID, TBL_PARENT_ID, TBL_LTYPE, TBL_NAME, TBL_LABEL, TBL_ACTIVE, TBL_DISP_ORDER, TBL_MANDATORY, TBL_REGION, TBL_CATEGORY, TBL_EFFECTIVE_DT, TBL_EXPIRATION_DT) 
-VALUES (1875, 0, 'Incentives-Locality', 'Virginia Beach-Norfolk, VA-NC', 'Virginia Beach-Norfolk, VA-NC', '1', 999, 'N', null, 'ERLR', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+VALUES (1875, 0, 'Incentives-Locality', 'Virginia Beach-Norfolk, VA-NC', 'Virginia Beach-Norfolk, VA-NC', '1', 999, 'N', null, 'IN', TO_DATE('2017-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2050-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
+-- In order to reset display sort order after adding new items.
 MERGE INTO HHS_CMS_HR.TBL_LOOKUP u
 USING (
     SELECT TBL_ID, TBL_LABEL, row_number() OVER (ORDER BY TBL_LABEL) rnum 
