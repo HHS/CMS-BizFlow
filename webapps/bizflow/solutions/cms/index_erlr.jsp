@@ -109,6 +109,49 @@ private String getCMSUserGroups() throws Exception
     return sb.toString();
 }
 
+private String getERLRStatus() throws Exception
+{
+    String query = "SELECT TBL_LABEL FROM HHS_CMS_HR.TBL_LOOKUP WHERE TBL_LTYPE = 'ERLRInitialResponseCasesStatus' AND TBL_ACTIVE = 1 ORDER BY TBL_NAME ";
+
+    Connection conn = getBizFlowDBConnection();
+    Statement stmt = null;
+    StringBuilder sb = new StringBuilder();
+
+    try {
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        sb.append("[");
+        boolean isFirst = true;
+        
+        while (rs.next()) {
+            if (isFirst == false) {
+                sb.append(",");
+            }
+            
+            String label = rs.getString("TBL_LABEL");
+
+            sb.append("\"").append(label).append("\"");
+            isFirst = false;
+        }
+
+        sb.append("]");
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        throw e;
+    } finally {
+        if (stmt != null) {
+            stmt.close();
+        }
+        if (conn != null) {
+            conn.close();
+        }
+    }
+
+    return sb.toString();
+}
+
 private String getERLRTypes() throws Exception
 {
     String query = "SELECT P.TBL_NAME PARENTNAME, T.TBL_ID ID, T.TBL_PARENT_ID PARENTID, T.TBL_LTYPE TYPE, T.TBL_NAME NAME " +
@@ -201,6 +244,16 @@ private String getERLRTypes() throws Exception
     } else {
         System.out.println("Using cached cms.erlrType");
     }
+
+    String erlrCaseStatus = bizflowProps.getProperty("cms.erlrCaseStatus");
+    if (erlrCaseStatus == null || erlrCaseStatus.length() == 0) {
+        System.out.println("cms.erlrCaseStatus is null or empty");
+        erlrCaseStatus = getERLRStatus();
+        bizflowProps.setProperty("cms.erlrCaseStatus", erlrCaseStatus);
+    } else {
+        System.out.println("Using cached cms.erlrCaseStatus");
+    }
+
 %>
 
 <!DOCTYPE html>
@@ -285,6 +338,8 @@ CMS_REPORT_FILTER.LABEL = {};
 CMS_REPORT_FILTER.LABEL.DATE = '<%= DATELABEL %>';
 
 CMS_REPORT_FILTER.ERLRTYPE = '<%= erlrType %>';
+
+CMS_REPORT_FILTER.ERLRCASESTATUS = '<%= erlrCaseStatus %>';
 
 -->    
 </script>
