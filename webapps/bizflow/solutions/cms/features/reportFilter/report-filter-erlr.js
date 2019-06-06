@@ -20,15 +20,6 @@
         // Primitive Options - Not for Selectize
         vm._components = ['By Admin Code', 'Office of the Administrator (OA) Only'];
         vm._includeSubOrgs = ['Yes', 'No'];
-        vm._caseStatusList = ['All', 'Drafting Document', 'Manager/Employee Out of Office',
-                          'Manager Review/Drafting Document', 'Pending Appeal',
-                          'Pending Customer Decision', 'Pending Grievance Decision',
-                          'Pending IG Determination', 'Pending Internal Review',
-                          'Pending OGC Opinion', 'Pending Oral Presentation',
-                          'Pending OSC Investigation', 'Pending Administrative Investigation',
-                          'Pending Third Party Decision', 'Researching',
-                          'Settlement Discussions', 'Waiting for Information'];
-        vm._caseStatusList.sort();
         vm._allCategories = [];
         vm._allFinalActions = [];
         
@@ -343,23 +334,54 @@
         };
 
         vm.initERLRTypes = function() {
+            // Initialization per Report
+            if (vm.report.name == 'CMS Grievance Report') {
+                vm.ERLRTypes = ['Grievance'];
+                vm.orgSelected.caseType = 'Grievance';
+            } else if (vm.report.name == 'CMS HPC Report') {
+                vm.ERLRTypes = ['Investigation'];
+                vm.orgSelected.caseType = 'Investigation';
+            } else if (vm.report.name == 'CMS Performance Improvement Plan (PIP) Report') {
+                vm.ERLRTypes = ['Performance Issue'];
+                vm.orgSelected.caseType = 'Performance Issue';
+            } else if (vm.report.name == 'CMS Standards of Conduct Case') {
+                vm.ERLRTypes = ['All', 'Conduct Issue', 'Investigation'];
+                vm.orgSelected.caseType = 'All';
+            } else if (vm.report.name == 'CMS Travel Card Case Report') {
+                vm.ERLRTypes = ['All', 'Conduct Issue', 'Investigation', 'Probationary Period Action'];
+                vm.orgSelected.caseType = 'All';
+            } else if (vm.report.name == 'CMS Trends Report') {
+                vm._components = ['CMS-wide'];
+                vm.orgSelected.component = 'CMS-wide';
+            } else if (vm.report.name == 'CMS Trends Number of Cases By Component Report') {
+                vm._components = ['CMS-wide'];
+                vm.orgSelected.component = 'CMS-wide';
+            }
+
+            var isFixedERLRTypes = (vm.ERLRTypes.length != 1 || vm.ERLRTypes[0] != 'All') ? true : false;
             for (var prop in vm.ERLRTypeMap) {
                 if (vm.ERLRTypeMap.hasOwnProperty(prop)) {
-                    vm.ERLRTypes.push(prop);
+                    if (isFixedERLRTypes == false) {
+                        vm.ERLRTypes.push(prop);
+                    }
+                    
                     vm.ERLRTypeMap[prop] = _.groupBy(vm.ERLRTypeMap[prop], 'TYPE');
 
                     for (var subProp in vm.ERLRTypeMap[prop]) {
                         if (vm.ERLRTypeMap[prop].hasOwnProperty(subProp)) {
                             vm.ERLRTypeMap[prop][subProp] = _.sortBy(vm.ERLRTypeMap[prop][subProp], ['NAME']);
 
-                            if (subProp == 'ERLRCaseCategory') {
-                                vm._allCategories = _.unionBy(vm._allCategories, vm.ERLRTypeMap[prop][subProp], 'NAME');
-                            } else if (subProp == 'ERLRCasesCompletedFinalAction') {
-                                vm._allFinalActions = _.unionBy(vm._allFinalActions, vm.ERLRTypeMap[prop][subProp], 'NAME');
+                            if (isFixedERLRTypes == false || _.includes(vm.ERLRTypes, prop) == true) {
+                                if (subProp == 'ERLRCaseCategory') {
+                                    vm._allCategories = _.unionBy(vm._allCategories, vm.ERLRTypeMap[prop][subProp], 'NAME');
+                                } else if (subProp == 'ERLRCasesCompletedFinalAction') {
+                                    vm._allFinalActions = _.unionBy(vm._allFinalActions, vm.ERLRTypeMap[prop][subProp], 'NAME');
+                                }
+                                vm.ERLRTypeMap[prop][subProp].unshift({PNAME: prop, PID: '', ID:'', TYPE: '', NAME: 'All'});
                             }
-                            vm.ERLRTypeMap[prop][subProp].unshift({PNAME: prop, PID: '', ID:'', TYPE: '', NAME: 'All'});
                         }
                     }
+                    
                 }
             }
 
@@ -375,30 +397,6 @@
             vm.categories = vm._allCategories;
             vm.finalActions = vm._allFinalActions;
             vm.ERLRTypes.sort();
-
-            // Initialization per Report
-            if (vm.report.name == 'CMS Grievance Report') {
-                vm.ERLRTypes = ['Grievance'];
-                vm.orgSelected.caseType = 'Grievance';
-            } else if (vm.report.name == 'CMS HPC Report') {
-                vm.ERLRTypes = ['Investigation'];
-                vm.orgSelected.caseType = 'Investigation';
-            } else if (vm.report.name == 'CMS Performance Improvement Plan (PIP) Report') {
-                vm.ERLRTypes = ['Performance Issue'];
-                vm.orgSelected.caseType = 'Performance Issue';
-            } else if (vm.report.name == 'CMS Standards of Conduct Case') {
-                vm.ERLRTypes = ['Conduct Issue'];
-                vm.orgSelected.caseType = 'Conduct Issue';
-            } else if (vm.report.name == 'CMS Travel Card Case Report') {
-                vm.ERLRTypes = ['All', 'Conduct Issue', 'Probationary Period Action'];
-                vm.orgSelected.caseType = 'All';
-            } else if (vm.report.name == 'CMS Trends Report') {
-                vm._components = ['CMS-wide'];
-                vm.orgSelected.component = 'CMS-wide';
-            } else if (vm.report.name == 'CMS Trends Number of Cases By Component Report') {
-                vm._components = ['CMS-wide'];
-                vm.orgSelected.component = 'CMS-wide';
-            }
         }
 
         // Calendar functions & configuration
@@ -577,9 +575,7 @@
             return $http({
                 method: "POST",
                 url: url,
-                headers: {
-                    "Accept": "application/xml"
-                }
+                headers: {"Accept": "application/xml"}
             }).then(function success(response) {
                 var result = x2js.xml_str2json(response.data);
 
@@ -598,11 +594,7 @@
                     for (var index = 0; index < count; index++) {
                         var first = users[index].FIRST_NAME;
                         var last = users[index].LAST_NAME; 
-                        //var email = users[index].EMAIL_ADDR;
                         var label = last + ', ' + first
-                        // if (email != null && email.length > 0) {
-                        //     label = label + " (" + email + ")";
-                        // } 
                         foundUsers.push(label);
                     }
                 } catch (e) {
@@ -612,7 +604,6 @@
                 return [];
             })
         }                
-
 
         vm.checkParameter = function() {
             var message = '';
@@ -651,19 +642,6 @@
                 vm.report.element.Date.label = 'Initial Contact Date Range';
             }
 
-            // // Request Type
-            // if (CMS_REPORT_FILTER.REQUESTTYPE && CMS_REPORT_FILTER.REQUESTTYPE.length > 0) {
-            //     vm._requestTypes = JSON.parse(CMS_REPORT_FILTER.REQUESTTYPE);
-            //     if (vm._requestTypes.length > 0) { 
-            //         if (vm._requestTypes.length == 1) {
-            //             vm.orgSelected.requestType = vm._requestTypes[0]
-            //         }
-            //     } else {
-            //         validParameter = false;
-            //         message = message + '<li>' + 'Parameter [REQUESTTYPE] has empty list or invalid.' + '</li>';
-            //     }
-            // }
-
             var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
             CMS_REPORT_FILTER.GROUPS = null;
             vm.group = _.groupBy(groups, 'grpname');            
@@ -673,10 +651,12 @@
             vm.ERLRTypeMap = _.groupBy(types, 'PNAME');
             vm.ERLRTypes = ['All'];
 
+            vm._caseStatusList = JSON.parse(CMS_REPORT_FILTER.ERLRCASESTATUS);
+            vm._caseStatusList.unshift("All");
+
             if (validParameter == false) {
                 var errorMessage = "<h4 style='color:red'>Invalid Report Filter UI Configuration</h4><p><h5>Please check following parameter(s).</h5></p><ul>";
                 errorMessage = errorMessage + message + '</ul>';
-    
                 bootbox.alert(errorMessage);
             }
         };
@@ -693,19 +673,17 @@
             vm.initUserGroups();
             vm.initERLRTypes();
 
-            $.ajaxSetup({
-                cache:false
-            });
+            $.ajaxSetup({cache:false});
             
             vm.adjustBizCoveUI();
             vm.selected = _.assign({}, vm.orgSelected);
-
-            $('#reportFilter').attr('aria-busy', 'false');
 
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
             vm.caseTypes = vm.getSelectizeOptions(vm.ERLRTypes);
             vm.caseStatusList = vm.getSelectizeOptions(vm._caseStatusList);
+
+            $('#reportFilter').attr('aria-busy', 'false');
         };        
     }
 })();
