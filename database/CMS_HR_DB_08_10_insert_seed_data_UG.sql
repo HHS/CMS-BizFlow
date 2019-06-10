@@ -19,7 +19,7 @@ BEGIN
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DCO Managers and Leads', 'DCO Managers and Leads', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('DCO Managers Only', 'DCO Managers Only', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('Report Pilot Testers', 'Report Pilot Testers', parent_mem_id);
-  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('HR Specialists', 'HR Specialists', parent_mem_id);
+  INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('HR Specialists Group A', 'HR Specialists Group A', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('TABG Directors', 'TABG Directors', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('OHC Directors', 'OHC Directors', parent_mem_id);
   INSERT INTO UG_MAPPING(KEY, NAME, PARENT_MEM_ID) VALUES ('OFM Directors', 'OFM Directors', parent_mem_id);
