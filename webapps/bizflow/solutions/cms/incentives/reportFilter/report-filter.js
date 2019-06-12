@@ -16,6 +16,7 @@
         // Attributes
         vm.report = {'name': '', 'description': ''};
         vm.group = {};
+		vm.hrSpecialists = {};
 
         // Primitive Options - Not for Selectize
         vm._components = ['By Request Number', 'By Admin Code', 'Office of the Administrator (OA) Only'];
@@ -217,6 +218,9 @@
             if (amIDCOManagerLeads.length > 0 || amIAdminTeam.length > 0) {
                 vm._components = ['By Request Number', 'By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
             }
+			
+			//TODO: merge group A and B
+			vm.hrSpecialists = vm.group['HR Specialists Group B'].concat(vm.group['HR Specialists Group A']);
         };
 
         // Calendar functions & configuration
@@ -271,8 +275,18 @@
                 }
             }
 			
+
             var date_from = "DATE_FROM";
 			var date_to = "DATE_TO";
+			/*
+			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE") {
+				date_from = "COMP_DATE_FROM";
+				date_to = "COMP_DATE_TO";
+			} else {
+				date_from = "DATE_FROM";
+				date_to = "DATE_TO";
+			}
+			*/
             if (vm.selected.fromDate != null) {
                 var from = vm.getDateString(vm.selected.fromDate);
                 url = url + '&' + date_from + '=' + from;
@@ -307,15 +321,6 @@
             if (vm.selected.appointmentType) {
                 url = url + '&APPT_TYPE=' + encodeURIComponent(vm.selected.appointmentType); // Appointment Type -- EncodeD
             }
-
-            // url = url + '&SCHDA_TYPE=' + vm.selected.scheduleAType; // Schedula A Type
-            // url = url + '&VOL_TYPE=' + vm.selected.volunteerType; // Volunteer Type
-            //url = url + '&SO_ID=' + vm.selected.selectingOfficial; // Selecting Official
-            // url = url + '&XO_ID=' + vm.selected.executiveOfficer; // Executive Officer
-            // url = url + '&HRL_ID=' + vm.selected.hrLiaison; // HR Liaison
-            // url = url + '&SS_ID=' + vm.selected.staffSpecialist; // Staff specialist
-            // url = url + '&CS_ID=' + vm.selected.classSpecialist; // Class specialist
-            //$log.debug('Report URL [' + url + ']');
 			
             if (vm.selected.dayType) {
 				url = url + '&DAYS=' + vm.selected.dayType; // Type of Days [Business Days | Calendar Days]
@@ -394,6 +399,13 @@
             }
         };
 
+		vm.requestType_onChange = function() {
+			console.log("requestType_onChange!!!!!!");
+			if (vm.selected.requestType == "Recruitment") {
+				vm.selected.appointmentType = "All";
+			}
+		}
+		
         vm.$onInit = function () {
             $log.info('reportFilter $onInit');
             // This should be called first.
@@ -404,6 +416,13 @@
             vm.selected = _.assign({}, vm.orgSelected);
             
             $('#reportFilter').attr('aria-busy', 'false');
+/*
+			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE") {
+				vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
+			} else {
+				vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
+			}
+*/
             vm.requestTypes = vm.getSelectizeOptions(vm._requestTypes);
             //vm.requestStatus = vm.getSelectizeOptions(vm._requestStatus);
             vm.appointmentTypes = vm.getSelectizeOptions(vm._appointmentTypes);
