@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-04-22T14:48:45 -->
+<!-- 2019-06-11T16:04:49 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives Time to Completion Report - SAM and LE" pageWidth="1008" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="988" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="155"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="840"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sgurung"/>
+	<property name="ireport.jasperserver.user" value="jmiranda"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="819"/>
@@ -26,7 +26,6 @@
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -236,16 +235,14 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CMS HR Incentives Time to Completion Report for SAM & LE]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="31" width="988" height="16" uuid="02590605-01a1-4763-877f-efdc7a105a48">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center">
+				<reportElement x="0" y="31" width="988" height="20" uuid="02590605-01a1-4763-877f-efdc7a105a48"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($P{REPORT_MODE}.contains("By Component")) ?
@@ -266,295 +263,296 @@ SELECT
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="45" height="50" backcolor="#1C16D9" uuid="b89693f7-67a6-4e70-b367-a4eb522a1f6c">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="45" height="50" backcolor="#D6D7D9" uuid="b89693f7-67a6-4e70-b367-a4eb522a1f6c">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Request Created]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="45" y="0" width="50" height="50" uuid="c99c85d1-87ce-48bb-822a-d148ef0db37d">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="45" y="0" width="50" height="50" backcolor="#D6D7D9" uuid="c99c85d1-87ce-48bb-822a-d148ef0db37d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Job Request Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="95" y="0" width="45" height="50" uuid="692bdb47-51b1-44f3-b204-1d436a8681cf">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="95" y="0" width="45" height="50" backcolor="#D6D7D9" uuid="692bdb47-51b1-44f3-b204-1d436a8681cf">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Admin Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="305" y="0" width="60" height="50" uuid="c69a4247-4119-4387-aa42-0be7618d1655">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="305" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="c69a4247-4119-4387-aa42-0be7618d1655">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Candidate Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="365" y="0" width="55" height="50" uuid="b42223a9-a877-42d7-b859-53e207014b33">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="365" y="0" width="55" height="50" backcolor="#D6D7D9" uuid="b42223a9-a877-42d7-b859-53e207014b33">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Pay Plan - Series - Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="420" y="0" width="60" height="50" uuid="bce994e8-540b-4af6-9d7e-be1fe44b40c1">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="420" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="bce994e8-540b-4af6-9d7e-be1fe44b40c1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[HR Initiates Request
 (HR)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="840" y="0" width="45" height="50" uuid="088bd8ce-5fe2-4a0d-8094-64232a027873">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="840" y="0" width="45" height="50" backcolor="#D6D7D9" uuid="088bd8ce-5fe2-4a0d-8094-64232a027873">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Days to Complete ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="200" y="0" width="65" height="50" uuid="62504b80-da43-49fb-a8e6-5b626004a1e2">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="200" y="0" width="65" height="50" backcolor="#D6D7D9" uuid="62504b80-da43-49fb-a8e6-5b626004a1e2">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Appointment Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="265" y="0" width="40" height="50" uuid="11f79735-b396-4dcd-9314-1de888e216fc">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="265" y="0" width="40" height="50" backcolor="#D6D7D9" uuid="11f79735-b396-4dcd-9314-1de888e216fc">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Incentive Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="140" y="0" width="60" height="50" uuid="19cff5ec-dcf3-4f90-a816-9a46f41877d3">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="140" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="19cff5ec-dcf3-4f90-a816-9a46f41877d3">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Request Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="790" y="0" width="50" height="50" uuid="abdd7cb5-47cf-457b-a81d-538a92a87fc2">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="790" y="0" width="50" height="50" backcolor="#D6D7D9" uuid="abdd7cb5-47cf-457b-a81d-538a92a87fc2">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Request Completed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="480" y="0" width="60" height="50" uuid="27b6d3c6-9336-41e7-abdb-2c8c2d1740ec">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="27b6d3c6-9336-41e7-abdb-2c8c2d1740ec">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Component Review
 (Component)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="540" y="0" width="60" height="50" uuid="406249bc-1f7b-41d0-98df-c1379c8760e8">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="540" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="406249bc-1f7b-41d0-98df-c1379c8760e8">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Center/ Office Director Review
 (Component)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="600" y="0" width="70" height="50" uuid="a357de91-bfcf-4ebe-8918-a6be633b7c3b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="600" y="0" width="70" height="50" backcolor="#D6D7D9" uuid="a357de91-bfcf-4ebe-8918-a6be633b7c3b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[HR Specialist Recommendation
 (HR)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="670" y="0" width="60" height="50" uuid="430c8de6-0374-4c26-9f96-b03cdbd82d28">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="670" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="430c8de6-0374-4c26-9f96-b03cdbd82d28">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[HR Leadership Review
 (HR)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="885" y="0" width="50" height="50" uuid="e8fed964-bce3-4bbb-a37e-31a95151da6d">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="885" y="0" width="50" height="50" backcolor="#D6D7D9" uuid="e8fed964-bce3-4bbb-a37e-31a95151da6d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Time of Possession
 (HR)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="935" y="0" width="53" height="50" uuid="79b1348a-9848-4cc3-8e18-fc3ba2652e06">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="935" y="0" width="53" height="50" backcolor="#D6D7D9" uuid="79b1348a-9848-4cc3-8e18-fc3ba2652e06">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Time of Possession
 (Component)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="730" y="0" width="60" height="50" uuid="0dcf9b93-ff99-46bf-ba1c-a6022c90c6e9">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="730" y="0" width="60" height="50" backcolor="#D6D7D9" uuid="0dcf9b93-ff99-46bf-ba1c-a6022c90c6e9">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="6" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+					<font size="7" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[HR Specialist Closeout
@@ -571,12 +569,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ( $F{DATE_CREATED} != null ) ? DATEFORMAT($F{DATE_CREATED},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
@@ -585,12 +583,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_NUM} != null )? $F{REQUEST_NUM} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -598,12 +596,12 @@ SELECT
 				<reportElement stretchType="RelativeToTallestObject" x="95" y="0" width="45" height="20" uuid="acd20c01-ff95-4900-82b0-71d8743b774d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{ADMIN_CODE} != null )? $F{ADMIN_CODE} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -613,12 +611,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{CANDIDATE_NAME} != null )? $F{CANDIDATE_NAME} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -628,12 +626,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAY_PLAN} + " - " + $F{SERIES} + " - " + $F{GRADE}]]></textFieldExpression>
 			</textField>
@@ -642,12 +640,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TIME_HRS_CREATE} != null )? $F{TIME_HRS_CREATE} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -656,12 +654,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{PROCESS_AGE} != null )? $F{PROCESS_AGE} : 0.00]]></textFieldExpression>
 			</textField>
@@ -671,12 +669,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{INCENTIVE_TYPE} != null )? $F{INCENTIVE_TYPE} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -685,12 +683,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE} != null )? $F{REQUEST_TYPE} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -699,12 +697,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean($F{APPOINTMENT_TYPE} == null) ? "N/A" : new Boolean ($F{SCHEDULE_A_TYPE} == null) ? $F{APPOINTMENT_TYPE} : $F{APPOINTMENT_TYPE} + " - " + $F{SCHEDULE_A_TYPE}]]></textFieldExpression>
 			</textField>
@@ -712,12 +710,12 @@ SELECT
 				<reportElement stretchType="RelativeToTallestObject" x="790" y="0" width="50" height="20" forecolor="#050505" uuid="662b6b3a-8639-4046-aa6b-58bc57be6f4e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ( $F{DATE_COMPLETED} != null ) ? DATEFORMAT($F{DATE_COMPLETED},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
@@ -727,12 +725,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TIME_COMPONENT_REVIEW} != null )? $F{TIME_COMPONENT_REVIEW} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -741,12 +739,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TIME_COC_REVIEW} != null )? $F{TIME_COC_REVIEW} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -754,12 +752,12 @@ SELECT
 				<reportElement stretchType="RelativeToTallestObject" x="600" y="0" width="70" height="20" uuid="a0ff03fc-1e5a-46e9-839e-2a007f40db2d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TIME_HRS_RECOMMEND} != null )? $F{TIME_HRS_RECOMMEND} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -767,12 +765,12 @@ SELECT
 				<reportElement stretchType="RelativeToTallestObject" x="670" y="0" width="60" height="20" uuid="a63d037b-b527-4716-8839-04a0acfac729">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TIME_HR_LEAD_REVIEW} != null )? $F{TIME_HR_LEAD_REVIEW} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -781,12 +779,12 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TOP_HR} != null )? $F{TOP_HR} : 0.00]]></textFieldExpression>
 			</textField>
@@ -794,13 +792,14 @@ SELECT
 				<reportElement stretchType="RelativeToTallestObject" x="935" y="0" width="53" height="20" uuid="f7aefd88-0b02-4122-a1ff-75934980adbd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TOP_COMPONENT} != null )? $F{TOP_COMPONENT} : 0.00]]></textFieldExpression>
 			</textField>
@@ -808,12 +807,12 @@ SELECT
 				<reportElement stretchType="RelativeToTallestObject" x="730" y="0" width="60" height="20" uuid="c65043ed-6baa-4069-980f-d6d4b8dde7e7">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="6"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{TIME_HRS_FINAL_REVIEW} != null )? $F{TIME_HRS_FINAL_REVIEW} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -858,7 +857,7 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box rightPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="4">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -866,7 +865,7 @@ SELECT
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="6" isBold="false"/>
+					<font size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Average Days for Completed Requests:]]></text>
 			</staticText>
@@ -875,15 +874,15 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Avg_Days_TOP_Comp}]]></textFieldExpression>
 			</textField>
@@ -891,15 +890,15 @@ SELECT
 				<reportElement x="885" y="0" width="50" height="20" uuid="8cf874fc-e81e-4bd7-bb53-4e56c8b43326">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Avg_Days_TOP_HR}]]></textFieldExpression>
 			</textField>
@@ -908,15 +907,15 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="4">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Avg_Days_Complete}]]></textFieldExpression>
 			</textField>
@@ -926,7 +925,7 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<textElement>
-					<font size="6"/>
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ( $P{DAYS}.equals("Business") ) ? "Note: All calculations are based on business days." : "Note: All calculations are based on calendar days."]]></textFieldExpression>
 			</textField>
@@ -944,7 +943,7 @@ SELECT
 				<reportElement x="0" y="8" width="988" height="25" uuid="a3ac0b61-55d1-498d-9d92-2f933bd85f14">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CMS HR Incentives Time to Completion Report for SAM & LE]]></text>
