@@ -268,11 +268,13 @@
                 if (vm.selected.component.length > 0) { // Component
                     url = url + '&COMPONENT=' + vm.selected.component;
                 }
-                if (vm.selected.adminCode.length > 0) { // Admin Code
+				if (vm.selected.adminCode.length > 0) { // Admin Code
                     url = url + '&ADMIN_CD=' + vm.selected.adminCode.toUpperCase();
+					url = url + '&INC_SUBORG=' +  vm.selected.includeSubOrg;
                 } else {
                     url = url + '&ADMIN_CD=~NULL~';
                 }
+
             }
 			
 
