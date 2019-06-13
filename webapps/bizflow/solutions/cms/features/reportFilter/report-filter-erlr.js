@@ -336,7 +336,7 @@
         vm.initERLRTypes = function() {
             // Initialization per Report
             if (vm.report.name == 'CMS Grievance Report') {
-                vm.ERLRTypes = ['All', 'Investigation', 'Grievance'];
+                vm.ERLRTypes = ['All', 'Conduct Issue', 'Grievance', 'Performance Issue', 'Probationary Period Action', 'Third Party Hearing', 'Within Grade Increase Denial'];
                 vm.orgSelected.caseType = 'All';
             } else if (vm.report.name == 'CMS HPC Report') {
                 vm.ERLRTypes = ['Investigation'];
