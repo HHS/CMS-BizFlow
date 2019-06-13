@@ -120,12 +120,7 @@
                         </div>
                     </div>
 					<!-- //#290605 - Business and Calendar Days filter  //-->
-
                     <div class="form-group col-md-3 required" ng-if ="$ctrl.report.name != 'CMS HR Incentives PCA Report - Complete'" >
-                    
-                        <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
-                        <selectize class="form-control" role="combobox" required aria-labelledby="dayTypeLabel"
-                    <div class="form-group col-md-3 required">
                         <label id="dayTypeLabel" for="dayType" class="control-label">Business or Calendar Days?</label>
                         <selectize  required
                                     ng-required="true"
@@ -133,17 +128,15 @@
                                     name="dateType"
                                     id="dayType" 
                                     config="$ctrl.simpleConfig"
-
-                                    options="$ctrl.dayTypes"
-                                    ng-model="$ctrl.selected.dayType"></selectize>
-                        <div class="day-type" ng-messages="fReportSection.dateType.$error" ng-clock>
-                            <div ng-message="required">Select Business or Calendar Days</div>
-                        </div>
-
                                     role="combobox" 
                                     options="$ctrl.dayTypes"
                                     ng-model="$ctrl.selected.dayType"></selectize>								   
+	                    <div class="day-type" ng-messages="fReportSection.dateType.$error" ng-clock>
+	                        <div ng-message="required">Select Business or Calendar Days</div>
+	                    </div>
                     </div>					
+
+
                 </div>
             </div>
         </div>
@@ -162,7 +155,7 @@
                         <selectize class="form-control" role="combobox" id="selectHrSpecialist" aria-labelledby="hrSpecialistLabel"
                                    name="selectHrSpecialist"
                                     config="$ctrl.membersInGroupConfig"
-                                    options="$ctrl.group['HR Specialists']" 
+                                    options="$ctrl.hrSpecialists" 
                                     ng-model="$ctrl.selected.hrSpecialist"></selectize>
                     </div>
                     <div class="form-group col-md-5" ng-if ="$ctrl.report.name != 'CMS HR Incentives PCA Report - Complete'">
@@ -189,9 +182,10 @@
                                    name="requestTypeSelect"
                                    config="$ctrl.simpleConfig"
                                    options="$ctrl.requestTypes"
+								   ng-change="$ctrl.requestType_onChange()"
                                    ng-model="$ctrl.selected.requestType"></selectize>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-3" ng-if="$ctrl.selected.requestType != 'Recruitment'">
                         <label id="appointmentTypeLabel" for="appointmentTypeSelect" class="control-label">Appointment Type</label>
                         <selectize role="combobox" id="appointmentTypeSelect" aria-labelledby="appointmentTypeLabel"
                                    name="appointmentTypeSelect"
