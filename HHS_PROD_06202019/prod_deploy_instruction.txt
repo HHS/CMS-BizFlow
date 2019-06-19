@@ -1,0 +1,14 @@
+[Production Deploy Instruction]
+1. Download "HHS_PROD_06202019" folder from CMS-BizFlow git 
+
+2. Report Deployment
+	2.1. Copy CMS_Standards_of_Conduct_Case_report.zip and import_fix_report.bat on your local BizFlowReporting\buildomatic\ folder.
+	2.2 Run import_fix_report.bat
+	2.3. Run import_datasource.bat
+3. Web Application (UI Module) Deployment
+	3.1. Download form-main.js, NewForm.xsl and BizFlowEntry.xsl and place them on prod linux shared path. 
+	3.2. Run the following 3 command
+		cp form-main.js /hrts/prod/tomcat8/apache-tomcat-8.0.37/webapps/bizflowwebmaker/cms_incentives_main/custom/js
+		cp BizFlowEntry.xsl /hrts/prod/tomcat8/apache-tomcat-8.0.37/webapps/bizflowwebmaker/cms_incentives_main/doc/CMS/mvc/cms_incentives_main/views/view/Page_Painter
+		cp NewForm.xsl /hrts/prod/tomcat8/apache-tomcat-8.0.37/webapps/bizflowwebmaker/cms_incentives_main/doc/CMS/mvc/cms_incentives_main/views/view/Page_Painter
+
