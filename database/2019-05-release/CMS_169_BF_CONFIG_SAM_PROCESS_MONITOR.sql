@@ -11,14 +11,20 @@ begin
        and ISFINAL='T'
        and envtype='O';
 
+
     SELECT MAX(VALUE)+1
       INTO V_TABID
       FROM ID
      WHERE KEYSTR = 'TabDefID';
      
-    UPDATE ID
-       SET VALUE=V_TABID
-     WHERE KEYSTR = 'TabDefID';
+    IF V_TABID IS NULL THEN
+        INSERT INTO ID(SVRID, KEYSTR, VALUE) VALUES('0000001001','TabDefID',101);
+        V_TABID := 101;
+    ELSE
+        UPDATE ID
+           SET VALUE=V_TABID
+         WHERE KEYSTR = 'TabDefID';
+    END IF;
      
     V_TABID := 10000+V_TABID;
      
