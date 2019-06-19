@@ -555,8 +555,7 @@
             } else if(activityStep.isCOMPReviewForModification()) {
                 readOnlyTabs = [MENU_TAB.GENERAL, MENU_TAB.POSITION, MENU_TAB.SAM_REVIEW, MENU_TAB.DOCUMENTS];
             } else if (activityStep.isHRSRecordConclusion()) {
-                //readOnlyTabs = [MENU_TAB.GENERAL, MENU_TAB.POSITION, MENU_TAB.SAM_DETAILS, MENU_TAB.SAM_JUSTIFICATION, MENU_TAB.SAM_REVIEW, MENU_TAB.SAM_APPROVAL, MENU_TAB.DOCUMENTS];
-				readOnlyTabs = [MENU_TAB.GENERAL, MENU_TAB.POSITION, MENU_TAB.SAM_DETAILS, MENU_TAB.SAM_JUSTIFICATION, MENU_TAB.SAM_REVIEW, MENU_TAB.SAM_APPROVAL];
+                readOnlyTabs = [MENU_TAB.GENERAL, MENU_TAB.POSITION, MENU_TAB.SAM_DETAILS, MENU_TAB.SAM_JUSTIFICATION, MENU_TAB.SAM_REVIEW, MENU_TAB.SAM_APPROVAL, MENU_TAB.DOCUMENTS];
             } else {
                 readOnlyTabs = [MENU_TAB.GENERAL, MENU_TAB.POSITION, MENU_TAB.DOCUMENTS];
             }
@@ -1334,7 +1333,13 @@
                         "fieldValue": FormState.getElementValue('supportSAM', '')
                     }];
                 });
-                TabManager.setHideNavigationButton(true);
+                var incType = FormState.getElementValue('incentiveType', '');
+				var actName = _processInfo.activity.name;
+				var reqStatus = FormUtility.getInputElementValue('pv_requestStatus');
+				if(incType == "SAM" && actName == "HR Specialist Final Review of Documents" && reqStatus == "Ready for Offer - Disapproved") {
+					DocumentRuleManager.setNoCheckingMissingDocument(true);
+                }
+				TabManager.setHideNavigationButton(true);
                 FormUtility.setRemainingCharacterDispType("NOW_MAX");
 
                 setTimeout(function () {
