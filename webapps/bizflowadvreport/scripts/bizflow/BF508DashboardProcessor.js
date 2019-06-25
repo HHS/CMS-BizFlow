@@ -15,17 +15,13 @@
 				
 		function start() {
 			
-			window.BF508ReportProcessor.setRootContainer(rootContainerId);
-			
-			window.BF508ReportProcessor.setBrowserType(browserType);
-			
 			logMessage("BF508DashboardProcessor.start()");
-			window.BF508ReportProcessor.start();
-			/*
-			setTimeout(function(){ 
-				window.BF508DashboardProcessor.start(); 
-			}, interval);
-			*/
+
+			BF508ReportProcessor.setRootContainer(rootContainerId);
+			
+			BF508ReportProcessor.setBrowserType(browserType);
+			
+			BF508ReportProcessor.start();
 		}
 
 		function setBrowserType(browserTP) {

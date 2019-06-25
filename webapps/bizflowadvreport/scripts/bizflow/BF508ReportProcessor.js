@@ -9,9 +9,16 @@
 		var recursion_count = 0;
 		var reportTables = new Object();
 		var browserType = "";
-		
+		var debugLogEnabled = false;
+
 		logMessage("file is loaded.");
-		
+
+		//---------------------------------------------------------------------
+		// Main Workflow Logic
+		//---------------------------------------------------------------------
+
+		//--------------------
+		// Runner - Main Scheduler
 		function start() {
 			logMessage("BF508ReportProcessor started (" + (recursion_count + 1) + ")");
 			
@@ -29,43 +36,8 @@
 			}, RECURSION_INTERVAL);			
 		}
 
-		//Report table is dynamically changed to a new table 
-		//when to navigate page by clicking on the page navigation toolbar button.
-		//therefore, we need to scan tables again.
-		function scanReportTables(rootId) {
-			logMessage("scanning report tables under #" + rootId);
-			//finding tables that the 508 processor has not found.
-			jQuery("#" + rootId + " table.jrPage:not([id])" ).each(function( index ) {				
-				//set ID if no ID exists
-				var tableId = jQuery( this ).attr("id");
-				if (typeof tableId === "undefined") {
-					tableId = "_bftable_" + Math.floor(Math.random() * 1000000000);
-					
-					jQuery(this).attr("id", tableId);			
-					var tableContent = jQuery(this).text()
-					//Do not process Disclaimer sections
-					if ((tableContent.indexOf("Disclaimer") < 0) 
-							&& (jQuery("#" + tableId + " tr").length > 2 )
-							&& (jQuery("#" + tableId + " img").length <= 0)){
-						jQuery(this).attr("_bf508status", "marked");
-					}
-				}
-			});			
-		}
-		
-		function registerReportTable(tableId, isDashlet, isInitialized) {
-			logMessage("regitering a table [" + tableId + "]");
-			var tableInfo = reportTables[tableId];
-			if (null == tableInfo || typeof tableInfo == "undefined") {
-				tableInfo = {};
-				tableInfo.tableId = tableId;
-				tableInfo.isDashlet = isDashlet;
-				tableInfo.initialized = isInitialized;	
-				reportTables[tableId] = tableInfo;				
-			}
-			logMessage(JSON.stringify(tableInfo));	
-		}
-
+		//--------------------
+		// Processor - Bath
 		function processAll(rootId) {
 			logMessage("processing all registered tables. ");
 
@@ -76,70 +48,78 @@
 					process(tableId);
 				} else {
 					if (jQuery("#" + tableId + "[role='application']").length > 0) {
-						cleanAriaAttributes(tableId);
+						remove508Blockers(tableId);
 					}					
 				}
 				
 			});
 		}
-		
+
+		//--------------------
+		// Processor - Individual		
 		function process(tableId) {
-			//var tableInfo  = reportTables[tableId];
+
+			logMessage("processing " + tableId, "color:green;");
+
+			//register table info
 			registerReportTable(tableId, false, false);
 			
-			logMessage("processing " + tableId, "color:green;");
-			
+			//initialize the table
 			if (!isTableInitialized(tableId)) {
 				initReportViewer();
 			}
 
-			cleanAriaAttributes(tableId);
-			
-			trimEmptyRowsInTables(tableId);
+			//remove 508 blockers
+			remove508Blockers(tableId);
 
-			var tableInfo = reportTables[tableId];
-			var tblCaption = getReportCaption(tableId);
-			if (typeof tblCaption !== "undefined") {
-				tableInfo.tableCaption = tblCaption;
-				addTableCaption(tableId, tblCaption);
-			}
+			//remove empty rows from the table
+			trimEmptyRows(tableId);
 			
 			if (rootContainerId == "reportContainer") {
-				var tblSummary = getReportSummmary(tableId);
-				if (typeof tblSummary !== "undefined") {
-					tableInfo.tableSummary = tblSummary;
-					addTableSummary(tableId, tblSummary);
+
+				//add table caption from table contents
+				var tblCaption;
+				if (typeof reportTables.tableCaption === "undefined") {
+					tblCaption = getReportCaption(tableId);
+				} else {
+					tblCaption = reportTables.tableCaption;
 				}
+				if (typeof tblCaption !== "undefined") {
+					reportTables.tableCaption = tblCaption;
+					addTableCaption(tableId, tblCaption);
+				}
+
+				//add page navigation info
+				var pageNaviInfo = getCurrentPageNaviInfo();
+
+				//add table summary attribute from table contents
+				var tblSummary;
+				if (typeof reportTables.tableSummary === "undefined") {
+					tblSummary = getReportSummmary(tableId);
+				} else {
+					tblSummary = reportTables.tableSummary;
+				}
+				if (typeof tblSummary !== "undefined") {
+					reportTables.tableSummary = tblSummary;
+					addTableSummary(tableId, tblSummary + ". " + pageNaviInfo);
+				}
+
 			}
 			//trimDuplicateReportCaptionSummary(tableId);
 			
-			//convertTDToTH(tableId);
+			//populateTableHeader(tableId);
 			
 			setReportClickable(tableId);
 
-			setHeadMargin("10px");		
+			setReportHeadMargin("10px");		
 
+			//mark the table as processed
 			jQuery("#" + tableId).attr("_bf508status", "processed");
 		}
-		
-		function isTableInitialized(tableId) {
-			var tbl = reportTables[tableId];
-			var initialized = false;
-			try {
-				if (tbl != null) {
-				
-					if (typeof tbl.initialized === "boolean") {
-						initialized = tbl.initialized;
-					}
-				}
-			} catch (e) {
-				console.log(e);
-			} finally {
-				console.log("initialized="+ initialized);
-			}
-			return initialized;
-		}
-		
+
+		//---------------------------------------------------------------------
+		// Report Content Modifier
+		//---------------------------------------------------------------------
 		function initReportViewer() {
 			logMessage("initializing section 508 in the report");
 			
@@ -204,29 +184,17 @@
 				if (jQuery("#ICDialog_508").length == 0) {
 					jQuery("#viewerToolbar.toolbar").append(
 						'<span style="display:;"><button id="ICDialog_508"'
-							+ ' style="width:100px;height:30px;"'
+							+ ' style="width:150px;height:30px;"'
 							+ ' tabindex="0" '
-							+ ' aria-label="Open the report options dialog"'
+							+ ' aria-label="Open Input Controls Dialog"'
 							+ ' onclick="window.BF508ReportProcessor.showReportOption();">'
-							+ 'Option</button>'
+							+ 'Input Controls</button>'
 						+ ' </span>');
 				}				
 			}
 		}
 
-		function setReportClickable(tableId) {
-			logMessage("making the report clickable.");
-			jQuery("#" + tableId).removeAttr("tabindex");
-		}
-		
-		function setTabindices(tableId) {
-			logMessage("adding tabindex to span");
-			jQuery("#" + tableId + " span:not(:empty)" ).each(function( index ) {
-				jQuery( this ).attr("tabindex", "0");
-			});
-		}
-
-		function cleanAriaAttributes(tableId) {
+		function remove508Blockers(tableId) {
 			//------------------------------
 			//Removing ARIA attributes which prevent screen reader software from recognizing HTML tables in a report.
 			//
@@ -252,7 +220,7 @@
 			*/
 		}
 	
-		function trimEmptyRowsInTables(tableId) {
+		function trimEmptyRows(tableId) {
 			//------------------------------
 			//Trimming empty rows from tables
 			//------------------------------
@@ -266,38 +234,14 @@
 				}
 			});
 			
-			//first and last colums having no data
-			/*
-			jQuery("#" + tableId + " tr[style] td:first" ).each(function( index ) {
-				if ((jQuery( this ).text() == "\n" || jQuery( this ).text() == "\r")) {
-					logMessage("removing first empty column>" + index + ": " + jQuery( this ).prop("tagName") + '=' + jQuery( this ).text() + ". siblings=" + jQuery( this ).siblings().length, "color:red;");
-					if (index >= 0) {
-						jQuery( this ).remove();
-					}
-				}
-			});			
-
-			jQuery("#" + tableId + " tr[style] td:last" ).each(function( index ) {
-				if ((jQuery( this ).text() == "\n" || jQuery( this ).text() == "\r")) {
-					logMessage("removing last empty column>" + index + ": " + jQuery( this ).prop("tagName") + '=' + jQuery( this ).text() + ". siblings=" + jQuery( this ).siblings().length, "color:red;");
-					if (index >= 0) {
-						jQuery( this ).remove();
-					}
-				}
-			});	
-			*/
-		
-			
 			jQuery("#" + tableId + " tr[style='height:0']").remove(); 
+
 			//for IE
-			
 			jQuery("#" + tableId + " tr[style]" ).each(function( index ) {
 				if (jQuery( this ).css('height') == "0px" || jQuery( this ).css('height') == "0") {
 					jQuery( this ).remove();
 				}
 			});
-			
-			
 			//jQuery("#" + tableId + " tr[style][role='row'][style='height: 0px']").remove(); 
 			
 			jQuery("#" + tableId + " td[role='gridcell']").filter(function(index) {
@@ -305,74 +249,47 @@
 			}).remove();
 			
 		}
-		
-		function trimDuplicateReportCaptionSummary(tableId) {
-			jQuery("#" + tableId + " tr[role='row']:first").remove(); 
-			jQuery("#" + tableId + " tr[role='row']:first").remove(); 
-		}
-		
+
+		//--------------------
+		//Adding report summary
 		function addTableSummary(tableId, summary) {
-			//------------------------------
-			//Adding a summary to a report table
-			//------------------------------
+
 			logMessage("adding a table summary. " + summary);
 			jQuery("#" + tableId + ":first").attr("summary", summary);
 		}
-		
+
+		//--------------------
+		//Adding caption to a reqport table
 		function addTableCaption(tableId, caption) {
-			//------------------------------
-			//Adding caption to a reqport table
-			//------------------------------
 			logMessage("adding a table caption. " + caption);
 			if (jQuery("#" + tableId + " caption").length == 0) {
-				//var title = jQuery("#" + tableId + " div.header div.title").text();
-				//title = title.trim();
 				jQuery("<caption style='display:none'>" + caption + "</caption>").prependTo("#" + tableId);
 			}
 		}
 		
-		function convertTDToTH(tableId) {
+		function populateTableHeader(tableId) {
 			jQuery("#" + tableId + " td[style]").each(function(index) {
 				//jQuery(this).css("background-color")
 			  //jQuery(this).replaceWith('<th>' + jQuery(this).text() + '</th>'); 
 			});
 		}
 
-		function setHeadMargin(height) {
+		function setReportHeadMargin(height) {
 			if (jQuery("#_508headroom").length == 0) {
 				logMessage("adding head room");
 				jQuery( "<DIV id='_508headroom' style='height:" + height + ";' role='application'></DIV>" ).prependTo("#reportContainer");
 			}
 		}
-		
-		function logMessage(message, style) {
-			if (typeof style !== "undefined") {
-				if (browserType !== "IE") {
-					console.log("%c" + LOG_ID + message, style);
-				} else {
-					console.log(LOG_ID + message);
-				}
-			} else {
-				console.log(LOG_ID + message);
-			}				
-		}
 
-		function setRootContainer(rootId) {
-			rootContainerId = rootId;
-		}
-		
-		function getRootContainer() {
-			return rootContainerId;
-		}
-		
-		function setBrowserType(browserTP) {
-			browserType = browserTP;
-		}
-		
-		function getBrowserType() {
-			return browserType;
-		}
+		//--------------------
+		//Removing first two rows - they are report caption and summary per CMS report templates
+		function trimDuplicateReportCaptionSummary(tableId) {
+			jQuery("#" + tableId + " tr[role='row']:first").remove(); 
+			jQuery("#" + tableId + " tr[role='row']:first").remove(); 
+		}		
 
+		//---------------------------------------------------------------------
+		// Report Content Parser for predefined report format
 		function getReportCaption(tableId) {
 			var caption = "";
 			var objTable = reportTables[tableId];
@@ -407,7 +324,26 @@
 			}
 			return summary;		
 		}
-		
+
+		function getCurrentPageNaviInfo() {
+			var pageInfo = "";
+			try {
+				var pageIndex = 1 +  Report.pageIndex;
+				var lastPageIndex = 1 + Report.lastPageIndex;
+				if (lastPageIndex > 1) {
+					pageInfo = "Page " + pageIndex + " of total " + lastPageIndex;
+				}
+			} catch (e) {
+				pageInfo = "";
+			}
+			return pageInfo;
+		}
+
+		//---------------------------------------------------------------------
+		// Report Native Viewer Action Handler
+		//---------------------------------------------------------------------
+
+		//--------------------
 		function refreshCurrentReport() {
 			//refresh report
 			viewer.jive && viewer.jive.hide();
@@ -420,46 +356,162 @@
 			}
 		}
 		
+		//--------------------
 		function showReportOption() {
             if (Controls.controlDialog){
                 Controls.controlDialog.show();
             }				
 		}
 		
+		//--------------------
 		function exportReport(fileFormat) {
 			if (fileFormat == null) fileFormat = "";
 			var reportUnitURI = Report.reportUnitURI;
 			var idx = reportUnitURI.lastIndexOf("/");
 			reportUnitURI = reportUnitURI.substr(idx);
 			reportUnitURI = "/bizflowadvreport/flow.html/flowFile/" + reportUnitURI + "." + fileFormat;
-			alert("We are currently implementing " + reportUnitURI  + " export feature in accessibility mode.");
+			logMessage("exporting [" + fileFormat + "] " + reportUnitURI);
+			//alert("We are currently implementing " + reportUnitURI  + " export feature in accessibility mode.");
 			Report.exportReport(fileFormat, reportUnitURI)
 		}
+
+		//---------------------------------------------------------------------
+		// Table Processor Ulitity Functions
+		//---------------------------------------------------------------------
 		
+		//--------------------
+		// Logger - web browser console log
+		function logMessage(message, style) {
+			if (debugLogEnabled) {
+				if (typeof style !== "undefined") {
+					if (browserType !== "IE") {
+						console.log("%c" + LOG_ID + message, style);
+					} else {
+						console.log(LOG_ID + message);
+					}
+				} else {
+					console.log(LOG_ID + message);
+				}
+			}			
+		}
+
+		//--------------------
+		// Scanner - finding target tables
+		//	Report table is dynamically changed to a new table 
+		//	when to navigate page by clicking on the page navigation toolbar button.
+		//	therefore, we need to scan tables again.
+		function scanReportTables(rootId) {
+			logMessage("scanning report tables under #" + rootId);
+			//finding tables that the 508 processor has not found.
+			jQuery("#" + rootId + " table.jrPage:not([id])" ).each(function( index ) {				
+				//set ID if no ID exists
+				var tableId = jQuery( this ).attr("id");
+				if (typeof tableId === "undefined") {
+					tableId = "_bftable_" + Math.floor(Math.random() * 1000000000);
+					
+					jQuery(this).attr("id", tableId);			
+					var tableContent = jQuery(this).text()
+					//Do not process Disclaimer sections
+					if ((tableContent.indexOf("Disclaimer") < 0) 
+							&& (jQuery("#" + tableId + " tr").length > 2 )
+							&& (jQuery("#" + tableId + " img").length <= 0)){
+						jQuery(this).attr("_bf508status", "marked");
+					}
+				}
+			});			
+		}
+
+		//--------------------
+		// Register - Pulling Tabling Information from the scanned target tables
+		function registerReportTable(tableId, isDashlet, isInitialized) {
+			logMessage("regitering a table [" + tableId + "]");
+			var tableInfo = reportTables[tableId];
+			if (null == tableInfo || typeof tableInfo == "undefined") {
+				tableInfo = {};
+				tableInfo.tableId = tableId;
+				tableInfo.isDashlet = isDashlet;
+				tableInfo.initialized = isInitialized;	
+				reportTables[tableId] = tableInfo;				
+			}
+			logMessage(JSON.stringify(tableInfo));	
+		}
+
+		//--------------------
+		// Checking if the table has been initialized
+		function isTableInitialized(tableId) {
+			var tbl = reportTables[tableId];
+			var initialized = false;
+			try {
+				if (tbl != null) {
+				
+					if (typeof tbl.initialized === "boolean") {
+						initialized = tbl.initialized;
+					}
+				}
+			} catch (e) {
+				console.log(e);
+			} finally {
+				console.log("initialized="+ initialized);
+			}
+			return initialized;
+		}
+		
+		function setReportClickable(tableId) {
+			logMessage("making the report clickable.");
+			jQuery("#" + tableId).removeAttr("tabindex");
+		}
+		
+		function setTabindices(tableId) {
+			logMessage("adding tabindex to span");
+			jQuery("#" + tableId + " span:not(:empty)" ).each(function( index ) {
+				jQuery( this ).attr("tabindex", "0");
+			});
+		}
+
+		//---------------------------------------------------------------------
+		// Getter and Setter
+		function getRootContainer() {
+			return rootContainerId;
+		}
+
+		function setRootContainer(rootId) {
+			rootContainerId = rootId;
+		}
+		
+		function getBrowserType() {
+			return browserType;
+		}
+		
+		function setBrowserType(browserTP) {
+			browserType = browserTP;
+		}
+
+		function getDebugLogEnabled() {
+			return debugLogEnabled;
+		}
+		
+		function setDebugLogEnabled(enabled) {
+			debugLogEnabled = enabled;
+		}
+
+		
+		//---------------------------------------------------------------------
+		// Interface		
         return {
 			start: start
-			,process: process
-			,scanReportTables: scanReportTables
+			, logMessage: logMessage
+			//Report Action Handlers
+			, refreshCurrentReport: refreshCurrentReport
+			, showReportOption: showReportOption
+			, exportReport: exportReport
 			
-			//setter
-			,setBrowserType: setBrowserType
-			,getBrowserType: getBrowserType
-			,setRootContainer: setRootContainer
-			,registerReportTable: registerReportTable
-			
-			,isTableInitialized: isTableInitialized
-			
-			,setReportClickable: setReportClickable
-			,cleanAriaAttributes: cleanAriaAttributes
-			,setTabindices: setTabindices
-			,trimEmptyRowsInTables: trimEmptyRowsInTables
-			,addTableSummary: addTableSummary
-			,addTableCaption: addTableCaption
-			//Report Toolbar button
-			,refreshCurrentReport: refreshCurrentReport
-			,showReportOption: showReportOption
-			,exportReport: exportReport
-
+			//Getter and Setter
+			, getRootContainer: getRootContainer
+			, setRootContainer: setRootContainer
+			, getBrowserType: getBrowserType
+			, setBrowserType: setBrowserType
+			, getDebugLogEnabled: getDebugLogEnabled
+			, setDebugLogEnabled: setDebugLogEnabled
         }
     }
 

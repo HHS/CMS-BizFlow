@@ -5,6 +5,7 @@ jQuery( function() {
 		if (isIE || isEdge) {
 			BF508ReportProcessor.setBrowserType("IE");
 		}
+		BF508ReportProcessor.setDebugLogEnabled(true);
 		BF508ReportProcessor.start();
 	}
 });
