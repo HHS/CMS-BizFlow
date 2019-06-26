@@ -22,6 +22,8 @@
 			BF508ReportProcessor.setBrowserType(browserType);
 			
 			BF508ReportProcessor.start();
+
+			BF508DashboardFilterScanner.scan();
 		}
 
 		function setBrowserType(browserTP) {
