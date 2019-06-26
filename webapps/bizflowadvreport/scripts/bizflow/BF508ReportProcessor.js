@@ -190,7 +190,9 @@
 							+ ' onclick="window.BF508ReportProcessor.showReportOption();">'
 							+ 'Input Controls</button>'
 						+ ' </span>');
-				}				
+				}
+				
+				removeApplicationMode("pagination");
 			}
 		}
 
@@ -219,7 +221,17 @@
 			}
 			*/
 		}
-	
+
+		function removeApplicationMode(elementId, mode) {
+			if (typeof mode === "undefined" || mode == null) {
+				console.log("%cremoveApplicationMode-remove");
+				jQuery("#" + elementId).removeAttr("role");
+			} else {
+				console.log("%cremoveApplicationMode-update");
+				jQuery("#" + elementId).attr("role", mode);
+			}
+		}
+
 		function trimEmptyRows(tableId) {
 			//------------------------------
 			//Trimming empty rows from tables
@@ -382,7 +394,7 @@
 		//--------------------
 		// Logger - web browser console log
 		function logMessage(message, style) {
-			if (debugLogEnabled) {
+			if (true) {
 				if (typeof style !== "undefined") {
 					if (browserType !== "IE") {
 						console.log("%c" + LOG_ID + message, style);

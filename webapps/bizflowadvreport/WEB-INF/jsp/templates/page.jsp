@@ -83,14 +83,16 @@ Usage:
 		<!-- SECTION 508 CMS BEGIN //-->
 		<c:if test="${moduleName == 'dashboardViewerBarePage' || moduleName == 'dashboardViewerPage' }">
 			<script type="text/javascript" src="${scriptsUri}/bizflow/BFInputControl.js?ver=1.2" purpose="Section 508"></script>
-			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508ReportProcessor.js?ver=1" purpose="Section 508"></script>
-			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508DashboardProcessor.js?ver=1" purpose="Section 508"></script>
-			<script type="text/javascript" src="${scriptsUri}/bizflow/508_dashboard.js?ver=1" purpose="Section 508"></script>
+			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508ReportProcessor.js?ver=1.2" purpose="Section 508"></script>
+			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508DashboardFilterScanner.js?ver=1.2" purpose="Section 508"></script>
+			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508DashboardFilterWorker.js?ver=1.2" purpose="Section 508"></script>
+			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508DashboardProcessor.js?ver=1.2" purpose="Section 508"></script>			
+			<script type="text/javascript" src="${scriptsUri}/bizflow/508_dashboard.js?ver=1.2" purpose="Section 508"></script>
 		</c:if>
 		<c:if test="${moduleName == 'report.viewer.page' }">
-			<script type="text/javascript" src="${scriptsUri}/bizflow/BFInputControl.js?ver=1.1" purpose="Section 508"></script>		
-			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508ReportProcessor.js?ver=1" purpose="Section 508"></script>
-			<script type="text/javascript" src="${scriptsUri}/bizflow/508_report.js?ver=1" purpose="Section 508"></script>
+			<script type="text/javascript" src="${scriptsUri}/bizflow/BFInputControl.js?ver=1.2" purpose="Section 508"></script>		
+			<script type="text/javascript" src="${scriptsUri}/bizflow/BF508ReportProcessor.js?ver=1.2" purpose="Section 508"></script>
+			<script type="text/javascript" src="${scriptsUri}/bizflow/508_report.js?ver=1.2" purpose="Section 508"></script>
 		</c:if>
 		<!-- SECTION 508 CMS END //-->
 		

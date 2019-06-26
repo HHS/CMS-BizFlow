@@ -5,24 +5,7 @@
 		jQuery("#bf-speaker").text('');
 		setTimeout(function(){jQuery("#bf-speaker").text(s);},100);
 	}
-	
-    jQuery(document).on("changed:control", function(x, y) {
-		console.log("%c[508]changed:control", "color:red");
-	});		
-	
-    jQuery(document).on("viewmodel:values:changed", function(x, y) {
-		console.log("%c[508]viewmodel:values:changed", "color:red");
-	});	
-
-    jQuery(document).on("viewmodel:selection:changed", function(x, y) {
-		console.log("%c[508]viewmodel:selection:changed", "color:red");
-	});	
-
-	jQuery(document).on("viewmodel:order:changed", function(x, y) {
-		console.log("%c[508]viewmodel:order:changed", "color:red");
-	});	
-
-	
+		
     jQuery(document).on("controls:initialized", function(event, controlsViewModel) {
 		
 		console.log("%c[508]controls:initialized", "color:red");
@@ -60,7 +43,7 @@
         controlsViewModel.update = function (state) {			
 			if(typeof state != 'undefined' && typeof state["TIMEZONE"] != 'undefined' && typeof state["TIMEZONE"].values != 'undefined'){
 				try{
-					if (typeof _bfUserTimezone != 'undefined' && _bfUserTimezone != "null"){
+					if (typeof _bfUserTimezone != 'undefined' && _bfUserTimezone != "null" && _bfUserTimezone != ""){
 						state["TIMEZONE"].values = _bfUserTimezone;
 					}
 					else{
