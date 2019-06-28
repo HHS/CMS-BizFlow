@@ -6145,6 +6145,18 @@ DDL for VW_FISCAL_CALENDAR
   FROM BIZFLOW.CAL
   ORDER BY CALDTIME DESC;
   
-  
+---------------------------------------------
+DDL for VW_LOOKUP_CLSF_STANDARD
+---------------------------------------------
 
+CREATE OR REPLACE VIEW VW_LOOKUP_CLSF_STANDARD
+AS
+SELECT
+  TBL_ID ID  
+  , TBL_NAME NAME
+  , TBL_LABEL LABEL
+  , TBL_DISP_ORDER DISPORDER
+FROM TBL_LOOKUP
+WHERE TBL_LTYPE = 'PositionClassificationStandard' AND TBL_ACTIVE = 1
+ORDER BY TBL_DISP_ORDER
 
