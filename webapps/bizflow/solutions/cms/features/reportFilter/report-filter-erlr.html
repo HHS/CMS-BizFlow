@@ -2,54 +2,44 @@
     body {
         padding: 10px 10px 10px 10px;
     }
-
     .field-message {
         color: red;
         margin: -5px 0px 0px 12px;
     }
-
-
     .admin-code-message {
         color: red;
         padding: 0px 12px 0px 12px;
     }
-
     .date-message {
         color: red;
         margin: -10px 0px 0px 12px;
         /* padding: -10px 12px 6px 12px; */
     }
-
     ul.dropdown-menu {
         overflow-y: scroll;
         overflow: auto;
-        height: 22em;
+        max-height: 22em;
     }
-
     span.red {
         color:red;
     }
-
     a.no_underbar {
         text-decoration: none;
     }
-
     table.selectedList {
         margin-left: 3px;
         margin-top: -3px;
     }
-
     div.button-section {
         margin-top: 5px;
     }
 </style>
 
-<div id="reportFilter" ng-form="fReportSection" aria-busy="true">
+<div role="dialog" id="reportFilter" ng-form="fReportSection" aria-busy="true">
     <fieldset>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h1 class="panel-title">
-					<small><i><b>Disclaimer:</b> The content contained and delivered through this site is undergoing Section 508 remediation. For immediate assistance, please contact <a href="mailto:HRSystemsSupportRequest@cms.hhs.gov">HRSystemsSupportRequest@cms.hhs.gov</a>. Content will be updated as remediation is completed.</i><br><br></small>
                     <small>{{$ctrl.report.description}}</small>
                 </h1>
             </div>
@@ -57,33 +47,56 @@
                 <div class="row container-fluid">
                     <div class="form-group col-md-3 required">
                         <label id="ComponentLabel" for="selectComponent" class="control-label">Component</label>
-                        <selectize class="form-control" role="combobox" id="selectComponent" required aria-labelledby="ComponentLabel"
+                        <div ng-if="$ctrl.isSection508User == false">
+                            <selectize class="form-control" role="combobox" id="selectComponent" required aria-labelledby="ComponentLabel"
+                                        ng-model="$ctrl.selected.component" 
+                                        options="$ctrl.components"
+                                        config="$ctrl.simpleConfig"
+                                        placeholder="Select One..."
+                                        name="components"></selectize>
+                            <div class="field-message" ng-messages="fReportSection.components.$error" ng-clock>
+                                <div ng-message="required">Select a value from the component filter</div>
+                            </div>
+                        </div>
+
+                        <select ng-if="$ctrl.isSection508User == true"
+                                    class="form-control" role="combobox" id="selectComponent" required aria-labelledby="ComponentLabel"
                                     ng-model="$ctrl.selected.component" 
-                                    options="$ctrl.components"
-                                    config="$ctrl.simpleConfig"
+                                    ng-options="item for item in $ctrl.components"
                                     placeholder="Select One..."
-                                    name="components"></selectize>
-                        <div class="field-message" ng-messages="fReportSection.components.$error" ng-clock>
-                            <div ng-message="required">Select a value from the component filter</div>
-                        </div>                                      
+                                    name="components"
+                                    tabindex="0"
+                                    title="{{$ctrl.getErrorMessage('selectComponent', 'fReportSection.components.$error')}}">
+                            <option value="" hidden>Select One</option>
+                        </select>
+
                     </div>
-                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
+                    <div class="form-group col-md-3 required" ng-show="$ctrl.selected.component == 'By Admin Code'">
                         <label id="adminCodeLabel" for="adminCodeInput" class="control-label">Administrative Code</label>
                         <input name="adminCode" id="adminCodeInput" aria-labelledby="adminCodeLabel" 
                                ng-model="$ctrl.selected.adminCode" class="form-control" type="text" 
                                ng-minlength="3"
-                               placeholder="Enter Administrative Code..." required aria-label="Administrative Code">
-                        <div class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
+                               tabindex="0"
+                               placeholder="Enter Administrative Code..." required aria-label="Administrative Code"
+                               title="{{$ctrl.getErrorMessage('adminCodeInput', fReportSection.adminCode.$error)}}"
+                               >
+                        <div ng-if="$ctrl.isSection508User == false" class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
                             <div ng-message="required">Type the administrative code for the report</div>
                             <div ng-message="minlength">Enter a minimum of three characters for the administrative code</div>
                         </div>
                     </div>
-                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
+                    <div class="form-group col-md-3 required" ng-show="$ctrl.selected.component == 'By Admin Code'">
                         <label id="subOrgLabel" for="subOrgSelect" class="control-label">Include Cases for Sub-Orgs?</label>
-                        <selectize id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" required
+                        <selectize ng-if="$ctrl.isSection508User == false" id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" required
                                     ng-model="$ctrl.selected.includeSubOrg" 
                                     options="$ctrl.includeSubOrgs"
                                     config="$ctrl.simpleConfig"></selectize>
+                        <select ng-if="$ctrl.isSection508User == true"
+                                    class="form-control"
+                                    id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" required
+                                    ng-model="$ctrl.selected.includeSubOrg" 
+                                    tabindex="0"
+                                    ng-options="item for item in $ctrl.includeSubOrgs"></select>                                    
                     </div>
                 </div>
                 <div class="row container-fluid">
@@ -97,17 +110,24 @@
                     <div class="form-group col-md-3 required">
                         <label id="dateRCompletedFromLabel" for="dateRCompletedFromInput dateRCompletedFromButton" class="control-label">From</label>
                         <p class="input-group">
-                            <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate" 
-                                is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="true" 
-                                close-text="Close" ng-change="$ctrl.changeFromOption()" required aria-labelledby="dateRCompletedFromLabel"
-                                placeholder="MM/DD/YYYY" name="dateFrom"/>
-                            <span class="input-group-btn">
+                            <input 
+                                id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate" 
+                                is-open="$ctrl.fromDateOpened" ng-required="true" 
+                                datepicker-options="$ctrl.dateOptionFrom"
+                                ng-change="$ctrl.changeFromOption()" required 
+                                aria-label="{{$ctrl.report.element.Date.label + ' From'}}"
+                                placeholder="MM/DD/YYYY" name="dateFrom"
+                                tabindex="0"
+                                title="{{$ctrl.getErrorMessage('dateRCompletedFromInput', fReportSection.dateFrom.$error)}}"
+                                />
+                        
+                            <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedFromButton" type="button" class="btn btn-default" ng-click="$ctrl.openFromDate($event)" required aria-labelledby="dateRCompletedFromLabel">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
                             </span>
                         </p>
-                        <div class="date-message" ng-messages="fReportSection.dateFrom.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="date-message" ng-messages="fReportSection.dateFrom.$error" ng-clock>
                             <div ng-message="required">Set the start date for the report date range</div>
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>                        
@@ -117,15 +137,18 @@
 						<p class="input-group">
                             <input id="dateRCompletedToInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.toDate" 
                                 is-open="$ctrl.toDateOpened" datepicker-options="$ctrl.dateOptionTo" ng-required="true" 
-                                close-text="Close" ng-change="$ctrl.changeToOption()" required aria-labelledby="dateRCompletedToLabel"
-                                placeholder="MM/DD/YYYY" name="dateTo"/>
-                            <span class="input-group-btn">
+                                close-text="Close" ng-change="$ctrl.changeToOption()" required aria-label="{{$ctrl.report.element.Date.label + ' To'}}"
+                                tabindex="0"
+                                placeholder="MM/DD/YYYY" name="dateTo"
+                                title="{{$ctrl.getErrorMessage('dateRCompletedToInput', fReportSection.dateTo.$error)}}"
+                                />
+                            <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
                             </span>
                         </p>
-                        <div class="date-message" ng-messages="fReportSection.dateTo.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="date-message" ng-messages="fReportSection.dateTo.$error" ng-clock>
                             <div ng-message="required">Set the end date for the report date range</div>
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>                        
@@ -147,12 +170,15 @@
                         <label id="employeeNameLabel" for="employeeName" class="control-label ">Employee Name</label>
                         <input name="employeeName" id="employeeName" aria-labelledby="employeeNameLabel" 
                                ng-model="$ctrl.selected.employeeName" class="form-control" type="text" 
-                               placeholder="Enter Employee Name..." aria-label="Employee Name"
+                               placeholder="Enter Employee Name..." aria-labelledby="employeeNameLabel"
                                uib-typeahead="name for name in $ctrl.getNames('emp', $viewValue)"
                                typeahead-no-results="NotFoundEmployee"
                                typeahead-min-length=3
-                               typeahead-wait-ms=500> 
-                        <div ng-show="NotFoundEmployee">
+                               typeahead-wait-ms=500
+                               tabindex="0"
+                               title="Enter 3 characters of Employee name or more"
+                               >
+                        <div ng-if="NotFoundEmployee" aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                             <i class="glyphicon glyphicon-remove"></i> No Employee Found
                         </div>
                     </div>                               
@@ -162,22 +188,49 @@
                         <input name="customerName" id="customerName" aria-labelledby="customerNameLabel" 
                                 ng-model="$ctrl.selected.customerName" class="form-control" type="text" 
                                 placeholder="Enter Customer Contact Name..."  aria-label="Customer Contact Name"
-                                uib-typeahead="name for name in $ctrl.getNames('cust', $viewValue)"
+                                uib-typeahead="item as item.name in $ctrl.getNames('cust', $viewValue)"
                                 typeahead-no-results="NotFoundCustomer"
                                 typeahead-min-length=3
-                                typeahead-wait-ms=500> 
-                         <div ng-show="NotFoundCustomer">
+                                typeahead-wait-ms=500
+                                tabindex="0"
+                                title="Enter 3 characters of Customer Contact name or more"
+                                >  
+                         <div ng-if="NotFoundCustomer" aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                              <i class="glyphicon glyphicon-remove"></i> No Customer Found
                          </div>                                 
                     </div>
                     
                     <div class="form-group col-md-3">
                         <label id="specialistLabel" for="specialistSelect" class="control-label">Primary ER/LR Specialist</label>
-                        <selectize id="specialistSelect" 
+                        <selectize ng-if="$ctrl.isSection508User == false" 
+                                    id="specialistSelect" 
                                     config="$ctrl.membersInGroupConfig"
                                     role="combobox" 
                                     options="$ctrl.group['DWC']" 
                                     ng-model="$ctrl.selected.specialist"></selectize>
+
+                        <div ng-if="$ctrl.isSection508User == true">
+                            <input ng-model="$ctrl.selected.specialist" 
+                                    class="form-control" 
+                                    type="text" 
+                                    placeholder="Enter 3 characters of Primary ER/LR Specialist's name or more"
+    
+                                    aria-labelledby="specialistLabel"
+                                    id="specialistSelect"
+                                    
+                                    uib-typeahead="item as item.name for item in $ctrl.group['DWC'] | filter: {name:$viewValue}"
+                                    typeahead-no-results="noResultsSP" 
+                                    typeahead-wait-ms="300" 
+                                    typeahead-min-length="3" 
+                                    typeahead-select-on-exact="true" 
+                                    typeahead-focus-first="false"
+                                    typeahead-editable="false"
+                                    ng-blur="$ctrl.selected.specialist = $ctrl.getValidMember($event, $ctrl.selected.specialist, 'DWC')">
+                            <div ng-if="noResultsSP"
+                                    aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
+                                    <i class="glyphicon glyphicon-remove"></i> No Results Found
+                            </div>                                     
+                        </div>
                     </div>
 
                 </div>   
@@ -185,25 +238,38 @@
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
                         <label id="caseTypeLabel" for="caseTypeSelect" class="control-label">Case Type</label>
-                        <selectize role="combobox" id="caseTypeSelect" aria-labelledby="caseTypeLabel"
+                        <selectize ng-if="$ctrl.isSection508User == false" role="combobox" id="caseTypeSelect" aria-labelledby="caseTypeLabel"
                                     ng-model="$ctrl.selected.caseType"
                                     options="$ctrl.caseTypes"
                                     config="$ctrl.caseTypeConfig"></selectize>
+                        <select ng-if="$ctrl.isSection508User == true"
+                                    class="form-control"
+                                    id="caseTypeSelect" role="combobox" aria-labelledby="caseTypeLabel" required
+                                    ng-model="$ctrl.selected.caseType" 
+                                    tabindex="0"
+                                    ng-options="item for item in $ctrl.caseTypes"></select>                                      
                     </div>
                 </div>
 
                 <div class="row container-fluid">
                     <div class="form-group col-md-3" ng-hide="$ctrl.categories.length == 0">
                         <label id="caseCategoryLabel" for="scheduleATypeSelect" class="control-label">Case Category</label>
-                        <selectize role="combobox" id="caseCategorySelect" aria-labelledby="caseCategoryLabel"
+                        <selectize ng-if="$ctrl.isSection508User == false" role="combobox" id="caseCategorySelect" aria-labelledby="caseCategoryLabel"
                                     ng-model="$ctrl.selected.caseCategory"
                                     options="$ctrl.categories"
                                     config="$ctrl.categoryConfig"></selectize>
+                        <select ng-if="$ctrl.isSection508User == true"
+                                    class="form-control"
+                                    tabindex="0"
+                                    id="caseCategorySelect" aria-labelledby="caseCategoryLabel" required
+                                    ng-model="$ctrl.selected.caseCategory"
+                                    ng-options="item.value as item.key for item in $ctrl.categories"
+                                    ng-change="$ctrl.addCaseCategory($ctrl.selected.caseCategory)"></select>                                       
 
                         <table class="selectedList" ng-show="$ctrl.selected.caseCategories.length > 0">
                             <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.caseCategories">
                                 <td valign="top">
-                                    <a class="no_underbar" href="" ng-click="$ctrl.removeCaseCategory(item)">
+                                    <a role="button" aria-label="Remove {{item}} from Case Category" class="no_underbar" href="" ng-click="$ctrl.removeCaseCategory(item)">
                                         <span class="red" ><strong>X </strong></span>
                                     </a>
                                 </td>
@@ -212,22 +278,29 @@
                             </tr>
                         </table>
                         <div style="margin-top:10px" ng-show="$ctrl.selected.caseCategories.length > 0">
-                            <button type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeCaseCategory()" aria-label="Clear"> Clear</button>
+                            <button aria-label="Clear Case Category and set All" type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeCaseCategory()" aria-label="Clear"> Clear</button>
                         </div>
             
                     </div>
 
                     <div class="form-group col-md-3">
                         <label id="caseStatusLabel" for="caseStatusSelect" class="control-label">Case Status</label>
-                        <selectize role="combobox" id="caseStatusSelect" aria-labelledby="caseStatusLabel"
+                        <selectize ng-if="$ctrl.isSection508User == false" role="combobox" id="caseStatusSelect" aria-labelledby="caseStatusLabel"
                                     ng-model="$ctrl.selected.status"
                                     options="$ctrl.caseStatusList"
                                     config="$ctrl.statusConfig"></selectize>
+                        <select ng-if="$ctrl.isSection508User == true"
+                                    class="form-control"
+                                    tabindex="0"
+                                    id="caseStatusSelect" aria-labelledby="caseStatusLabel" required
+                                    ng-model="$ctrl.selected.status"
+                                    ng-options="item for item in $ctrl.caseStatusList"
+                                    ng-change="$ctrl.addStatus($ctrl.selected.status)"></select>                                     
 
                         <table class="selectedList" ng-show="$ctrl.selected.statusList.length > 0">
                             <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.statusList">
                                 <td valign="top">
-                                    <a class="no_underbar" href="" ng-click="$ctrl.removeStatus(item)">
+                                    <a role="button" aria-label="Remove {{item}} from Status List" class="no_underbar" href="" ng-click="$ctrl.removeStatus(item)">
                                         <span class="red" ><strong>X </strong></span>
                                     </a>
                                 </td>
@@ -236,20 +309,27 @@
                             </tr>
                         </table>
                         <div style="margin-top:10px" ng-show="$ctrl.selected.statusList.length > 0">
-                            <button type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeStatus()" aria-label="Clear"> Clear</button>
+                            <button aria-label="Clear status list and set All" type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeStatus()" aria-label="Clear"> Clear</button>
                         </div>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label id="finalActionLabel" for="finalActionSelect" class="control-label">Final Action </label>
-                        <selectize role="combobox" id="finalActionSelect" aria-labelledby="finalActionLabel"
+                        <selectize ng-if="$ctrl.isSection508User == false" role="combobox" id="finalActionSelect" aria-labelledby="finalActionLabel"
                                     ng-model="$ctrl.selected.finalAction"
                                     options="$ctrl.finalActions"
                                     config="$ctrl.finalActionConfig"></selectize>
+                        <select ng-if="$ctrl.isSection508User == true"
+                                    class="form-control"
+                                    tabindex="0"
+                                    id="finalActionSelect" aria-labelledby="finalActionLabel" required
+                                    ng-model="$ctrl.selected.finalAction"
+                                    ng-options="item.value as item.key for item in $ctrl.finalActions"
+                                    ng-change="$ctrl.addFinalAction($ctrl.selected.finalAction)"></select>                                    
                         <table class="selectedList" ng-show="$ctrl.selected.finalActions.length > 0">
                             <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.finalActions">
                                 <td valign="top">
-                                    <a class="no_underbar" href="" ng-click="$ctrl.removeFinalAction(item)">
+                                    <a role="button" aria-label="Remove {{item}} from Final Action" class="no_underbar" href="" ng-click="$ctrl.removeFinalAction(item)">
                                         <span class="red" ><strong>X </strong></span>
                                     </a>
                                 </td>
@@ -258,7 +338,9 @@
                             </tr>
                         </table>
                         <div style="margin-top:10px" ng-show="$ctrl.selected.finalActions.length > 0">
-                            <button type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeFinalAction()" aria-label="Clear"> Clear</button>
+                            <button type="button" class="btn btn-primary btn-sm" name="Clear" 
+                                ng-click="$ctrl.removeFinalAction()" 
+                                aria-label="Clear Final Actions and set All"> Clear</button>
                         </div>
                     </div>
                 </div>
@@ -276,4 +358,5 @@
             </div>
         </div>
     </fieldset>
+
 </div>

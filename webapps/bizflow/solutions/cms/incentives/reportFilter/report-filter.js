@@ -75,10 +75,11 @@
         // Default Values
         vm.orgSelected = {
             component: '',
-            incentiveType: '',
+            incentiveType: 'All',
+            incentiveTypes: [],
             adminCode: '',
             includeSubOrg: 'Yes',
-            pcaType: '',            
+            pcaType: 'All',            
             requestType: 'All',
             classificationType: 'All',
             appointmentType: 'All',
@@ -86,12 +87,7 @@
             volunteerType: 'All',
             fromDate: null,
             toDate: null,
-            hrSpecialist: 'All',
-            selectingOfficial: 'All',
-            executiveOfficer: 'All',
-            hrLiaison: 'All',
-            staffSpecialist: 'All',
-            classSpecialist: 'All'
+            hrSpecialist: null,
         };
         // Selected Values
         vm.selected = {};
@@ -125,13 +121,18 @@
             create: false,
 			allowEmptyOption: false,
             valueField: 'value',
-            labelField: 'key'
+            labelField: 'key',
+            maxItems: null
         };
 
         vm.getSelectizeOptions = function (items) {
-            return items.map(function (item) {
-                return {key: item, value: item};
-            })
+            if (vm.isSection508User == false) {
+                return items.map(function (item) {
+                    return {key: item, value: item};
+                })
+            } else {
+                return items;
+            }
         };
 		
         vm.getSelectizeOptionsEx = function (items) {
@@ -198,7 +199,7 @@
             } catch (e) {
                 $log.error(e);
             }
-        };
+        };    
 
         vm.initUserGroups = function () {
             var groups = JSON.parse(CMS_REPORT_FILTER.GROUPS).groups;
@@ -220,7 +221,9 @@
             }
 			
 			//TODO: merge group A and B
-			vm.hrSpecialists = vm.group['HR Specialists Group B'].concat(vm.group['HR Specialists Group A']);
+            vm.hrSpecialists = vm.group['HR Specialists Group B'].concat(vm.group['HR Specialists Group A']);
+            vm.hrSpecialists.unshift({name: 'All', memberid: 'All'});
+            vm.orgSelected.hrSpecialist = vm.hrSpecialists[0];
         };
 
         // Calendar functions & configuration
@@ -268,26 +271,16 @@
                 if (vm.selected.component.length > 0) { // Component
                     url = url + '&COMPONENT=' + vm.selected.component;
                 }
-                if (vm.selected.adminCode.length > 0) { // Admin Code
+                if (vm.selected.adminCode != undefined && vm.selected.adminCode.length > 0) { // Admin Code
                     url = url + '&ADMIN_CD=' + vm.selected.adminCode.toUpperCase();
 					url = url + '&INC_SUBORG=' +  vm.selected.includeSubOrg;
                 } else {
                     url = url + '&ADMIN_CD=~NULL~';
                 }
             }
-			
 
             var date_from = "DATE_FROM";
 			var date_to = "DATE_TO";
-			/*
-			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE") {
-				date_from = "COMP_DATE_FROM";
-				date_to = "COMP_DATE_TO";
-			} else {
-				date_from = "DATE_FROM";
-				date_to = "DATE_TO";
-			}
-			*/
             if (vm.selected.fromDate != null) {
                 var from = vm.getDateString(vm.selected.fromDate);
                 url = url + '&' + date_from + '=' + from;
@@ -302,10 +295,18 @@
             }
 
             if (vm.selected.hrSpecialist) {
-                url = url + '&HRS_ID=' + vm.selected.hrSpecialist; // HR Specialist
+                url = url + '&HRS_ID=' + (vm.isSection508User == true ? vm.selected.hrSpecialist.memberid : vm.selected.hrSpecialist); // HR Specialist
             }
+
             if (vm.selected.incentiveType) {
-				var incentiveTypeArray = vm.selected.incentiveType;
+                var incentiveTypeArray;
+                
+                if (vm.isSection508User == false) {
+                    incentiveTypeArray = vm.selected.incentiveType;
+                } else {
+                    incentiveTypeArray = vm.selected.incentiveTypes;
+                }
+
 				if(incentiveTypeArray.length > 0) {
 					var incentiveType = incentiveTypeArray.join(",");
 					if(incentiveType != "") {
@@ -325,7 +326,9 @@
 			
             if (vm.selected.dayType) {
 				url = url + '&DAYS=' + vm.selected.dayType; // Type of Days [Business Days | Calendar Days]
-            }			
+            }
+            url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg;
+            url = url + '&_bf508=' + (vm.isSection508User ? 'y' : 'n');
             return url;
         };
 
@@ -405,25 +408,173 @@
 			if (vm.selected.requestType == "Recruitment") {
 				vm.selected.appointmentType = "All";
 			}
-		}
-		
+        }
+        
+        vm.getValidMember = function($event, model, groupName) {
+            console.log('Model type [' + typeof model + '] - Typed [' + $($event.currentTarget).val() + ']' );
+            if (typeof model == 'object' && $($event.currentTarget).val() == model.name) {
+                console.log('Same');
+                return model;
+            } else {
+                console.log('Not Object, or different name');
+                return vm.group[groupName][0];
+            }
+        }        
+        
+        vm.onKeyDownComponent = function($event) {
+            setTimeout(function() {
+                var component = $('#selectComponent option:selected').text();
+                var keyCode = $event.keyCode;
+    
+                if (component == 'By Admin Code' && keyCode == 9) {
+                    $event.preventDefault();
+                    setTimeout(function() {
+                        $('#adminCodeInput').focus();
+                    }, 0);
+                }
+            }, 0);
+        }
+
+        vm.errorMessages = {
+            'selectComponent': {
+                'required': 'Select a value from the component filter'
+            },
+            'requestNumberInput': {
+                'required': 'Type a request number for the report'
+            },
+            'adminCodeInput': {
+                'required': 'Type an administrative code for the report',
+                'minlength': 'Enter a minimum of three characters for the administrative code'
+            },
+            'dateRCompletedFromInput': {
+                'required': 'Set the start date for the report date range',
+                'date': 'Type the date in the format: MM/DD/YYYY'
+            },
+            'dateRCompletedToInput': {
+                'required': 'Set the end date for the report date range',
+                'date': 'Type the date in the format: MM/DD/YYYY'
+            },
+            'dayType': {
+                'required': 'Select Business or Calendar Days'
+            }
+        }
+
+        vm.getErrorMessage = function(which, $error) {
+            var message = '';
+            if (which != undefined && which && $error != undefined && $error) {
+                var names = Object.getOwnPropertyNames($error);
+                var count = names.length;
+                for (var index = 0; index < count; index++) {
+                    if ($error.hasOwnProperty(names[index]) && $error[names[index]] == true) {
+                        message = vm.errorMessages[which][names[index]];
+                        break;
+                    }
+                }
+            }
+            return message;
+        }
+
+        // vm.getErrorMessage = function(which, $error) {
+        //     // var o = {a: 1, b: 2, c:3};
+        //     // console.log(Object.getOwnPropertyNames(o))
+        //     // console.log(o['a'])
+
+        //     var message = '';
+        //     if (vm.isSection508User == true && $error != undefined) {
+        //         if ($error.required) {
+        //             if (which == 'from') {
+        //                 message = 'Type the start date in the format: MM/DD/YYYY for the report date range';
+        //             } else if (which == 'to') {
+        //                 message = 'Type the end date in the format: MM/DD/YYYY for the report date range';
+        //             } else if (which == 'admincode') {
+        //                 message = 'Type the administrative code for the report';
+        //             }
+        //         } else if ($error.date) {
+        //             if (which == 'from' || which == 'to') {
+        //                 message = 'Type the date in the format: MM/DD/YYYY';
+        //             }
+        //         } else if ($error.minlength) {
+        //             if (which == 'admincode') {
+        //                 message = 'Enter a minimum of three characters for the administrative code';
+        //             }
+        //         }
+        //     }
+        //     return message;
+        // }
+
+        vm.addIncentiveType = function(value) {
+            if (value == undefined) {
+                return;
+            }
+
+            if (vm.selected.incentiveTypes == undefined) {
+                vm.selected.incentiveTypes = [];
+            }
+
+            if (value == 'All') {
+                vm.selected.incentiveTypes = [];
+                vm.selected.incentiveType = 'All';
+            } else {
+                var index = _.findIndex(vm.selected.incentiveTypes, function(item) {
+                    return item == value;
+                });
+    
+                if (index == -1) {
+                    vm.selected.incentiveTypes.push(value);
+                }
+            }
+            setTimeout(function() {$scope.$apply();}, 0);
+        }
+
+        vm.removeIncentiveType = function(value) {
+            console.log("removeIncentiveType [" + value + "]");
+
+            if (value == undefined) {
+                vm.selected.incentiveTypes = [];
+            } else {
+                var index = _.findIndex(vm.selected.incentiveTypes, function(item) {
+                    return item == value;
+                });
+    
+                if (index != -1) {
+                    vm.selected.incentiveTypes.splice(index, 1);
+                }
+            }
+
+            if (vm.selected.incentiveTypes.length == 0) {
+                vm.selected.incentiveType = 'All';
+            }
+        }
+
+        vm.getIncentiveTypeLabel = function(value) {
+            console.log('getIncentiveTypeLabel - [' + value + ']');
+            var foundItem = _.find(vm.incentiveTypes, function (item) {
+                if (item.value === value) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+            var label = value;
+            if (foundItem != undefined && foundItem) {
+                label = foundItem.key;
+            }
+            console.log('Found label - [' + label + ']')
+            return label;
+        }
+
         vm.$onInit = function () {
             $log.info('reportFilter $onInit');
+            vm.isSection508User = Section508.isSection508User();
+
             // This should be called first.
             vm.initReportMap();
             vm.initUserGroups();
-
             vm.adjustBizCoveUI();
+
             vm.selected = _.assign({}, vm.orgSelected);
-            
-            $('#reportFilter').attr('aria-busy', 'false');
-/*
-			if (CMS_REPORT_FILTER.REPORTPATH == "/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE") {
-				vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
-			} else {
-				vm._incentiveTypes = [{value: "LE", key: "Leave Enhancement (LE)"},{value: "PCA", key: "Physician's Comparability Allowance (PCA)"},{value: "SAM", key: "Salary Above Minimum (SAM)"}];
-			}
-*/
+
             vm.requestTypes = vm.getSelectizeOptions(vm._requestTypes);
             //vm.requestStatus = vm.getSelectizeOptions(vm._requestStatus);
             vm.appointmentTypes = vm.getSelectizeOptions(vm._appointmentTypes);
@@ -431,9 +582,20 @@
             vm.volunteerTypes = vm.getSelectizeOptions(vm._volunteerTypes);
             vm.components = vm.getSelectizeOptions(vm._components);
             vm.includeSubOrgs = vm.getSelectizeOptions(vm._includeSubOrgs);
+            
             vm.incentiveTypes = vm.getSelectizeOptionsEx(vm._incentiveTypes);
+            vm.incentiveTypes.unshift({value: 'All', key: 'All'});
+
             vm.pcaTypes = vm.getSelectizeOptions(vm._pcaTypes);            
-      			vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
+            vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
+
+            if (vm.isSection508User == true) {
+                // #selectComponent is not processed yet. So, use setTimeout.
+                setTimeout(function() {
+                    $('#selectComponent').on('keydown', vm.onKeyDownComponent);
+                }, 0);
+            }            
+            $('#reportFilter').attr('aria-busy', 'false');
         };
 
         vm.$onDestroy = function () {
@@ -441,3 +603,5 @@
         };
     }
 })();
+
+
