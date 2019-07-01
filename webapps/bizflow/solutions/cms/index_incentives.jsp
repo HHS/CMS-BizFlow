@@ -148,7 +148,7 @@ private String getCMSUserGroups() throws Exception
     
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./bower_components/sifter/sifter.js"></script>
-    <script src="./bower_components/selectize/dist/js/selectize.js"></script>
+    <script src="./bower_components/selectize/dist/js/selectize.min.js"></script>
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-selectize2/dist/angular-selectize.js"></script>
     <!-- <script src="./bower_components/angular-aria/angular-aria.min.js"></script> -->
@@ -183,6 +183,7 @@ private String getCMSUserGroups() throws Exception
     <script src="./common/components/infobar/directive-infobar.js"></script>
     <script src="./common/components/csvtodata/directive-csvtodata.js"></script>
 
+    <script src="section508.js"></script>
     <script src="app.main.js"></script>
     <script src="incentives/reportFilter/report-filter.js"></script>
 </head>

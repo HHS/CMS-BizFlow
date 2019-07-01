@@ -318,7 +318,7 @@ private String getERLRTypes() throws Exception
     <script src="./common/components/titlebar/directive-titlebar.js"></script>
     <script src="./common/components/infobar/directive-infobar.js"></script>
     <script src="./common/components/csvtodata/directive-csvtodata.js"></script>
-
+    <script src="section508.js"></script>
     <script src="app.main.js"></script>
     <script src="features/reportFilter/report-filter-erlr.js"></script>
 </head>

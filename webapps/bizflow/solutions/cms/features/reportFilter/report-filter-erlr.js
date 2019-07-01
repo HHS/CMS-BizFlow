@@ -18,7 +18,7 @@
         vm.group = {};
 
         // Primitive Options - Not for Selectize
-        vm._components = ['By Admin Code', 'Office of the Administrator (OA) Only'];
+        vm._components = ['By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
         vm._includeSubOrgs = ['Yes', 'No'];
         vm._allCategories = [];
         vm._allFinalActions = [];
@@ -44,7 +44,9 @@
             toDate: null
         };
         // Selected Values
-        vm.selected = {};
+        vm.selected = {
+
+        };
 
         // Date From - To
         vm.fromDateOpened = false;
@@ -145,7 +147,7 @@
 
                 // vm.selected.finalAction = 'All';
             }
-            $scope.$apply();
+            setTimeout(function() {$scope.$apply();}, 0);
         }
 
         vm.removeFinalAction = function(value) {
@@ -190,7 +192,7 @@
 
                 // vm.selected.finalAction = 'All';
             }
-            $scope.$apply();
+            setTimeout(function() {$scope.$apply();}, 0);
         }
 
         vm.removeCaseCategory = function(value) {
@@ -236,7 +238,7 @@
 
                 // vm.selected.finalAction = 'All';
             }
-            $scope.$apply();
+            setTimeout(function() {$scope.$apply();}, 0);
         }
 
         vm.removeStatus = function(value) {
@@ -289,9 +291,13 @@
 
 
         vm.getSelectizeOptions = function(items) {
-            return items.map(function(item) {
-                return {key: item, value: item};
-            })
+            if (vm.isSection508User == false) {
+                return items.map(function(item) {
+                    return {key: item, value: item};
+                })
+            } else {
+                return items;
+            }
         }
         vm.copyItems = function(targets, sources) {
             if (targets) {
@@ -328,9 +334,9 @@
             var amIAdminTeam = _.filter(vm.group['Admin Team'], function (item) {
                 return item.memberid === vm.report.user.memberID;
             });
-            if (amIDCOManagerLeads.length > 0 || amIAdminTeam.length > 0) {
-                vm._components = ['By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
-            }
+            // if (amIDCOManagerLeads.length > 0 || amIAdminTeam.length > 0) {
+            //     vm._components = ['By Admin Code', 'CMS-wide', 'Office of the Administrator (OA) Only'];
+            // }
         };
 
         vm.initERLRTypes = function() {
@@ -446,21 +452,29 @@
             if (vm.selected.component.length > 0) { // Component
                 url = url + '&COMPONENT=' + encodeURI(vm.selected.component);
             }
-            if (vm.selected.adminCode.length > 0) { // Admin Code
+            if (vm.selected.adminCode != undefined && vm.selected.adminCode.length > 0) { // Admin Code
                 url = url + '&ADMIN_CD=' + encodeURI(vm.selected.adminCode.toUpperCase());
             } else {
                 url = url + '&ADMIN_CD=~NULL~';
             }
             url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg;
             if (vm.selected.fromDate != null) { // COMP_DATE_FROM
-                var from = vm.getDateString(vm.selected.fromDate);
-                url = url + '&DATE_RANGE_FROM=' + encodeURI(from);
+                try {
+                    var from = vm.getDateString(vm.selected.fromDate);
+                    url = url + '&DATE_RANGE_FROM=' + encodeURI(from);
+                } catch (e) {
+                    url = url + '&DATE_RANGE_FROM=2000-01-01';    
+                }
             } else {
                 url = url + '&DATE_RANGE_FROM=2000-01-01';
             }
             if (vm.selected.toDate != null) { // COMP_DATE_TO
-                var to = vm.getDateString(vm.selected.toDate);
-                url = url + '&DATE_RANGE_TO=' + encodeURI(to);
+                try {
+                    var to = vm.getDateString(vm.selected.toDate);
+                    url = url + '&DATE_RANGE_TO=' + encodeURI(to);
+                } catch (e) {
+                    url = url + '&DATE_RANGE_TO=2050-12-31';                    
+                }
             } else {
                 url = url + '&DATE_RANGE_TO=2050-12-31';
             }
@@ -488,10 +502,8 @@
 			} else {
 				url = url + vm.translateMultipleOptions('CASE_STATUS', vm.selected.statusList); // Case Status
 			}
-			
-            $log.debug('Report URL [' + url + ']');
-
-            console.log(url);
+			url = url + '&_bf508=' + (vm.isSection508User ? 'y' : 'n');
+            // $log.debug('Report URL [' + url + ']');
             return url;
         };
 
@@ -661,12 +673,78 @@
             }
         };
 
+        vm.getValidMember = function($event, model, groupName) {
+            console.log('Model type [' + typeof model + '] - Typed [' + $($event.currentTarget).val() + ']' );
+            if (typeof model == 'object' && $($event.currentTarget).val() == model.name) {
+                console.log('Same');
+                return model;
+            } else {
+                console.log('Not Object, or different name');
+                return vm.group[groupName][0];
+            }
+        }
+
+        vm.onKeyDownComponent = function($event) {
+            setTimeout(function() {
+                var component = $('#selectComponent option:selected').text();
+                var keyCode = $event.keyCode;
+    
+                if (component == 'By Admin Code' && keyCode == 9) {
+                    $event.preventDefault();
+                    setTimeout(function() {
+                        $('#adminCodeInput').focus();
+                    }, 0);
+                }
+            }, 0);
+        }
+
+        vm.errorMessages = {
+            'selectComponent': {
+                'required': 'Select a value from the component filter'
+            },
+            'requestNumberInput': {
+                'required': 'Type a request number for the report'
+            },
+            'adminCodeInput': {
+                'required': 'Type an administrative code for the report',
+                'minlength': 'Enter a minimum of three characters for the administrative code'
+            },
+            'dateRCompletedFromInput': {
+                'required': 'Set the start date for the report date range',
+                'date': 'Type the date in the format: MM/DD/YYYY'
+            },
+            'dateRCompletedToInput': {
+                'required': 'Set the end date for the report date range',
+                'date': 'Type the date in the format: MM/DD/YYYY'
+            },
+            'dayType': {
+                'required': 'Select Business or Calendar Days'
+            }
+        }
+
+        vm.getErrorMessage = function(which, $error) {
+            var message = '';
+            if (which != undefined && which && $error != undefined && $error) {
+                var names = Object.getOwnPropertyNames($error);
+                var count = names.length;
+                for (var index = 0; index < count; index++) {
+                    if ($error.hasOwnProperty(names[index]) && $error[names[index]] == true) {
+                        message = vm.errorMessages[which][names[index]];
+                        break;
+                    }
+                }
+            }
+            return message;
+        }        
+
         vm.$onDestroy = function () {
             $log.info('reportFilter $onDestroy');
         };
 
         vm.$onInit = function () {
             $log.info('reportFilter $onInit');
+
+            vm.isSection508User = Section508.isSection508User();
 
             // This should be called first.
             vm.checkParameter();
@@ -683,6 +761,12 @@
             vm.caseTypes = vm.getSelectizeOptions(vm.ERLRTypes);
             vm.caseStatusList = vm.getSelectizeOptions(vm._caseStatusList);
 
+            if (vm.isSection508User == true) {
+                // #selectComponent is not processed yet. So, use setTimeout.
+                setTimeout(function() {
+                    $('#selectComponent').on('keydown', vm.onKeyDownComponent);
+                }, 0);
+            }
             $('#reportFilter').attr('aria-busy', 'false');
         };        
     }
