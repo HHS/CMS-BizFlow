@@ -1,0 +1,1914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-01T15:17:37 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time of Possession End to End" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="6f68a380-2e9a-4289-9d0c-69d540b1a495">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="Time of Possession- Active"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="2.0F"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTimeofPossessionEndtoEndActive"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTimeofPossessionEndtoEndActive_files/main_jrxml"/>
+	<parameter name="DAYS" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Business Days"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date"/>
+	<parameter name="COMP_DATE_TO" class="java.util.Date"/>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLSF_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="APPT_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SCHDA_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VOL_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SO_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="XO_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HRL_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SS_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CS_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	CREATE_DATE,
+	REQUEST_NUMBER,
+	ADMIN_CODE,
+	SECOND_SUB_ORG,
+	SUB_ORG_2_CD,	
+	POS_TITLE,
+	REQUEST_TYPE,
+	CLASS_TYPE,
+	APPOINTMENT_TYPE,
+	CASE WHEN $P{DAYS} = 'Business Days' AND HOLD_STRATCON_START IS NOT NULL AND CREATE_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(CREATE_DATE, HOLD_STRATCON_START)
+		WHEN $P{DAYS} = 'Calendar Days' AND HOLD_STRATCON_START IS NOT NULL AND CREATE_DATE IS NOT NULL
+		THEN ROUND(HOLD_STRATCON_START - CREATE_DATE)
+	END AS CREATE_REQUEST,
+	CASE WHEN $P{DAYS} = 'Business Days' AND HOLD_STRATCON_START IS NOT NULL AND ACKD_STRATCON_START IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(HOLD_STRATCON_START, ACKD_STRATCON_START)
+		WHEN $P{DAYS} = 'Calendar Days' AND HOLD_STRATCON_START IS NOT NULL AND ACKD_STRATCON_START IS NOT NULL
+		THEN ROUND(ACKD_STRATCON_START - HOLD_STRATCON_START)
+	END AS HOLD_STRATCON,
+	CASE WHEN $P{DAYS} = 'Business Days' AND ACKD_STRATCON_START IS NOT NULL AND APPRV_STRATCON_START IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(ACKD_STRATCON_START, APPRV_STRATCON_START)
+		WHEN $P{DAYS} = 'Calendar Days' AND ACKD_STRATCON_START IS NOT NULL AND APPRV_STRATCON_START IS NOT NULL
+		THEN ROUND(APPRV_STRATCON_START - ACKD_STRATCON_START)
+	END AS ACKD_STRATCON,
+	CASE WHEN $P{DAYS} = 'Business Days' AND APPRV_STRATCON_START IS NOT NULL AND APPRV_STRATCON_END IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(APPRV_STRATCON_START, APPRV_STRATCON_END)
+		WHEN $P{DAYS} = 'Calendar Days' AND APPRV_STRATCON_START IS NOT NULL AND APPRV_STRATCON_END IS NOT NULL
+		THEN ROUND(APPRV_STRATCON_END - APPRV_STRATCON_START)
+	END AS APPRV_STRATCON,
+	CASE WHEN $P{DAYS} = 'Business Days' AND CLS_ANALYSIS_START IS NOT NULL AND CFRM_ANALYSIS_START IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(CLS_ANALYSIS_START, CFRM_ANALYSIS_START)
+		WHEN $P{DAYS} = 'Calendar Days' AND CLS_ANALYSIS_START IS NOT NULL AND CFRM_ANALYSIS_START IS NOT NULL
+		THEN ROUND(CFRM_ANALYSIS_START - CLS_ANALYSIS_START)
+	END AS CLS_ANALYSIS,
+	CASE WHEN $P{DAYS} = 'Business Days' AND CFRM_ANALYSIS_START IS NOT NULL AND CFRM_ANALYSIS_END IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(CFRM_ANALYSIS_START, CFRM_ANALYSIS_END)
+		WHEN $P{DAYS} = 'Calendar Days' AND CFRM_ANALYSIS_START IS NOT NULL AND CFRM_ANALYSIS_END IS NOT NULL
+		THEN ROUND(CFRM_ANALYSIS_END - CFRM_ANALYSIS_START)
+	END AS CFRM_ANALYSIS,
+	CASE WHEN $P{DAYS} = 'Business Days' AND BUS_CODE_START IS NOT NULL AND BUS_CODE_END IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(BUS_CODE_START, BUS_CODE_END)
+		WHEN $P{DAYS} = 'Calendar Days' AND BUS_CODE_START IS NOT NULL AND BUS_CODE_END IS NOT NULL
+		THEN ROUND(BUS_CODE_END - BUS_CODE_START)
+	END AS BUS_CODE,
+	CASE WHEN $P{DAYS} = 'Business Days' AND BUS_CODE_END IS NOT NULL AND FNL_PKG_START IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(BUS_CODE_END, FNL_PKG_START)
+		WHEN $P{DAYS} = 'Calendar Days' AND BUS_CODE_END IS NOT NULL AND FNL_PKG_START IS NOT NULL
+		THEN ROUND(FNL_PKG_START - BUS_CODE_END)
+	END AS APPROVE_PD,
+	CASE WHEN $P{DAYS} = 'Business Days' AND FNL_PKG_START IS NOT NULL AND FNL_PKG_END IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(FNL_PKG_START, FNL_PKG_END)
+		WHEN $P{DAYS} = 'Calendar Days' AND FNL_PKG_START IS NOT NULL AND FNL_PKG_END IS NOT NULL
+		THEN ROUND(FNL_PKG_END - FNL_PKG_START)
+	END AS FNL_PKG,
+	CASE WHEN $P{DAYS} = 'Business Days' AND REQUEST_APPROVAL_DATE IS NOT NULL AND HM_ANN_RVW_SENT_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(REQUEST_APPROVAL_DATE, HM_ANN_RVW_SENT_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND REQUEST_APPROVAL_DATE IS NOT NULL AND HM_ANN_RVW_SENT_DATE IS NOT NULL
+		THEN ROUND(HM_ANN_RVW_SENT_DATE - REQUEST_APPROVAL_DATE)
+	END AS BUILD_ASSESSMENT,
+	CASE WHEN $P{DAYS} = 'Business Days' AND HM_ANN_RVW_SENT_DATE IS NOT NULL AND HM_ANN_RVW_CMPL_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(HM_ANN_RVW_SENT_DATE, HM_ANN_RVW_CMPL_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND HM_ANN_RVW_SENT_DATE IS NOT NULL AND HM_ANN_RVW_CMPL_DATE IS NOT NULL
+		THEN ROUND(HM_ANN_RVW_CMPL_DATE - HM_ANN_RVW_SENT_DATE)
+	END AS REVIEW_ASSESSMENT,
+	CASE WHEN $P{DAYS} = 'Business Days' AND HM_ANN_RVW_CMPL_DATE IS NOT NULL AND ANNOUNCEMENT_OPEN_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(HM_ANN_RVW_CMPL_DATE, BIZFLOW.HHS_FN_SUBTRACT_BUSDAY(ANNOUNCEMENT_OPEN_DATE, 1))
+		WHEN $P{DAYS} = 'Calendar Days' AND HM_ANN_RVW_CMPL_DATE IS NOT NULL AND ANNOUNCEMENT_OPEN_DATE IS NOT NULL
+		THEN ROUND(ANNOUNCEMENT_OPEN_DATE - HM_ANN_RVW_CMPL_DATE)
+	END AS POST_TO_USA_JOBS,
+	CASE WHEN $P{DAYS} = 'Business Days' AND ANNOUNCEMENT_OPEN_DATE IS NOT NULL AND ANNOUNCEMENT_CLOSE_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(BIZFLOW.HHS_FN_SUBTRACT_BUSDAY(ANNOUNCEMENT_OPEN_DATE, 1), ANNOUNCEMENT_CLOSE_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND ANNOUNCEMENT_OPEN_DATE IS NOT NULL AND ANNOUNCEMENT_CLOSE_DATE IS NOT NULL
+		THEN ROUND(ANNOUNCEMENT_CLOSE_DATE - ANNOUNCEMENT_OPEN_DATE)
+	END AS ANNOUNCEMENT_OPEN_PERIOD,
+	CASE WHEN $P{DAYS} = 'Business Days' AND ANNOUNCEMENT_CLOSE_DATE IS NOT NULL AND CERTIFICATE_ISSUE_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(ANNOUNCEMENT_CLOSE_DATE, CERTIFICATE_ISSUE_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND ANNOUNCEMENT_CLOSE_DATE IS NOT NULL AND CERTIFICATE_ISSUE_DATE IS NOT NULL
+		THEN ROUND(CERTIFICATE_ISSUE_DATE - ANNOUNCEMENT_CLOSE_DATE)
+	END AS QUAL_ANALYSIS,
+	CASE WHEN $P{DAYS} = 'Business Days' AND CERTIFICATE_ISSUE_DATE IS NOT NULL AND REVIEW_SENT_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(CERTIFICATE_ISSUE_DATE, REVIEW_SENT_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND CERTIFICATE_ISSUE_DATE IS NOT NULL AND REVIEW_SENT_DATE IS NOT NULL
+		THEN ROUND(REVIEW_SENT_DATE - CERTIFICATE_ISSUE_DATE)
+	END AS CERT_ISSUE,
+	CASE WHEN $P{DAYS} = 'Business Days' AND REVIEW_SENT_DATE IS NOT NULL AND REVIEW_RETURN_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(REVIEW_SENT_DATE, REVIEW_RETURN_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND REVIEW_SENT_DATE IS NOT NULL AND REVIEW_RETURN_DATE IS NOT NULL
+		THEN ROUND(REVIEW_RETURN_DATE - REVIEW_SENT_DATE)
+	END AS CERT_RETURN,	
+	CASE WHEN $P{DAYS} = 'Business Days' AND ELG_QUAL_START IS NOT NULL AND ELG_QUAL_END IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(ELG_QUAL_START, ELG_QUAL_END)
+		WHEN $P{DAYS} = 'Calendar Days' AND ELG_QUAL_START IS NOT NULL AND ELG_QUAL_END IS NOT NULL
+		THEN ROUND(ELG_QUAL_END - ELG_QUAL_START)
+	END AS ELIG_QUAL,	
+	CASE WHEN $P{DAYS} = 'Business Days' AND SELECTION_DETERM_START IS NOT NULL AND SELECTION_DETERM_END IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(SELECTION_DETERM_START, SELECTION_DETERM_END)
+		WHEN $P{DAYS} = 'Calendar Days' AND SELECTION_DETERM_START IS NOT NULL AND SELECTION_DETERM_END IS NOT NULL
+		THEN ROUND(SELECTION_DETERM_END - SELECTION_DETERM_START)
+	END AS SELECTION_DETERM,		
+	CASE WHEN $P{DAYS} = 'Business Days' AND NEW_HIRE_CREATE_DATE IS NOT NULL AND SEND_TENT_OFFR_CMPL_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(NEW_HIRE_CREATE_DATE, SEND_TENT_OFFR_CMPL_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND NEW_HIRE_CREATE_DATE IS NOT NULL AND SEND_TENT_OFFR_CMPL_DATE IS NOT NULL
+		THEN ROUND(SEND_TENT_OFFR_CMPL_DATE - NEW_HIRE_CREATE_DATE)
+	END AS SEND_TENT_OFFR,
+	CASE WHEN $P{DAYS} = 'Business Days' AND SEND_TENT_OFFR_CMPL_DATE IS NOT NULL AND TENT_OFFR_RSPNS_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(SEND_TENT_OFFR_CMPL_DATE, TENT_OFFR_RSPNS_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND SEND_TENT_OFFR_CMPL_DATE IS NOT NULL AND TENT_OFFR_RSPNS_DATE IS NOT NULL
+		THEN ROUND(TENT_OFFR_RSPNS_DATE - SEND_TENT_OFFR_CMPL_DATE)
+	END AS RCV_TENT_OFFR_RSPNS,
+	CASE WHEN $P{DAYS} = 'Business Days' AND TENT_OFFR_RSPNS_DATE IS NOT NULL AND INIT_BKGRND_INVST_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(TENT_OFFR_RSPNS_DATE, INIT_BKGRND_INVST_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND TENT_OFFR_RSPNS_DATE IS NOT NULL AND INIT_BKGRND_INVST_DATE IS NOT NULL
+		THEN ROUND(INIT_BKGRND_INVST_DATE - TENT_OFFR_RSPNS_DATE)
+	END AS INIT_BKGRND_INVST,
+	CASE WHEN $P{DAYS} = 'Business Days' AND INIT_BKGRND_INVST_DATE IS NOT NULL AND RCVE_BKGRND_INVST_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(INIT_BKGRND_INVST_DATE, RCVE_BKGRND_INVST_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND INIT_BKGRND_INVST_DATE IS NOT NULL AND RCVE_BKGRND_INVST_DATE IS NOT NULL
+		THEN ROUND(RCVE_BKGRND_INVST_DATE - INIT_BKGRND_INVST_DATE)
+	END AS RCVE_BKGRND_INVST,
+	CASE WHEN $P{DAYS} = 'Business Days' AND RCVE_BKGRND_INVST_DATE IS NOT NULL AND EOD_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(RCVE_BKGRND_INVST_DATE, EOD_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND RCVE_BKGRND_INVST_DATE IS NOT NULL AND EOD_DATE IS NOT NULL
+		THEN ROUND(EOD_DATE - RCVE_BKGRND_INVST_DATE)
+	END AS EOD,
+	CASE WHEN $P{DAYS} = 'Business Days' AND EOD_DATE IS NOT NULL AND SEND_OFCL_OFFR_CMPL_DATE IS NOT NULL
+		THEN BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(EOD_DATE, SEND_OFCL_OFFR_CMPL_DATE)
+		WHEN $P{DAYS} = 'Calendar Days' AND EOD_DATE IS NOT NULL AND SEND_OFCL_OFFR_CMPL_DATE IS NOT NULL
+		THEN ROUND(SEND_OFCL_OFFR_CMPL_DATE - EOD_DATE)
+	END AS SEND_OFCL_OFFR
+FROM
+(	
+	SELECT DISTINCT
+		S.REQ_JOB_REQ_CREATE_DT AS CREATE_DATE,
+		S.REQ_JOB_REQ_NUMBER AS REQUEST_NUMBER,
+		S.SG_ADMIN_CD AS ADMIN_CODE,
+		S.SUB_ORG_2_DSCR AS SECOND_SUB_ORG,
+		S.SUB_ORG_2_CD,
+		S.POS_TITLE,
+		S.SG_RT_DSCR AS REQUEST_TYPE,
+		S.SG_CT_DSCR AS CLASS_TYPE,
+		E.AT_DSCR AS APPOINTMENT_TYPE,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT
+			WHERE NAME = 'Hold Strategic Consultation Meeting'
+			AND PROCID = S.SG_PROCID) AS HOLD_STRATCON_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT
+			WHERE NAME = 'Acknowledge Strat Cons Meeting'
+			AND PROCID = S.SG_PROCID) AS ACKD_STRATCON_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT
+			WHERE NAME = 'Approve Strat Cons Meeting'
+			AND PROCID = S.SG_PROCID) AS APPRV_STRATCON_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT
+			WHERE NAME = 'Approve Strat Cons Meeting'
+			AND PROCID = S.SG_PROCID) AS APPRV_STRATCON_END,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT
+			WHERE NAME = 'Complete PD Coversheet and Classification Analysis'
+			AND PROCID = C.PD_PROCID) AS CLS_ANALYSIS_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT
+			WHERE NAME = 'Confirm Classification Analysis'
+			AND PROCID = C.PD_PROCID) AS CFRM_ANALYSIS_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Confirm Classification Analysis'
+			AND PROCID = C.PD_PROCID) AS CFRM_ANALYSIS_END,
+        CASE WHEN C.BYPASS_DWC_FL = 'Yes' 
+                THEN (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT WHERE NAME = 'Confirm Final BUS Code' AND PROCID = C.PD_PROCID)
+            WHEN NVL(C.BYPASS_DWC_FL, 'No') = 'No'
+                THEN (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT WHERE NAME = 'Confirm BUS Code' AND PROCID = C.PD_PROCID)
+        END AS BUS_CODE_START,
+        CASE WHEN C.BYPASS_DWC_FL = 'Yes' 
+                THEN (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT WHERE NAME = 'Confirm Final BUS Code' AND PROCID = C.PD_PROCID)
+            WHEN C.BYPASS_DWC_FL = 'No'
+                THEN (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT WHERE NAME = 'Confirm Final BUS Code' AND PROCID = C.PD_PROCID)
+            ELSE (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT WHERE NAME = 'Review DWC Entry' AND PROCID = C.PD_PROCID)
+        END AS BUS_CODE_END,		
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Approve Coversheet and Create Final Pkg'
+			AND PROCID = C.PD_PROCID) AS FNL_PKG_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Approve Coversheet and Create Final Pkg'
+			AND PROCID = C.PD_PROCID) AS FNL_PKG_END,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Conduct Eligibility and Qualifications Review'
+			AND PROCID = C.PD_PROCID) AS ELG_QUAL_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Conduct Eligibility and Qualifications Review'
+			AND PROCID = C.PD_PROCID) AS ELG_QUAL_END,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(STARTDTIME,$P{TIMEZONE}) AS STARTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Select Candidate for Appointment'
+			AND PROCID = C.PD_PROCID) AS SELECTION_DETERM_START,
+		(SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CMPLTDTIME,$P{TIMEZONE}) AS CMPLTDTIME FROM BIZFLOW.ACT 
+			WHERE NAME = 'Select Candidate for Appointment'
+			AND PROCID = C.PD_PROCID) AS SELECTION_DETERM_END,			
+		REQUEST_APPROVAL_DATE,
+		MIN(HM_ANN_RVW_SENT_DATE) AS HM_ANN_RVW_SENT_DATE,
+		MIN(HM_ANN_RVW_CMPL_DATE) AS HM_ANN_RVW_CMPL_DATE,
+		MIN(ANNOUNCEMENT_OPEN_DATE) AS ANNOUNCEMENT_OPEN_DATE,
+		MIN(ANNOUNCEMENT_CLOSE_DATE) AS ANNOUNCEMENT_CLOSE_DATE,
+		MIN(CERTIFICATE_ISSUE_DATE) AS CERTIFICATE_ISSUE_DATE,
+		MIN(REVIEW_SENT_DATE) AS REVIEW_SENT_DATE,
+		MIN(REVIEW_RETURN_DATE) AS REVIEW_RETURN_DATE,
+		NEW_HIRE_CREATE_DATE,
+		SEND_TENT_OFFR_CMPL_DATE,
+		MIN(TENT_OFFR_RSPNS_DATE) AS TENT_OFFR_RSPNS_DATE,
+		INIT_BKGRND_INVST_DATE,
+		RCVE_BKGRND_INVST_DATE,
+		EOD_DATE,
+		SEND_OFCL_OFFR_CMPL_DATE
+	FROM HHS_CMS_HR.VW_STRATCON S
+		LEFT JOIN HHS_CMS_HR.VW_CLASSIFICATION C
+			ON S.REQ_JOB_REQ_NUMBER = C.REQ_JOB_REQ_NUMBER
+		LEFT JOIN HHS_CMS_HR.VW_ELIGQUAL E
+			ON S.REQ_JOB_REQ_NUMBER = E.REQ_JOB_REQ_NUMBER 
+		LEFT JOIN HHS_HR.DSS_CMS_TIME_OF_POSSESS P
+			ON S.REQ_JOB_REQ_NUMBER = P.REQUEST_NUMBER
+			AND REQUEST_TYPE = 'New Vacancy'
+			AND ARRVL_VERIF_CMPL_DATE IS NULL --Requests are still active since there is no New Hire Arrival Verified Complete Date
+	WHERE S.REQ_JOB_REQ_CREATE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
+	AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
+		AND (
+			($P{COMPONENT} = 'CMS-wide' AND S.SG_ADMIN_CD LIKE 'FC%')
+			OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND S.SG_ADMIN_CD = 'FC')			
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND S.SG_ADMIN_CD LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND S.SG_ADMIN_CD = UPPER($P{ADMIN_CD}))
+			)  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+		AND (($P{REQ_TYPE} = 'All' AND S.SG_RT_DSCR IN ('Recruitment', 'Appointment')) OR (S.SG_RT_DSCR  = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type (Recruitment or Appointment)
+		AND (($P{CLSF_TYPE} = 'All') OR (S.SG_CT_DSCR  = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+		
+		AND (($P{APPT_TYPE} = 'All') OR (E.AT_DSCR = $P{APPT_TYPE}))    -- Appointment Type filter: All Appointment Types or a specific type
+		AND (($P{SCHDA_TYPE} = 'All') OR (E.SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule A filter: All Schedule A Types or a specific type
+		AND (($P{VOL_TYPE} = 'All') OR (E.VT_DSCR = $P{VOL_TYPE}))      -- Volunteer Type filter: All Volunteer Types or a specific type
+		
+		AND (($P{SO_ID} = 'All') OR (S.SG_RT_DSCR = 'Recruitment' AND S.SG_SO_ID = $P{SO_ID}) OR (S.SG_CT_DSCR = 'Appointment' AND E.SO_ID = $P{SO_ID}))  -- Selecting Official
+		AND (($P{XO_ID} = 'All') OR (S.SG_CT_DSCR = 'Recruitment' AND S.SG_XO_ID = $P{XO_ID}) OR (S.SG_CT_DSCR = 'Appointment' AND E.XO_ID = $P{XO_ID}))  -- Executive Officer
+		AND (($P{HRL_ID} = 'All') OR (S.SG_CT_DSCR = 'Recruitment' AND S.SG_HRL_ID = $P{HRL_ID}) OR (S.SG_CT_DSCR = 'Appointment' AND E.HRL_ID = $P{HRL_ID})) -- HR Liaison
+		AND (($P{SS_ID} = 'All') OR (S.SG_CT_DSCR = 'Recruitment' AND S.SG_SS_ID = $P{SS_ID}) OR (S.SG_CT_DSCR = 'Appointment' AND E.SS_ID = $P{SS_ID}))      -- Staffing Specialist
+		AND (($P{CS_ID} = 'All') OR (S.SG_CT_DSCR = 'Recruitment' AND S.SG_CS_ID = $P{CS_ID}) OR (S.SG_CT_DSCR = 'Appointment' AND E.CS_ID = $P{CS_ID})) -- Classification Specialist
+		AND S.REQ_CANCEL_DT IS NULL
+		AND C.REQ_CANCEL_DT IS NULL
+		AND E.REQ_CANCEL_DT IS NULL
+	GROUP BY
+		SG_PROCID,
+		C.PD_PROCID,
+		S.REQ_JOB_REQ_CREATE_DT,
+		S.REQ_JOB_REQ_NUMBER,
+		S.SG_ADMIN_CD,
+		S.SUB_ORG_2_DSCR,
+		S.SUB_ORG_2_CD,
+		S.POS_TITLE,
+		S.SG_RT_DSCR,
+		S.SG_CT_DSCR,
+		E.AT_DSCR,
+		REQUEST_APPROVAL_DATE,
+		NEW_HIRE_CREATE_DATE,
+		SEND_TENT_OFFR_CMPL_DATE,
+		INIT_BKGRND_INVST_DATE,
+		RCVE_BKGRND_INVST_DATE,
+		EOD_DATE,
+		SEND_OFCL_OFFR_CMPL_DATE,
+		C.BYPASS_DWC_FL
+)
+ORDER BY
+	SUB_ORG_2_CD,
+	REQUEST_NUMBER]]>
+	</queryString>
+	<field name="CREATE_DATE" class="java.sql.Timestamp"/>
+	<field name="REQUEST_NUMBER" class="java.lang.String"/>
+	<field name="ADMIN_CODE" class="java.lang.String"/>
+	<field name="SECOND_SUB_ORG" class="java.lang.String"/>
+	<field name="SUB_ORG_2_CD" class="java.lang.String"/>
+	<field name="POS_TITLE" class="java.lang.String"/>
+	<field name="REQUEST_TYPE" class="java.lang.String"/>
+	<field name="CLASS_TYPE" class="java.lang.String"/>
+	<field name="APPOINTMENT_TYPE" class="java.lang.String"/>
+	<field name="CREATE_REQUEST" class="java.math.BigDecimal"/>
+	<field name="HOLD_STRATCON" class="java.math.BigDecimal"/>
+	<field name="ACKD_STRATCON" class="java.math.BigDecimal"/>
+	<field name="APPRV_STRATCON" class="java.math.BigDecimal"/>
+	<field name="CLS_ANALYSIS" class="java.math.BigDecimal"/>
+	<field name="CFRM_ANALYSIS" class="java.math.BigDecimal"/>
+	<field name="BUS_CODE" class="java.math.BigDecimal"/>
+	<field name="APPROVE_PD" class="java.math.BigDecimal"/>
+	<field name="FNL_PKG" class="java.math.BigDecimal"/>
+	<field name="BUILD_ASSESSMENT" class="java.math.BigDecimal"/>
+	<field name="REVIEW_ASSESSMENT" class="java.math.BigDecimal"/>
+	<field name="POST_TO_USA_JOBS" class="java.math.BigDecimal"/>
+	<field name="ANNOUNCEMENT_OPEN_PERIOD" class="java.math.BigDecimal"/>
+	<field name="QUAL_ANALYSIS" class="java.math.BigDecimal"/>
+	<field name="CERT_ISSUE" class="java.math.BigDecimal"/>
+	<field name="CERT_RETURN" class="java.math.BigDecimal"/>
+	<field name="ELIG_QUAL" class="java.math.BigDecimal"/>
+	<field name="SELECTION_DETERM" class="java.math.BigDecimal"/>
+	<field name="SEND_TENT_OFFR" class="java.math.BigDecimal"/>
+	<field name="RCV_TENT_OFFR_RSPNS" class="java.math.BigDecimal"/>
+	<field name="INIT_BKGRND_INVST" class="java.math.BigDecimal"/>
+	<field name="RCVE_BKGRND_INVST" class="java.math.BigDecimal"/>
+	<field name="EOD" class="java.math.BigDecimal"/>
+	<field name="SEND_OFCL_OFFR" class="java.math.BigDecimal"/>
+	<variable name="Average_Component" class="java.lang.Integer" resetType="Group" resetGroup="Component" calculation="Average">
+		<variableExpression><![CDATA[(new Boolean($F{CREATE_REQUEST} == null)? 0 : $F{CREATE_REQUEST}.doubleValue()) + (new Boolean($F{ACKD_STRATCON}== null)? 0 : $F{ACKD_STRATCON}.doubleValue()) + (new Boolean($F{CFRM_ANALYSIS}== null)? 0 : $F{CFRM_ANALYSIS}.doubleValue()) + (new Boolean($F{APPROVE_PD}== null)? 0 : $F{APPROVE_PD}.doubleValue()) + (new Boolean($F{REVIEW_ASSESSMENT}== null)? 0 : $F{REVIEW_ASSESSMENT}.doubleValue()) + (new Boolean($F{CERT_RETURN}== null)? 0 : $F{CERT_RETURN}.doubleValue()) + (new Boolean($F{SELECTION_DETERM}== null)? 0 : $F{SELECTION_DETERM}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="Average_HR" class="java.lang.Integer" resetType="Group" resetGroup="Component" calculation="Average">
+		<variableExpression><![CDATA[(new Boolean($F{HOLD_STRATCON}== null)? 0 : $F{HOLD_STRATCON}.doubleValue()) +
+(new Boolean($F{APPRV_STRATCON}== null)? 0 :$F{APPRV_STRATCON}.doubleValue()) +
+(new Boolean($F{CLS_ANALYSIS}== null)? 0 : $F{CLS_ANALYSIS}.doubleValue()) +
+(new Boolean($F{BUS_CODE}== null)? 0 : $F{BUS_CODE}.doubleValue()) +
+(new Boolean($F{FNL_PKG}== null)? 0 :  $F{FNL_PKG}.doubleValue()) +
+(new Boolean($F{BUILD_ASSESSMENT}== null)? 0 : $F{BUILD_ASSESSMENT}.doubleValue()) +
+(new Boolean($F{POST_TO_USA_JOBS}== null)? 0 : $F{POST_TO_USA_JOBS}.doubleValue()) +
+(new Boolean($F{QUAL_ANALYSIS}== null)? 0 : $F{QUAL_ANALYSIS}.doubleValue()) +
+(new Boolean($F{CERT_ISSUE}== null)? 0 : $F{CERT_ISSUE}.doubleValue()) +
+(new Boolean($F{SEND_TENT_OFFR}== null)? 0 : $F{SEND_TENT_OFFR}.doubleValue()) +
+(new Boolean($F{INIT_BKGRND_INVST}== null)? 0 : $F{INIT_BKGRND_INVST}.doubleValue()) +
+(new Boolean($F{EOD}== null)? 0 : $F{EOD}.doubleValue()) +
+(new Boolean($F{SEND_OFCL_OFFR}== null)? 0 : $F{SEND_OFCL_OFFR}.doubleValue())+
+(new Boolean($F{ELIG_QUAL}== null)? 0 : $F{ELIG_QUAL}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="Average_Other" class="java.lang.Integer" resetType="Group" resetGroup="Component" calculation="Average">
+		<variableExpression><![CDATA[(new Boolean($F{ANNOUNCEMENT_OPEN_PERIOD}== null)? 0 : $F{ANNOUNCEMENT_OPEN_PERIOD}.doubleValue())  + (new Boolean($F{RCV_TENT_OFFR_RSPNS}== null)? 0 : $F{RCV_TENT_OFFR_RSPNS}.doubleValue()) + (new Boolean($F{RCVE_BKGRND_INVST}== null)? 0 : $F{RCVE_BKGRND_INVST}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="Average_Total" class="java.lang.Integer" resetType="Group" resetGroup="Component" calculation="Average">
+		<variableExpression><![CDATA[(new Boolean($F{CREATE_REQUEST} == null)? 0 : $F{CREATE_REQUEST}.doubleValue()) + (new Boolean($F{ACKD_STRATCON}== null)? 0 : $F{ACKD_STRATCON}.doubleValue()) + (new Boolean($F{CFRM_ANALYSIS}== null)? 0 : $F{CFRM_ANALYSIS}.doubleValue()) + (new Boolean($F{APPROVE_PD}== null)? 0 : $F{APPROVE_PD}.doubleValue()) + (new Boolean($F{REVIEW_ASSESSMENT}== null)? 0 : $F{REVIEW_ASSESSMENT}.doubleValue()) + (new Boolean($F{CERT_RETURN}== null)? 0 : $F{CERT_RETURN}.doubleValue()) + (new Boolean($F{SELECTION_DETERM}== null)? 0 : $F{SELECTION_DETERM}.doubleValue())
++ (new Boolean($F{HOLD_STRATCON}== null)? 0 : $F{HOLD_STRATCON}.doubleValue()) +
+(new Boolean($F{APPRV_STRATCON}== null)? 0 :$F{APPRV_STRATCON}.doubleValue()) +
+(new Boolean($F{CLS_ANALYSIS}== null)? 0 : $F{CLS_ANALYSIS}.doubleValue()) +
+(new Boolean($F{BUS_CODE}== null)? 0 : $F{BUS_CODE}.doubleValue()) +
+(new Boolean($F{FNL_PKG}== null)? 0 :  $F{FNL_PKG}.doubleValue()) +
+(new Boolean($F{BUILD_ASSESSMENT}== null)? 0 : $F{BUILD_ASSESSMENT}.doubleValue()) +
+(new Boolean($F{POST_TO_USA_JOBS}== null)? 0 : $F{POST_TO_USA_JOBS}.doubleValue()) +
+(new Boolean($F{QUAL_ANALYSIS}== null)? 0 : $F{QUAL_ANALYSIS}.doubleValue()) +
+(new Boolean($F{CERT_ISSUE}== null)? 0 : $F{CERT_ISSUE}.doubleValue()) +
+(new Boolean($F{SEND_TENT_OFFR}== null)? 0 : $F{SEND_TENT_OFFR}.doubleValue()) +
+(new Boolean($F{INIT_BKGRND_INVST}== null)? 0 : $F{INIT_BKGRND_INVST}.doubleValue()) +
+(new Boolean($F{EOD}== null)? 0 : $F{EOD}.doubleValue()) +
+(new Boolean($F{SEND_OFCL_OFFR}== null)? 0 : $F{SEND_OFCL_OFFR}.doubleValue())+
+(new Boolean($F{ELIG_QUAL}== null)? 0 : $F{ELIG_QUAL}.doubleValue())
++ (new Boolean($F{ANNOUNCEMENT_OPEN_PERIOD}== null)? 0 : $F{ANNOUNCEMENT_OPEN_PERIOD}.doubleValue())  + (new Boolean($F{RCV_TENT_OFFR_RSPNS}== null)? 0 : $F{RCV_TENT_OFFR_RSPNS}.doubleValue()) + (new Boolean($F{RCVE_BKGRND_INVST}== null)? 0 : $F{RCVE_BKGRND_INVST}.doubleValue())]]></variableExpression>
+	</variable>
+	<group name="Component">
+		<groupExpression><![CDATA[$F{SECOND_SUB_ORG}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField evaluationTime="Group" evaluationGroup="Component">
+					<reportElement x="0" y="0" width="772" height="20" isPrintInFirstWholeBand="true" printWhenGroupChanges="Component" uuid="639d7a67-a21d-4970-8d55-4419ed69d3bb">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SUB_ORG_2_CD} + " - " + $F{SECOND_SUB_ORG}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement x="0" y="0" width="532" height="20" uuid="2833d95b-edf4-4bfe-897b-8370fed7ecd9">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box rightPadding="2">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Average Days to Complete:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="532" y="0" width="60" height="20" uuid="10b5ba6e-d4b8-4c04-8d38-33cf3c70fd40">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box bottomPadding="2">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="7"/>
+						<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Average_Component}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="592" y="0" width="60" height="20" uuid="758e279a-723f-4495-b344-bc691e3a708d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box bottomPadding="2">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="7"/>
+						<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Average_HR}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="652" y="0" width="60" height="20" uuid="274d8ac4-f911-4c92-871a-7514085553da">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box bottomPadding="2">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="7"/>
+						<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Average_Other}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="712" y="0" width="60" height="20" uuid="5162b04b-be98-42ae-96a6-4266e5bc7bf9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box bottomPadding="2">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="7"/>
+						<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Average_Total}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="772" height="25" uuid="b79ad4e7-e53a-4c39-9fa6-de2b3ba8252c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Time of Possession End to End Report - Active]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="30" width="772" height="16" uuid="9aa8f9dd-db89-46af-b088-cb2162b83e98">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide requests completed between " + DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+					: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? "All requests for the Office of the Administrator (OA) completed between " + DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+					: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? "All requests for " + $P{ADMIN_CD} + " and its suborganizations completed between " + DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+					: "All requests for " + $P{ADMIN_CD} + " completed between " + DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="60" splitType="Stretch">
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="784" y="0" width="1320" height="60" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="dc2bded2-37ac-4c5a-9662-3e42cd8dc40e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="772" height="60" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="f591ddd4-7f6a-49b0-be17-450c85f7f6e7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="20" width="80" height="40" uuid="e445f7f5-7815-4149-93d8-1993428ee592">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Date Request Created]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="80" y="20" width="80" height="40" uuid="217c0d86-e45c-46e7-9677-d6c9e35a1196">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Job Request Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="160" y="20" width="80" height="40" uuid="983e6990-9d0b-436d-a374-715254e5bbb8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Admin Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="240" y="20" width="120" height="40" uuid="4ff1f5c0-d273-453e-9e86-0eb30c5b3ed1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Position Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="360" y="20" width="72" height="40" uuid="34f75e7c-bc02-45f9-893c-c4a61ce31b85">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Request Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="432" y="20" width="100" height="40" uuid="b432321b-b587-4063-85de-8078a708d9fa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Classification Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="784" y="0" width="220" height="20" uuid="38939094-daec-4125-87dc-243d61e8ba98">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Strategic Consultation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="532" height="20" uuid="3ab938ab-d3d1-4d0f-885b-ac5f2cafd953">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Request Information]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="784" y="20" width="55" height="40" uuid="2c72394a-7767-4c2a-b723-283903f0a9d9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Create/Review/Modify Request (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="839" y="20" width="55" height="40" uuid="08a10921-128c-45ea-b835-557d0b947413">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Hold Strategic Consultation Meeting (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="894" y="20" width="55" height="40" uuid="c75ff7ff-8593-4355-9368-ff865fe17555">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Acknowledge Strategic Consultation Meeting (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="949" y="20" width="55" height="40" uuid="9480f340-2624-4e96-ab36-977bc70cd067">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Approve Strategic Consultation Meeting (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1004" y="0" width="275" height="20" uuid="45a79244-dc29-4e0e-9aec-5e50a7dc8dc3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Classification]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1059" y="20" width="55" height="40" uuid="b6fa384f-3080-4ce3-8da1-74d6841dd088">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Confirm Analysis (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1114" y="20" width="55" height="40" uuid="c9b64f3f-377b-4f11-babd-b5c3a5bba3a1">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[BUS Code Review (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1169" y="20" width="55" height="40" uuid="41218be1-a9d0-443e-9977-9a69ee4bf56c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Approve Coversheet (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1224" y="20" width="55" height="40" uuid="75051228-c9ba-4806-9f2c-9f1842c264a0">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Create Final Package (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1279" y="0" width="385" height="20" uuid="85ce4631-d328-4ce9-91cc-53057af116d6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Recruitment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1279" y="20" width="55" height="40" uuid="3867893a-406b-4607-908f-68132c6e7fe7">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Build Assessment / Announcement (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1334" y="20" width="55" height="40" uuid="b4ad3d30-58a7-4378-84f7-670459db225d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Review Assessment/ Announcement (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1389" y="20" width="55" height="40" uuid="436bdac7-425f-43d9-9508-486715d28288">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Final Edits and Post to USA Jobs (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1444" y="20" width="55" height="40" uuid="cda70a1a-a82b-49b0-9540-34057a114f63">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Announcement Open Period (Other)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1004" y="20" width="55" height="40" uuid="12f4036c-d022-4a41-ab20-9976557bfbf6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Complete PD Coversheet & Classification Analysis (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1499" y="20" width="55" height="40" uuid="de20adb4-77ac-4785-aaa5-b7970c37bb01">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Qualifications Analysis (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1554" y="20" width="55" height="40" uuid="9addbe90-0642-43cb-b274-736058ed4a02">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Issue Certificate and Send Review (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1609" y="20" width="55" height="40" uuid="9c0e7ea3-52d1-4c4e-890c-267a8f56aa46">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Make and Return Selections (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1774" y="20" width="55" height="40" uuid="38a665e0-f72a-43aa-bf5e-6e847c1f7ded">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Send Tentative Offer (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1829" y="20" width="55" height="40" uuid="45c6bf96-54a5-4253-bad0-3e6610c7126d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Receive Tentative Offer Response (Other)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1884" y="20" width="55" height="40" uuid="e5a14b25-5e6c-47cf-a03e-b3956396c64e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Complete Pre-Employment Forms & Initiate Background Investigation (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1939" y="20" width="55" height="40" uuid="865277b9-14ec-4a3b-b117-21bbd74c36f3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Receive Background Investigation Clearance (Other)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1994" y="20" width="55" height="40" uuid="c0fccbab-3e1d-4ae3-9583-7e8724bf0421">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Establish Entry on Duty Date (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="2049" y="20" width="55" height="40" uuid="fb224e1a-9d69-4c4b-89bc-16ddacd3734d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Send Official Offer (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1774" y="0" width="330" height="20" uuid="ea5aa434-c86f-4c03-8028-56def815fa1d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Offer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="532" y="20" width="60" height="40" uuid="abc2fd32-34e7-4245-a045-623faa1bb197">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Component]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="592" y="20" width="60" height="40" uuid="5c1e19a1-4c2e-4b33-a1b9-17bfe3201a75">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[HR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="652" y="20" width="60" height="40" uuid="784a1b34-6330-40d7-9fcc-8b81830b0d5d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Other]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="712" y="20" width="60" height="40" uuid="efcec0cb-b09f-4065-876a-b4eddebd7232">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="532" y="0" width="240" height="20" uuid="fb11ef92-bb02-413c-92e9-91d994d0d3c6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Summary]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1664" y="0" width="110" height="20" uuid="00070936-dfdd-4459-9fba-ef7789426c91">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Appointment Eligibility and Qualifications Review]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1664" y="20" width="55" height="40" uuid="a8a043a1-2939-41f8-9c33-91ab93beb380">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Eligibility and Qualifications Review (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1719" y="20" width="55" height="40" uuid="5973b50b-7b73-4c58-9ba8-d39f78aaee34">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="3" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Selection Determination (Component)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="80" height="20" uuid="47f584d5-66a5-460c-b8ef-bba8d17277f7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CREATE_DATE}!= null) ? DATEFORMAT($F{CREATE_DATE},"MM/dd/yyy"): "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="80" y="0" width="80" height="20" uuid="c063c9a2-b86f-40ff-b41d-7a5ebb8e9e3f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_NUMBER}!= null) ? $F{REQUEST_NUMBER} : "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="160" y="0" width="80" height="20" uuid="44d15b68-abe3-465e-9066-4141a66727b4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{ADMIN_CODE}!= null) ? $F{ADMIN_CODE} : "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="120" height="20" uuid="4cc9ad00-35a7-4cff-9e39-f5bfceceb8c0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{POS_TITLE}!= null) ? $F{POS_TITLE} : "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="360" y="0" width="72" height="20" uuid="6f925671-078a-4794-8516-52a5fd8cac65">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}!= null) ?$F{REQUEST_TYPE} : "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="432" y="0" width="100" height="20" uuid="1c9dafa1-42b6-4321-8571-037a20848753">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ? (new Boolean ($F{CLASS_TYPE}!= null) ? $F{CLASS_TYPE} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	: (new Boolean ($F{CLASS_TYPE}!= null) ? $F{CLASS_TYPE} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="784" y="0" width="55" height="20" uuid="e520b228-35ae-453a-ab77-aea0683de268">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CREATE_REQUEST} != null) ? $F{CREATE_REQUEST} : "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="839" y="0" width="55" height="20" uuid="1413f170-bffd-42c1-9691-ea52f11130d1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{HOLD_STRATCON} != null) ? $F{HOLD_STRATCON} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{HOLD_STRATCON} != null) ? $F{HOLD_STRATCON} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="894" y="0" width="55" height="20" uuid="bd821c87-6320-45b2-b4d5-84fe641df463">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{ACKD_STRATCON} != null) ? $F{ACKD_STRATCON} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{ACKD_STRATCON} != null) ? $F{ACKD_STRATCON} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="949" y="0" width="55" height="20" uuid="1fb0fe6e-843f-4546-906d-3a916427c0c5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{APPRV_STRATCON} != null) ? $F{APPRV_STRATCON} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{APPRV_STRATCON} != null) ? $F{APPRV_STRATCON} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1004" y="0" width="55" height="20" uuid="eb87ffdd-f24a-47e1-99ea-d0c1e1ec3889">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{APPOINTMENT_TYPE}==null && $F{CLASS_TYPE}==null) ? (new Boolean ($F{CLS_ANALYSIS}!= null) ? $F{CLS_ANALYSIS} : "TBD")			
+		: ($F{APPOINTMENT_TYPE}==null && !$F{CLASS_TYPE}.equals("Review Existing Position Description")) ? (new Boolean ($F{CLS_ANALYSIS}!= null) ?$F{CLS_ANALYSIS} : "TBD")
+		: ($F{CLASS_TYPE}==null) ? (new Boolean ($F{CLS_ANALYSIS}!= null) ? $F{CLS_ANALYSIS} : "TBD")
+		: ($F{CLASS_TYPE}.equals("Review Existing Position Description")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+		:(new Boolean ($F{CLS_ANALYSIS}!= null) ? $F{CLS_ANALYSIS} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1059" y="0" width="55" height="20" uuid="ec868354-f26d-43f8-a081-f60e8dca52ab">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{APPOINTMENT_TYPE}==null && $F{CLASS_TYPE}==null) ? (new Boolean ($F{CFRM_ANALYSIS}!= null) ? $F{CFRM_ANALYSIS} : "TBD")			
+		: ($F{APPOINTMENT_TYPE}==null && !$F{CLASS_TYPE}.equals("Review Existing Position Description")) ? (new Boolean ($F{CFRM_ANALYSIS}!= null) ?$F{CFRM_ANALYSIS} : "TBD")
+		: ($F{CLASS_TYPE}==null) ? (new Boolean ($F{CFRM_ANALYSIS}!= null) ? $F{CFRM_ANALYSIS} : "TBD")
+		: ($F{CLASS_TYPE}.equals("Review Existing Position Description")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+		:(new Boolean ($F{CFRM_ANALYSIS}!= null) ? $F{CFRM_ANALYSIS} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1114" y="0" width="55" height="20" uuid="bc6e9cd5-3311-43c1-98e0-948f76e4901c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{APPOINTMENT_TYPE}==null && $F{CLASS_TYPE}==null) ? (new Boolean ($F{BUS_CODE}!= null) ? $F{BUS_CODE} : "TBD")			
+		: ($F{APPOINTMENT_TYPE}==null && !$F{CLASS_TYPE}.equals("Review Existing Position Description")) ? (new Boolean ($F{BUS_CODE}!= null) ?$F{BUS_CODE} : "TBD")
+		: ($F{CLASS_TYPE}==null) ? (new Boolean ($F{BUS_CODE}!= null) ? $F{BUS_CODE} : "TBD")
+		: ($F{CLASS_TYPE}.equals("Review Existing Position Description")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+		:(new Boolean ($F{BUS_CODE}!= null) ? $F{BUS_CODE} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1169" y="0" width="55" height="20" uuid="91f93979-5394-480d-bbf7-535dc0c232a7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{APPOINTMENT_TYPE}==null && $F{CLASS_TYPE}==null) ? (new Boolean ($F{APPROVE_PD}!= null) ? $F{APPROVE_PD} : "TBD")			
+		: ($F{APPOINTMENT_TYPE}==null && !$F{CLASS_TYPE}.equals("Review Existing Position Description")) ? (new Boolean ($F{APPROVE_PD}!= null) ?$F{APPROVE_PD} : "TBD")
+		: ($F{CLASS_TYPE}==null) ? (new Boolean ($F{APPROVE_PD}!= null) ? $F{APPROVE_PD} : "TBD")
+		: ($F{CLASS_TYPE}.equals("Review Existing Position Description")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+		:(new Boolean ($F{APPROVE_PD}!= null) ? $F{APPROVE_PD} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1224" y="0" width="55" height="20" uuid="bb802150-8cb3-4df2-9df6-308644e9bdad">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{APPOINTMENT_TYPE}==null && $F{CLASS_TYPE}==null) ? (new Boolean ($F{FNL_PKG}!= null) ? $F{FNL_PKG} : "TBD")			
+		: ($F{APPOINTMENT_TYPE}==null && !$F{CLASS_TYPE}.equals("Review Existing Position Description")) ? (new Boolean ($F{FNL_PKG}!= null) ?$F{FNL_PKG} : "TBD")
+		: ($F{CLASS_TYPE}==null) ? (new Boolean ($F{FNL_PKG}!= null) ? $F{FNL_PKG} : "TBD")
+		: ($F{CLASS_TYPE}.equals("Review Existing Position Description")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+		: ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+		:(new Boolean ($F{FNL_PKG}!= null) ? $F{FNL_PKG} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1279" y="0" width="55" height="20" uuid="70a76596-4887-41ca-a8c4-82001813f25d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{BUILD_ASSESSMENT} != null) ? $F{BUILD_ASSESSMENT} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{BUILD_ASSESSMENT} != null) ? $F{BUILD_ASSESSMENT} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1334" y="0" width="55" height="20" uuid="cd0cc324-bcc5-4266-ab63-71c76720aef7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{REVIEW_ASSESSMENT} != null) ? $F{REVIEW_ASSESSMENT} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{REVIEW_ASSESSMENT} != null) ? $F{REVIEW_ASSESSMENT} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1389" y="0" width="55" height="20" uuid="de6457e2-138b-42fd-968f-82565afa102d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{POST_TO_USA_JOBS} != null) ? $F{POST_TO_USA_JOBS} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{POST_TO_USA_JOBS} != null) ? $F{POST_TO_USA_JOBS} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1444" y="0" width="55" height="20" uuid="1d53a28d-220f-47b6-bccc-2b87f4363fad">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{ANNOUNCEMENT_OPEN_PERIOD} != null) ? $F{ANNOUNCEMENT_OPEN_PERIOD} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{ANNOUNCEMENT_OPEN_PERIOD} != null) ? $F{ANNOUNCEMENT_OPEN_PERIOD} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1499" y="0" width="55" height="20" uuid="4a8866d5-4b6c-4927-938f-0c5fd734baae">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{QUAL_ANALYSIS} != null) ? $F{QUAL_ANALYSIS} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{QUAL_ANALYSIS} != null) ? $F{QUAL_ANALYSIS} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1554" y="0" width="55" height="20" uuid="02420a4a-d568-4e9d-b5b2-0f28945445fd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{CERT_ISSUE} != null) ? $F{CERT_ISSUE} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{CERT_ISSUE} != null) ? $F{CERT_ISSUE} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1609" y="0" width="55" height="20" uuid="f8f5205e-23d8-4cc9-b98e-7914abc27413">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Appointment")) ? "N/A" 
+:new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{CERT_RETURN} != null) ? $F{CERT_RETURN} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{CERT_RETURN} != null) ? $F{CERT_RETURN} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1774" y="0" width="55" height="20" uuid="03e0faea-52bb-463c-a4f5-78ea6b01cc9f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{SEND_TENT_OFFR} != null) ? $F{SEND_TENT_OFFR} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{SEND_TENT_OFFR} != null) ? $F{SEND_TENT_OFFR} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1829" y="0" width="55" height="20" uuid="3e6169ca-c87f-4bd0-aaed-b322de8e8ffd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{RCV_TENT_OFFR_RSPNS} != null) ? $F{RCV_TENT_OFFR_RSPNS}: "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{RCV_TENT_OFFR_RSPNS} != null) ? $F{RCV_TENT_OFFR_RSPNS}: "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1884" y="0" width="55" height="20" uuid="f4896558-f996-4975-80f2-28193f8a31d0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{INIT_BKGRND_INVST} != null) ? $F{INIT_BKGRND_INVST} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{INIT_BKGRND_INVST} != null) ? $F{INIT_BKGRND_INVST} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1939" y="0" width="55" height="20" uuid="cc3bf041-405d-4624-ae47-88d55d18714e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{RCVE_BKGRND_INVST} != null) ? $F{RCVE_BKGRND_INVST} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{RCVE_BKGRND_INVST} != null) ? $F{RCVE_BKGRND_INVST} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1994" y="0" width="55" height="20" uuid="d0652c03-f8f5-4639-ae2a-cc08eb2a67d3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{EOD} != null) ? $F{EOD} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{EOD} != null) ? $F{EOD} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2049" y="0" width="55" height="20" uuid="76d82bbd-2a0a-4b7d-81a1-df4d27df0924">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPOINTMENT_TYPE}==null) ?
+	 (new Boolean ($F{SEND_OFCL_OFFR}!= null) ? $F{SEND_OFCL_OFFR} : "TBD")
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Volunteer")) ? "N/A"
+	: new Boolean ($F{APPOINTMENT_TYPE}.equals("Expert/Consultant")) ? "N/A"
+	:(new Boolean ($F{SEND_OFCL_OFFR}!= null) ? $F{SEND_OFCL_OFFR} : "TBD")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="532" y="0" width="60" height="20" uuid="d4d78e31-4f03-45f7-9cb3-3552ca0ba308">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new Boolean($F{CREATE_REQUEST} == null)? 0 : $F{CREATE_REQUEST}.doubleValue()) + (new Boolean($F{ACKD_STRATCON}== null)? 0 : $F{ACKD_STRATCON}.doubleValue()) + (new Boolean($F{CFRM_ANALYSIS}== null)? 0 : $F{CFRM_ANALYSIS}.doubleValue()) + (new Boolean($F{APPROVE_PD}== null)? 0 : $F{APPROVE_PD}.doubleValue()) + (new Boolean($F{REVIEW_ASSESSMENT}== null)? 0 : $F{REVIEW_ASSESSMENT}.doubleValue()) + (new Boolean($F{CERT_RETURN}== null)? 0 : $F{CERT_RETURN}.doubleValue()) + (new Boolean($F{SELECTION_DETERM}== null)? 0 : $F{SELECTION_DETERM}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="592" y="0" width="60" height="20" uuid="669593d3-28a4-4ed3-8b8c-bc3e58ba7635">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new Boolean($F{HOLD_STRATCON}== null)? 0 : $F{HOLD_STRATCON}.doubleValue()) +
+(new Boolean($F{APPRV_STRATCON}== null)? 0 :$F{APPRV_STRATCON}.doubleValue()) +
+(new Boolean($F{CLS_ANALYSIS}== null)? 0 : $F{CLS_ANALYSIS}.doubleValue()) +
+(new Boolean($F{BUS_CODE}== null)? 0 : $F{BUS_CODE}.doubleValue()) +
+(new Boolean($F{FNL_PKG}== null)? 0 :  $F{FNL_PKG}.doubleValue()) +
+(new Boolean($F{BUILD_ASSESSMENT}== null)? 0 : $F{BUILD_ASSESSMENT}.doubleValue()) +
+(new Boolean($F{POST_TO_USA_JOBS}== null)? 0 : $F{POST_TO_USA_JOBS}.doubleValue()) +
+(new Boolean($F{QUAL_ANALYSIS}== null)? 0 : $F{QUAL_ANALYSIS}.doubleValue()) +
+(new Boolean($F{CERT_ISSUE}== null)? 0 : $F{CERT_ISSUE}.doubleValue()) +
+(new Boolean($F{SEND_TENT_OFFR}== null)? 0 : $F{SEND_TENT_OFFR}.doubleValue()) +
+(new Boolean($F{INIT_BKGRND_INVST}== null)? 0 : $F{INIT_BKGRND_INVST}.doubleValue()) +
+(new Boolean($F{EOD}== null)? 0 : $F{EOD}.doubleValue()) +
+(new Boolean($F{SEND_OFCL_OFFR}== null)? 0 : $F{SEND_OFCL_OFFR}.doubleValue())+
+(new Boolean($F{ELIG_QUAL}== null)? 0 : $F{ELIG_QUAL}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="652" y="0" width="60" height="20" uuid="574d1955-fa4b-4bcc-8059-b8917780ed9c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new Boolean($F{ANNOUNCEMENT_OPEN_PERIOD}== null)? 0 : $F{ANNOUNCEMENT_OPEN_PERIOD}.doubleValue())  + (new Boolean($F{RCV_TENT_OFFR_RSPNS}== null)? 0 : $F{RCV_TENT_OFFR_RSPNS}.doubleValue()) + (new Boolean($F{RCVE_BKGRND_INVST}== null)? 0 : $F{RCVE_BKGRND_INVST}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="712" y="0" width="60" height="20" uuid="b79db7bd-575e-470c-a005-ec9dc5d9d3cc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new Boolean($F{CREATE_REQUEST} == null)? 0 : $F{CREATE_REQUEST}.doubleValue()) + (new Boolean($F{ACKD_STRATCON}== null)? 0 : $F{ACKD_STRATCON}.doubleValue()) + (new Boolean($F{CFRM_ANALYSIS}== null)? 0 : $F{CFRM_ANALYSIS}.doubleValue()) + (new Boolean($F{APPROVE_PD}== null)? 0 : $F{APPROVE_PD}.doubleValue()) + (new Boolean($F{REVIEW_ASSESSMENT}== null)? 0 : $F{REVIEW_ASSESSMENT}.doubleValue()) + (new Boolean($F{CERT_RETURN}== null)? 0 : $F{CERT_RETURN}.doubleValue()) + (new Boolean($F{SELECTION_DETERM}== null)? 0 : $F{SELECTION_DETERM}.doubleValue())
++ (new Boolean($F{HOLD_STRATCON}== null)? 0 : $F{HOLD_STRATCON}.doubleValue()) +
+(new Boolean($F{APPRV_STRATCON}== null)? 0 :$F{APPRV_STRATCON}.doubleValue()) +
+(new Boolean($F{CLS_ANALYSIS}== null)? 0 : $F{CLS_ANALYSIS}.doubleValue()) +
+(new Boolean($F{BUS_CODE}== null)? 0 : $F{BUS_CODE}.doubleValue()) +
+(new Boolean($F{FNL_PKG}== null)? 0 :  $F{FNL_PKG}.doubleValue()) +
+(new Boolean($F{BUILD_ASSESSMENT}== null)? 0 : $F{BUILD_ASSESSMENT}.doubleValue()) +
+(new Boolean($F{POST_TO_USA_JOBS}== null)? 0 : $F{POST_TO_USA_JOBS}.doubleValue()) +
+(new Boolean($F{QUAL_ANALYSIS}== null)? 0 : $F{QUAL_ANALYSIS}.doubleValue()) +
+(new Boolean($F{CERT_ISSUE}== null)? 0 : $F{CERT_ISSUE}.doubleValue()) +
+(new Boolean($F{SEND_TENT_OFFR}== null)? 0 : $F{SEND_TENT_OFFR}.doubleValue()) +
+(new Boolean($F{INIT_BKGRND_INVST}== null)? 0 : $F{INIT_BKGRND_INVST}.doubleValue()) +
+(new Boolean($F{EOD}== null)? 0 : $F{EOD}.doubleValue()) +
+(new Boolean($F{SEND_OFCL_OFFR}== null)? 0 : $F{SEND_OFCL_OFFR}.doubleValue())+
+(new Boolean($F{ELIG_QUAL}== null)? 0 : $F{ELIG_QUAL}.doubleValue())
++ (new Boolean($F{ANNOUNCEMENT_OPEN_PERIOD}== null)? 0 : $F{ANNOUNCEMENT_OPEN_PERIOD}.doubleValue())  + (new Boolean($F{RCV_TENT_OFFR_RSPNS}== null)? 0 : $F{RCV_TENT_OFFR_RSPNS}.doubleValue()) + (new Boolean($F{RCVE_BKGRND_INVST}== null)? 0 : $F{RCVE_BKGRND_INVST}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1719" y="0" width="55" height="20" uuid="2bcfcadb-11e8-4427-b3d7-a4899e856c4a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Recruitment")) ? "N/A" 
+	: new Boolean (($F{SELECTION_DETERM} != null)) ? $F{SELECTION_DETERM}
+	: "TBD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1664" y="0" width="55" height="20" uuid="7b57be3f-4118-4d45-a215-aae3ec5159b5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph leftIndent="4" rightIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{REQUEST_TYPE}.equals("Recruitment")) ? "N/A" 
+	: new Boolean (($F{ELIG_QUAL} != null)) ? $F{ELIG_QUAL}
+	: "TBD"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="42" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="25" width="286" height="15" uuid="a033d9fb-78ae-4353-b045-6eb07716175e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="25" width="50" height="15" uuid="a97dce3c-9058-4a88-856f-d632c2998e32">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="730" y="25" width="38" height="15" uuid="7a09475d-f2cd-4297-8f15-b564c7c7d470">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="340" height="20" uuid="0bf4b117-6685-4cdf-ac4b-70af61a32bff"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{DAYS}.contains("Calendar Days")) ? "Note: All calculations are based on calendar days." : "Note: All calculations are based on business days."]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="74">
+			<staticText>
+				<reportElement x="0" y="8" width="772" height="25" uuid="fa399158-2a79-4c99-8311-5b1a0c8829d5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Time of Possession End to End Report - Active]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="54" width="336" height="20" uuid="c3064f17-5baf-4c20-9384-f867c2f67608"/>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

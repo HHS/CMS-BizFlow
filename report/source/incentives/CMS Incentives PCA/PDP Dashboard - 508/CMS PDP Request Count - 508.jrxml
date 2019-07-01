@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-01T15:16:37 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS PDP Request Count - 508" pageWidth="500" pageHeight="170" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="584e65eb-3d78-4b9a-b362-9bd9b574efe7">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/Incentives_PCA_PDP_Dashboard___508/CMS_PDP_Request_Count___508"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[LTRIM("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.sql.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.sql.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	SUM(CREATE_REQUEST_ACTIVE) AS CREATE_REQUEST_ACTIVE,
+	SUM(CREATE_REQUEST_COMPLETE) AS CREATE_REQUEST_COMPLETE,
+	SUM(DRAFT_ACTIVE) AS DRAFT_ACTIVE,
+	SUM(DRAFT_COMPLETE) AS DRAFT_COMPLETE,
+	SUM(FINALIZE_REQUEST_ACTIVE) AS FINAL_REQUEST_ACTIVE,
+	SUM(FINALIZE_REQUEST_COMPLETE) AS FINAL_REQUEST_COMPLETE,
+    SUM(CONDUCT_PANEL_ACTIVE) AS CONDUCT_PANEL_ACTIVE,
+	SUM(CONDUCT_PANEL_COMPLETE) AS CONDUCT_PANEL_COMPLETE,
+	SUM(FINAL_APPROVAL_ACTIVE) AS FINAL_APPROVAL_ACTIVE,
+	SUM(FINAL_APPROVAL_COMPLETE) AS FINAL_APPROVAL_COMPLETE
+FROM
+	(	
+		SELECT 
+			PROCID, 
+			CASE
+				WHEN CREATE_REQUEST_START IS NOT NULL AND CREATE_REQUEST_END IS NULL
+				THEN 1
+				ELSE 0
+			END AS CREATE_REQUEST_ACTIVE,
+			CASE
+				WHEN CREATE_REQUEST_START IS NOT NULL AND CREATE_REQUEST_END IS NOT NULL
+				THEN 1
+				ELSE 0
+			END AS CREATE_REQUEST_COMPLETE,
+			CASE
+				WHEN DRAFT_START IS NOT NULL AND DRAFT_END IS NULL
+				THEN 1
+				ELSE 0
+			END AS DRAFT_ACTIVE,
+			CASE
+				WHEN DRAFT_START IS NOT NULL AND DRAFT_END IS NOT NULL
+				THEN 1
+				ELSE 0
+			END AS DRAFT_COMPLETE,
+			CASE
+				WHEN FINALIZE_REQUEST_START IS NOT NULL AND FINALIZE_REQUEST_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS FINALIZE_REQUEST_ACTIVE,
+			CASE
+				WHEN FINALIZE_REQUEST_START IS NOT NULL AND FINALIZE_REQUEST_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS FINALIZE_REQUEST_COMPLETE,
+       CASE
+				WHEN CONDUCT_PANEL_START IS NOT NULL AND CONDUCT_PANEL_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS CONDUCT_PANEL_ACTIVE,
+			CASE
+				WHEN CONDUCT_PANEL_START IS NOT NULL AND CONDUCT_PANEL_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS CONDUCT_PANEL_COMPLETE,
+			CASE
+				WHEN FINAL_APPROVAL_START IS NOT NULL AND FINAL_APPROVAL_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_APPROVAL_ACTIVE,
+			CASE
+				WHEN FINAL_APPROVAL_START IS NOT NULL AND FINAL_APPROVAL_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_APPROVAL_COMPLETE	
+		FROM
+			(
+				SELECT
+					P.PROCID AS PROCID,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Start') AS CREATE_REQUEST_START,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Start') AS CREATE_REQUEST_END,            
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'Selecting Official Reviews Request') AS DRAFT_START,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'Selecting Official Reviews Request') AS DRAFT_END,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'HR Specialist Review and Approval Request') AS FINALIZE_REQUEST_START,  
+          PDP.OHC_REVIEW_DATE AS FINALIZE_REQUEST_END, 
+          PDP.DATE_OF_MEETING AS CONDUCT_PANEL_START,  
+          PDP.DATE_OF_RECOMMENDATION AS CONDUCT_PANEL_END,
+          PDP.ADMINISTRATOR_APPROVAL_DATE AS FINAL_APPROVAL_START,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'HR Specialist Review and Approval Request') AS FINAL_APPROVAL_END
+
+				FROM
+					BIZFLOW.PROCS P
+					INNER JOIN HHS_CMS_HR.VW_INCENTIVES_COM COM ON P.PROCID = COM.PROC_ID
+					INNER JOIN HHS_CMS_HR.VW_INCENTIVES_PDP PDP ON COM.PROC_ID = PDP.PROC_ID
+				WHERE COM.CANCEL_RESAON IS NULL -- Request is not cancelled
+					AND P.NAME IN ('PDP Incentives') -- PDP Incentives only
+					AND COM.REQ_DATE IS NOT NULL
+          
+					AND (TO_DATE(COM.REQ_DATE, 'YYYY/MM/DD') BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}) 				
+								AND (
+									($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+									OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+									OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+									)  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children  
+			)
+	)]]>
+	</queryString>
+	<field name="CREATE_REQUEST_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="CREATE_REQUEST_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="DRAFT_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="DRAFT_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="FINAL_REQUEST_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="FINAL_REQUEST_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="CONDUCT_PANEL_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="CONDUCT_PANEL_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="FINAL_APPROVAL_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="FINAL_APPROVAL_COMPLETE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="20" uuid="9dfa641b-5e8c-46de-877b-6362a981eefe">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PDP Request Count"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="30" forecolor="#000000" uuid="66518eba-678b-4ed5-89aa-10b05ccea882">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Displays the count of active and completed Physician and Dentist Pay (PDP) requests"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="20" uuid="66f5c648-554d-4b3b-a89f-7f074c9ab275">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Incentives Activity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="150" height="20" uuid="7e0abe90-2fd2-449a-9538-9c557693a060">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Active Request Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="150" height="20" uuid="95ac3167-76f7-4c4e-b78d-70547466a9f6">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Completed Request Count]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9a8de334-a93b-49bc-9fc5-259de3e5d66c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Create Request (Component)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="20" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="96dfc6db-02a4-4f45-99ac-36643ab0e55e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Draft Justification (Component)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="40" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="31195bc4-a442-420f-9a01-3be09c05780d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Finalize Request (HR)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="60" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="96086a1e-5b7b-49ea-9b31-5170caad8345">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Conduct Panel Review (HR)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="80" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="d7914366-7486-4316-92a6-0550bb73dd98">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Obtain Final Approval (HR)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="0" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="bbbde9d2-bde7-4dab-b0dd-aa7a0cb221d2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CREATE_REQUEST_ACTIVE} != null ? $F{CREATE_REQUEST_ACTIVE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="20" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a779ff52-6dd8-47fe-9a5e-4e3ef7394205">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DRAFT_ACTIVE} != null ? $F{DRAFT_ACTIVE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="40" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0bb292ac-79a0-4b7c-996e-40eaa8e4cb91">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FINAL_REQUEST_ACTIVE} != null ? $F{FINAL_REQUEST_ACTIVE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="60" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7360c147-ccc3-46f2-be3f-4cee1dd535de">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONDUCT_PANEL_ACTIVE} != null ? $F{CONDUCT_PANEL_ACTIVE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="80" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="85770e70-75a2-4409-8445-ee7fd0318579">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FINAL_APPROVAL_ACTIVE} != null ? $F{FINAL_APPROVAL_ACTIVE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="0" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="04055d34-c132-497f-bb7f-344a9ef2c47c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CREATE_REQUEST_COMPLETE} != null ? $F{CREATE_REQUEST_COMPLETE}: 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="20" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="adf15b51-1925-4cd1-8128-d7a381d7fe80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DRAFT_COMPLETE} != null ? $F{DRAFT_COMPLETE}: 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="40" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c4acafb7-497f-4153-9795-a3a0b7ed28b9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FINAL_REQUEST_COMPLETE} != null ? $F{FINAL_REQUEST_COMPLETE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="60" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="28db69e8-3f6c-4e41-83f6-290507f84e99">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONDUCT_PANEL_COMPLETE}!= null ? $F{CONDUCT_PANEL_COMPLETE} : 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="80" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="644f1b57-29ae-4a7b-85de-cb38dd0571e4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FINAL_APPROVAL_COMPLETE} != null ? $F{FINAL_APPROVAL_COMPLETE} : 0]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="20" uuid="16f15eb6-1e60-47da-a3a9-e3fd297d9b19">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PDP Request Count"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="500" height="20" uuid="0c88e273-b982-4234-8efe-1a88a23a1c04">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
