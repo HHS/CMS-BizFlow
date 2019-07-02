@@ -18,13 +18,13 @@
      
 </style>
 
-<div role="dialog" id="reportFilter" ng-form="fReportSection" aria-busy="true">
+<div role="dialog" id="reportFilter" ng-form="fReportSection">
     <fieldset>
-        <div class="panel panel-default">
+        <div class="panel panel-default" aria-labelledby="mandatorySectionHelp">
             <div class="panel-heading">
-                <div class="panel-title">
-                    <small>{{$ctrl.report.description}}</small>
-                </div>
+                <h1 class="panel-title" id="mandatorySectionHelp">
+                    <small></small>
+                </h1>
             </div>
             <div class="panel-body">
                 <div class="row container-fluid">
@@ -44,11 +44,12 @@
                                     placeholder="Select One..."
                                     name="components"
                                     tabindex="0"
-                                    title="{{fReportSection.components.$error.required ? 'Select a value from the component filter' : ' '}}">
+                                    title="{{fReportSection.components.$error.required ? 'Select a value from the component filter' : ''}}"
+                                    ng-cloak>
                             <option value="" hidden>Select One</option>
                         </select>
 
-                        <div ng-if="$ctrl.isSection508User == false" class="field-message" ng-messages="fReportSection.components.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="field-message" ng-messages="fReportSection.components.$error" ng-cloak>
                             <div ng-message="required">Select a value from the component filter</div>
                         </div>                                      
                     </div>
@@ -60,8 +61,9 @@
                                tabindex="0"
                                placeholder="Enter Administrative Code..." required aria-label="Administrative Code"
                                title="{{$ctrl.getErrorMessage('adminCodeInput', fReportSection.adminCode.$error)}}"
+                               ng-cloak
                                >
-                        <div ng-if="$ctrl.isSection508User == false" class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-cloak>
                             <div ng-message="required">Type the administrative code for the report</div>
                             <div ng-message="minlength">Enter a minimum of three characters for the administrative code</div>
                         </div>
@@ -84,20 +86,22 @@
                 </div>
                 <div class="row container-fluid">
                     <div class="col-md-3">
-                        <label id="dateRCompletedFromLabel" class="control-label">{{$ctrl.report.element.Date.label}}</label>
+                        <label id="dateRCompletedFromLabel" class="control-label" ng-cloak>{{$ctrl.report.element.Date.label}}</label>
                     </div>
                 </div>
                 <div class="row container-fluid">
                     <div class="form-group col-md-3 required">
                         <label id="dateRCompletedFromLabel" class="control-label">From</label>
                         <p class="input-group">
-                            <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="$ctrl.selected.fromDate" 
+                            <input id="dateRCompletedFromInput" type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" 
+                                ng-model="$ctrl.selected.fromDate" 
                                 is-open="$ctrl.fromDateOpened" datepicker-options="$ctrl.dateOptionFrom" ng-required="true" 
                                 close-text="Close" ng-change="$ctrl.changeFromOption()" required 
                                 placeholder="MM/DD/YYYY" name="dateFrom"
                                 aria-label="{{$ctrl.report.element.Date.label + ' From'}}" 
                                 tabindex="0"
-                                title="{{$ctrl.getErrorMessage('dateRCompletedFromInput', fReportSection.dateFrom.$error)}}"                                
+                                title="{{$ctrl.getErrorMessage('dateRCompletedFromInput', fReportSection.dateFrom.$error)}}"
+                                ng-cloak                                
                                 />
                             <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedFromButton" type="button" class="btn btn-default" ng-click="$ctrl.openFromDate($event)" required aria-labelledby="dateRCompletedFromLabel">
@@ -105,7 +109,7 @@
                                 </button>
                             </span>
                         </p>
-                        <div ng-if="$ctrl.isSection508User == false" class="date-message" ng-messages="fReportSection.dateFrom.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="date-message" ng-messages="fReportSection.dateFrom.$error" ng-cloak>
                             <div ng-message="required">Set the start date for the report date range</div>
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>                        
@@ -119,7 +123,8 @@
                                 placeholder="MM/DD/YYYY" name="dateTo"
                                 aria-label="{{$ctrl.report.element.Date.label + ' To'}}" 
                                 tabindex="0"
-                                title="{{$ctrl.getErrorMessage('dateRCompletedToInput', fReportSection.dateFrom.$error)}}"                                
+                                title="{{$ctrl.getErrorMessage('dateRCompletedToInput', fReportSection.dateFrom.$error)}}"
+                                ng-cloak                                
                                 />
                             <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
@@ -127,7 +132,7 @@
                                 </button>
                             </span>
                         </p>
-                        <div ng-if="$ctrl.isSection508User == false" class="date-message" ng-messages="fReportSection.dateTo.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="date-message" ng-messages="fReportSection.dateTo.$error" ng-cloak>
                             <div ng-message="required">Set the end date for the report date range</div>
                             <div ng-message="date">Type the date in the format: MM/DD/YYYY</div>
                         </div>                        
@@ -154,12 +159,13 @@
                                     tabindex="0"
                                     ng-options="item for item in $ctrl.dayTypes" 
                                     ng-model="$ctrl.selected.dayType"
-                                    title="{{($ctrl.isSection508User == true && fReportSection.dayType.$error.required) ? 'Select Business or Calendar Days' : null }}"                                    
+                                    title="{{($ctrl.isSection508User == true && fReportSection.dayType.$error.required) ? 'Select Business or Calendar Days' : null }}"
+                                    ng-cloak
                                     >
                             <option hidden value="">Select One</option>        
                         </select>
 
-                        <div ng-if="$ctrl.isSection508User == false" class="field-message" ng-messages="fReportSection.dayType.$error" ng-clock>
+                        <div ng-if="$ctrl.isSection508User == false" class="field-message" ng-messages="fReportSection.dayType.$error" ng-cloak>
                             <div ng-message="required">Select Business or Calendar Days</div>
                         </div>                        
                     </div>                    
@@ -167,11 +173,11 @@
             </div>
         </div>
 
-        <div class="panel panel-default" aria-labelledby="sectionHelp">
+        <div class="panel panel-default" aria-labelledby="optionalSectionHelp">
             <div class="panel-heading">
-                <div class="panel-title" id="sectionHelp">
+                <h1 class="panel-title" id="optionalSectionHelp">
                     <small>The optional fields below allow you to further filter the set of job requests that you wish to see on the report.</small>
-                </div>
+                </h1>
             </div>
 
             <div class="panel-body">
@@ -274,8 +280,7 @@
                 </div>
                 <div class="row container-fluid">
                     <div class="form-group col-md-3">
-                        <label id="selectingOfficialLabel" class="control-label" for="selectingOfficial"
-                               title="{{$ctrl.selected.selectingOfficial == 'All' ? 'All is selected as a default value' : ''}}">Selecting Official - {{noResultsSO}} </label>
+                        <label id="selectingOfficialLabel" class="control-label" for="selectingOfficial">Selecting Official</label>
                         <selectize  ng-if="$ctrl.isSection508User == false" 
                                     aria-labelledby="selectingOfficialLabel"
                                     id="selectingOfficial"
@@ -299,6 +304,8 @@
                                 typeahead-editable="true"
                                 typeahead-focus-first="false"
                                 ng-blur="$ctrl.selected.selectingOfficial508 = $ctrl.getValidMember($event, $ctrl.selected.selectingOfficial508, 'Selecting Officials')"
+                                title="{{$ctrl.selected.selectingOfficial508.name == 'All' ? 'All is selected as a default value. Type 3 or more characters of selecting official name to search.' : ''}}"
+                                ng-cloak
                                 >
                             <div ng-if="$ctrl.noResultsSO" 
                                 aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
@@ -330,7 +337,9 @@
                                 typeahead-select-on-exact="true" 
                                 typeahead-focus-first="false"
                                 typeahead-editable="false"
-                                ng-blur="$ctrl.selected.executiveOfficer508 = $ctrl.getValidMember($event, $ctrl.selected.executiveOfficer508, 'Executive Officers')">
+                                ng-blur="$ctrl.selected.executiveOfficer508 = $ctrl.getValidMember($event, $ctrl.selected.executiveOfficer508, 'Executive Officers')"
+                                title="{{$ctrl.selected.executiveOfficer508.name == 'All' ? 'All is selected as a default value. Type 3 or more characters of executive officer name to search' : ''}}"
+                                ng-cloak>
                             <div ng-if="noResultsXO"
                                 aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                                 <i class="glyphicon glyphicon-remove"></i> No Results Found
@@ -361,7 +370,10 @@
                                 typeahead-select-on-exact="true" 
                                 typeahead-focus-first="false"
                                 typeahead-editable="false"
-                                ng-blur="$ctrl.selected.hrLiaison508 = $ctrl.getValidMember($event, $ctrl.selected.hrLiaison508, 'HR Liaison')">
+                                ng-blur="$ctrl.selected.hrLiaison508 = $ctrl.getValidMember($event, $ctrl.selected.hrLiaison508, 'HR Liaison')"
+                                title="{{$ctrl.selected.hrLiaison508.name == 'All' ? 'All is selected as a default value. Type 3 or more characters of HR Liaison name to search' : ''}}"
+                                ng-cloak
+                                >
                             <div ng-if="noResultsHR"
                                 aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                                 <i class="glyphicon glyphicon-remove"></i> No Results Found
@@ -395,7 +407,10 @@
                                 typeahead-select-on-exact="true" 
                                 typeahead-focus-first="false"
                                 typeahead-editable="false"
-                                ng-blur="$ctrl.selected.staffSpecialist508 = $ctrl.getValidMember($event, $ctrl.selected.staffSpecialist508, 'HR Staffing Specialists')">
+                                ng-blur="$ctrl.selected.staffSpecialist508 = $ctrl.getValidMember($event, $ctrl.selected.staffSpecialist508, 'HR Staffing Specialists')"
+                                title="{{$ctrl.selected.staffSpecialist508.name == 'All' ? 'All is selected as a default value. Type 3 or more characters of Staffing Specialist name to search' : ''}}"
+                                ng-cloak
+                                >
                             <div ng-if="noResultsSS"
                                 aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                                 <i class="glyphicon glyphicon-remove"></i> No Results Found
@@ -426,7 +441,9 @@
                                 typeahead-select-on-exact="true" 
                                 typeahead-focus-first="false"
                                 typeahead-editable="false"
-                                ng-blur="$ctrl.selected.classSpecialist508 = $ctrl.getValidMember($event, $ctrl.selected.classSpecialist508, 'HR Classification Specialists')">
+                                ng-blur="$ctrl.selected.classSpecialist508 = $ctrl.getValidMember($event, $ctrl.selected.classSpecialist508, 'HR Classification Specialists')"
+                                title="{{$ctrl.selected.classSpecialist508.name == 'All' ? 'All is selected as a default value. Type 3 or more characters of HR Classification Specialist name to search' : ''}}"
+                                ng-cloak>
                             <div ng-if="noResultsCS"
                                 aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                                 <i class="glyphicon glyphicon-remove"></i> No Results Found
@@ -449,5 +466,5 @@
             </div>
         </div>
     </fieldset>
-
+   
 </div>

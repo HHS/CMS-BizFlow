@@ -344,7 +344,7 @@ CMS_REPORT_FILTER.ERLRCASESTATUS = '<%= erlrCaseStatus %>';
 -->    
 </script>
 
-<body ng-app="bizflow.app" ng-controller="CtrlAppMain">
+<body class="hidden" id="reportFilterBody" ng-app="bizflow.app" ng-controller="CtrlAppMain">
 
 <ng-view></ng-view>
 
