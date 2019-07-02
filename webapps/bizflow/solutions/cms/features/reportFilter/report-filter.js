@@ -232,7 +232,7 @@
             try {
                 $('#mainWrapper table.tableTab', window.parent.document).remove(); // Remove BizCove Header
                 $('#mainWrapper table.list td', window.parent.document).css({'padding': '0px 0px 0px 0px'}); // Adjust padding
-                $('#modalPopupMax0Title', window.parent.parent.document).text(vm.report.name).focus(); // Set report name
+                $('#modalPopupMax0Title', window.parent.parent.document).text(vm.report.name); // Set report name
             } catch (e) {
                 $log.error(e);
             }
@@ -544,11 +544,11 @@
                 'minlength': 'Enter a minimum of three characters for the administrative code'
             },
             'dateRCompletedFromInput': {
-                'required': 'Set the start date for the report date range',
+                'required': 'Type the from date in the format MM/DD/YYYY for the request date range',
                 'date': 'Type the date in the format: MM/DD/YYYY'
             },
             'dateRCompletedToInput': {
-                'required': 'Set the end date for the report date range',
+                'required': 'Type the end date in the format MM/DD/YYYY for the request date range',
                 'date': 'Type the date in the format: MM/DD/YYYY'
             },
             'dayType': {
@@ -583,7 +583,25 @@
                     }, 0);
                 }
             }, 0);
-        }        
+        }
+        vm.onKeyDownAppointmentType = function($event) {
+            setTimeout(function() {
+                var component = $('#appointmentTypeSelect option:selected').text();
+                var keyCode = $event.keyCode;
+    
+                if (component == 'Schedule A' && keyCode == 9) {
+                    $event.preventDefault();
+                    setTimeout(function() {
+                        $('#scheduleATypeSelect').focus();
+                    }, 0);
+                } else if (component == 'Volunteer' && keyCode == 9) {
+                    $event.preventDefault();
+                    setTimeout(function() {
+                        $('#volunteerTypeSelect').focus();
+                    }, 0);
+                }
+            }, 0);
+        }
 
         vm.$onInit = function () {
             $log.info('reportFilter $onInit');
@@ -619,10 +637,17 @@
                 // #selectComponent is not processed yet. So, use setTimeout.
                 setTimeout(function() {
                     $('#selectComponent').on('keydown', vm.onKeyDownComponent);
+                    $('#appointmentTypeSelect').on('keydown', vm.onKeyDownAppointmentType);
                 }, 0);
             }
 
-            $('#reportFilter').attr('aria-busy', 'false');
+            $('#mandatorySectionHelp small').html(vm.report.description);
+
+            setTimeout(function() {
+                $('#reportFilterBody').attr('aria-busy', 'false');
+                $('#reportFilterBody').removeClass('hidden');
+                $('#selectComponent').focus(); 
+            }, 100);
         };
 
         vm.$onDestroy = function () {

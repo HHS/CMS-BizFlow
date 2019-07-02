@@ -350,6 +350,7 @@
 
         vm.reset = function () {
             vm.selected = _.assign({}, vm.orgSelected);
+            vm.selected.incentiveTypes = [];
         };
 
         vm.close = function () {
@@ -431,6 +432,11 @@
                     setTimeout(function() {
                         $('#adminCodeInput').focus();
                     }, 0);
+                } else if (component == 'By Request Number' && keyCode == 9) {
+                    $event.preventDefault();
+                    setTimeout(function() {
+                        $('#requestNumberInput').focus();
+                    }, 0);
                 }
             }, 0);
         }
@@ -447,11 +453,11 @@
                 'minlength': 'Enter a minimum of three characters for the administrative code'
             },
             'dateRCompletedFromInput': {
-                'required': 'Set the start date for the report date range',
+                'required': 'Type the from date in the format MM/DD/YYYY for the request date range',
                 'date': 'Type the date in the format: MM/DD/YYYY'
             },
             'dateRCompletedToInput': {
-                'required': 'Set the end date for the report date range',
+                'required': 'Type the end date in the format MM/DD/YYYY for the request date range',
                 'date': 'Type the date in the format: MM/DD/YYYY'
             },
             'dayType': {
@@ -473,34 +479,6 @@
             }
             return message;
         }
-
-        // vm.getErrorMessage = function(which, $error) {
-        //     // var o = {a: 1, b: 2, c:3};
-        //     // console.log(Object.getOwnPropertyNames(o))
-        //     // console.log(o['a'])
-
-        //     var message = '';
-        //     if (vm.isSection508User == true && $error != undefined) {
-        //         if ($error.required) {
-        //             if (which == 'from') {
-        //                 message = 'Type the start date in the format: MM/DD/YYYY for the report date range';
-        //             } else if (which == 'to') {
-        //                 message = 'Type the end date in the format: MM/DD/YYYY for the report date range';
-        //             } else if (which == 'admincode') {
-        //                 message = 'Type the administrative code for the report';
-        //             }
-        //         } else if ($error.date) {
-        //             if (which == 'from' || which == 'to') {
-        //                 message = 'Type the date in the format: MM/DD/YYYY';
-        //             }
-        //         } else if ($error.minlength) {
-        //             if (which == 'admincode') {
-        //                 message = 'Enter a minimum of three characters for the administrative code';
-        //             }
-        //         }
-        //     }
-        //     return message;
-        // }
 
         vm.addIncentiveType = function(value) {
             if (value == undefined) {
@@ -594,8 +572,13 @@
                 setTimeout(function() {
                     $('#selectComponent').on('keydown', vm.onKeyDownComponent);
                 }, 0);
-            }            
-            $('#reportFilter').attr('aria-busy', 'false');
+            }
+
+            setTimeout(function() {
+                $('#reportFilterBody').attr('aria-busy', 'false');
+                $('#reportFilterBody').removeClass('hidden');
+                $('#selectComponent').focus(); 
+            }, 100);
         };
 
         vm.$onDestroy = function () {

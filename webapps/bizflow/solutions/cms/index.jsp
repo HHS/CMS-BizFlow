@@ -214,7 +214,7 @@ CMS_REPORT_FILTER.LABEL.DATE = '<%= DATELABEL %>';
 -->    
 </script>
 
-<body ng-app="bizflow.app" ng-controller="CtrlAppMain">
+<body class="hidden" id="reportFilterBody" ng-app="bizflow.app" ng-controller="CtrlAppMain" aria-busy="true">
 
 <ng-view></ng-view>
 

@@ -35,12 +35,12 @@
     }
 </style>
 
-<div role="dialog" id="reportFilter" ng-form="fReportSection" aria-busy="true">
+<div role="dialog" id="reportFilter" ng-form="fReportSection">
     <fieldset>
-        <div class="panel panel-default">
+        <div class="panel panel-default" aria-labelledby="mandatorySectionHelp">
             <div class="panel-heading">
-                <h1 class="panel-title">
-                    <small>{{$ctrl.report.description}}</small>
+                <h1 class="panel-title" id="mandatorySectionHelp">
+                    <small></small>
                 </h1>
             </div>
             <div class="panel-body">
@@ -66,12 +66,14 @@
                                     placeholder="Select One..."
                                     name="components"
                                     tabindex="0"
-                                    title="{{$ctrl.getErrorMessage('selectComponent', 'fReportSection.components.$error')}}">
+                                    title="{{$ctrl.getErrorMessage('selectComponent', fReportSection.components.$error)}}"
+                                    ng-cloak
+                                    >
                             <option value="" hidden>Select One</option>
                         </select>
 
                     </div>
-                    <div class="form-group col-md-3 required" ng-show="$ctrl.selected.component == 'By Admin Code'">
+                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="adminCodeLabel" for="adminCodeInput" class="control-label">Administrative Code</label>
                         <input name="adminCode" id="adminCodeInput" aria-labelledby="adminCodeLabel" 
                                ng-model="$ctrl.selected.adminCode" class="form-control" type="text" 
@@ -79,13 +81,14 @@
                                tabindex="0"
                                placeholder="Enter Administrative Code..." required aria-label="Administrative Code"
                                title="{{$ctrl.getErrorMessage('adminCodeInput', fReportSection.adminCode.$error)}}"
+                               ng-cloak
                                >
                         <div ng-if="$ctrl.isSection508User == false" class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
                             <div ng-message="required">Type the administrative code for the report</div>
                             <div ng-message="minlength">Enter a minimum of three characters for the administrative code</div>
                         </div>
                     </div>
-                    <div class="form-group col-md-3 required" ng-show="$ctrl.selected.component == 'By Admin Code'">
+                    <div class="form-group col-md-3 required" ng-if="$ctrl.selected.component == 'By Admin Code'">
                         <label id="subOrgLabel" for="subOrgSelect" class="control-label">Include Cases for Sub-Orgs?</label>
                         <selectize ng-if="$ctrl.isSection508User == false" id="subOrgSelect" role="combobox" aria-labelledby="subOrgLabel" required
                                     ng-model="$ctrl.selected.includeSubOrg" 
@@ -103,7 +106,7 @@
                     <div class="col-md-3">
                         <label id="dateRCompletedFromLabel" 
                                for="dateRCompletedFromInput dateRCompletedFromButton" 
-                               class="control-label">{{$ctrl.report.element.Date.label}}</label>
+                               class="control-label" ng-cloak>{{$ctrl.report.element.Date.label}}</label>
                     </div>
                 </div>
                 <div class="row container-fluid">
@@ -119,6 +122,7 @@
                                 placeholder="MM/DD/YYYY" name="dateFrom"
                                 tabindex="0"
                                 title="{{$ctrl.getErrorMessage('dateRCompletedFromInput', fReportSection.dateFrom.$error)}}"
+                                ng-cloak
                                 />
                         
                             <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
@@ -141,6 +145,7 @@
                                 tabindex="0"
                                 placeholder="MM/DD/YYYY" name="dateTo"
                                 title="{{$ctrl.getErrorMessage('dateRCompletedToInput', fReportSection.dateTo.$error)}}"
+                                ng-cloak
                                 />
                             <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
@@ -176,7 +181,8 @@
                                typeahead-min-length=3
                                typeahead-wait-ms=500
                                tabindex="0"
-                               title="Enter 3 characters of Employee name or more"
+                               title="Type 3 or more characters of of Employee name to search"
+                               autocomplete="off"
                                >
                         <div ng-if="NotFoundEmployee" aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                             <i class="glyphicon glyphicon-remove"></i> No Employee Found
@@ -188,12 +194,13 @@
                         <input name="customerName" id="customerName" aria-labelledby="customerNameLabel" 
                                 ng-model="$ctrl.selected.customerName" class="form-control" type="text" 
                                 placeholder="Enter Customer Contact Name..."  aria-label="Customer Contact Name"
-                                uib-typeahead="item as item.name in $ctrl.getNames('cust', $viewValue)"
+                                uib-typeahead="name for name in $ctrl.getNames('cust', $viewValue)"
                                 typeahead-no-results="NotFoundCustomer"
                                 typeahead-min-length=3
                                 typeahead-wait-ms=500
                                 tabindex="0"
-                                title="Enter 3 characters of Customer Contact name or more"
+                                title="Type 3 or more characters of Customer Contact name to search"
+                                autocomplete="off"
                                 >  
                          <div ng-if="NotFoundCustomer" aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                              <i class="glyphicon glyphicon-remove"></i> No Customer Found
@@ -213,7 +220,7 @@
                             <input ng-model="$ctrl.selected.specialist" 
                                     class="form-control" 
                                     type="text" 
-                                    placeholder="Enter 3 characters of Primary ER/LR Specialist's name or more"
+                                    placeholder="Type 3 or more characters of Primary ER/LR Specialist name to search"
     
                                     aria-labelledby="specialistLabel"
                                     id="specialistSelect"
@@ -225,7 +232,8 @@
                                     typeahead-select-on-exact="true" 
                                     typeahead-focus-first="false"
                                     typeahead-editable="false"
-                                    ng-blur="$ctrl.selected.specialist = $ctrl.getValidMember($event, $ctrl.selected.specialist, 'DWC')">
+                                    ng-blur="$ctrl.selected.specialist = $ctrl.getValidMember($event, $ctrl.selected.specialist, 'DWC')"
+                                    >
                             <div ng-if="noResultsSP"
                                     aria-live="assertive" role="log" aria-atomic="false" aria-relevant="additions">
                                     <i class="glyphicon glyphicon-remove"></i> No Results Found
@@ -261,7 +269,7 @@
                         <select ng-if="$ctrl.isSection508User == true"
                                     class="form-control"
                                     tabindex="0"
-                                    id="caseCategorySelect" aria-labelledby="caseCategoryLabel" required
+                                    id="caseCategorySelect" aria-labelledby="caseCategoryLabel" 
                                     ng-model="$ctrl.selected.caseCategory"
                                     ng-options="item.value as item.key for item in $ctrl.categories"
                                     ng-change="$ctrl.addCaseCategory($ctrl.selected.caseCategory)"></select>                                       
@@ -269,16 +277,16 @@
                         <table class="selectedList" ng-show="$ctrl.selected.caseCategories.length > 0">
                             <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.caseCategories">
                                 <td valign="top">
-                                    <a role="button" aria-label="Remove {{item}} from Case Category" class="no_underbar" href="" ng-click="$ctrl.removeCaseCategory(item)">
+                                    <a tabindex="0" role="button" ng-cloak aria-label="Remove {{item}} from Case Category" class="no_underbar" href="" ng-click="$ctrl.removeCaseCategory(item)">
                                         <span class="red" ><strong>X </strong></span>
                                     </a>
                                 </td>
                                 <td>&nbsp;</td>
-                                <td valign="top">{{item}}</td>
+                                <td valign="top" ng-cloak>{{item}}</td>
                             </tr>
                         </table>
                         <div style="margin-top:10px" ng-show="$ctrl.selected.caseCategories.length > 0">
-                            <button aria-label="Clear Case Category and set All" type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeCaseCategory()" aria-label="Clear"> Clear</button>
+                            <button aria-label="Clear Case Category" type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeCaseCategory()" aria-label="Clear"> Clear</button>
                         </div>
             
                     </div>
@@ -292,7 +300,7 @@
                         <select ng-if="$ctrl.isSection508User == true"
                                     class="form-control"
                                     tabindex="0"
-                                    id="caseStatusSelect" aria-labelledby="caseStatusLabel" required
+                                    id="caseStatusSelect" aria-labelledby="caseStatusLabel" 
                                     ng-model="$ctrl.selected.status"
                                     ng-options="item for item in $ctrl.caseStatusList"
                                     ng-change="$ctrl.addStatus($ctrl.selected.status)"></select>                                     
@@ -300,16 +308,16 @@
                         <table class="selectedList" ng-show="$ctrl.selected.statusList.length > 0">
                             <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.statusList">
                                 <td valign="top">
-                                    <a role="button" aria-label="Remove {{item}} from Status List" class="no_underbar" href="" ng-click="$ctrl.removeStatus(item)">
-                                        <span class="red" ><strong>X </strong></span>
+                                    <a role="button" ng-cloak aria-label="Remove {{item}} from Case Status" class="no_underbar" href="" ng-click="$ctrl.removeStatus(item)">
+                                        <span class="red"><strong>X </strong></span>
                                     </a>
                                 </td>
                                 <td>&nbsp;</td>
-                                <td valign="top">{{item}}</td>
+                                <td valign="top" ng-cloak>{{item}}</td>
                             </tr>
                         </table>
                         <div style="margin-top:10px" ng-show="$ctrl.selected.statusList.length > 0">
-                            <button aria-label="Clear status list and set All" type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeStatus()" aria-label="Clear"> Clear</button>
+                            <button aria-label="Clear Case Status" type="button" class="btn btn-primary btn-sm" name="Clear" ng-click="$ctrl.removeStatus()" aria-label="Clear"> Clear</button>
                         </div>
                     </div>
 
@@ -322,25 +330,25 @@
                         <select ng-if="$ctrl.isSection508User == true"
                                     class="form-control"
                                     tabindex="0"
-                                    id="finalActionSelect" aria-labelledby="finalActionLabel" required
+                                    id="finalActionSelect" aria-labelledby="finalActionLabel" 
                                     ng-model="$ctrl.selected.finalAction"
                                     ng-options="item.value as item.key for item in $ctrl.finalActions"
                                     ng-change="$ctrl.addFinalAction($ctrl.selected.finalAction)"></select>                                    
                         <table class="selectedList" ng-show="$ctrl.selected.finalActions.length > 0">
                             <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.finalActions">
                                 <td valign="top">
-                                    <a role="button" aria-label="Remove {{item}} from Final Action" class="no_underbar" href="" ng-click="$ctrl.removeFinalAction(item)">
+                                    <a role="button" ng-cloak aria-label="Remove {{item}} from Final Action" class="no_underbar" href="" ng-click="$ctrl.removeFinalAction(item)">
                                         <span class="red" ><strong>X </strong></span>
                                     </a>
                                 </td>
                                 <td>&nbsp;</td>
-                                <td valign="top">{{item}}</td>
+                                <td valign="top" ng-cloak>{{item}}</td>
                             </tr>
                         </table>
                         <div style="margin-top:10px" ng-show="$ctrl.selected.finalActions.length > 0">
                             <button type="button" class="btn btn-primary btn-sm" name="Clear" 
                                 ng-click="$ctrl.removeFinalAction()" 
-                                aria-label="Clear Final Actions and set All"> Clear</button>
+                                aria-label="Clear Final Actions"> Clear</button>
                         </div>
                     </div>
                 </div>
@@ -358,5 +366,5 @@
             </div>
         </div>
     </fieldset>
-
+  
 </div>

@@ -39,11 +39,11 @@
     }    
 </style>
 
-<div role="dialog" id="reportFilter" ng-form="fReportSection" aria-busy="true">
+<div role="dialog" id="reportFilter" ng-form="fReportSection">
     <fieldset>
-        <div class="panel panel-default">
+        <div class="panel panel-default" aria-labelledby="mandatorySectionHelp">
             <div class="panel-heading">
-                <h1 class="panel-title">
+                <h1 class="panel-title" id="mandatorySectionHelp">
                     <small>Mandatory Filters - You must select values for the following filters that are marked with red asterisk.</small>
                 </h1>
             </div>
@@ -93,6 +93,7 @@
                                ng-minlength="3"
                                placeholder="Enter Administrative Code..." required aria-label="Administrative Code"
                                title="{{$ctrl.getErrorMesssage('adminCode', fReportSection.adminCode.$error)}}"
+                               ng-cloak
                                >
                         <div ng-if="$ctrl.isSection508User == false" class="admin-code-message" ng-messages="fReportSection.adminCode.$error" ng-clock>
                             <div ng-message="required">Type an administrative code for the report</div>
@@ -119,7 +120,7 @@
                 </div>
                 <div class="row container-fluid" ng-if="$ctrl.selected.component != 'By Request Number'">
                     <div class="col-md-3">
-                        <label id="dateRCompletedDateLabel" class="control-label">{{$ctrl.dateLabel}}</label>
+                        <label id="dateRCompletedDateLabel" class="control-label" ng-cloak>{{$ctrl.dateLabel}}</label>
                     </div>
                 </div>
                 <div class="row container-fluid">
@@ -131,6 +132,7 @@
                                    close-text="Close" ng-change="$ctrl.changeFromOption()" aria-labelledby="dateRCompletedFromLabel"
                                    placeholder="MM/DD/YYYY" name="dateFrom"
                                    title="{{$ctrl.getErrorMessage('dateRCompletedFromInput', fReportSection.dateFrom.$error)}}"
+                                   ng-cloak
                                    />
                             <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedFromButton" type="button" class="btn btn-default" ng-click="$ctrl.openFromDate($event)" required aria-labelledby="dateRCompletedFromLabel">
@@ -152,6 +154,7 @@
                                    close-text="Close" ng-change="$ctrl.changeToOption()" aria-labelledby="dateRCompletedToLabel"
                                    placeholder="MM/DD/YYYY" name="dateTo"
                                    title="{{$ctrl.getErrorMessage('dateRCompletedToInput', fReportSection.dateFrom.$error)}}"
+                                   ng-cloak
                                    />
                             <span ng-if="$ctrl.isSection508User == false" class="input-group-btn">
                                 <button id="dateRCompletedToButton" type="button" class="btn btn-default" ng-click="$ctrl.openToDate($event)" aria-labelledby="dateRCompletedToLabel">
@@ -189,6 +192,7 @@
                                     tabindex="0"
                                     ng-options="item for item in $ctrl.dayTypes"
                                     title="{{$ctrl.getErrorMessage('dayType', fReportSection.dateFrom.$error)}}"
+                                    ng-cloak
                                     >
                             <option value="" hidden>Select One</option>     
                         </select>   
@@ -197,9 +201,9 @@
             </div>
         </div>
 
-        <div class="panel panel-default" aria-labelledby="sectionHelp">
+        <div class="panel panel-default" aria-labelledby="optionalSectionHelp">
             <div class="panel-heading">
-                <h1 class="panel-title" id="sectionHelp">
+                <h1 class="panel-title" id="optionalSectionHelp">
                     <small>The optional fields below allow you to further filter the set of job requests that you wish to see on the report.</small>
                 </h1>
             </div>
@@ -253,17 +257,17 @@
                             <table class="selectedList" ng-show="$ctrl.selected.incentiveTypes.length > 0">
                                 <tr style="margin-bottom: 2px" ng-repeat="item in $ctrl.selected.incentiveTypes">
                                     <td valign="top">
-                                        <a role="button" aria-label="Remove {{item}} from Incentive Type" class="no_underbar" href="" 
+                                        <a role="button" ng-cloak aria-label="Remove {{$ctrl.getIncentiveTypeLabel(item)}} from Incentive Type" class="no_underbar" href="" 
                                             ng-click="$ctrl.removeIncentiveType(item)">
                                             <span class="red" ><strong>X </strong></span>
                                         </a>
                                     </td>
                                     <td>&nbsp;</td>
-                                    <td valign="top">{{$ctrl.getIncentiveTypeLabel(item)}}</td>
+                                    <td valign="top" ng-cloak>{{$ctrl.getIncentiveTypeLabel(item)}}</td>
                                 </tr>
                             </table>
                             <div style="margin-top:10px" ng-show="$ctrl.selected.incentiveTypes.length > 0">
-                                <button aria-label="Clear Case Category and set All" type="button" class="btn btn-primary btn-sm" name="Clear" 
+                                <button aria-label="Clear Case Category" type="button" class="btn btn-primary btn-sm" name="Clear" 
                                         ng-click="$ctrl.removeIncentiveType()" aria-label="Clear"> Clear</button>
                             </div>
                         </div>
@@ -350,9 +354,5 @@
             </div>
         </div>
     </fieldset>
-    <div>
-        <h1 class="panel-title">
-            <small>{{$ctrl.getTargetReportURL()}}</small>
-        </h1>
-    </div>    
+
 </div>
