@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:24:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS incentives Active &amp; Completed PDP Requests - BarChart" pageWidth="440" pageHeight="240" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="440" leftMargin="0" rightMargin="0" topMargin="7" bottomMargin="5" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="752"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="237"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_PCA_PDP_Dashboard/CMS_PDP_Request_Count_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_PCA_PDP_Dashboard/CMS_PDP_Request_Count"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - HHS QA"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[LTRIM("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.sql.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.sql.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	SUM(CREATE_REQUEST_ACTIVE) AS CREATE_REQUEST_ACTIVE,
+	SUM(CREATE_REQUEST_COMPLETE) AS CREATE_REQUEST_COMPLETE,
+	SUM(DRAFT_ACTIVE) AS DRAFT_ACTIVE,
+	SUM(DRAFT_COMPLETE) AS DRAFT_COMPLETE,
+	SUM(FINALIZE_REQUEST_ACTIVE) AS FINAL_REQUEST_ACTIVE,
+	SUM(FINALIZE_REQUEST_COMPLETE) AS FINAL_REQUEST_COMPLETE,
+    SUM(CONDUCT_PANEL_ACTIVE) AS CONDUCT_PANEL_ACTIVE,
+	SUM(CONDUCT_PANEL_COMPLETE) AS CONDUCT_PANEL_COMPLETE,
+	SUM(FINAL_APPROVAL_ACTIVE) AS FINAL_APPROVAL_ACTIVE,
+	SUM(FINAL_APPROVAL_COMPLETE) AS FINAL_APPROVAL_COMPLETE
+FROM
+	(	
+		SELECT 
+			PROCID, 
+			CASE
+				WHEN CREATE_REQUEST_START IS NOT NULL AND CREATE_REQUEST_END IS NULL
+				THEN 1
+				ELSE 0
+			END AS CREATE_REQUEST_ACTIVE,
+			CASE
+				WHEN CREATE_REQUEST_START IS NOT NULL AND CREATE_REQUEST_END IS NOT NULL
+				THEN 1
+				ELSE 0
+			END AS CREATE_REQUEST_COMPLETE,
+			CASE
+				WHEN DRAFT_START IS NOT NULL AND DRAFT_END IS NULL
+				THEN 1
+				ELSE 0
+			END AS DRAFT_ACTIVE,
+			CASE
+				WHEN DRAFT_START IS NOT NULL AND DRAFT_END IS NOT NULL
+				THEN 1
+				ELSE 0
+			END AS DRAFT_COMPLETE,
+			CASE
+				WHEN FINALIZE_REQUEST_START IS NOT NULL AND FINALIZE_REQUEST_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS FINALIZE_REQUEST_ACTIVE,
+			CASE
+				WHEN FINALIZE_REQUEST_START IS NOT NULL AND FINALIZE_REQUEST_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS FINALIZE_REQUEST_COMPLETE,
+       CASE
+				WHEN CONDUCT_PANEL_START IS NOT NULL AND CONDUCT_PANEL_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS CONDUCT_PANEL_ACTIVE,
+			CASE
+				WHEN CONDUCT_PANEL_START IS NOT NULL AND CONDUCT_PANEL_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS CONDUCT_PANEL_COMPLETE,
+			CASE
+				WHEN FINAL_APPROVAL_START IS NOT NULL AND FINAL_APPROVAL_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_APPROVAL_ACTIVE,
+			CASE
+				WHEN FINAL_APPROVAL_START IS NOT NULL AND FINAL_APPROVAL_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_APPROVAL_COMPLETE	
+		FROM
+			(
+				SELECT
+					P.PROCID AS PROCID,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Start') AS CREATE_REQUEST_START,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Start') AS CREATE_REQUEST_END,            
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'Selecting Official Reviews Request') AS DRAFT_START,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'Selecting Official Reviews Request') AS DRAFT_END,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'HR Specialist Review and Approval Request') AS FINALIZE_REQUEST_START,  
+          PDP.OHC_REVIEW_DATE AS FINALIZE_REQUEST_END, 
+          PDP.DATE_OF_MEETING AS CONDUCT_PANEL_START,  
+          PDP.DATE_OF_RECOMMENDATION AS CONDUCT_PANEL_END,
+          PDP.ADMINISTRATOR_APPROVAL_DATE AS FINAL_APPROVAL_START,
+          (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'HR Specialist Review and Approval Request') AS FINAL_APPROVAL_END
+
+				FROM
+					BIZFLOW.PROCS P
+					INNER JOIN HHS_CMS_HR.VW_INCENTIVES_COM COM ON P.PROCID = COM.PROC_ID
+					INNER JOIN HHS_CMS_HR.VW_INCENTIVES_PDP PDP ON COM.PROC_ID = PDP.PROC_ID
+				WHERE COM.CANCEL_RESAON IS NULL -- Request is not cancelled
+					AND P.NAME IN ('PDP Incentives') -- PDP Incentives only
+					AND COM.REQ_DATE IS NOT NULL
+          
+					AND (TO_DATE(COM.REQ_DATE, 'YYYY/MM/DD') BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}) 				
+								AND (
+									($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+									OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+									OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+									)  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children  
+			)
+	)]]>
+	</queryString>
+	<field name="CREATE_REQUEST_ACTIVE" class="java.lang.Integer"/>
+	<field name="CREATE_REQUEST_COMPLETE" class="java.lang.Integer"/>
+	<field name="DRAFT_ACTIVE" class="java.lang.Integer"/>
+	<field name="DRAFT_COMPLETE" class="java.lang.Integer"/>
+	<field name="FINAL_REQUEST_ACTIVE" class="java.lang.Integer"/>
+	<field name="FINAL_REQUEST_COMPLETE" class="java.lang.Integer"/>
+	<field name="CONDUCT_PANEL_ACTIVE" class="java.lang.Integer"/>
+	<field name="CONDUCT_PANEL_COMPLETE" class="java.lang.Integer"/>
+	<field name="FINAL_APPROVAL_ACTIVE" class="java.lang.Integer"/>
+	<field name="FINAL_APPROVAL_COMPLETE" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="219" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="440" height="20" uuid="3ffde04f-d619-4184-a1d4-b430aeaa5346">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PDP Request Count"]]></textFieldExpression>
+			</textField>
+			<barChart>
+				<chart isShowLegend="true" evaluationTime="Report" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement x="0" y="9" width="440" height="210" uuid="07f185ac-de26-46f6-a637-212e745aa659">
+						<property name="MaximumCategoryLabelWidthRatio" value="1.2f"/>
+						<property name="ItemMargin" value="0.0f"/>
+						<property name="MaximumCategoryLabelLines" value="3"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="IntegerTickUnits" value="true"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<chartTitle>
+						<font fontName="SansSerif"/>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend position="Right"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Create Request (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CREATE_REQUEST_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{CREATE_REQUEST_ACTIVE} > 0 ? ""+$F{CREATE_REQUEST_ACTIVE}: ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Create Request (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CREATE_REQUEST_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{CREATE_REQUEST_COMPLETE} > 0 ? ""+$F{CREATE_REQUEST_COMPLETE} : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Draft Justification (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{DRAFT_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{DRAFT_ACTIVE} >0 ? ""+$F{DRAFT_ACTIVE}:""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Draft Justification (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{DRAFT_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{DRAFT_COMPLETE} >0 ? ""+$F{DRAFT_COMPLETE}: ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Finalize Request (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_REQUEST_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_REQUEST_ACTIVE} >0 ?""+$F{FINAL_REQUEST_ACTIVE}:""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Finalize Request (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_REQUEST_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_REQUEST_COMPLETE} >0 ?""+$F{FINAL_REQUEST_COMPLETE} :""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Conduct Panel Review (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CONDUCT_PANEL_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{CONDUCT_PANEL_ACTIVE} >0 ? ""+$F{CONDUCT_PANEL_ACTIVE} : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Conduct Panel Review (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CONDUCT_PANEL_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{CONDUCT_PANEL_COMPLETE} >0 ?""+$F{CONDUCT_PANEL_COMPLETE} :""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Obtain Final Approval (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_APPROVAL_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_APPROVAL_ACTIVE} >0 ?""+$F{FINAL_APPROVAL_ACTIVE} : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Obtain Final Approval (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_APPROVAL_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_APPROVAL_COMPLETE} > 0 ? ""+$F{FINAL_APPROVAL_COMPLETE} : ""]]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal">
+						<seriesColor seriesOrder="0" color="#112E51"/>
+						<seriesColor seriesOrder="1" color="#00A6D2"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</title>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="5" width="440" height="20" uuid="d7c9e46a-7ff3-4c92-807b-0dbb39c75a4f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA["PDP Request Count"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="440" height="20" uuid="a3715503-a877-43c7-8430-da9ed5e8b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

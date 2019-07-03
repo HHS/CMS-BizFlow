@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:23:35 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives Completed PDP Requests - Pie Chart" pageWidth="440" pageHeight="240" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="440" leftMargin="0" rightMargin="0" topMargin="7" bottomMargin="5" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="752"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="237"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_PCA_PDP_Dashboard/CMS_PCA_Request_Count"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_PCA_PDP_Dashboard/CMS_PCA_Request_Count_files/main_jrxml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - HHS QA"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[LTRIM("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	SUM(CREATE_REQUEST_ACTIVE) AS CREATE_REQUEST_ACTIVE,
+	SUM(CREATE_REQUEST_COMPLETE) AS CREATE_REQUEST_COMPLETE,
+	SUM(DRAFT_ACTIVE) AS DRAFT_ACTIVE,
+	SUM(DRAFT_COMPLETE) AS DRAFT_COMPLETE,
+	SUM(FINAL_REQUEST_ACTIVE) AS FINAL_REQUEST_ACTIVE,
+	SUM(FINAL_REQUEST_COMPLETE) AS FINAL_REQUEST_COMPLETE,
+	SUM(FINAL_APPROVAL_ACTIVE) AS FINAL_APPROVAL_ACTIVE,
+	SUM(FINAL_APPROVAL_COMPLETE) AS FINAL_APPROVAL_COMPLETE
+FROM
+	(	
+		SELECT 
+			PROCID, 
+			CASE
+				WHEN CREATE_REQUEST_START IS NOT NULL AND CREATE_REQUEST_END IS NULL
+				THEN 1
+				ELSE 0
+			END AS CREATE_REQUEST_ACTIVE,
+			CASE
+				WHEN CREATE_REQUEST_START IS NOT NULL AND CREATE_REQUEST_END IS NOT NULL
+				THEN 1
+				ELSE 0
+			END AS CREATE_REQUEST_COMPLETE,
+			CASE
+				WHEN DRAFT_START IS NOT NULL AND DRAFT_END IS NULL
+				THEN 1
+				ELSE 0
+			END AS DRAFT_ACTIVE,
+			CASE
+				WHEN DRAFT_START IS NOT NULL AND DRAFT_END IS NOT NULL
+				THEN 1
+				ELSE 0
+			END AS DRAFT_COMPLETE,
+			CASE
+				WHEN APPROVAL_TABG_DATE IS NOT NULL AND HR_RVW_APPRVL_RQST_START IS NOT NULL AND RVW_OFM_DATE IS NULL
+				THEN 1
+				WHEN APPROVAL_TABG_DATE IS NULL AND HR_RVW_APPRVL_RQST_START IS NOT NULL AND RVW_OHC_DATE IS NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_REQUEST_ACTIVE,
+			CASE
+				WHEN APPROVAL_TABG_DATE IS NOT NULL AND HR_RVW_APPRVL_RQST_START IS NOT NULL AND RVW_OFM_DATE IS NOT NULL
+				THEN 1
+				WHEN APPROVAL_TABG_DATE IS NULL AND HR_RVW_APPRVL_RQST_START IS NOT NULL AND RVW_OHC_DATE IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_REQUEST_COMPLETE,
+			CASE
+				WHEN APPROVAL_OADMIN_DATE IS NULL AND APPROVAL_TABG_DATE IS NOT NULL AND HR_RVW_APPRVL_RQST_END IS NULL
+				THEN 1
+				WHEN APPROVAL_OADMIN_DATE IS NOT NULL AND HR_RVW_APPRVL_RQST_END IS NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_APPROVAL_ACTIVE,
+			CASE
+				WHEN APPROVAL_OADMIN_DATE IS NULL AND APPROVAL_TABG_DATE IS NOT NULL AND HR_RVW_APPRVL_RQST_END IS NOT NULL
+				THEN 1
+				WHEN APPROVAL_OADMIN_DATE IS NOT NULL AND HR_RVW_APPRVL_RQST_END IS NOT NULL
+				THEN 1		
+				ELSE 0
+			END AS FINAL_APPROVAL_COMPLETE	
+		FROM
+			(
+				SELECT
+					P.PROCID AS PROCID,
+					(SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Start') AS CREATE_REQUEST_START,
+					(SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Start') AS CREATE_REQUEST_END,
+					(SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(NVL(STARTDTIME,CMPLTDTIME), $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Selecting Official Reviews Request') AS DRAFT_START,
+					(SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE})  FROM BIZFLOW.ACT WHERE PROCID = P.PROCID AND NAME = 'Selecting Official Reviews Request') AS DRAFT_END,
+					TO_DATE(APPROVAL_TABG_DATE, 'MM/DD/YYYY') AS APPROVAL_TABG_DATE,
+					(SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(STARTDTIME, $P{TIMEZONE}) FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'HR Specialist Review and Approval Request') AS HR_RVW_APPRVL_RQST_START,
+					(SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CMPLTDTIME, $P{TIMEZONE})  FROM BIZFLOW.ACT WHERE PROCID = COM.PROC_ID AND NAME = 'HR Specialist Review and Approval Request') AS HR_RVW_APPRVL_RQST_END,	
+					TO_DATE(RVW_OFM_DATE, 'MM/DD/YYYY') AS RVW_OFM_DATE,
+					TO_DATE(RVW_OHC_DATE, 'MM/DD/YYYY') AS RVW_OHC_DATE,
+					TO_DATE(APPROVAL_OADMIN_DATE, 'MM/DD/YYYY') AS APPROVAL_OADMIN_DATE
+				FROM
+					BIZFLOW.PROCS P
+					INNER JOIN HHS_CMS_HR.VW_INCENTIVES_COM COM ON P.PROCID = COM.PROC_ID
+					INNER JOIN HHS_CMS_HR.VW_INCENTIVES_PCA PCA ON COM.PROC_ID = PCA.PROC_ID
+				WHERE COM.CANCEL_RESAON IS NULL -- Request is not cancelled
+					AND P.NAME IN ('PCA Incentives') -- PCA Incentives only
+					AND 1 = CASE
+								WHEN PCA_TYPE = 'Renewal' AND RVW_SO_DATE IS NOT NULL
+								THEN 1 
+								ELSE 0 
+							END	-- Does not include Renewal Requests that did not get renewed					
+					AND (TO_DATE(COM.REQ_DATE, 'YYYY/MM/DD') BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}) 				
+								AND (
+									($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+									OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+									OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+									)  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children  
+			)
+	)]]>
+	</queryString>
+	<field name="CREATE_REQUEST_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="CREATE_REQUEST_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="DRAFT_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="DRAFT_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="FINAL_REQUEST_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="FINAL_REQUEST_COMPLETE" class="java.math.BigDecimal"/>
+	<field name="FINAL_APPROVAL_ACTIVE" class="java.math.BigDecimal"/>
+	<field name="FINAL_APPROVAL_COMPLETE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="219" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="440" height="20" uuid="3ffde04f-d619-4184-a1d4-b430aeaa5346">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PCA Request Count"]]></textFieldExpression>
+			</textField>
+			<barChart>
+				<chart evaluationTime="Report" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement x="0" y="8" width="440" height="210" uuid="223c0ed7-ce77-450a-9a6c-1d04dd553025">
+						<property name="MaximumCategoryLabelWidthRatio" value="1.2f"/>
+						<property name="ItemMargin" value="0.0f"/>
+						<property name="MaximumCategoryLabelLines" value="3"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="IntegerTickUnits" value="true"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Right"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Create Request (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CREATE_REQUEST_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{CREATE_REQUEST_ACTIVE}.intValue() > 0 ? ""+$F{CREATE_REQUEST_ACTIVE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Create Request (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CREATE_REQUEST_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{CREATE_REQUEST_COMPLETE}.intValue() > 0 ? ""+$F{CREATE_REQUEST_COMPLETE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Draft Justification (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{DRAFT_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{DRAFT_ACTIVE}.intValue() > 0 ? " "+$F{DRAFT_ACTIVE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Draft Justification (Component)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{DRAFT_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{DRAFT_COMPLETE}.intValue() > 0 ? " "+$F{DRAFT_COMPLETE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Finalize Request (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_REQUEST_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_REQUEST_ACTIVE}.intValue() > 0 ? " "+$F{FINAL_REQUEST_ACTIVE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Finalize Request (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_REQUEST_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_APPROVAL_COMPLETE}.intValue() > 0 ? " "+$F{FINAL_REQUEST_COMPLETE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Active"]]></seriesExpression>
+						<categoryExpression><![CDATA["Obtain Final Approval (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_APPROVAL_ACTIVE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_APPROVAL_ACTIVE}.intValue() > 0 ? " "+$F{FINAL_APPROVAL_ACTIVE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Completed"]]></seriesExpression>
+						<categoryExpression><![CDATA["Obtain Final Approval (HR)"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{FINAL_APPROVAL_COMPLETE}]]></valueExpression>
+						<labelExpression><![CDATA[$F{FINAL_APPROVAL_COMPLETE}.intValue() > 0 ? " "+$F{FINAL_APPROVAL_COMPLETE}.toString() : ""]]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal">
+						<seriesColor seriesOrder="0" color="#112E51"/>
+						<seriesColor seriesOrder="1" color="#00A6D2"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</title>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="5" width="440" height="20" uuid="d7c9e46a-7ff3-4c92-807b-0dbb39c75a4f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA["PCA Request Count"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="440" height="20" uuid="a3715503-a877-43c7-8430-da9ed5e8b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

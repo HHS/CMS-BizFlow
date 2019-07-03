@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:14:01 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERLR Special cases Count BarChart" pageWidth="600" pageHeight="210" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="600" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="0" whenResourceMissingType="Empty" uuid="8c27c22b-ced2-4d72-9c55-65e91153223f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/ERLR_Dashboard/ERLR_Special_cases_Count_BarChart_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/ERLR_Dashboard/ERLR_Special_cases_Count_BarChart"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow data Adapter - HHS QA"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FISCAL_YEAR" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["2019"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CATEGORY_TBL.CATEGORY AS CATEGORY, NVL(COUNT_Q1,0) AS COUNT_Q1, NVL(COUNT_Q2,0) AS COUNT_Q2, NVL(COUNT_Q3,0) AS COUNT_Q3, NVL(COUNT_Q4,0) AS COUNT_Q4
+FROM
+(
+SELECT 'PIP' AS CATEGORY FROM DUAL
+UNION ALL
+SELECT 'Grievance' AS CATEGORY FROM DUAL
+UNION ALL
+SELECT 'Travel Card' AS CATEGORY FROM DUAL
+UNION ALL
+SELECT 'Removal' AS CATEGORY FROM DUAL
+UNION ALL
+SELECT 'Probationary Terminations' AS CATEGORY FROM DUAL
+UNION ALL
+SELECT 'HPC Discipline' AS CATEGORY FROM DUAL
+) CATEGORY_TBL
+LEFT JOIN
+(
+SELECT SPECIALITY AS CATEGORY, 
+
+	SUM(CASE WHEN ((TO_CHAR(INIT_CONTACT_DT , 'MM') BETWEEN 10 AND 12) AND TO_CHAR(INIT_CONTACT_DT , 'YYYY') = TO_CHAR(TO_NUMBER($P{FISCAL_YEAR})-1 )) THEN 1 ELSE 0 END) AS COUNT_Q1,
+
+	SUM(CASE WHEN ((TO_CHAR(INIT_CONTACT_DT, 'MM') BETWEEN 1 AND 3) AND TO_CHAR(INIT_CONTACT_DT , 'YYYY') = TO_CHAR($P{FISCAL_YEAR})) THEN 1 ELSE 0 END) AS COUNT_Q2,
+	
+	SUM(CASE WHEN ((TO_CHAR(INIT_CONTACT_DT, 'MM') BETWEEN 4 AND 6) AND TO_CHAR(INIT_CONTACT_DT , 'YYYY') = TO_CHAR($P{FISCAL_YEAR})) THEN 1 ELSE 0 END) AS COUNT_Q3,
+
+	SUM(CASE WHEN ((TO_CHAR(INIT_CONTACT_DT, 'MM') BETWEEN 7 AND 9) AND TO_CHAR(INIT_CONTACT_DT , 'YYYY') = TO_CHAR($P{FISCAL_YEAR})) THEN 1 ELSE 0 END) AS COUNT_Q4
+FROM
+(
+          -- Special Cases with filters
+          SELECT G.ERLR_CASE_NUMBER   AS CASE_NUMBER,
+            G.GEN_CUST_INIT_CONTACT_DT AS INIT_CONTACT_DT,
+            G.GEN_CASE_STATUS          AS CASE_STATUS,
+            UPPER(NVL(G.GEN_EMPLOYEE_ADMIN_CD, G.GEN_CUSTOMER_ADMIN_CD)) AS ADMIN_CODE,
+            'PIP' AS SPECIALITY
+          FROM HHS_CMS_HR.VW_ERLR_GEN G
+          LEFT JOIN HHS_CMS_HR.VW_ERLR_PERF_ISSUE PI ON PI.ERLR_CASE_NUMBER = G.ERLR_CASE_NUMBER
+          WHERE UPPER(NVL(G.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+          AND (NVL(G.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (G.GEN_CASE_STATUS IN ('Closed') AND G.CANCEL_REASON IS NOT NULL))
+          AND G.GEN_CASE_TYPE IS NOT NULL
+          AND PI_ACTION_TYPE = 'PIP'
+          
+          UNION
+          
+          SELECT G.ERLR_CASE_NUMBER   AS CASE_NUMBER,
+            G.GEN_CUST_INIT_CONTACT_DT AS INIT_CONTACT_DT,
+            G.GEN_CASE_STATUS          AS CASE_STATUS,
+            UPPER(NVL(G.GEN_EMPLOYEE_ADMIN_CD, G.GEN_CUSTOMER_ADMIN_CD)) AS ADMIN_CODE,
+            'Grievance' AS SPECIALITY
+          FROM HHS_CMS_HR.VW_ERLR_GEN G
+          LEFT JOIN HHS_CMS_HR.VW_ERLR_APPEAL APP ON G.ERLR_CASE_NUMBER = APP.ERLR_CASE_NUMBER
+          LEFT JOIN HHS_CMS_HR.ERLR_3RDPARTY_HEAR HR ON G.ERLR_CASE_NUMBER = HR.ERLR_CASE_NUMBER
+          WHERE UPPER(NVL(G.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+          AND (NVL(G.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (G.GEN_CASE_STATUS IN ('Closed') AND G.CANCEL_REASON IS NOT NULL))
+          AND (G.GEN_CASE_TYPE IN ('Grievance') OR
+           ((G.GEN_CASE_TYPE IN ('Conduct Issue') OR G.GEN_CASE_TYPE IN ('Probationary Period Action')  OR G.GEN_CASE_TYPE IN ('Performance Issue') 
+           OR G.GEN_CASE_TYPE IN ('Within Grade Increase Denial/Reconsideration')) AND  APP.AP_ERLR_APPEAL_TYPE ='Grievance')
+           OR (G.GEN_CASE_TYPE ='Third Party Hearing' AND HR.THRD_PRTY_APPEAL_TYPE ='Grievance' ))
+          
+          UNION
+          
+          SELECT G.ERLR_CASE_NUMBER   AS CASE_NUMBER,
+            G.GEN_CUST_INIT_CONTACT_DT AS INIT_CONTACT_DT,
+            G.GEN_CASE_STATUS          AS CASE_STATUS,
+            UPPER(NVL(G.GEN_EMPLOYEE_ADMIN_CD, G.GEN_CUSTOMER_ADMIN_CD)) AS ADMIN_CODE,
+            'Travel Card' AS SPECIALITY
+          FROM HHS_CMS_HR.VW_ERLR_GEN G
+          WHERE UPPER(NVL(G.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+          AND (NVL(G.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (G.GEN_CASE_STATUS IN ('Closed') AND G.CANCEL_REASON IS NOT NULL))
+          AND (G.GEN_CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Travel%'
+              AND ((G.GEN_CASE_TYPE  IN ('Conduct Issue','Probationary Period Action','Investigation'))) )
+          
+          UNION
+          
+          SELECT G.ERLR_CASE_NUMBER   AS CASE_NUMBER,
+            G.GEN_CUST_INIT_CONTACT_DT AS INIT_CONTACT_DT,
+            G.GEN_CASE_STATUS          AS CASE_STATUS,
+            UPPER(NVL(G.GEN_EMPLOYEE_ADMIN_CD, G.GEN_CUSTOMER_ADMIN_CD)) AS ADMIN_CODE,
+            'Removal' AS SPECIALITY
+          FROM HHS_CMS_HR.VW_ERLR_GEN G
+          WHERE UPPER(NVL(G.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+          AND (NVL(G.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (G.GEN_CASE_STATUS IN ('Closed') AND G.CANCEL_REASON IS NOT NULL))
+          AND G.GEN_CASE_TYPE IS NOT NULL
+          AND G.CC_FINAL_ACTION LIKE '%Removal%'
+          
+          UNION
+          
+          SELECT G.ERLR_CASE_NUMBER   AS CASE_NUMBER,
+            G.GEN_CUST_INIT_CONTACT_DT AS INIT_CONTACT_DT,
+            G.GEN_CASE_STATUS          AS CASE_STATUS,
+            UPPER(NVL(G.GEN_EMPLOYEE_ADMIN_CD, G.GEN_CUSTOMER_ADMIN_CD)) AS ADMIN_CODE,
+            'Probationary Terminations' AS SPECIALITY
+          FROM HHS_CMS_HR.VW_ERLR_GEN G
+          WHERE UPPER(NVL(G.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+          AND (NVL(G.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (G.GEN_CASE_STATUS IN ('Closed') AND G.CANCEL_REASON IS NOT NULL))
+          AND (G.GEN_CASE_TYPE = 'Probationary Period Action' 
+              AND G.CC_FINAL_ACTION LIKE '%Termination%')            
+            
+            UNION
+          
+          SELECT G.ERLR_CASE_NUMBER   AS CASE_NUMBER,
+            G.GEN_CUST_INIT_CONTACT_DT AS INIT_CONTACT_DT,
+            G.GEN_CASE_STATUS          AS CASE_STATUS,
+            UPPER(NVL(G.GEN_EMPLOYEE_ADMIN_CD, G.GEN_CUSTOMER_ADMIN_CD)) AS ADMIN_CODE,
+            'HPC Discipline' AS SPECIALITY
+          FROM HHS_CMS_HR.VW_ERLR_GEN G
+          LEFT JOIN HHS_CMS_HR.VW_ERLR_INVESTIGATION INV ON INV.ERLR_CASE_NUMBER = G.ERLR_CASE_NUMBER
+          WHERE UPPER(NVL(G.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+          AND (NVL(G.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (G.GEN_CASE_STATUS IN ('Closed') AND G.CANCEL_REASON IS NOT NULL))
+          AND (G.GEN_CASE_TYPE = 'Investigation' AND INV.INVESTIGATION_TYPE = 'HPC' AND (G.CC_FINAL_ACTION LIKE '%Long-Term Suspension%' 
+              OR G.CC_FINAL_ACTION LIKE '%Short-Term Suspension%' OR G.CC_FINAL_ACTION LIKE '%Reprimand%'
+              OR (G.CC_FINAL_ACTION LIKE '%Removal%' AND G.CC_FINAL_ACTION NOT LIKE '%Employee Failed PIP: Removal%')))
+          
+) 
+WHERE 
+(INIT_CONTACT_DT IS NOT NULL AND INIT_CONTACT_DT BETWEEN TO_DATE('10/01/'||TO_CHAR(TO_NUMBER($P{FISCAL_YEAR})-1),'MM/DD/YYYY') AND TO_DATE('09/30/'||TO_CHAR($P{FISCAL_YEAR}),'MM/DD/YYYY')) 
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(ADMIN_CODE) != 'N/A'
+AND (
+      ($P{COMPONENT} = 'CMS-wide' AND ADMIN_CODE LIKE 'FC%') 
+      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND ADMIN_CODE = UPPER($P{ADMIN_CD}))
+    )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children 
+
+GROUP BY SPECIALITY
+) MAIN
+ON CATEGORY_TBL.CATEGORY = MAIN.CATEGORY
+ORDER BY 
+CASE 
+WHEN CATEGORY LIKE 'PIP' THEN 1
+WHEN CATEGORY LIKE 'Grievance' THEN 2
+WHEN CATEGORY LIKE 'Travel Card' THEN 3
+WHEN CATEGORY LIKE 'Removal' THEN 4
+WHEN CATEGORY LIKE 'Probationary Terminations' THEN 5
+WHEN CATEGORY LIKE 'HPC Discipline' THEN 6
+END]]>
+	</queryString>
+	<field name="CATEGORY" class="java.lang.String"/>
+	<field name="COUNT_Q1" class="java.lang.Integer"/>
+	<field name="COUNT_Q2" class="java.lang.Integer"/>
+	<field name="COUNT_Q3" class="java.lang.Integer"/>
+	<field name="COUNT_Q4" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="200" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<barChart>
+				<chart isShowLegend="true" evaluationTime="Report" hyperlinkType="" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="600" height="200" forecolor="#524D4D" uuid="36484c32-de48-42bc-b231-29e4f0156e12">
+						<property name="MaximumCategoryLabelWidthRatio" value="1.0f"/>
+						<property name="ItemMargin" value="0.1f"/>
+						<property name="MaximumCategoryLabelLines" value="3"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="IntegerTickUnits" value="true"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<chartTitle>
+						<font fontName="DejaVu Sans" size="8"/>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend position="Bottom">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Q1"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CATEGORY}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{COUNT_Q1}]]></valueExpression>
+						<labelExpression><![CDATA[""+$F{COUNT_Q1}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Q2"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CATEGORY}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{COUNT_Q2}]]></valueExpression>
+						<labelExpression><![CDATA[""+$F{COUNT_Q2}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Q3"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CATEGORY}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{COUNT_Q3}]]></valueExpression>
+						<labelExpression><![CDATA[""+$F{COUNT_Q3}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Q4"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CATEGORY}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{COUNT_Q4}]]></valueExpression>
+						<labelExpression><![CDATA[""+$F{COUNT_Q4}]]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#112E51"/>
+						<seriesColor seriesOrder="1" color="#00A6D2"/>
+						<seriesColor seriesOrder="2" color="#98DAF1"/>
+						<seriesColor seriesOrder="3" color="#046B99"/>
+					</plot>
+					<itemLabel color="#000000">
+						<font fontName="Arial" size="10"/>
+					</itemLabel>
+					<categoryAxisFormat labelRotation="0.0">
+						<axisFormat tickLabelColor="#000000" verticalTickLabels="false" axisLineColor="#000000">
+							<labelFont>
+								<font fontName="Arial" size="10" isBold="true"/>
+							</labelFont>
+							<tickLabelFont>
+								<font fontName="Arial" size="9" isBold="true"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA["Cases Initiated"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+							<labelFont>
+								<font fontName="Arial" size="11" isBold="true"/>
+							</labelFont>
+							<tickLabelFont>
+								<font fontName="Arial" size="9" isBold="true"/>
+							</tickLabelFont>
+						</axisFormat>
+					</valueAxisFormat>
+					<rangeAxisMinValueExpression><![CDATA[0]]></rangeAxisMinValueExpression>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="0" width="500" height="20" uuid="29fad0c8-533e-46d5-90ff-8a7f00ceab34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of Special Cases Initiated for Fiscal Year " +$P{FISCAL_YEAR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="500" height="20" uuid="76d6f548-2b5d-4498-a0e0-e34feb24845a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

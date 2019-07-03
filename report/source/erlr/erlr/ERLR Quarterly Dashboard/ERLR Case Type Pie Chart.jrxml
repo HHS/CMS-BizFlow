@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:13:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERLR Case Type Pie Chart" pageWidth="500" pageHeight="395" whenNoDataType="NoDataSection" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ae13046c-0794-44e9-a0b0-01262c22124c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/ERLR_Dashboard/ERLR_Case_Type_Pie_Chart"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/ERLR_Dashboard/ERLR_Case_Type_Pie_Chart_files/main_jrxml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="204"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="791"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	COUNT(VW.CASE_ID) AS CASE_COUNT,
+	TBL.TBL_LABEL AS CASE_TYPE
+FROM HHS_CMS_HR.TBL_LOOKUP TBL
+LEFT JOIN 
+		(SELECT
+			ERLR_CASE_NUMBER AS CASE_ID,
+			GEN_EMPLOYEE_ADMIN_CD,
+			GEN_CUSTOMER_ADMIN_CD,
+			CASE 
+        WHEN (GEN_CASE_TYPE IN ('Third Party Hearing') AND THRD_PRTY_APPEAL_TYPE IS NULL) THEN CAST('Ignore' as NVARCHAR2(1000))
+        ELSE GEN_CASE_TYPE END
+       AS CASE_TYPE_CODE,
+			GEN_CUST_INIT_CONTACT_DT,
+			CC_CASE_COMPLETE_DT,
+			GEN_CASE_STATUS
+      ,CANCEL_REASON
+		FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR) VW
+	ON UPPER(TBL.TBL_LABEL) = UPPER(VW.CASE_TYPE_CODE)
+WHERE TBL_CATEGORY = 'ERLR'
+	AND UPPER(NVL(VW.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+	AND (NVL(VW.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (VW.GEN_CASE_STATUS IN ('Closed') AND VW.CANCEL_REASON IS NOT NULL))
+AND VW.CASE_TYPE_CODE IS NOT NULL
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(TO_CHAR(VW.GEN_EMPLOYEE_ADMIN_CD),TO_CHAR(VW.GEN_CUSTOMER_ADMIN_CD))) != 'N/A'
+	AND TBL_LTYPE = 'ERLRInitialResponseCaseType'
+	AND TBL_ACTIVE = '1'
+	AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VW.GEN_EMPLOYEE_ADMIN_CD, VW.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VW.GEN_EMPLOYEE_ADMIN_CD, VW.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+	)
+	-- Filter : Date Range
+ AND ((VW.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VW.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))		
+GROUP BY
+	TBL.TBL_LABEL
+ORDER BY
+	TBL.TBL_LABEL]]>
+	</queryString>
+	<field name="CASE_COUNT" class="java.math.BigDecimal"/>
+	<field name="CASE_TYPE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="500" height="20" uuid="90e18c9b-5485-45b7-9818-ee5046fcfa07">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Cases By Case Type]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="20" uuid="1c79272a-3af3-4fe2-aed4-fe0e331999c9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="1" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="20" uuid="f2c8a05b-edeb-4cc1-ba85-c721481b53b7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DATE_RANGE_FROM},"MM/dd/yyyy") +" through " + DATEFORMAT($P{DATE_RANGE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="350" splitType="Stretch">
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="500" height="345" uuid="19a5981e-c701-4629-8106-b75da18de8ed">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<chartTitle>
+						<font size="1"/>
+					</chartTitle>
+					<chartSubtitle>
+						<font size="1"/>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{CASE_TYPE}]]></keyExpression>
+					<valueExpression><![CDATA[$F{CASE_COUNT}]]></valueExpression>
+				</pieDataset>
+				<piePlot isShowLabels="true" isCircular="true" labelFormat="{1} cases ({2})" legendLabelFormat="{0}">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0">
+						<seriesColor seriesOrder="0" color="#F58231"/>
+						<seriesColor seriesOrder="1" color="#046B99"/>
+						<seriesColor seriesOrder="2" color="#9BDAF1"/>
+						<seriesColor seriesOrder="3" color="#4AA564"/>
+						<seriesColor seriesOrder="4" color="#FAD980"/>
+						<seriesColor seriesOrder="5" color="#823E73"/>
+						<seriesColor seriesOrder="6" color="#2F5151"/>
+						<seriesColor seriesOrder="7" color="#AC143F"/>
+						<seriesColor seriesOrder="8" color="#BF9000"/>
+						<seriesColor seriesOrder="9" color="#0071BC"/>
+						<seriesColor seriesOrder="10" color="#00A6D2"/>
+						<seriesColor seriesOrder="11" color="#FDB81E"/>
+						<seriesColor seriesOrder="12" color="#4B9828"/>
+						<seriesColor seriesOrder="13" color="#AEB0B5"/>
+						<seriesColor seriesOrder="14" color="#886EC2"/>
+						<seriesColor seriesOrder="15" color="#186825"/>
+						<seriesColor seriesOrder="16" color="#374989"/>
+						<seriesColor seriesOrder="17" color="#323A45"/>
+						<seriesColor seriesOrder="18" color="#E59393"/>
+						<seriesColor seriesOrder="19" color="#8C5834"/>
+						<seriesColor seriesOrder="20" color="#94BFA2"/>
+						<seriesColor seriesOrder="21" color="#523685"/>
+						<seriesColor seriesOrder="22" color="#3C844B"/>
+						<seriesColor seriesOrder="23" color="#8B3535"/>
+						<seriesColor seriesOrder="24" color="#378972"/>
+						<seriesColor seriesOrder="25" color="#981B1E"/>
+						<seriesColor seriesOrder="26" color="#C55A11"/>
+					</plot>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="60">
+			<staticText>
+				<reportElement x="0" y="1" width="500" height="20" uuid="2f02127d-19c3-483a-9cb1-3be8d0898a0c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Cases By Case Type]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="22" width="500" height="20" uuid="c9e35cb2-a3a8-41e7-8660-b3ff3bda123f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DATE_RANGE_FROM},"MM/dd/yyyy") +" through " + DATEFORMAT($P{DATE_RANGE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="40" width="500" height="20" uuid="f0900a85-0fe6-4f65-a2dc-e5402d0e254d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
