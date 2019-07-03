@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-27T10:10:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main" pageWidth="700" pageHeight="595" orientation="Landscape" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9a264326-02fa-429a-b9b2-cb4168af1712">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Active_USA_Staffing_Requests"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Active_USA_Staffing_Requests_files/Main_Jrxml"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
+	<parameter name="USA_Staffing_Creation_Date_From" class="java.util.Date"/>
+	<parameter name="USA_Staffing_Creation_Date_To" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+       DISTINCT        
+       STA.REQ_JOB_REQ_NUMBER AS REQUEST_NUMER,
+    STA.SG_RT_DSCR As REQUEST_TYPE,
+    CUSTOMER_NAME AS CUSTOMER_NAME,
+  REQ.REQUEST_CREATE_DATE AS DATE_CREATED,
+    REQ.REQUEST_STATUS,
+    APPROVER_NAME AS REQUEST_APPROVER,
+    NEW_HIRE_NAME AS SELECTEE,
+    SEND_TENT_OFFR_CMPL_DATE AS TNT_OFFR_DATE,
+    INIT_BKGRND_INVST_DATE AS INITIATE_BACKGROUND,
+    RCVE_BKGRND_INVST_DATE AS RECEIVE_BACKGROUND,
+    SEND_OFCL_OFFR_CMPL_DATE AS SEND_OFFI 
+    
+FROM HHS_HR.DSS_CMS_REQUESTS REQ
+LEFT JOIN HHS_HR.DSS_TIME_TO_OFFER OFR ON REQ.REQUEST_NUMBER = OFR.REQUEST_NUMBER
+LEFT JOIN HHS_CMS_HR.VW_STRATCON STA ON  REQ.REQUEST_NUMBER = STA.REQ_JOB_REQ_NUMBER
+
+WHERE EOD_DATE  IS NULL  AND STA.REQ_JOB_REQ_NUMBER  IS NOT NULL
+AND REQ.REQUEST_TYPE = 'New Vacancy'
+
+ AND REQ.REQUEST_CREATE_DATE BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{USA_Staffing_Creation_Date_From}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
+	AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{USA_Staffing_Creation_Date_To}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))]]>
+	</queryString>
+	<field name="REQUEST_NUMER" class="java.lang.String"/>
+	<field name="REQUEST_TYPE" class="java.lang.String"/>
+	<field name="CUSTOMER_NAME" class="java.lang.String"/>
+	<field name="DATE_CREATED" class="java.sql.Timestamp"/>
+	<field name="REQUEST_STATUS" class="java.lang.String"/>
+	<field name="REQUEST_APPROVER" class="java.lang.String"/>
+	<field name="SELECTEE" class="java.lang.String"/>
+	<field name="TNT_OFFR_DATE" class="java.sql.Timestamp"/>
+	<field name="INITIATE_BACKGROUND" class="java.sql.Timestamp"/>
+	<field name="RECEIVE_BACKGROUND" class="java.sql.Timestamp"/>
+	<field name="SEND_OFFI" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="77" splitType="Stretch">
+			<staticText>
+				<reportElement x="-10" y="0" width="670" height="30" uuid="353083fc-b43a-456a-9be1-0cd676f6216f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Active USA Staffing Requests]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-10" y="40" width="670" height="30" uuid="2ff7661d-9cc8-4512-9552-54502471083c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["All active New Vacancy requests created in USA Staffing between " +DATEFORMAT($P{USA_Staffing_Creation_Date_From},"MMMM d, yyy") +" and " + DATEFORMAT($P{USA_Staffing_Creation_Date_To},"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="-10" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="f0af2e7c-e29c-4cf9-9c17-d2c7e34bb6c5">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[NEIL Request Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="50" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="821319ee-72d7-4b60-b2d5-665b4e842b14"/>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="110" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="246a994a-9d91-43f2-9626-4928626b39ca"/>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Customer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="170" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="c4beaaf8-9237-4c35-b29b-f12e3e1b6b76"/>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Approver (Staffer) Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="230" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="7d3edd0a-6990-4ab1-aaf4-727afbca27d2"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Selectee Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="290" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="517646da-cf43-49f7-9f14-925734a8260c"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Date Created]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="350" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="9d40e4b4-d8e4-420e-b363-962d7d931355"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Stage in USA Staffing]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="410" y="0" width="50" height="41" backcolor="#EBEBFC" uuid="97d03fd5-5581-4a41-a641-86f80ab2baa1"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Tentative Offer Sent Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="520" y="0" width="70" height="41" backcolor="#EBEBFC" uuid="8cb2b056-9cc1-4ce7-87e0-529f196ee64f"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Receive Background Investigation/ Security Clearance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="460" y="0" width="60" height="41" backcolor="#EBEBFC" uuid="5311b629-24c2-4865-89ed-8f94f500631d"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Initiate Background Investigation/ Security Clerance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="590" y="0" width="70" height="41" backcolor="#EBEBFC" uuid="a3cb418e-a8d4-49b7-8c34-680af55039a8"/>
+				<box>
+					<pen lineWidth="0.01"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Send Official Offer Complete Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="-10" y="0" width="60" height="20" uuid="8a294946-8413-49a8-853c-be43510ecc75">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUEST_NUMER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="50" y="0" width="60" height="20" uuid="2ce81119-0faf-451f-a188-76056c124b01"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{REQUEST_TYPE}!= null )? $F{REQUEST_TYPE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="110" y="0" width="60" height="20" uuid="d4109b41-04a6-4840-8fcc-cf4c370bd870"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CUSTOMER_NAME}!= null )? $F{CUSTOMER_NAME} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="170" y="0" width="60" height="20" uuid="b7dcac27-93b0-4036-a24f-96e0bd80435c"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{REQUEST_APPROVER}!= null )? $F{REQUEST_APPROVER} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="230" y="0" width="60" height="20" uuid="42a9b28a-ecc9-4b76-9957-e6517e3ed666"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{SELECTEE}!= null )? $F{SELECTEE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="290" y="0" width="60" height="20" uuid="b9d5c0a7-6134-4d2a-9119-3434606a91c6"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{DATE_CREATED} != null) ? DATEFORMAT($F{DATE_CREATED},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="350" y="0" width="60" height="20" uuid="bf26b09e-e809-4b9a-94fc-cdc14a9ff3be"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{REQUEST_STATUS}!= null )? $F{REQUEST_STATUS} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="410" y="0" width="50" height="20" uuid="fb476785-d2bf-4edc-9290-7921cbada35e"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{TNT_OFFR_DATE} != null) ? DATEFORMAT($F{TNT_OFFR_DATE},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="460" y="0" width="60" height="20" uuid="500e5bd9-0f67-44a1-97f3-883be14d1877"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{INITIATE_BACKGROUND} != null) ? DATEFORMAT($F{INITIATE_BACKGROUND},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="520" y="0" width="70" height="20" uuid="6eca5816-4c79-4659-b758-ea0fb9128c6c"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{RECEIVE_BACKGROUND}!= null) ? DATEFORMAT($F{RECEIVE_BACKGROUND},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="590" y="0" width="70" height="20" uuid="49625032-33ee-496e-bfd1-7b247d4ec578"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SEND_OFFI}!= null) ? DATEFORMAT($F{SEND_OFFI},"M/d/yyy") : "N/A"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement x="-10" y="10" width="321" height="16" uuid="c5a7dff6-fbb5-4a9d-a966-8786606def74"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="620" y="10" width="40" height="16" uuid="8087557f-560c-4c20-9e58-589cd650fee7"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="590" y="10" width="30" height="16" uuid="7e00f2e8-8db7-4bf7-a1ba-d78bf81a1b8e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="52">
+			<staticText>
+				<reportElement x="-10" y="0" width="670" height="30" uuid="60bf24a5-1fdc-40d1-83d0-061a69e22659"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Active USA Staffing Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="30" width="280" height="20" uuid="1185366a-e633-4e39-9a6e-6008563a4de1"/>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

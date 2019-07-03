@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-06-11T16:04:49 -->
+<!-- 2019-06-25T23:25:54 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives Time to Completion Report - SAM and LE" pageWidth="1008" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="988" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="155"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="840"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="jmiranda"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_Time_to_Completion_Report___SAM_and_LE"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="819"/>
@@ -78,6 +78,7 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["Business"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[--    CMS Incentives Time to Completion Report - SAM and LE
 
@@ -85,7 +86,7 @@ SELECT
    
    P.NAME
    , FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') AS Parent_Proc
-   , (SELECT CREATIONDTIME FROM BIZFLOW.PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ) AS Date_Created
+   , (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM BIZFLOW.PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ) AS Date_Created
    , COM."REQ_NUM"  AS Request_Num
    , COM."ADMIN_CODE" AS Admin_Code
    , COM."REQ_TYPE"  AS Request_Type
@@ -122,7 +123,7 @@ SELECT
    , CASE WHEN $P{DAYS} = 'Business' THEN HHS_FN_GET_ACCBUSDAYSDIFF(P.PROCID,'HR Specialist Final Review of Documents') 
      ELSE HHS_FN_GET_ACCCALDAYSDIFF(P.PROCID,'HR Specialist Final Review of Documents') END AS Time_HRS_Final_Review
    
-   , P.CMPLTDTIME AS Date_Completed
+   , HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(P.CMPLTDTIME,$P{TIMEZONE}) AS Date_Completed
 
    , CASE WHEN $P{DAYS} = 'Business' THEN HHS_FN_GET_ACCBUSDAYSDIFF(P.PROCID,'Component Reviews Request') 
        + HHS_FN_GET_ACCBUSDAYSDIFF(P.PROCID,'Component Reviews Request for Modification') 

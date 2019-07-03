@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-06-11T16:13:28 -->
+<!-- 2019-07-01T15:58:49 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Cancelled Incentives Report" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="261"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="734"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="jmiranda"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_Cancelled_Requests_Report_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_Cancelled_Requests_Report"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="729"/>
@@ -34,7 +34,6 @@
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -86,6 +85,9 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["Business"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[--    CMS Cancelled Incentives Report
 
@@ -110,7 +112,7 @@ SELECT
 
    , "INC"."CANCEL_RESAON" AS Cancel_Reason
    , "INC"."CANCEL_USER_NAME" AS Cancelled_By
-   , "P"."CMPLTDTIME" AS Cancel_Date
+   , HHS_CMS_HR.FN_NEW_TIMEZONE("P"."CMPLTDTIME", $P{TIMEZONE}) AS Cancel_Date
    
    , (SELECT NAME FROM ACT WHERE PROCID = P.PROCID AND TYPE = 'P' AND STATE = 'C' 
                                   AND CMPLTDTIME = (SELECT MAX(CMPLTDTIME) 
@@ -123,11 +125,9 @@ SELECT
 
  FROM BIZFLOW.PROCS P
 	 INNER JOIN  "HHS_CMS_HR"."VW_INCENTIVES_COM" INC ON P.PROCID = INC.PROC_ID
-	 INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON  INC.REQ_NUM = SCF.REQ_JOB_REQ_NUMBER
+	 LEFT JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON  INC.REQ_NUM = SCF.REQ_JOB_REQ_NUMBER
 
  WHERE P.STATE = 'C' AND "INC"."CANCEL_RESAON" IS NOT NULL -- Request is completed but not cancelled
-  AND P.NAME IN ('SAM Incentives', 'LE Incentives')        -- SAM and LE Incentives only
-
   
   -- MANDATORY filters 
   

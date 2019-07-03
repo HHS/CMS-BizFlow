@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-04-10T16:40:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives LE Service Agreement" pageWidth="612" pageHeight="792" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="18" bottomMargin="18" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="216"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="778"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_LE_Service_Agreement_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_LE_Service_Agreement"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="679"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="310"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="caseID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Checked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["repo:/Images/Checkbox_Yes.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Unchecked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["repo:/Images/Checkbox_No.png"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	INC."CANDI_NAME"  AS Applicant_Name,
+	INC."ADMIN_CODE" AS Admin_Code,
+	INC."ORG_NAME" AS Organization,
+	INC."POS_TITLE" AS Title,
+	INC."PAY_PLAN" AS Pay_Plan,
+	INC."SERIES" AS Series,
+	CASE 
+    WHEN INC."PAY_PLAN" IN ('ES') THEN  ' '
+    WHEN INC."PAY_PLAN" IN ('GP', 'GR', 'GS', 'WG') THEN  INC."GRADE" 
+			ELSE 'N/A' 
+  END AS Grade,
+	CONCAT(CONCAT(LE."TOTAL_CREDITABLE_YEARS", ' years, '), CONCAT(LE."TOTAL_CREDITABLE_MONTHS", ' months'))
+	 AS Service_Credited_Amt, 
+    LE."HRS_RVW_DATE" AS Service_Comput_Date, -- This is not the correct field; correct mapping TBD
+    LE."RCMD_LA_RATE" AS Annual_Leave_Cat   
+  
+FROM HHS_CMS_HR.VW_INCENTIVES_COM INC
+INNER JOIN  HHS_CMS_HR.VW_INCENTIVES_LE LE ON  INC.PROC_ID = LE.PROC_ID
+WHERE INC.PROC_ID = $P{caseID}]]>
+	</queryString>
+	<field name="APPLICANT_NAME" class="java.lang.String"/>
+	<field name="ADMIN_CODE" class="java.lang.String"/>
+	<field name="ORGANIZATION" class="java.lang.String"/>
+	<field name="TITLE" class="java.lang.String"/>
+	<field name="PAY_PLAN" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="GRADE" class="java.lang.String"/>
+	<field name="SERVICE_CREDITED_AMT" class="java.lang.String"/>
+	<field name="SERVICE_COMPUT_DATE" class="java.lang.String"/>
+	<field name="ANNUAL_LEAVE_CAT" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement key="" positionType="Float" x="0" y="0" width="540" height="44" uuid="ad0c65d9-18c0-4bde-a237-9a7148a6175f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true">DEPARTMENT OF HEALTH AND HUMAN SERVICES (HHS)
+CENTERS FOR MEDICARE AND MEDICAID SERVICES (CMS)</style>
+CREDITABLE SERVICE FOR ANNUAL LEAVE ACCRUAL – SERVICE AGREEMENT]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="479">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement x="0" y="30" width="540" height="37" uuid="322201c1-510a-4348-82f5-36ca135e2203"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<line>
+					<reportElement x="185" y="0" width="1" height="37" uuid="addee9e9-16e0-48b9-b8cd-7f9a21935dad">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement positionType="Float" x="0" y="24" width="540" height="1" forecolor="#969595" uuid="f0e18a0f-2c90-4934-a9f7-989f7e4b52cd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#595858"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement positionType="Float" x="0" y="12" width="540" height="1" forecolor="#969595" uuid="afd111af-d68b-48ce-9090-9e22e389ccb8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#595858"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement positionType="Float" x="185" y="0" width="355" height="12" uuid="5e0a60a8-7b9f-4fd6-9210-94522ab5611a"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{APPLICANT_NAME}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="185" y="24" width="355" height="12" uuid="86ac5a22-a091-4d4a-94f6-79d8b107636c"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ADMIN_CODE} + ", " + $F{ORGANIZATION}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="185" y="12" width="355" height="12" uuid="999d9e06-993d-4840-b0a6-5d138fac36fd"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{GRADE} == " "? $F{TITLE} + ", " + $F{PAY_PLAN} + ", "+ $F{SERIES} + ", " + $F{GRADE}:$F{TITLE} + ", " + $F{PAY_PLAN} + ", "+ $F{SERIES}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="24" width="185" height="12" uuid="7a728f60-d28f-4e5d-b2a5-aef22e5900e4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[Hiring Component]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="12" width="185" height="12" uuid="f0d34bee-087d-4c88-8d7f-69e9ccb9ba2b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top" markup="styled">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[<style isBold="true">Position </style><style isItalic="true">(Title, Pay Plan, Series, Grade)</style>]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="185" height="12" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[Name]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="91" width="540" height="30" uuid="2d3834b4-00a8-413d-800c-0867c0826458"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[In consideration of service credit I am receiving toward my leave accrual rate and Service Computation Date (Leave), for which I am granted under the policies of the Department of Health and Human Services, I hereby agree:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="351" width="540" height="76" uuid="9914776c-de86-4a1b-ae02-1c19a3e9b8a8"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font size="9"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["I, <u>" + $F{APPLICANT_NAME} + "</u>, agree to the terms of this agreement on  _____________ "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="121" width="540" height="230" uuid="9743e1c4-48d8-4238-bd0d-9d4dbfd1c2d7"/>
+				<box leftPadding="10"/>
+				<textElement markup="html">
+					<font size="9"/>
+					<paragraph firstLineIndent="-18" leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1.    To serve in CMS for a minimum of one (1) full year of continuous service;" + "<br><br>" + "2.    That I am a newly appointed employee or an employee who is being reappointed following a break in service of at least 90 calendar days after my last period of civilian Federal employment;" + "<br><br>" + "3.     That the amount of service credited to me shall be determined by the HR Director or his/her designee, as prescribed by the HHS policy for Creditable Service for Annual Leave Accrual;" + "<br><br>" + "4.     The service credited to me under this agreement is: <u>" + $F{SERVICE_CREDITED_AMT} + "</u>" + ";<br><br>" + "5.     That my service computation date for annual leave accrual purposes will be <u> _____________</u> placing me in the <u>" + $F{ANNUAL_LEAVE_CAT} + "</u>  hour annual leave category upon entry on duty; " + "<br><br>" + "6.     That acceptance of this agreement does not alter the conditions or terms of my employment;" + "<br><br>" + "7.     That this credit of service is based solely on the position to which I am assigned and is not associated with my performance and/or conduct. Accordingly, this agreement will not preclude nor limit the Department of Health and Human Services from effecting personnel actions as may be appropriate;" + "<br><br>" + "8.     That in the event I separate from Federal service or transfer to another agency or HHS Operational Division (OPDIV) or Staff Division (STAFFDIV) prior to completing 1 full year of continuous service, my service computation date will be re-calculated subtracting the credit that I received under this agreement;" + "<br><br>" + "9.     That the effective date of this agreement and service credit pursuant to this agreement will be made on the first day of the pay period after the agreement is signed, but not earlier than the date of the appointment. This agreement is effective on:_____________;" + "<br><br>" + "10. That HHS policy is incorporated into and made a part of this agreement, and I have read this policy."]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="432" width="300" height="30" uuid="8f21f89b-f973-40fc-bb87-041338759984"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="462" width="94" height="14" uuid="5a1b9e9e-7842-40fe-9533-691d378a92ee"/>
+				<textElement>
+					<font size="9" isItalic="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="12" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="398" y="0" width="142" height="10" uuid="5905c9bd-f414-4883-b983-3efa9601bbb8"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Issued August 16, 2018"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

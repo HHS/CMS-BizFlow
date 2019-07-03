@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-06-11T16:01:41 -->
+<!-- 2019-06-24T11:06:37 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS HR Incentives PCA Report - Complete" pageWidth="1008" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="988" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="155"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="840"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="jmiranda"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_HR_Incentives_PCA_Report___Complete_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_HR_Incentives_PCA_Report___Complete"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="819"/>
@@ -26,6 +26,7 @@
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow Data Adapter - HHS DEV"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -75,6 +76,9 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[--    CMS HR Incentives PCA Report - Complete
 
@@ -82,7 +86,7 @@ SELECT
    
    P.NAME
    , BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') AS Parent_Proc    
-   , (SELECT CREATIONDTIME FROM PROCS WHERE PROCID =  BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ) AS Date_Created    
+   , (SELECT HHS_CMS_HR.FN_NEW_TIMEZONE(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ) AS Date_Created    
    , SUBSTR(BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'S', 'requestStatus'),INSTR(BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'S', 'requestStatus'), ' - ') + 3) AS Request_Status  
    , COM.REQ_NUM  AS Request_Num
    , COM.ADMIN_CODE AS Admin_Code
@@ -90,7 +94,7 @@ SELECT
    , COM.INCEN_TYPE AS Incentive_Type
    , COM.POS_TITLE AS Pos_Title
    , COM.HRS1_NAME AS HRS_Name
-   , P.CMPLTDTIME AS Date_Completed
+   , HHS_CMS_HR.FN_NEW_TIMEZONE(P.CMPLTDTIME, $P{TIMEZONE}) AS Date_Completed
 
    , SCF.SG_AT_DSCR AS Appointment_Type
    , SCF.SG_SAT_DSCR AS Schedule_A_Type
@@ -118,7 +122,6 @@ SELECT
  WHERE P.STATE = 'C' AND COM.CANCEL_RESAON IS NULL                      -- Request is completed but not cancelled
  AND P.NAME = 'PCA Incentives'                                          -- PCA Incentives only
  AND BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'S', 'requestStatus') = 'PCA Package Finalized'
- AND SCF."SG_AT_DSCR" IN ('Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Expert/Consultant', '30% or more disabled veterans')
  AND COM."INCEN_TYPE" = 'PCA'
  AND COM."REQ_TYPE" IN ('Recruitment', 'Appointment')
  

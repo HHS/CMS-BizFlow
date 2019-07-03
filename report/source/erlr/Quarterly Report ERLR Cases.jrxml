@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T12:30:11 -->
+<!-- 2019-06-06T16:46:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Quarterly Report of ER/LR Cases" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sgurung"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Quarterly_Report_of_ER_LR_Cases_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Quarterly_Report_of_ER_LR_Cases"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="780"/>
@@ -45,7 +45,6 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -156,6 +155,12 @@ FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR]]>
 					<subreportParameter name="CASE_STATUS">
 						<subreportParameterExpression><![CDATA[$P{CASE_STATUS}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="CATEGORY">
+						<subreportParameterExpression><![CDATA[$P{CATEGORY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FINALACTION">
+						<subreportParameterExpression><![CDATA[$P{FINALACTION}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["repo:/reports/CMS/ERLR_Subreports/CMS_Employee_Relations_Cases_files/main_jrxml"]]></subreportExpression>
 				</subreport>
@@ -205,6 +210,12 @@ FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR]]>
 					<subreportParameter name="CASE_STATUS">
 						<subreportParameterExpression><![CDATA[$P{CASE_STATUS}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="CATEGORY">
+						<subreportParameterExpression><![CDATA[$P{CATEGORY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FINALACTION">
+						<subreportParameterExpression><![CDATA[$P{FINALACTION}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["repo:/reports/CMS/ERLR_Subreports/CMS_Labor_Relations_Cases_files/main_jrxml"]]></subreportExpression>
 				</subreport>
@@ -217,26 +228,29 @@ FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR]]>
 	<pageHeader>
 		<band height="51" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="29" width="752" height="22" uuid="c25b622a-9708-4871-8a2e-275f772f0b8e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide cases initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy"): new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All cases for the Office of the Administrator (OA) initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy"): new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All cases for " + $P{ADMIN_CD} + " and its sub-organizations initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy"): "All cases for " + $P{ADMIN_CD} + " initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-20" y="4" width="792" height="25" uuid="82f31038-d198-452b-acc7-5768aee28c02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[DATEFORMAT($P{DATE_RANGE_FROM},"MMMMM d, yyy") + " through " + DATEFORMAT($P{DATE_RANGE_TO},"MMMMM d, yyy")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="5" width="752" height="22" uuid="91f94b31-147a-4b02-aa46-b934e1b08cc4">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="16" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? $P{ADMIN_CD} + " Quarterly Report of ER/LR Cases" : $P{COMPONENT} + " Quarterly Report of ER/LR Cases"]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[Quarterly Report of ER/LR Cases]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<pageFooter>

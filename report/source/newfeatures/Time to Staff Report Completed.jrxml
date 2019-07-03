@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T16:36:49 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time to Staff Report - Completed" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-10T16:42:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time to Staff Report - Completed" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sriya"/>
-	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Time_to_Staff_Report___Completed"/>
-	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Time_to_Staff_Report"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTimeToStaffReportCompleted_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTimeToStaffReportCompleted"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="689"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="302"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -40,6 +40,7 @@
 	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -107,6 +108,9 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="DAYS" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Calendar Days"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
 	USAS_Req_Num,
@@ -129,8 +133,12 @@
 	PD_Num_3,
 	PD_Num_4,
 	PD_Num_5,
-
-	BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(Approval_Date, Review_Return_Date) AS Days_To_Recruit,
+	
+	CASE
+		WHEN $P{DAYS} = 'Calendar Days' 
+			THEN ROUND(Review_Return_Date - Approval_Date) 
+		ELSE BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(Approval_Date, Review_Return_Date)
+	END  AS Days_To_Recruit,
 	
 	BF_Req_Num,
 	Admin_Code,
@@ -247,24 +255,19 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 	<group name="Component">
 		<groupExpression><![CDATA[$F{SECOND_SUB_ORG}]]></groupExpression>
 		<groupHeader>
-			<band height="21">
-				<rectangle radius="0">
-					<reportElement x="0" y="0" width="752" height="21" backcolor="rgba(252, 250, 250, 0.39215687)" uuid="9bdd3beb-09c9-4706-b7f0-e77a2095ee9e"/>
-					<graphicElement>
-						<pen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
-					</graphicElement>
-				</rectangle>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<textField evaluationTime="Group" evaluationGroup="Component">
 					<reportElement x="0" y="0" width="752" height="20" printWhenGroupChanges="Component" uuid="1bd3d651-1c36-419d-a1d7-a86d6532f429">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
 					</reportElement>
-					<box leftPadding="2">
+					<box leftPadding="4">
 						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
@@ -319,10 +322,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 		<band height="5" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="77" splitType="Stretch">
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement x="0" y="6" width="752" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
+				<reportElement x="0" y="0" width="752" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
@@ -330,229 +335,233 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 				<text><![CDATA[NEIL Time to Staff Report - Completed]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="1" y="40" width="751" height="37" uuid="36e55a9f-47d0-4115-ac47-87676b130686"/>
+				<reportElement x="0" y="25" width="752" height="20" uuid="034d847b-ea3a-4e44-846b-a9d1b784a7ff">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? "By Admin Code"+ ","  +  $P{ADMIN_CD} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy") : $P{COMPONENT} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide requests completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All requests for the Office of the Administrator (OA) completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All requests for " + $P{ADMIN_CD} + " and its sub-organizations completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: "All requests for " + $P{ADMIN_CD} + " completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="45">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<rectangle>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="752" height="45" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
-				</graphicElement>
-			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="45" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="60" height="45" backcolor="#D6D7D9" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Request Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" x="120" y="0" width="50" height="45" uuid="9b526774-be06-4411-9885-f5610582c81e">
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="120" y="0" width="50" height="45" backcolor="#D6D7D9" uuid="9b526774-be06-4411-9885-f5610582c81e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Admin Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" x="395" y="0" width="60" height="45" uuid="84b4f4a0-bbaa-47e9-ae72-48330060b9f1">
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="395" y="0" width="60" height="45" backcolor="#D6D7D9" uuid="84b4f4a0-bbaa-47e9-ae72-48330060b9f1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Certificate Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="260" y="0" width="65" height="45" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="260" y="0" width="65" height="45" backcolor="#D6D7D9" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Pay Plan - Series - Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" x="325" y="0" width="70" height="45" uuid="e1d96d38-c30e-4190-8e77-3a625f7fa825">
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="325" y="0" width="70" height="45" backcolor="#D6D7D9" uuid="e1d96d38-c30e-4190-8e77-3a625f7fa825">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Area(s) of Consideration]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="642" y="0" width="62" height="45" uuid="0046fda5-8b12-408b-a1f3-96f56f214324">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="642" y="0" width="62" height="45" backcolor="#D6D7D9" uuid="0046fda5-8b12-408b-a1f3-96f56f214324">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Certificate Review Return Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="704" y="0" width="48" height="45" uuid="e41bd2c4-12fd-47f3-be9e-63a0cad59fc9">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="704" y="0" width="48" height="45" backcolor="#D6D7D9" uuid="e41bd2c4-12fd-47f3-be9e-63a0cad59fc9">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Time to Staff]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="170" y="0" width="40" height="45" uuid="f54e171f-34a0-4759-81d8-654ddfe90099">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="170" y="0" width="40" height="45" backcolor="#D6D7D9" uuid="f54e171f-34a0-4759-81d8-654ddfe90099">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[PD Num/ Job Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" x="60" y="0" width="60" height="45" uuid="004ca71b-ec5e-4a39-94bd-affbbf2ba12a">
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="60" y="0" width="60" height="45" backcolor="#D6D7D9" uuid="004ca71b-ec5e-4a39-94bd-affbbf2ba12a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[USAS Request Approved Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" x="455" y="0" width="65" height="45" uuid="3f826935-50f3-45aa-ae51-f768cdd0e50a">
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="455" y="0" width="65" height="45" backcolor="#D6D7D9" uuid="3f826935-50f3-45aa-ae51-f768cdd0e50a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Certificate Series - Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" x="520" y="0" width="62" height="45" uuid="a45a5d12-b7ed-4da8-b81c-c17851ab5407">
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="520" y="0" width="62" height="45" backcolor="#D6D7D9" uuid="a45a5d12-b7ed-4da8-b81c-c17851ab5407">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Certificate Location]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="582" y="0" width="60" height="45" uuid="43e7d34e-244c-48dc-95ac-8679273c6324">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="582" y="0" width="60" height="45" backcolor="#D6D7D9" uuid="43e7d34e-244c-48dc-95ac-8679273c6324">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Certificate Issue Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="210" y="0" width="50" height="45" uuid="bea55268-47d0-490c-9813-489b4ae936f3">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="210" y="0" width="50" height="45" backcolor="#D6D7D9" uuid="bea55268-47d0-490c-9813-489b4ae936f3">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Position Title]]></text>
 			</staticText>
@@ -565,12 +574,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{APPROVAL_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -578,12 +587,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="6cf94747-2425-4989-be50-cbca044fb067">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BF_REQ_NUM}]]></textFieldExpression>
 			</textField>
@@ -592,12 +601,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ADMIN_CODE}]]></textFieldExpression>
 			</textField>
@@ -606,12 +615,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CERT_NUMBER}]]></textFieldExpression>
 			</textField>
@@ -620,12 +629,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAYPLAN_SERIES_GRADE}]]></textFieldExpression>
 			</textField>
@@ -634,12 +643,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{AREA_CONSIDERATION}]]></textFieldExpression>
 			</textField>
@@ -649,12 +658,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{REVIEW_RETURN_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -663,12 +672,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center">
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DAYS_TO_RECRUIT}]]></textFieldExpression>
 			</textField>
@@ -677,12 +686,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{PD_NUM_1} == null) ? "" 
 																	: new Boolean ($F{PD_NUM_2} == null) ? $F{PD_NUM_1}
@@ -696,12 +705,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CERT_SERIES} + "-" + $F{CERT_GRADE}]]></textFieldExpression>
 			</textField>
@@ -711,12 +720,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CERT_LOCATION}]]></textFieldExpression>
 			</textField>
@@ -725,12 +734,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{CERT_ISSUE_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -742,12 +751,12 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{POSITION_TITLE}]]></textFieldExpression>
 			</textField>
@@ -780,17 +789,13 @@ ORDER BY Second_Sub_Org, BF_Req_Num]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="0" width="752" height="20" uuid="d23f5711-b9b4-4e15-a0cd-940508552535">
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle" markup="styled">
-					<font size="9"/>
-					<paragraph leftIndent="4" rightIndent="0"/>
+			<textField>
+				<reportElement x="0" y="0" width="752" height="20" uuid="6e7b1d8d-a2b3-4aa6-9324-e27683409ed0"/>
+				<textElement>
+					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Note: <style isBold="true">Time to Staff</style> is calculated as the number of business days between the <style isBold="true">USAS Request Approved Date</style> and the <style isBold="true">Certificate Review Return Date</style>.]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[new Boolean ($P{DAYS}.contains("Calendar Days")) ? "Note: Time to Staff is calculated as the number of calendar days between the USAS Request Approved Date and the Certificate Review Return Date." : "Note: Time to Staff is calculated as the number of business days between the USAS Request Approved Date and the Certificate Review Return Date."      ]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<noData>

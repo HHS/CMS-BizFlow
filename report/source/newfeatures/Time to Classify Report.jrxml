@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T17:08:26 -->
+<!-- 2019-06-26T16:38:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time to Classify Report - Completed" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
 	<property name="ireport.jasperserver.user" value="sriya"/>
-	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Time_to_Classify_files/main_jrxml"/>
-	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Time_to_Classify"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTimeToClassifyReportCompleted_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTimeToClassifyReportCompleted"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="689"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="302"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -42,6 +42,7 @@
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS_Cloud_Bizflow"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -109,8 +110,21 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="DAYS" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Calendar Days"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STANDARD_PD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT  "CP"."PROCESS_CREATION_DATE" AS Classification_Start_Date,
+		<![CDATA[SELECT  
+
+HHS_CMS_HR.FN_NEW_TIMEZONE("CP"."PROCESS_CREATION_DATE", $P{TIMEZONE}) As  Classification_Start_Date,
+
 	"CP"."V_REQUEST_NUMBER" AS Request_Num,
 	"CP"."V_ADMIN_CODE" AS Admin_Code,
 	"CF"."PD_SUB_ORG_DSCR_2" AS Second_Sub_Org,
@@ -123,29 +137,24 @@
 	"CP"."V_CLASSIFICATION_TYPE" AS Classification_Type,
 	"CF"."PD_CLS_SPEC_NAME" AS Classifier_Name,
 	"CF"."CS_TITLE" AS Position_Title,
-	"CP"."PROCESS_COMPLETION_DATE" AS Complete_Date,
-	"CP"."PROCESS_AGE" AS Days_To_Complete,
+
+	HHS_CMS_HR.FN_NEW_TIMEZONE(	"CP"."PROCESS_COMPLETION_DATE", $P{TIMEZONE}) As  Complete_Date,
 	
-		(
-		SELECT STARTDTIME
-		FROM ACT 
-		WHERE 
-			PROCID = CP.PROCESS_ID 
-			AND NAME IN ('Confirm BUS Code')
-			AND STATE = 'C'
-		--GROUP BY PROCID, ACTSEQ
-	)                               AS DWC_Start_Date,  -- the date that the DWC work item was created 
+	CASE
+		WHEN $P{DAYS} = 'Calendar Days' 
+	 		THEN  ROUND(	HHS_CMS_HR.FN_NEW_TIMEZONE(	"CP"."PROCESS_COMPLETION_DATE", $P{TIMEZONE}) - HHS_CMS_HR.FN_NEW_TIMEZONE("CP"."PROCESS_CREATION_DATE", $P{TIMEZONE})) 
+		ELSE  "CP"."PROCESS_AGE"
+    END Days_To_Complete,
 	
+	(SELECT STARTDTIME
+			FROM ACT 
+			WHERE PROCID = CP.PROCESS_ID AND NAME IN ('Confirm BUS Code') AND STATE = 'C')
+         AS DWC_Start_Date,  -- the date that the DWC work item was created 
 	
-	(
-		SELECT CMPLTDTIME
-		FROM ACT 
-		WHERE 
-			PROCID = CP.PROCESS_ID 
-			AND NAME IN ('Confirm BUS Code')
-			AND STATE = 'C'
-		--GROUP BY PROCID, ACTSEQ
-	)                               AS DWC_Completion_Date  -- the date that the DWC work item was completed 
+	(SELECT CMPLTDTIME
+			FROM ACT 
+			WHERE PROCID = CP.PROCESS_ID AND NAME IN ('Confirm BUS Code') AND STATE = 'C')
+	      AS DWC_Completion_Date  -- the date that the DWC work item was completed 
 
 FROM
 	"HHS_VW_CLASSIFICATION_PROC" CP
@@ -153,28 +162,28 @@ FROM
 		LEFT OUTER JOIN  "HHS_CMS_HR"."VW_STRATCON" SCF ON  "SCF"."REQ_ID" =  "CF"."REQ_ID" 
 					    
 
-WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') -- Classification completed, but not cancelled
- 	AND "CP"."PROCESS_COMPLETION_DATE" BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
-		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- Completed in given date range
-		
- 	AND (
-                              ($P{COMPONENT} = 'CMS-wide' AND CF.CS_ADMIN_CD LIKE 'FC%') 
-                              OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND CF.CS_ADMIN_CD = 'FC')
-                              OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND CF.CS_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')
-                              OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND CF.CS_ADMIN_CD = $P{ADMIN_CD})
-               )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+WHERE (FN_GET_RLVNTDATAVALUE(CF.PD_PROCID, 'I', 'S', 'requestStatus') <> 'Request Cancelled') -- Classification completed, but not cancelled
+ AND 
+HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL("CP"."PROCESS_COMPLETION_DATE" ,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999    -- RUNNING in given 
+ 	AND ( ($P{COMPONENT} = 'CMS-wide' AND CF.CS_ADMIN_CD LIKE 'FC%') 
+		OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND CF.CS_ADMIN_CD = 'FC')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND CF.CS_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND CF.CS_ADMIN_CD = $P{ADMIN_CD})
+         )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+         
 	AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
 	AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
 	AND (($P{APPT_TYPE} = 'All') OR (SCF.SG_AT_DSCR = $P{APPT_TYPE}))    -- Appointment Type filter: All Appointment Types or a specific type
 	AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule A filter: All Schedule A Types or a specific type
 	AND (($P{VOL_TYPE} = 'All') OR (SCF.SG_VT_DSCR = $P{VOL_TYPE}))      -- Volunteer Type filter: All Volunteer Types or a specific type
 	
-	AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))            -- Selecting Official
-    AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))           -- Executive Officer
-    AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))      -- HR Liaison
-    AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
-    AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+	AND (($P{SO_ID} = 'All') OR (NVL(CF.SO_ID, SCF.SG_SO_ID) = $P{SO_ID}))            -- Selecting Official
+    AND (($P{XO_ID} = 'All') OR (NVL(CF.XO_ID, SCF.SG_XO_ID) = $P{XO_ID}))           -- Executive Officer
+    AND (($P{HRL_ID} = 'All') OR (NVL(CF.HRL_ID, SCF.SG_HRL_ID) = $P{HRL_ID}))      -- HR Liaison
+    AND (($P{SS_ID} = 'All') OR (NVL(CF.SS_ID, SCF.SG_SS_ID) = $P{SS_ID}))              -- Staffing Specialist
+    AND (($P{CS_ID} = 'All') OR (NVL(CF.CS_ID, SCF.SG_CS_ID) = $P{CS_ID}))              -- Classification Specialist
 	
+	AND ($P{STANDARD_PD} = 'All' OR  SCF.POS_STD_PD_TYPE = $P{STANDARD_PD})  -- Standard PD filter
  	
 	ORDER BY Second_Sub_Org, Classification_Start_Date]]>
 	</queryString>
@@ -201,24 +210,19 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 	<group name="Component">
 		<groupExpression><![CDATA[$F{SECOND_SUB_ORG}]]></groupExpression>
 		<groupHeader>
-			<band height="21">
-				<rectangle radius="0">
-					<reportElement x="0" y="0" width="752" height="21" backcolor="rgba(252, 250, 250, 0.39215687)" uuid="9bdd3beb-09c9-4706-b7f0-e77a2095ee9e"/>
-					<graphicElement>
-						<pen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
-					</graphicElement>
-				</rectangle>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<textField evaluationTime="Group" evaluationGroup="Component">
 					<reportElement x="0" y="0" width="752" height="20" printWhenGroupChanges="Component" uuid="1bd3d651-1c36-419d-a1d7-a86d6532f429">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-						<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
 					</reportElement>
-					<box leftPadding="2">
+					<box leftPadding="4">
 						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
@@ -233,7 +237,7 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				<textField pattern="#,##0">
 					<reportElement x="704" y="0" width="48" height="20" uuid="3ffb1f9b-d11b-47ed-90eb-0da6756e79bc">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-						<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.tr" value="end"/>
 					</reportElement>
 					<box leftPadding="2">
 						<pen lineWidth="0.5"/>
@@ -250,6 +254,7 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				<staticText>
 					<reportElement x="0" y="0" width="704" height="20" uuid="ba1f4803-8fe6-411c-a079-50c5f7f6542b">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="net.sf.jasperreports.export.pdf.tag.tr" value="start"/>
 					</reportElement>
 					<box rightPadding="2">
 						<pen lineWidth="1.0"/>
@@ -273,10 +278,13 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 		<band height="5" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="66" splitType="Stretch">
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement x="0" y="6" width="752" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
+				<reportElement x="0" y="0" width="752" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.h2" value="full"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
@@ -284,214 +292,220 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				<text><![CDATA[NEIL Time to Classify Report - Completed]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="2" y="36" width="750" height="30" uuid="76b1f0c2-cdae-433d-86e2-f1438a3f1dec"/>
+				<reportElement x="0" y="25" width="752" height="20" uuid="0ca192a0-5709-4959-add4-5ac2b12b5e72">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? "By Admin Code"+ ","  +  $P{ADMIN_CD} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy") : $P{COMPONENT} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide requests completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All requests for the Office of the Administrator (OA) completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All requests for " + $P{ADMIN_CD} + " and its sub-organizations completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: "All requests for " + $P{ADMIN_CD} + " completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="40">
-			<rectangle>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="752" height="40" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28"/>
-				<graphicElement>
-					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
-				</graphicElement>
-			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="71" height="40" backcolor="#1C16D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="71" height="40" backcolor="#D6D7D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Received in Classification]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="71" y="0" width="76" height="40" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="71" y="0" width="76" height="40" backcolor="#D6D7D9" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Job Request Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="147" y="0" width="48" height="40" uuid="9b526774-be06-4411-9885-f5610582c81e">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="147" y="0" width="48" height="40" backcolor="#D6D7D9" uuid="9b526774-be06-4411-9885-f5610582c81e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Admin Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="317" y="0" width="65" height="40" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="317" y="0" width="65" height="40" backcolor="#D6D7D9" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Request Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="382" y="0" width="75" height="40" uuid="84b4f4a0-bbaa-47e9-ae72-48330060b9f1">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="382" y="0" width="75" height="40" backcolor="#D6D7D9" uuid="84b4f4a0-bbaa-47e9-ae72-48330060b9f1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Classification Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="457" y="0" width="70" height="40" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="457" y="0" width="70" height="40" backcolor="#D6D7D9" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Classification Specialist]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="527" y="0" width="52" height="40" uuid="6063dc88-7575-4e03-9bdc-d5bced7aff5b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="527" y="0" width="52" height="40" backcolor="#D6D7D9" uuid="6063dc88-7575-4e03-9bdc-d5bced7aff5b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Sent to DWC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="579" y="0" width="55" height="40" uuid="e1d96d38-c30e-4190-8e77-3a625f7fa825">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="579" y="0" width="55" height="40" backcolor="#D6D7D9" uuid="e1d96d38-c30e-4190-8e77-3a625f7fa825">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Received from DWC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="634" y="0" width="70" height="40" uuid="0046fda5-8b12-408b-a1f3-96f56f214324">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="634" y="0" width="70" height="40" backcolor="#D6D7D9" uuid="0046fda5-8b12-408b-a1f3-96f56f214324">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Classification Completed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="704" y="0" width="48" height="40" uuid="e41bd2c4-12fd-47f3-be9e-63a0cad59fc9">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="704" y="0" width="48" height="40" backcolor="#D6D7D9" uuid="e41bd2c4-12fd-47f3-be9e-63a0cad59fc9">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Days to Classify]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="246" y="0" width="71" height="40" uuid="4533a0ce-0d87-44d1-ae78-73fb4e334cd4">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="246" y="0" width="71" height="40" backcolor="#D6D7D9" uuid="4533a0ce-0d87-44d1-ae78-73fb4e334cd4">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Position Title]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="195" y="0" width="51" height="40" uuid="644086eb-ea1b-4cc6-82e8-991263f0fea6">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="195" y="0" width="51" height="40" backcolor="#D6D7D9" uuid="644086eb-ea1b-4cc6-82e8-991263f0fea6">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[PD Num/ Job Code]]></text>
 			</staticText>
@@ -505,13 +519,14 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{CLASSIFICATION_START_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -521,12 +536,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REQUEST_NUM}]]></textFieldExpression>
 			</textField>
@@ -535,12 +550,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ADMIN_CODE}]]></textFieldExpression>
 			</textField>
@@ -549,12 +564,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}]]></textFieldExpression>
 			</textField>
@@ -562,12 +577,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				<reportElement stretchType="RelativeToTallestObject" x="382" y="0" width="75" height="20" uuid="d2d7f2b6-ca84-4a0e-bc78-3c71e2e760dd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CLASSIFICATION_TYPE}]]></textFieldExpression>
 			</textField>
@@ -577,12 +592,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CLASSIFIER_NAME}]]></textFieldExpression>
 			</textField>
@@ -592,12 +607,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{DWC_START_DATE}, "MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -607,12 +622,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{DWC_COMPLETION_DATE}, "MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -621,12 +636,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{COMPLETE_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -634,13 +649,14 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				<reportElement stretchType="RelativeToTallestObject" x="704" y="0" width="48" height="20" uuid="cae70f1f-6845-4b4c-ab41-f8df8e23aca2">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center">
 					<font size="8"/>
-					<paragraph leftIndent="0" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DAYS_TO_COMPLETE}]]></textFieldExpression>
 			</textField>
@@ -652,12 +668,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{POSITION_TITLE}]]></textFieldExpression>
 			</textField>
@@ -667,12 +683,12 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{PD_NUM_1} == null) ? "" 
 																	: new Boolean ($F{PD_NUM_2} == null) ? $F{PD_NUM_1}
@@ -684,7 +700,7 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="42" splitType="Stretch">
+		<band height="44" splitType="Stretch">
 			<textField>
 				<reportElement x="634" y="25" width="69" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214"/>
 				<textElement textAlignment="Right">
@@ -699,16 +715,6 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				</textElement>
 				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="0" width="245" height="25" uuid="3a5e4b70-e6e2-43c5-981d-540df944bfba">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
-					<paragraph leftIndent="4" rightIndent="0"/>
-				</textElement>
-				<text><![CDATA[Note: All calculations are based on business days.]]></text>
-			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
 				<reportElement x="0" y="25" width="245" height="15" uuid="62b5a7cd-d6db-43a9-9a4b-cf3714eb47df">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -716,9 +722,16 @@ WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", '
 				</reportElement>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4"/>
+					<paragraph leftIndent="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="340" height="20" uuid="c77b85be-a804-4c7e-8cdf-05fe8004898b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{DAYS}.contains("Calendar")) ? "Note: All calculations are based on calendar days." : "Note: All calculations are based on business days."]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

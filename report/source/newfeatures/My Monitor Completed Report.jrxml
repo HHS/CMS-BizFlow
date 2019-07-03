@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T17:35:13 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main" pageWidth="690" pageHeight="612" orientation="Landscape" columnWidth="690" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="add5935c-7cf1-48e3-9ca4-05baa77dc234">
+<!-- 2019-06-25T20:38:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="main" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="add5935c-7cf1-48e3-9ca4-05baa77dc234">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sriya"/>
-	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_My_Monitor___Completed_Requests_Report"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSMyMonitorCompletedRequestsReport"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_My_Monitor___Completed_Requests_Report_files/Main_Jrxml"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSMyMonitorCompletedRequestsReport_files/main_jrxml"/>
 	<parameter name="COMPONENT" class="java.lang.String">
 		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
 	</parameter>
@@ -55,13 +47,16 @@
 	<parameter name="INC_SUBORG" class="java.lang.String">
 		<defaultValueExpression><![CDATA["No"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT * 
 FROM (
 ( SELECT 
  PRO.PROCESS_NAME As PROCESS_DEFINATION_NAME 
 ,PRO.V_REQUEST_NUMBER As REQUEST_NUMBER
-,PRO.REQUEST_STATUS_DATE As REQUEST_DATE
+,HHS_CMS_HR.FN_NEW_TIMEZONE(PRO.REQUEST_STATUS_DATE, $P{TIMEZONE}) As REQUEST_DATE
 ,PRO.PROCESS_CREATOR_NAME As INITIATOR
 
 
@@ -121,9 +116,7 @@ INNER JOIN HHS_CMS_HR.VW_STRATCON SCF ON  PRO.V_REQUEST_NUMBER  =SCF.REQ_JOB_REQ
                     ORDER BY MT.SSH_REQ_ID
                     ) MTI ON MTI.SSH_REQ_ID = CLA.REQ_ID 
             WHERE PRO.PROCESS_STATE_DESC = 'Completed' 
-        
-         AND PRO.PROCESS_COMPLETION_DATE BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
-		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- RUNNING in given date range
+		AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(PRO.PROCESS_COMPLETION_DATE,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999  -- RUNNING in given date range
            
   AND (             
                          ($P{COMPONENT} = 'CMS-wide' AND  CLA.CS_ADMIN_CD LIKE 'FC%' ) 
@@ -151,7 +144,7 @@ UNION
 
 CON.PROCESS_NAME As PROCESS_DEFINATION_NAME 
 ,CON.V_REQUEST_NUMBER As REQUEST_NUMBER
-,CON.REQUEST_STATUS_DATE As REQUEST_DATE
+,HHS_CMS_HR.FN_NEW_TIMEZONE(CON.REQUEST_STATUS_DATE, $P{TIMEZONE}) As REQUEST_DATE
 ,CON.PROCESS_CREATOR_NAME As INITIATOR
 ,CON.V_ADMIN_CODE As ADMINCODE
 ,CON.V_REQUEST_TYPE As REQUEST_TYPE
@@ -177,9 +170,7 @@ HHS_VW_CONSULTATION_PROC CON
                     ORDER BY MT.SSH_REQ_ID
                     ) MTI ON MTI.SSH_REQ_ID = SCF.REQ_ID 
             WHERE CON.PROCESS_STATE_DESC = 'Completed' 
-           
-          AND CON.PROCESS_COMPLETION_DATE BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
-		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- RUNNING in given date range
+		AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CON.PROCESS_COMPLETION_DATE,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999    -- RUNNING in given date range
             
              AND (
                        ($P{COMPONENT} = 'CMS-wide'  AND CON.V_ADMIN_CODE LIKE 'FC%' ) 
@@ -210,7 +201,7 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 
 ELIG.PROCESS_NAME As PROCESS_DEFINATION_NAME 
 ,ELIG.V_REQUEST_NUMBER As REQUEST_NUMBER
-,ELIG.REQUEST_STATUS_DATE As REQUEST_DATE
+,HHS_CMS_HR.FN_NEW_TIMEZONE(ELIG.REQUEST_STATUS_DATE, $P{TIMEZONE}) As REQUEST_DATE
 ,ELIG.PROCESS_CREATOR_NAME As INITIATOR
 ,CASE 
  		WHEN ELIG.V_ADMIN_CODE IS NULL 
@@ -275,9 +266,7 @@ FROM HHS_VW_ELIGQUAL_PROC ELIG
                     ORDER BY MT.SSH_REQ_ID
                     ) MTI ON MTI.SSH_REQ_ID = ELI.REQ_ID 
             WHERE ELIG.PROCESS_STATE_DESC = 'Completed'
-            
-           AND ELIG.PROCESS_COMPLETION_DATE BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
-		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- RUNNING in given date range
+    		AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(ELIG.PROCESS_COMPLETION_DATE,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999    -- RUNNING in given date range
                AND (
           ($P{COMPONENT} = 'CMS-wide'  AND ELIG.V_ADMIN_CODE LIKE 'FC%'  ) 
                        OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND   ELIG.V_ADMIN_CODE = 'FC')
@@ -318,70 +307,90 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="85">
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement x="20" y="12" width="630" height="28" uuid="08375ac8-d186-47aa-942c-93d134ba70f7"/>
-				<textElement>
+				<reportElement x="0" y="5" width="772" height="25" uuid="08375ac8-d186-47aa-942c-93d134ba70f7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[                                                My Monitor - Completed Requests]]></text>
+				<text><![CDATA[CMS My Monitor - Completed Requests]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="20" y="55" width="630" height="30" uuid="4ecaa08e-5ad6-4bc8-9409-202c1c8bd477"/>
+				<reportElement x="0" y="30" width="772" height="20" uuid="5ec4e4b9-12e3-4ac9-8ec8-bb794e4b128c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? "By Admin Code"+ ","  +  $P{ADMIN_CD} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy") : $P{COMPONENT} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide requests completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All requests for the Office of the Administrator (OA) completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All requests for " + $F{ADMIN_CODE} + " and its sub-organizations completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: "All requests for " + $F{ADMIN_CODE} + " completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="20" y="0" width="70" height="30" backcolor="#F0F8FA" uuid="9f6ae523-1ea8-4f38-a053-d685a5f4592b">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="70" height="30" backcolor="#D6D7D9" uuid="9f6ae523-1ea8-4f38-a053-d685a5f4592b">
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="full"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<text><![CDATA[Workflow Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="90" y="0" width="60" height="30" backcolor="#F0F8FA" uuid="48bd981b-1cf1-4643-8839-e2a85a385f58"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="70" y="0" width="60" height="30" backcolor="#D6D7D9" uuid="48bd981b-1cf1-4643-8839-e2a85a385f58">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<text><![CDATA[Request Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="0" width="40" height="30" backcolor="#F0F8FA" uuid="69e0148b-215e-4f26-b954-356faf9353c6"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="130" y="0" width="60" height="30" backcolor="#D6D7D9" uuid="69e0148b-215e-4f26-b954-356faf9353c6"/>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<text><![CDATA[Request Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="190" y="0" width="40" height="30" backcolor="#F0F8FA" uuid="ebc0ac9f-c138-434e-9412-9d1e4dd0ff3b"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="190" y="0" width="70" height="30" backcolor="#D6D7D9" uuid="ebc0ac9f-c138-434e-9412-9d1e4dd0ff3b"/>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -394,8 +403,10 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Initiator ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="230" y="0" width="40" height="30" backcolor="#F0F8FA" uuid="dc80966c-771a-4891-b962-59e545118161"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="260" y="0" width="40" height="30" backcolor="#D6D7D9" uuid="dc80966c-771a-4891-b962-59e545118161">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -408,8 +419,10 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Admin Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="270" y="0" width="60" height="30" backcolor="#F0F8FA" uuid="bab8117c-676d-4f3f-b7a1-608d44773c94"/>
-				<box>
+				<reportElement mode="Opaque" x="300" y="0" width="60" height="30" backcolor="#D6D7D9" uuid="bab8117c-676d-4f3f-b7a1-608d44773c94">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -422,8 +435,11 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Request Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="330" y="0" width="60" height="30" backcolor="#F0F8FA" uuid="80ba34a5-7ecd-4f67-b4f4-47048c694e9a"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="360" y="0" width="70" height="30" backcolor="#D6D7D9" uuid="80ba34a5-7ecd-4f67-b4f4-47048c694e9a">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -436,8 +452,8 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Classification Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="390" y="0" width="50" height="30" backcolor="#F0F8FA" uuid="27535e49-eef4-41ac-a332-f4a13fca196c"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="430" y="0" width="72" height="30" backcolor="#D6D7D9" uuid="27535e49-eef4-41ac-a332-f4a13fca196c"/>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -450,8 +466,8 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Position Title]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="440" y="0" width="50" height="30" backcolor="#F0F8FA" uuid="ae28da77-2bda-4a4b-b611-564be14d54a7"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="502" y="0" width="70" height="30" backcolor="#D6D7D9" uuid="ae28da77-2bda-4a4b-b611-564be14d54a7"/>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -464,8 +480,10 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Selecting Official ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="490" y="0" width="50" height="30" backcolor="#F0F8FA" uuid="970720d4-f681-4c94-9d08-5d778a893fa8"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="572" y="0" width="70" height="30" backcolor="#D6D7D9" uuid="970720d4-f681-4c94-9d08-5d778a893fa8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -478,8 +496,11 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Staffing Specialist ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="540" y="0" width="60" height="30" backcolor="#F0F8FA" uuid="bf4f9e6a-f47a-42ad-9f1e-e0d89b48df20"/>
-				<box>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="642" y="0" width="70" height="30" backcolor="#D6D7D9" uuid="bf4f9e6a-f47a-42ad-9f1e-e0d89b48df20">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -492,10 +513,10 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				<text><![CDATA[Class Specialist ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="600" y="0" width="50" height="30" backcolor="#F0F8FA" uuid="0c247b5e-5007-485f-bc1d-7fd21739dd71">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="712" y="0" width="60" height="30" backcolor="#D6D7D9" uuid="0c247b5e-5007-485f-bc1d-7fd21739dd71">
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
 				</reportElement>
-				<box>
+				<box leftPadding="2" bottomPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -511,95 +532,100 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="20" y="0" width="70" height="20" uuid="325c7e01-87ac-4990-81b7-b35f25da8852">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="20" uuid="325c7e01-87ac-4990-81b7-b35f25da8852">
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="full"/>
 				</reportElement>
-				<box>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PROCESS_DEFINATION_NAME}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="90" y="0" width="60" height="20" uuid="c366b17c-100f-4add-9a8c-a4bc64a221af"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="70" y="0" width="60" height="20" uuid="c366b17c-100f-4add-9a8c-a4bc64a221af"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REQUEST_NUMBER}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="150" y="0" width="40" height="20" uuid="679f2af6-2708-42bc-bdd1-b02801456a83"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="130" y="0" width="60" height="20" uuid="679f2af6-2708-42bc-bdd1-b02801456a83">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{REQUEST_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="190" y="0" width="40" height="20" uuid="a2426bcc-410d-4e6c-8b61-8bd90aa1fa8f"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="190" y="0" width="70" height="20" uuid="a2426bcc-410d-4e6c-8b61-8bd90aa1fa8f"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Top">
 					<font size="8"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{INITIATOR}!=null  ?$F{INITIATOR} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="230" y="0" width="40" height="20" uuid="bd1b8655-1ecb-4b70-92d6-0ebfdd3ac336"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="260" y="0" width="40" height="20" uuid="bd1b8655-1ecb-4b70-92d6-0ebfdd3ac336"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Top">
 					<font size="8"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ADMIN_CODE}!=null  ? $F{ADMIN_CODE} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="270" y="0" width="60" height="20" uuid="48da7e21-2601-47b3-8cc5-54e6e0950720"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="300" y="0" width="60" height="20" uuid="48da7e21-2601-47b3-8cc5-54e6e0950720"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
 					<rightPen lineWidth="0.1"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Top">
 					<font size="8"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}!=null  ? $F{REQUEST_TYPE} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="330" y="0" width="60" height="20" uuid="4a0f6efd-f019-44b5-9bc6-cde10805449c"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="360" y="0" width="70" height="20" uuid="4a0f6efd-f019-44b5-9bc6-cde10805449c"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -611,9 +637,12 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CLASSIFIFCATION_TYPE}!=null  ? $F{CLASSIFIFCATION_TYPE} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="390" y="0" width="50" height="20" uuid="836aba0c-39f0-4bbe-917c-5142588facad"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="430" y="0" width="72" height="20" uuid="836aba0c-39f0-4bbe-917c-5142588facad">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -625,9 +654,12 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				</textElement>
 				<textFieldExpression><![CDATA[$F{POSITION}!=null  ? $F{POSITION} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="440" y="0" width="50" height="20" uuid="986ea7d0-c387-473b-bee1-25d4bdb2a659"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="502" y="0" width="70" height="20" uuid="986ea7d0-c387-473b-bee1-25d4bdb2a659">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -639,9 +671,9 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SELECTING_OFFICIAL}!=null  ? $F{SELECTING_OFFICIAL} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="490" y="0" width="50" height="20" uuid="3927684a-b7b2-43c2-a72a-07974efbcf0b"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="572" y="0" width="70" height="20" uuid="3927684a-b7b2-43c2-a72a-07974efbcf0b"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -652,9 +684,9 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SELECTING_SPECIALIST} !=null  ? $F{SELECTING_SPECIALIST} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="540" y="0" width="60" height="20" uuid="a517c83f-9842-4ef6-9849-9821127e55c1"/>
-				<box>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="642" y="0" width="70" height="20" uuid="a517c83f-9842-4ef6-9849-9821127e55c1"/>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -666,11 +698,11 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CLASS_SPECIALIST} !=null  ? $F{CLASS_SPECIALIST} :"N/A"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="600" y="0" width="50" height="20" uuid="7f91c566-7f64-4ccd-aa2b-b99907413841">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="712" y="0" width="60" height="20" uuid="7f91c566-7f64-4ccd-aa2b-b99907413841">
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
 				</reportElement>
-				<box>
+				<box topPadding="4" leftPadding="2">
 					<topPen lineWidth="0.1"/>
 					<leftPen lineWidth="0.1"/>
 					<bottomPen lineWidth="0.1"/>
@@ -685,41 +717,41 @@ AND (($P{SCHDA_TYPE} = 'All') OR (SCF.SG_SAT_DSCR = $P{SCHDA_TYPE})) -- Schedule
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="53" splitType="Stretch">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="550" y="30" width="100" height="18" uuid="58f5e0a4-e203-40e0-9ec9-3c27a9153d81"/>
-				<textElement>
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="20" y="0" width="260" height="18" uuid="dd4f0b88-374c-44c1-9094-9c310c4842b2"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Note: All calculations are based on business days.]]></text>
-			</staticText>
+		<band height="29" splitType="Stretch">
 			<textField>
-				<reportElement x="20" y="23" width="300" height="17" uuid="b645b486-6c99-4bac-af84-cc7811992954"/>
+				<reportElement x="0" y="10" width="300" height="17" uuid="b645b486-6c99-4bac-af84-cc7811992954"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="692" y="12" width="30" height="17" uuid="f5fa7665-8f3e-4b16-a049-807e68db3dbf"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="722" y="12" width="50" height="17" uuid="d2beea94-8b84-4386-ada3-30b864cb55c8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<noData>
-		<band height="74">
+		<band height="70">
 			<staticText>
-				<reportElement x="20" y="12" width="630" height="28" uuid="f30e34e8-385f-4542-be71-0caedfa58da2"/>
-				<textElement>
+				<reportElement x="0" y="10" width="772" height="28" uuid="f30e34e8-385f-4542-be71-0caedfa58da2"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[                                                       My Monitor - Completed Requests]]></text>
+				<text><![CDATA[CMS My Monitor - Completed Requests]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="20" y="53" width="220" height="17" uuid="55923b85-ec7c-449c-a7f8-eb01f2ae2283"/>
+				<reportElement x="0" y="40" width="220" height="17" uuid="55923b85-ec7c-449c-a7f8-eb01f2ae2283"/>
 				<text><![CDATA[No records match your search criteria.]]></text>
 			</staticText>
 		</band>

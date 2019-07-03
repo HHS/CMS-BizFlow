@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-06-11T16:08:16 -->
+<!-- 2019-06-25T16:36:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS HR Time to SAM/LE Report - Completed" pageWidth="1008" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="988" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="155"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="840"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="jmiranda"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_HR_Time_to_SAM_LE_Report___Completed_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_HR_Time_to_SAM_LE_Report___Completed"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="819"/>
@@ -26,7 +26,6 @@
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xlsx.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -79,66 +78,124 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["Business"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[--    CMS HR Time to SAM/LE Report - Completed
 
+
+
 SELECT
+
    P.NAME
+
    , BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') AS Parent_Proc    
-   , (SELECT CREATIONDTIME FROM BIZFLOW.PROCS WHERE PROCID =  BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ) AS Date_Created    
+
+   , (SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM BIZFLOW.PROCS WHERE PROCID =  BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ) AS Date_Created    
+
    , SUBSTR(BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'S', 'requestStatus'),INSTR(BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'S', 'requestStatus'), ' - ') + 3) AS Request_Status  -- +3 because ' - ' is 3-char long
+
    , COM."REQ_NUM" AS Request_Num
+
    , COM."ADMIN_CODE" AS Admin_Code
+
    , COM."REQ_TYPE" AS Request_Type
+
    , SCF."SG_AT_DSCR" AS Appointment_Type
+
    , SCF."SG_SAT_DSCR" AS Schedule_A_Type
+
    , COM."INCEN_TYPE" AS Incentive_Type
+
    , COM."POS_TITLE" AS Pos_Title
+
    , COM."HRS1_NAME" AS HRS_Name
+
    , BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(P.PROCID,'HR Specialist Final Review of Documents') AS Time_HRS_Final_Review
-   , P.CMPLTDTIME AS Date_Completed
+
+   , HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(P.CMPLTDTIME,$P{TIMEZONE}) AS Date_Completed
+
    , CASE WHEN $P{DAYS} = 'Calendar' THEN ROUND(CMPLTDTIME - CREATIONDTIME)
+
      ELSE 
+
      BIZFLOW.HHS_FN_GET_BUSDAYSDIFF(P.CREATIONDTIME, P.CMPLTDTIME) END AS PROCESS_AGE
 
+
+
  FROM
+
   "BIZFLOW"."PROCS" P
+
   INNER JOIN  "HHS_CMS_HR"."VW_INCENTIVES_COM" COM ON P.PROCID = COM.PROC_ID
-  INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON  COM.REQ_NUM = SCF.REQ_JOB_REQ_NUMBER
+
+  LEFT JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON  COM.REQ_NUM = SCF.REQ_JOB_REQ_NUMBER
+
+
 
  WHERE P.STATE = 'C' AND "COM"."CANCEL_RESAON" IS NULL                  -- Request is completed but not cancelled
+
  AND P.NAME IN ('SAM Incentives', 'LE Incentives')                      -- SAM and LE Incentives only
+
  AND BIZFLOW.FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'S', 'requestStatus') IN ('Complete - Approved','Complete - Disapproved')
- AND SCF."SG_AT_DSCR" IN ('Schedule A', 'Veteran Recruitment Appointment (VRA)', 'Expert/Consultant', '30% or more disabled veterans')
+
 -- AND COM."INCEN_TYPE" IN ('SAM', 'LE')
+
  AND COM."REQ_TYPE" IN ('Recruitment', 'Appointment')
 
-         
- -- MANDATORY filters
-               
- AND (
-            	(($P{REPORT_MODE} = 'By Component' 
-                	AND	( 	($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
-                          	  OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND COM.ADMIN_CODE = 'FC')
-                            	OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE '$P!{ADMIN_CD}' || '%')
-                            	OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = $P{ADMIN_CD})
-                    	)
-            	  )  -- Component filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
-            
-                	AND TO_DATE("COM"."REQ_DATE", 'YYYY/MM/DD') BETWEEN $P{DATE_FROM} AND $P{DATE_TO}) --  Plus Date range filter 
-               
-            	OR (($P{REPORT_MODE} = 'By Request Num' AND COM.REQ_NUM = $P{REQ_NUM}) -- Request Number filter
-                	AND TO_DATE("COM"."REQ_DATE", 'YYYY/MM/DD') BETWEEN NVL($P{DATE_FROM}, '01-JAN-2017') AND NVL($P{DATE_TO}, SYSDATE)) --  Plus Date range filter
-     )         
+
 
          
- -- OPTIONAL filters
+
+ -- MANDATORY filters
+
                
+
+ AND (
+
+            	(($P{REPORT_MODE} = 'By Component' 
+
+                	AND	( 	($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+
+                          	  OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND COM.ADMIN_CODE = 'FC')
+
+                            	OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE '$P!{ADMIN_CD}' || '%')
+
+                            	OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = $P{ADMIN_CD})
+
+                    	)
+
+            	  )  -- Component filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+
+            
+
+                	AND TO_DATE("COM"."REQ_DATE", 'YYYY/MM/DD') BETWEEN $P{DATE_FROM} AND $P{DATE_TO}) --  Plus Date range filter 
+
+               
+
+            	OR (($P{REPORT_MODE} = 'By Request Num' AND COM.REQ_NUM = $P{REQ_NUM}) -- Request Number filter
+
+                	AND TO_DATE("COM"."REQ_DATE", 'YYYY/MM/DD') BETWEEN NVL($P{DATE_FROM}, '01-JAN-2017') AND NVL($P{DATE_TO}, SYSDATE)) --  Plus Date range filter
+
+     )         
+
+
+
+         
+
+ -- OPTIONAL filters
+
+               
+
  AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))        -- Request Type filter: All Request Types or a specific type
+
  AND (($P{APPT_TYPE} = 'All') OR (SCF.SG_AT_DSCR = $P{APPT_TYPE}))      -- Appointment Type filter: All Appointment Types or a specific type
+
  AND $X{IN, COM.INCEN_TYPE, INCEN_TYPE}                                 -- Incentive Type filter 
+
  AND (($P{HRS_ID} = 'All') OR (COM.HRS1_ID = $P{HRS_ID}))               -- HR Specialist filter
+
 	
+
  ORDER BY Date_Created]]>
 	</queryString>
 	<field name="NAME" class="java.lang.String"/>
