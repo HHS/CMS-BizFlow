@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:32:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Completed Classification Requests by Types - Chart" pageWidth="440" pageHeight="260" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="440" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="778"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="212"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Completed_Classification_Requests_by_Types___Chart_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Completed_Classification_Requests_by_Types___Chart"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ), -12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 'CMS' AS Scope, COUNT (*) AS How_Many, 
+    CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN 'Create New PD' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN 'Update Major Duties' 
+            WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN 'Review Existing PD' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN 'Update Coversheet' 
+            ELSE 'Others'
+    END AS CLASS_TYPE,
+            
+    CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN '1' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN '2' 
+            WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN '3' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN '4' 
+            ELSE '5'
+    END AS CLASS_ORDER
+    
+FROM "HHS_VW_CLASSIFICATION_PROC" CP               
+WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') -- Classification completed, but not cancelled
+			AND  CP."V_CLASSIFICATION_TYPE" IN ('Create New Position Description', 'Update Major Duties', 'Update Coversheet', 'Review Existing Position Description')
+			AND ($P{REQ_TYPE} = 'All' OR CP.V_REQUEST_TYPE = $P{REQ_TYPE}) -- Request Type filter     
+			AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CP.PROCESS_COMPLETION_DATE, $P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999 -- Completed in given date range
+
+GROUP BY 'CMS', 
+    (CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN 'Create New PD' 
+    WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN 'Update Major Duties' 
+    WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN 'Review Existing PD' 
+    WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN 'Update Coversheet' 
+    ELSE 'Others'
+    END),
+    (CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN '1' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN '2' 
+            WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN '3' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN '4' 
+            ELSE '5'
+    END)
+
+UNION
+
+SELECT 'Component' AS Scope, COUNT (*) AS How_Many, 
+    CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN 'Create New PD' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN 'Update Major Duties' 
+            WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN 'Review Existing PD' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN 'Update Coversheet' 
+            ELSE 'Others'
+    END AS CLASS_TYPE,
+            
+    CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN '1' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN '2' 
+            WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN '3' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN '4' 
+            ELSE '5'
+    END AS CLASS_ORDER
+    
+FROM "HHS_VW_CLASSIFICATION_PROC" CP               
+WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') -- Classification completed, but not cancelled
+			AND  CP."V_CLASSIFICATION_TYPE" IN ('Create New Position Description', 'Update Major Duties', 'Update Coversheet', 'Review Existing Position Description')
+			AND ($P{REQ_TYPE} = 'All' OR CP.V_REQUEST_TYPE = $P{REQ_TYPE}) -- Request Type filter 
+			AND ( ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND CP.V_ADMIN_CODE = 'FC')
+				          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND CP.V_ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+				          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND CP.V_ADMIN_CODE = UPPER($P{ADMIN_CD}))
+			        	  )  -- Admin Code filter: FC only; Admin Code with children; Admin Code w/o children
+
+			AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CP.PROCESS_COMPLETION_DATE, $P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999 -- Completed in given date range
+           
+GROUP BY 'CMS', 
+    (CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN 'Create New PD' 
+    WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN 'Update Major Duties' 
+    WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN 'Review Existing PD' 
+    WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN 'Update Coversheet' 
+    ELSE 'Others'
+    END),
+    (CASE    WHEN V_CLASSIFICATION_TYPE = 'Create New Position Description' THEN '1' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Major Duties' THEN '2' 
+            WHEN V_CLASSIFICATION_TYPE = 'Review Existing Position Description' THEN '3' 
+            WHEN V_CLASSIFICATION_TYPE = 'Update Coversheet' THEN '4' 
+            ELSE '5'
+    END)
+ORDER BY CLASS_ORDER]]>
+	</queryString>
+	<field name="SCOPE" class="java.lang.String"/>
+	<field name="HOW_MANY" class="java.math.BigDecimal"/>
+	<field name="CLASS_TYPE" class="java.lang.String"/>
+	<field name="CLASS_ORDER" class="java.lang.String"/>
+	<variable name="Variable_1" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="440" height="20" uuid="b0401abe-2603-49ab-a203-211bfbf4cd54">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Completed Requests by Classification Type]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="230">
+			<barChart>
+				<chart isShowLegend="true" evaluationTime="Report" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement x="0" y="0" width="440" height="230" uuid="d1e4c0da-91f9-43f6-8e18-c085dbba2d93">
+						<property name="MaximumCategoryLabelWidthRatio" value="1.0f"/>
+						<property name="ItemMargin" value="0.0f"/>
+						<property name="MaximumCategoryLabelLines" value="3"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font size="9"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{SCOPE}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CLASS_TYPE}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{HOW_MANY}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true" isShowTickMarks="false">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0" labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#046B99"/>
+						<seriesColor seriesOrder="1" color="#9BDAF1"/>
+					</plot>
+					<itemLabel>
+						<font size="9"/>
+					</itemLabel>
+					<categoryAxisFormat labelRotation="0.0">
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" verticalTickLabels="false" axisLineColor="#000000">
+							<labelFont>
+								<font size="9"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="9"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+							<labelFont>
+								<font size="9"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="9"/>
+							</tickLabelFont>
+						</axisFormat>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="5" width="440" height="20" uuid="d7c9e46a-7ff3-4c92-807b-0dbb39c75a4f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Completed Requests by Classification Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="440" height="20" uuid="a3715503-a877-43c7-8430-da9ed5e8b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

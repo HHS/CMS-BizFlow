@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:36:43 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS TTH Average Time to Hire by Phase - Chart" pageWidth="1024" pageHeight="360" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="1024" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow data Adapter - HHS QA"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="778"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="212"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Time_to_Hire_Dashboard/CMS_TTH_Completed_Requests_by_Phase___Chart_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Time_to_Hire_Dashboard/CMS_TTH_Completed_Requests_by_Phase___Chart"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ACTION_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All Actions"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- STRATEGIC CONSULTATION Phase --
+SELECT 'CMS Goal' AS Scope, '1' AS Disp_Order, '1' AS Phase_Order, 'Strategic Consultation' AS Phase, 5 AS Avg_Days
+FROM dual --static data for goals
+WHERE 1 = 1
+
+UNION
+
+SELECT 'CMS Actual' AS Scope, '2' AS Disp_Order, '1' AS Phase_Order, 'Strategic Consultation' AS Phase, CAST(AVG(SCP.PROCESS_AGE) AS DECIMAL(3,0)) AS Avg_Days
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        INNER JOIN HHS_VW_CONSULTATION_PROC SCP ON SCP.PROCESS_ID = SCF.SG_PROCID
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+UNION
+
+SELECT 'Component Actual' AS Scope, '3' AS Disp_Order, '1' AS Phase_Order, 'Strategic Consultation' AS Phase, CAST(AVG(SCP.PROCESS_AGE) AS DECIMAL(3,0)) AS Avg_Days
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+		INNER JOIN "HHS_VW_CONSULTATION_PROC" SCP ON SCF.SG_PROCID = SCP.PROCESS_ID    
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCF.SG_ADMIN_CD LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCF.SG_ADMIN_CD = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+		
+-- CLASSIFICATION, JOB ANALYSIS, ASSESSMENT Phase --
+
+UNION
+
+SELECT 'CMS Goal' AS Scope, '1' AS Disp_Order, '2' AS Phase_Order, 'Classification, Job Analysis, Assessment' AS Phase, 12 AS Avg_Days
+FROM dual --static data for goals
+WHERE 1 = 1
+
+UNION
+
+SELECT 'CMS Actual' AS Scope, '2' AS Disp_Order, '2' AS Phase_Order, 'Classification, Job Analysis, Assessment' AS Phase, 
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(SCP.PROCESS_COMPLETION_DATE, $P{TIMEZONE}),HHS_FN_SUBTRACT_BUSDAY(TTH.ANNOUNCEMENT_OPEN_DATE, 1))) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the end of Strat Con and Announcement Open Date (minus 1 bus day)
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+		INNER JOIN "HHS_VW_CONSULTATION_PROC" SCP ON SCF.SG_PROCID = SCP.PROCESS_ID    
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+UNION
+
+SELECT 'Component Actual' AS Scope, '3' AS Disp_Order, '2' AS Phase_Order, 'Classification, Job Analysis, Assessment' AS Phase, 
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(SCP.PROCESS_COMPLETION_DATE, $P{TIMEZONE}),HHS_FN_SUBTRACT_BUSDAY(TTH.ANNOUNCEMENT_OPEN_DATE, 1))) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the end of Strat Con and Announcement Open Date (minus 1 bus day)
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+		INNER JOIN "HHS_VW_CONSULTATION_PROC" SCP ON SCF.SG_PROCID = SCP.PROCESS_ID    
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCF.SG_ADMIN_CD LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCF.SG_ADMIN_CD = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+-- QUALIFICATIONS, CERTIFICATE ISSUANCE Phase
+
+UNION
+
+SELECT 'CMS Goal' AS Scope, '1' AS Disp_Order, '3' AS Phase_Order, 'Qualifications, Certificate Issuance' AS Phase, 13 AS Avg_Days
+FROM dual --static data for goals
+WHERE 1 = 1
+
+UNION
+
+SELECT 'CMS Actual' AS Scope, '2' AS Disp_Order, '3' AS Phase_Order, 'Qualifications, Certificate Issuance' AS Phase,  
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.ANNOUNCEMENT_CLOSE_DATE, TTH.REVIEW_SENT_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Announcement Close Date and Certificate Review Sent Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+UNION
+
+SELECT 'Component Actual' AS Scope, '3' AS Disp_Order, '3' AS Phase_Order, 'Qualifications, Certificate Issuance' AS Phase,   
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.ANNOUNCEMENT_CLOSE_DATE, TTH.REVIEW_SENT_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Announcement Close Date and Certificate Review Sent Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCF.SG_ADMIN_CD LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCF.SG_ADMIN_CD = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+-- INTERVIEWS and SELECTION Phase
+
+UNION
+
+SELECT 'CMS Goal' AS Scope, '1' AS Disp_Order, '4' AS Phase_Order, 'Interviews and Selections' AS Phase, 11 AS Avg_Days
+FROM dual --static data for goals
+WHERE 1 = 1
+
+UNION
+
+SELECT 'CMS Actual' AS Scope, '2' AS Disp_Order, '4' AS Phase_Order, 'Interviews and Selections' AS Phase,   
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.REVIEW_SENT_DATE, TTH.REVIEW_RETURN_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Certificate Review Sent Date and Certificate Review Return Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+UNION
+
+SELECT 'Component Actual' AS Scope, '3' AS Disp_Order, '4' AS Phase_Order, 'Interviews and Selections' AS Phase,    
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.REVIEW_SENT_DATE, TTH.REVIEW_RETURN_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Certificate Review Sent Date and Certificate Review Return Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCF.SG_ADMIN_CD LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCF.SG_ADMIN_CD = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+-- TENTATIVE OFFER Phase --
+
+UNION
+
+SELECT 'CMS Goal' AS Scope, '1' AS Disp_Order, '5' AS Phase_Order, 'Tentative Offer' AS Phase, 4 AS Avg_Days
+FROM dual --static data for goals
+WHERE 1 = 1
+
+UNION
+
+SELECT 'CMS Actual' AS Scope, '2' AS Disp_Order, '5' AS Phase_Order, 'Tentative Offer' AS Phase,    
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.REVIEW_RETURN_DATE, TTH.SEND_TENT_OFFR_CMPL_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Certificate Review Return Date and the Send Tentative Offer Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+UNION
+
+SELECT 'Component Actual' AS Scope, '3' AS Disp_Order, '5' AS Phase_Order, 'Tentative Offer' AS Phase,    
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.REVIEW_RETURN_DATE, TTH.SEND_TENT_OFFR_CMPL_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Certificate Review Return Date and the Send Tentative Offer Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCF.SG_ADMIN_CD LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCF.SG_ADMIN_CD = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+-- OFFICIAL OFFER Phase
+UNION
+
+SELECT 'CMS Goal' AS Scope, '1' AS Disp_Order, '6' AS Phase_Order, 'Official Offer' AS Phase, 16 AS Avg_Days
+FROM dual --static data for goals
+WHERE 1 = 1
+
+UNION
+
+SELECT 'CMS Actual' AS Scope, '2' AS Disp_Order, '6' AS Phase_Order, 'Official Offer' AS Phase,    
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.SEND_TENT_OFFR_CMPL_DATE, TTH.SEND_OFCL_OFFR_CMPL_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Send Tentative Offer Date and the Complete Official Offer Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+UNION
+
+SELECT 'Component Actual' AS Scope, '3' AS Disp_Order, '6' AS Phase_Order, 'Official Offer' AS Phase,     
+		CAST(AVG(HHS_FN_GET_BUSDAYSDIFF(TTH.SEND_TENT_OFFR_CMPL_DATE, TTH.SEND_OFCL_OFFR_CMPL_DATE)) AS DECIMAL(3,0)) AS Avg_Days
+		-- Avg bus days between the Send Tentative Offer Date and the Complete Official Offer Date
+FROM  "HHS_HR"."DSS_CMS_TIME_TO_HIRE" TTH
+        INNER JOIN "HHS_CMS_HR"."VW_STRATCON" SCF ON TTH.REQUEST_NUMBER = SCF.REQ_JOB_REQ_NUMBER
+        
+WHERE FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID,'I','S','requestStatus') <> 'Request Cancelled'
+
+		AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCF.SG_ADMIN_CD LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCF.SG_ADMIN_CD = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+
+		AND (($P{REQ_TYPE} = 'All'  AND SCF.SG_RT_DSCR IN ('Recruitment','Appointment'))  
+			OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}) )     -- Request Type filter
+		AND ($P{ACTION_TYPE} = 'All Actions' -- All Classification Types
+			OR ($P{ACTION_TYPE} = 'Major Actions' AND SCF.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties')) -- Classification Type Filter: All MAJOR types
+			OR ($P{ACTION_TYPE} = 'Minor Actions' AND SCF.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet')) -- Classification Type Filter: All MINOR types
+			OR ($P{ACTION_TYPE} = 'Other Actions' AND SCF.SG_CT_DSCR IN ('Reorganization for New Position', 'Reorganization Pen &' || ' Ink'))) -- Classification Type Filter: All MAJOR types
+		AND TTH.ARRVL_VERIF_CMPL_DATE BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+
+ORDER BY PHASE_ORDER ASC, DISP_ORDER ASC]]>
+	</queryString>
+	<field name="SCOPE" class="java.lang.String"/>
+	<field name="DISP_ORDER" class="java.lang.String"/>
+	<field name="PHASE_ORDER" class="java.lang.String"/>
+	<field name="PHASE" class="java.lang.String"/>
+	<field name="AVG_DAYS" class="java.math.BigDecimal"/>
+	<variable name="Variable_1" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="1024" height="20" uuid="b0401abe-2603-49ab-a203-211bfbf4cd54">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Average Time to Hire by Activity/Phase]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="300">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<barChart>
+				<chart isShowLegend="true" evaluationTime="Report" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement x="0" y="0" width="1024" height="300" uuid="771b95b3-7314-44ef-9961-d55faf822d3a">
+						<property name="MaximumCategoryLabelWidthRatio" value="1.0f"/>
+						<property name="ItemMargin" value="0.0f"/>
+						<property name="MaximumCategoryLabelLines" value="3"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font size="10"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{SCOPE}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PHASE}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{AVG_DAYS}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true" isShowTickMarks="false">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0" labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#112E51"/>
+						<seriesColor seriesOrder="1" color="#046B99"/>
+						<seriesColor seriesOrder="2" color="#9BDAF1"/>
+					</plot>
+					<itemLabel>
+						<font fontName="Arial" size="10"/>
+					</itemLabel>
+					<categoryAxisLabelExpression><![CDATA["Activities/Phases"]]></categoryAxisLabelExpression>
+					<categoryAxisFormat labelRotation="0.0">
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" verticalTickLabels="false" axisLineColor="#000000">
+							<labelFont>
+								<font fontName="Arial" size="12"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="10"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA["Average Number of Business Days"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+							<labelFont>
+								<font fontName="Arial" size="12"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="10"/>
+							</tickLabelFont>
+						</axisFormat>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="5" width="1024" height="20" uuid="d7c9e46a-7ff3-4c92-807b-0dbb39c75a4f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Average Time to Hire by Activity/Phase]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="1024" height="20" uuid="a3715503-a877-43c7-8430-da9ed5e8b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
