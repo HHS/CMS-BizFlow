@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-25T20:59:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Request Current Status Report" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="b97bde3f-62ce-4ec0-a254-47d9da706379">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSRequestsCurrentStatusReport"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Current_Status_Report__files/CMS Request Current Status Report"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date"/>
+	<parameter name="COMP_DATE_TO" class="java.util.Date"/>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLSF_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SO_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="XO_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HRL_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SS_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CS_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DAYS" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Calendar Days"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM
+(
+	( SELECT 
+ CASE 
+ 		WHEN TO_NCHAR(ELI.SERIES) IS NULL 
+ 		THEN SCF.POS_SERIES
+ 		ELSE TO_NCHAR(ELI.SERIES)
+ 	END AS   SERIES
+,ELIG.CURRENT_USER_NAME AS CURRENT_USER_NAME
+,CASE 
+ 		WHEN ELIG.V_REQUEST_TYPE IS NULL 
+ 		THEN CON.V_REQUEST_TYPE 
+ 		ELSE ELIG.V_REQUEST_TYPE
+ 	END AS  REQUEST_TYPE
+ 	
+ 	
+ 	,CASE 
+ 		WHEN ELIG.V_CLASSIFICATION_TYPE IS NULL 
+ 		THEN CON.V_CLASSIFICATION_TYPE
+ 		ELSE ELIG.V_CLASSIFICATION_TYPE
+ 	END AS   CLASSIFIFCATION_TYPE
+ 	
+
+,ELIG.REQUEST_STATUS As REQUEST_STATUS
+,ELIG.CURRENT_ACTIVITY_NAME 
+,ELIG.PROCESS_NAME
+
+	,CASE
+	 WHEN $P{DAYS} = 'Calendar Days' 
+	 THEN  ROUND(HHS_CMS_HR.FN_NEW_TIMEZONE("ELIG"."PROCESS_COMPLETION_DATE", $P{TIMEZONE}) - HHS_CMS_HR.FN_NEW_TIMEZONE("ELIG"."PROCESS_CREATION_DATE", $P{TIMEZONE}))
+     ELSE  ELIG.REQUEST_STATUS_AGE
+    END  DAYS_IN_CURENT_STATUS
+
+
+
+
+,CASE 
+ 		WHEN ELIG.V_REQUEST_NUMBER IS NULL 
+ 		THEN CON.V_REQUEST_NUMBER
+ 		ELSE ELIG.V_REQUEST_NUMBER
+ 	END AS   REQUEST_NUMBER
+
+
+
+,HHS_CMS_HR.FN_NEW_TIMEZONE(ELIG.REQUEST_STATUS_DATE, $P{TIMEZONE}) As REQUESTED_DATE  
+,CASE 
+ 		WHEN ELI.GRADE_1 IS NULL 
+ 		THEN SCF.POS_GRADE_1
+ 		ELSE ELI.GRADE_1
+ 	END AS   GRADE1
+ 	
+,CASE 
+ 		WHEN ELI.GRADE_2 IS NULL 
+ 		THEN SCF.POS_GRADE_2
+ 		ELSE ELI.GRADE_2
+ 	END AS   GRADE2
+ 	
+ ,CASE 
+ 		WHEN ELI.GRADE_3 IS NULL 
+ 		THEN SCF.POS_GRADE_3
+ 		ELSE ELI.GRADE_3
+ 	END AS   GRADE3
+ 	
+ ,CASE 
+ 		WHEN ELI.GRADE_4 IS NULL 
+ 		THEN SCF.POS_GRADE_4
+ 		ELSE ELI.GRADE_4
+ END AS   GRADE4
+ 	
+ 	
+ 	,CASE 
+ 		WHEN ELI.GRADE_5 IS NULL 
+ 		THEN SCF.POS_GRADE_5
+ 		ELSE ELI.GRADE_5
+ 	END AS   GRADE5
+
+,CASE 
+ 		WHEN ELI.POS_TITLE  IS NULL 
+ 		THEN SCF.POS_TITLE
+ 		ELSE ELI.POS_TITLE
+ 	END AS   POSITION
+
+,CASE 
+ 		WHEN ELI.POS_DESC_NUMBER_1 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_1
+ 		ELSE ELI.POS_DESC_NUMBER_1
+ 	END AS   PD_Num_1
+
+ 	,CASE 
+ 		WHEN ELI.POS_DESC_NUMBER_2 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_2
+ 		ELSE ELI.POS_DESC_NUMBER_2
+ 	END AS   PD_Num_2
+
+ 	,CASE 
+ 		WHEN ELI.POS_DESC_NUMBER_3  IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_3
+ 		ELSE ELI.POS_DESC_NUMBER_3
+ 	END AS   PD_Num_3
+
+ 	,CASE 
+ 		WHEN ELI.POS_DESC_NUMBER_4 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_4
+ 		ELSE ELI.POS_DESC_NUMBER_4
+ 	END AS   PD_Num_4
+
+ 	,CASE 
+ 		WHEN ELI.POS_DESC_NUMBER_5 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_5
+ 		ELSE ELI.POS_DESC_NUMBER_5
+ 	END AS   PD_Num_5
+
+
+,CASE 
+ 		WHEN ELI.PAY_PLAN_DSCR IS NULL 
+ 		THEN SCF.POS_PAY_PLAN_DSCR
+ 		ELSE ELI.PAY_PLAN_DSCR
+ 	END AS   pay
+
+,CASE 
+ 		WHEN ELIG.V_ADMIN_CODE IS NULL 
+ 		THEN CON.V_ADMIN_CODE
+ 		ELSE ELIG.V_ADMIN_CODE
+ 	END AS ADMINCODE
+ FROM HHS_VW_ELIGQUAL_PROC ELIG  
+ INNER JOIN   HHS_CMS_HR.VW_ELIGQUAL ELI ON ELIG.V_REQUEST_NUMBER = ELI.REQ_JOB_REQ_NUMBER
+ INNER JOIN  HHS_CMS_HR.VW_STRATCON SCF ON  ELIG.V_REQUEST_NUMBER  =SCF.REQ_JOB_REQ_NUMBER
+ INNER JOIN HHS_VW_CONSULTATION_PROC CON  ON CON.V_REQUEST_NUMBER  = ELIG.V_REQUEST_NUMBER 
+ WHERE ELIG.PROCESS_STATE_DESC = 'Running' AND ELIG.CURRENT_ACTIVITY_NAME !='Create Request' AND ELIG.REQUEST_STATUS_DATE IS NOT NULL
+            
+        	AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(ELIG.PROCESS_CREATION_DATE,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999  -- RUNNING in given date range
+			AND (
+                         ($P{COMPONENT} = 'CMS-wide' AND ELIG.V_ADMIN_CODE LIKE 'FC%' ) 
+                       OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND   ELIG.V_ADMIN_CODE = 'FC' )
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND  ELIG.V_ADMIN_CODE  LIKE '$P!{ADMIN_CD}' || '%'  )
+                           OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No'  AND   ELIG.V_ADMIN_CODE= $P{ADMIN_CD} )
+              ) 
+               -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+	AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
+	AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+
+	AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))              -- Selecting Official
+    AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))              -- Executive Officer
+    AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
+    AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
+    AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+          ) 
+          
+          
+          UNION 
+( SELECT 
+		
+	CASE 
+ 		WHEN TO_NCHAR(CLA.CS_SR_ID) IS NULL 
+ 		THEN SCF.POS_SERIES
+ 		ELSE TO_NCHAR(CLA.CS_SR_ID)
+ 	END AS   SERIES
+,PRO.CURRENT_USER_NAME AS CURRENT_USER_NAME
+,CASE 
+ WHEN PRO.V_REQUEST_TYPE IS NULL 
+ 		THEN CON.V_REQUEST_TYPE 
+ 		ELSE PRO.V_REQUEST_TYPE
+END AS  REQUEST_TYPE
+,CASE 
+ 		WHEN PRO.V_CLASSIFICATION_TYPE IS NULL 
+ 		THEN CON.V_CLASSIFICATION_TYPE
+ 		ELSE PRO.V_CLASSIFICATION_TYPE
+ 	END AS   CLASSIFIFCATION_TYPE
+,PRO.REQUEST_STATUS As REQUEST_STATUS
+,PRO.CURRENT_ACTIVITY_NAME 
+,PRO.PROCESS_NAME
+,PRO.REQUEST_STATUS_AGE AS DAYS_IN_CURENT_STATUS
+,CASE 
+ 		WHEN PRO.V_REQUEST_NUMBER IS NULL 
+ 		THEN CON.V_REQUEST_NUMBER 
+ 		ELSE PRO.V_REQUEST_NUMBER
+ 	END AS REQUEST_NUMBER
+ 	
+,HHS_CMS_HR.FN_NEW_TIMEZONE(PRO.REQUEST_STATUS_DATE, $P{TIMEZONE}) As REQUESTED_DATE  
+,CASE 
+ 		WHEN CLA.CS_GR_ID_1 IS NULL 
+ 		THEN SCF.POS_GRADE_1
+ 		ELSE CLA.CS_GR_ID_1
+ 	END AS   GRADE1
+ 	
+ 	
+ 	,CASE 
+ 		WHEN CLA.CS_GR_ID_2 IS NULL 
+ 		THEN SCF.POS_GRADE_2
+ 		ELSE CLA.CS_GR_ID_2
+ 	END AS   GRADE2
+ 	
+ 	,CASE 
+ 		WHEN CLA.CS_GR_ID_3 IS NULL 
+ 		THEN SCF.POS_GRADE_3
+ 		ELSE CLA.CS_GR_ID_3
+ 	END AS   GRADE3
+ 	
+ 	,CASE 
+ 		WHEN CLA.CS_GR_ID_4 IS NULL 
+ 		THEN SCF.POS_GRADE_4
+ 		ELSE CLA.CS_GR_ID_4
+ 	END AS   GRADE4
+ 	
+ 	
+ 	,CASE 
+ 		WHEN CLA.CS_GR_ID_5 IS NULL 
+ 		THEN SCF.POS_GRADE_5
+ 		ELSE CLA.CS_GR_ID_5
+ 	END AS   GRADE5
+
+,CASE 
+ 		WHEN CLA.CS_TITLE  IS NULL 
+ 		THEN SCF.POS_TITLE
+ 		ELSE CLA.CS_TITLE
+ 	END AS   POSITION
+
+,CASE 
+ 		WHEN CLA.CS_PD_NUMBER_JOBCD_1 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_1
+ 		ELSE CLA.CS_PD_NUMBER_JOBCD_1
+ 	END AS   PD_Num_1
+
+ 	,CASE 
+ 		WHEN CLA.CS_PD_NUMBER_JOBCD_2 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_2
+ 		ELSE CLA.CS_PD_NUMBER_JOBCD_2
+ 	END AS   PD_Num_2
+
+ 	,CASE 
+ 		WHEN CLA.CS_PD_NUMBER_JOBCD_3  IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_3
+ 		ELSE CLA.CS_PD_NUMBER_JOBCD_3
+ 	END AS   PD_Num_3
+
+ 	,CASE 
+ 		WHEN CLA.CS_PD_NUMBER_JOBCD_4 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_4
+ 		ELSE CLA.CS_PD_NUMBER_JOBCD_4
+ 	END AS   PD_Num_4
+
+,CASE 
+ 		WHEN CLA.CS_PD_NUMBER_JOBCD_5 IS NULL 
+ 		THEN SCF.POS_DESC_NUMBER_5
+ 		ELSE CLA.CS_PD_NUMBER_JOBCD_5
+ 	END AS   PD_Num_5
+	
+	
+	
+ 	,CASE 
+ 		WHEN CLA.CS_PAY_PLAN_DSCR IS NULL 
+ 		THEN SCF.POS_PAY_PLAN_DSCR
+ 		ELSE CLA.CS_PAY_PLAN_DSCR
+ 	END AS   pay
+
+,CASE 
+ 		WHEN PRO.V_ADMIN_CODE IS NULL 
+ 		THEN CON.V_ADMIN_CODE
+ 		ELSE PRO.V_ADMIN_CODE
+ 	END AS Admin_Code
+	
+	
+		FROM HHS_VW_CLASSIFICATION_PROC PRO
+		 INNER JOIN HHS_CMS_HR.VW_CLASSIFICATION CLA ON PRO.V_REQUEST_NUMBER = CLA.REQ_JOB_REQ_NUMBER
+INNER JOIN HHS_CMS_HR.VW_STRATCON SCF ON  PRO.V_REQUEST_NUMBER  =SCF.REQ_JOB_REQ_NUMBER  
+ INNER JOIN HHS_VW_CONSULTATION_PROC CON  ON CON.V_REQUEST_NUMBER  = PRO.V_REQUEST_NUMBER
+WHERE PRO.PROCESS_STATE_DESC = 'Running' AND PRO.CURRENT_ACTIVITY_NAME !='Create Request' AND PRO.REQUEST_STATUS_DATE IS NOT NULL
+        	AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(PRO.PROCESS_CREATION_DATE,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999  -- RUNNING in given date range             
+			AND (
+                         ($P{COMPONENT} = 'CMS-wide' AND  CLA.CS_ADMIN_CD LIKE 'FC%'  ) 
+                       OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND  CLA.CS_ADMIN_CD = 'FC' )
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG}= 'Yes' AND  CLA.CS_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%'    )
+                           OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No'  AND CLA.CS_ADMIN_CD = $P{ADMIN_CD})
+              ) 
+               -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+	AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
+	AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+
+	AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))              -- Selecting Official
+    AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))              -- Executive Officer
+    AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
+    AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
+    AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+          
+           
+)
+ 
+      
+ UNION
+ (
+SELECT 
+SCF.POS_SERIES AS SERIES
+,CON.CURRENT_USER_NAME AS CURRENT_USER_NAME,
+CON.V_REQUEST_TYPE As REQUEST_TYPE
+,CON.V_CLASSIFICATION_TYPE As CLASSIFIFCATION_TYPE
+,CON.REQUEST_STATUS As REQUEST_STATUS
+,CON.CURRENT_ACTIVITY_NAME 
+,CON.PROCESS_NAME
+,CON.REQUEST_STATUS_AGE AS DAYS_IN_CURENT_STATUS
+,CON.V_REQUEST_NUMBER As REQUEST_NUMBER
+,HHS_CMS_HR.FN_NEW_TIMEZONE(CON.REQUEST_STATUS_DATE, $P{TIMEZONE}) As REQUESTED_DATE  
+,SCF.POS_GRADE_1 AS GRADE1
+,SCF.POS_GRADE_2 AS GRADE2
+,SCF.POS_GRADE_3 AS GRADE3
+,SCF.POS_GRADE_4 AS GRADE4
+,SCF.POS_GRADE_5 AS GRADE5
+,SCF.POS_TITLE AS POSITION
+,SCF.POS_DESC_NUMBER_1 AS PD_Num_1
+,SCF.POS_DESC_NUMBER_2 AS PD_Num_2
+,SCF.POS_DESC_NUMBER_3 AS PD_Num_3
+,SCF.POS_DESC_NUMBER_4 AS PD_Num_4
+,SCF.POS_DESC_NUMBER_5 AS PD_Num_5
+,SCF.POS_PAY_PLAN_DSCR AS pay
+,CON.V_ADMIN_CODE As ADMINCODE
+FROM
+HHS_VW_CONSULTATION_PROC CON
+  INNER JOIN  HHS_CMS_HR.VW_STRATCON SCF ON CON.V_REQUEST_NUMBER  = SCF.REQ_JOB_REQ_NUMBER
+            WHERE CON.PROCESS_STATE_DESC = 'Running' AND CON.CURRENT_ACTIVITY_NAME !='Create Request' AND CON.REQUEST_STATUS_DATE IS NOT NULL
+            AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CON.PROCESS_CREATION_DATE,$P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999  -- RUNNING in given date range
+			AND (
+                         ($P{COMPONENT} = 'CMS-wide' AND CON.V_ADMIN_CODE LIKE 'FC%' ) 
+                       OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND   CON.V_ADMIN_CODE = 'FC')
+                        OR ($P{COMPONENT} = 'By Admin Code'  AND $P{INC_SUBORG} = 'Yes' AND  CON.V_ADMIN_CODE  LIKE '$P!{ADMIN_CD}' || '%'  )
+            
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No'  AND  CON.V_ADMIN_CODE = $P{ADMIN_CD})
+              ) 
+               -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+	AND (($P{REQ_TYPE} = 'All') OR (SCF.SG_RT_DSCR = $P{REQ_TYPE}))      -- Request Type filter: All Request Types or a specific type
+	AND (($P{CLSF_TYPE} = 'All') OR (SCF.SG_CT_DSCR = $P{CLSF_TYPE}))    -- Classification Type filter: All Classification Types or a specific type
+
+	AND (($P{SO_ID} = 'All') OR (SCF.SG_SO_ID = $P{SO_ID}))              -- Selecting Official
+    AND (($P{XO_ID} = 'All') OR (SCF.SG_XO_ID = $P{XO_ID}))              -- Executive Officer
+    AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
+    AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
+    AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+          
+      )
+          ORDER BY  REQUESTED_DATE      DESC
+ 
+ 
+)]]>
+	</queryString>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="CURRENT_USER_NAME" class="java.lang.String"/>
+	<field name="REQUEST_TYPE" class="java.lang.String"/>
+	<field name="CLASSIFIFCATION_TYPE" class="java.lang.String"/>
+	<field name="REQUEST_STATUS" class="java.lang.String"/>
+	<field name="CURRENT_ACTIVITY_NAME" class="java.lang.String"/>
+	<field name="PROCESS_NAME" class="java.lang.String"/>
+	<field name="DAYS_IN_CURENT_STATUS" class="java.math.BigDecimal"/>
+	<field name="REQUEST_NUMBER" class="java.lang.String"/>
+	<field name="REQUESTED_DATE" class="java.sql.Timestamp"/>
+	<field name="GRADE1" class="java.lang.String"/>
+	<field name="GRADE2" class="java.lang.String"/>
+	<field name="GRADE3" class="java.lang.String"/>
+	<field name="GRADE4" class="java.lang.String"/>
+	<field name="GRADE5" class="java.lang.String"/>
+	<field name="POSITION" class="java.lang.String"/>
+	<field name="PD_NUM_1" class="java.lang.String"/>
+	<field name="PD_NUM_2" class="java.lang.String"/>
+	<field name="PD_NUM_3" class="java.lang.String"/>
+	<field name="PD_NUM_4" class="java.lang.String"/>
+	<field name="PD_NUM_5" class="java.lang.String"/>
+	<field name="PAY" class="java.lang.String"/>
+	<field name="ADMINCODE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="769" height="25" uuid="9d384c57-f907-4ce9-88de-1439435e2f80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Requests Current Status Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="25" width="770" height="25" uuid="a9d3826d-1c2c-497b-9092-bf37586c67cd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide requests active between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All requests for the Office of the Administrator (OA) active between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All requests for " + $P{ADMIN_CD} + " and its sub-organizations active between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: "All requests for " + $P{ADMIN_CD} + " active between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="60" height="40" backcolor="#D6D7D9" uuid="753059ed-dfc6-4b42-9ec6-7fe5605829fa">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Date Request Created]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="120" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="39a3ca2c-36b0-48d8-9672-2afbf20f19da"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Admin Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="170" y="0" width="80" height="40" backcolor="#D6D7D9" uuid="193a6ca2-3a69-4f18-8700-d56efcc83320"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Request Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="330" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="708b748a-cb8b-4fde-97b1-764f189ec290"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[PD Num/Job Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="60" y="0" width="60" height="40" backcolor="#D6D7D9" uuid="19ec9aba-329c-4d9f-a88b-0075eeb23f15"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Job Request Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="250" y="0" width="80" height="40" backcolor="#D6D7D9" uuid="52b9621f-df92-4181-9161-269b454732dc"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Classification Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="380" y="0" width="60" height="40" backcolor="#D6D7D9" uuid="88f99a0a-3eb1-4742-9cc4-3c3d54f52fcc"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Position Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="440" y="0" width="49" height="40" backcolor="#D6D7D9" uuid="5fcee9b9-c81a-4a39-95b6-953448d5f0f4"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Pay Plan/Series]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="539" y="0" width="59" height="40" backcolor="#D6D7D9" uuid="54096efe-c860-44d6-8b36-1fe345e09f02"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Current Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="489" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="c843124d-2d25-4ed0-bac6-7f77a9ecfee7"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="598" y="0" width="62" height="40" backcolor="#D6D7D9" uuid="3f3755d6-5668-4272-a5e0-6527742d7d64"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Current Owner]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="660" y="0" width="60" height="40" backcolor="#D6D7D9" uuid="0d5bb3bb-c6c0-41c4-9d31-524e2be5bc34"/>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Current Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="720" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="01c3d960-9f3b-4aa4-88e3-811b449cb431">
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Days in Current Status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="0b3cba39-354b-4681-a566-ec01c10ab817">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{REQUESTED_DATE},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="60" y="0" width="60" height="20" uuid="16fd062c-7da1-45c8-bbb1-69ea7c12dfef"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ( $F{REQUEST_NUMBER}!= null ) ? $F{REQUEST_NUMBER}: "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="120" y="0" width="50" height="20" uuid="b14a9fde-566d-411d-bca4-51f8c1ef0f6d"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{ADMINCODE} != null ) ? $F{ADMINCODE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="170" y="0" width="80" height="20" uuid="406111ed-5b54-4423-831b-2db0e525e0c5"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ( $F{REQUEST_TYPE}!= null ) ? $F{REQUEST_TYPE}: "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="250" y="0" width="80" height="20" uuid="09fa47c5-dddf-430c-b018-e9b744b5873c"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CLASSIFIFCATION_TYPE} != null )? $F{CLASSIFIFCATION_TYPE} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="330" y="0" width="50" height="20" uuid="e8f9259f-5a33-45b7-8a1c-d3b3c86cf0f9"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PD_NUM_1} == null) ? "N/A" 
+																	: new Boolean ($F{PD_NUM_2} == null) ? $F{PD_NUM_1}
+																				: new Boolean ($F{PD_NUM_3} == null) ? $F{PD_NUM_1} + "; " + $F{PD_NUM_2}
+																							: new Boolean ($F{PD_NUM_4} == null) ? $F{PD_NUM_1} + "; " + $F{PD_NUM_2} + "; " + $F{PD_NUM_3}
+																										: new Boolean ($F{PD_NUM_5} == null) ? $F{PD_NUM_1} + "; " + $F{PD_NUM_2} + "; " + $F{PD_NUM_3} + "; " + $F{PD_NUM_4}
+																													: $F{PD_NUM_1} + "; " + $F{PD_NUM_2} + "; " + $F{PD_NUM_3} + "; " + $F{PD_NUM_4} + "; " + $F{PD_NUM_5}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="380" y="0" width="60" height="20" uuid="309d0a3f-2904-4699-9934-1d89d5d059e0"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ( $F{POSITION} != null )  ? $F{POSITION} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="440" y="0" width="49" height="20" uuid="a4f46452-c20a-4d29-b14d-79e41450e187"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{PAY}+ "/" +$F{SERIES} )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="489" y="0" width="50" height="20" uuid="bddb0916-1606-4847-8756-ace1878c99d9"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{GRADE1} == null) ? "N/A" 
+																	: new Boolean ($F{GRADE2} == null) ? $F{GRADE1}
+																				: new Boolean ($F{GRADE3} == null) ? $F{GRADE1} + "; " + $F{GRADE2}
+																							: new Boolean ($F{GRADE4} == null) ? $F{GRADE1} + "; " + $F{GRADE2} + "; " + $F{GRADE3}
+																										: new Boolean ($F{GRADE5} == null) ? $F{GRADE1} + "; " + $F{GRADE2} + "; " + $F{GRADE3} + "; " + $F{GRADE4}
+																													: $F{GRADE1} + "; " + $F{GRADE2} + "; " + $F{GRADE3} + "; " + $F{GRADE4} + "; " + $F{GRADE5}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="539" y="0" width="59" height="20" uuid="b62bdf86-ca20-4c29-9953-97eaa8edd2f3"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROCESS_NAME}!=null  ?$F{PROCESS_NAME} :"N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="598" y="0" width="62" height="20" uuid="f1fc82b6-1c35-44b7-84a4-7ef55501ea33"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CURRENT_USER_NAME}!=null  ?$F{CURRENT_USER_NAME}:"N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="660" y="0" width="60" height="20" uuid="4bfc0e9a-3425-421b-b03d-af936691b4aa"/>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ( $F{REQUEST_STATUS} != null ) ? $F{REQUEST_STATUS} : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="720" y="0" width="50" height="20" uuid="1b9845c3-daf5-4aa3-a2d6-27f944e6655b">
+					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="2">
+					<topPen lineWidth="0.1"/>
+					<leftPen lineWidth="0.1"/>
+					<bottomPen lineWidth="0.1"/>
+					<rightPen lineWidth="0.1"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAYS_IN_CURENT_STATUS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="30" width="219" height="17" uuid="61390b82-57a8-4c2a-b068-346b8d0408e3">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="733" y="0" width="37" height="20" uuid="ddad215b-17f2-4175-baeb-6bb1fbc4e25c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="703" y="0" width="30" height="20" uuid="c468e7d1-09d9-4825-8d3d-10f19d935c2e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="381" height="27" uuid="7490771d-dd31-47d1-a84b-f58bc7d3c98c">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{DAYS}.contains("Calendar Days")) ? "Note: All calculations are based on calendar days." : "Note: All calculations are based on business days."]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="65">
+			<staticText>
+				<reportElement x="0" y="4" width="770" height="26" uuid="742c9233-26e9-4aa3-a9f3-837899a89039">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Requests Current Status Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="200" height="25" uuid="cd4498b6-1c34-4d56-832d-c9bedbed7a32">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

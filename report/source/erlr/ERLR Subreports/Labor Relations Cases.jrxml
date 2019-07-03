@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T12:25:51 -->
+<!-- 2019-06-21T16:38:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Labor Relations Cases" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="792" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sgurung"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/ERLR_Subreports/CMS_Labor_Relations_Cases_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/ERLR_Subreports/CMS_Labor_Relations_Cases"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="780"/>
@@ -45,7 +45,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS_Cloud_Bizflow"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -85,8 +85,12 @@
 	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
-	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[-- Labor Relations (ER)
 
@@ -94,7 +98,8 @@ SELECT
 VWERLR.ERLR_CASE_NUMBER CASENUMBER,
 VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
 VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+  VWERLR.GEN_EMPLOYEE_ADMIN_CD,
+		VWERLR.GEN_CUSTOMER_ADMIN_CD,
 VWERLR.GEN_CASE_TYPE CASETYPE,
 VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
 VWERLR.GEN_CUST_INIT_CONTACT_DT INITIALCONTACTDATE,
@@ -108,11 +113,11 @@ FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
 
 -- Specific Conditions for : (Admin Code) FCX Quarterly Report of ER/LR Cases - Labor Relations (LR)
 WHERE (
-   UPPER(VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Labor Negotiation') || '%' 
-OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Grievance') || '%' 
-OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Information Request') || '%' 
-OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Unfair Labor Practice') || '%'
-OR (UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' 
+   VWERLR.GEN_CASE_TYPE = 'Labor Negotiation'
+OR VWERLR.GEN_CASE_TYPE = 'Grievance'
+OR VWERLR.GEN_CASE_TYPE = 'Information Request'
+OR VWERLR.GEN_CASE_TYPE = 'Unfair Labor Practice'
+OR ( VWERLR.GEN_CASE_TYPE = 'Third Party Hearing'
 AND ( VWERLR.THRD_PRTY_APPEAL_TYPE = 'Arbitration' 
    OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FLRA'
    OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FSIP'
@@ -121,25 +126,21 @@ AND ( VWERLR.THRD_PRTY_APPEAL_TYPE = 'Arbitration'
 )
 
 -- Common Conditions for all ERLR Reports 
-AND ( VWERLR.GEN_CASE_STATUS <> 'Closed' OR VWERLR.GEN_CASE_STATUS IS NULL )
+AND (CANCEL_REASON IS NULL  OR CANCEL_REASON NOT IN ('Case Opened in Error', 'Duplicate Case'))
+		AND (NVL(GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (GEN_CASE_STATUS IN ('Closed') AND CANCEL_REASON IS NOT NULL))
+		AND GEN_CASE_TYPE IS NOT NULL
+        
 
 -- Filter : Component
-AND (  ($P{COMPONENT} = 'CMS-wide' AND ( VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE 'FC%' OR VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NULL ) )
-				OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')
-				OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD = $P{ADMIN_CD})
-		)
-		
--- Filter : Date Range
-AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    			AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    			
-	OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-    		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-    		
-	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
-	OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
+    AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
 	)
+	
+   -- Filter : Date Range
+  AND (VWERLR.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY'))
 
 -- Filter : Employee Name
 AND (	( TRIM($P{EMP_NAME}) IS NULL )
@@ -171,7 +172,8 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 	<field name="CASENUMBER" class="java.math.BigDecimal"/>
 	<field name="EMPNAME" class="java.lang.String"/>
 	<field name="CONTACTNAME" class="java.lang.String"/>
-	<field name="ADMINCD" class="java.lang.String"/>
+	<field name="GEN_EMPLOYEE_ADMIN_CD" class="java.lang.String"/>
+	<field name="GEN_CUSTOMER_ADMIN_CD" class="java.lang.String"/>
 	<field name="CASETYPE" class="java.lang.String"/>
 	<field name="CASECATEGORY" class="java.lang.String"/>
 	<field name="INITIALCONTACTDATE" class="java.sql.Timestamp"/>
@@ -188,18 +190,14 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="5" splitType="Stretch"/>
-	</title>
 	<pageHeader>
 		<band height="59" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="9" width="752" height="22" uuid="2fea23ac-b346-4858-bbb7-252e3b79b647">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement x="0" y="17" width="792" height="25" uuid="2fea23ac-b346-4858-bbb7-252e3b79b647">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Labor Relations (LR)"]]></textFieldExpression>
@@ -210,25 +208,25 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 		<band height="40" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<rectangle>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="752" height="40" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28"/>
+				<reportElement stretchType="RelativeToTallestObject" x="20" y="0" width="750" height="40" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28"/>
 				<graphicElement>
 					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="40" backcolor="#1C16D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="20" y="0" width="80" height="40" backcolor="#1C16D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="0" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Employee Name]]></text>
@@ -240,12 +238,12 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="8" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Contact Name]]></text>
@@ -257,44 +255,27 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Case Type]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="701" y="0" width="51" height="40" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
-				</reportElement>
-				<box bottomPadding="2">
-					<pen lineWidth="0.5"/>
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
-				</textElement>
-				<text><![CDATA[Date Case Completed]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="485" y="0" width="166" height="40" uuid="96a2756e-12f6-41bb-b9c8-5e925ba16e2c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Final Action]]></text>
@@ -305,12 +286,12 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Initial Contact Date]]></text>
@@ -321,111 +302,118 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="7" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
 					<paragraph leftIndent="4" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Case Category]]></text>
 			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="701" y="0" width="69" height="40" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Date Case Completed]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Prevent">
+		<band height="20" splitType="Prevent">
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="15" uuid="648441fc-7697-4bbe-b2d1-c7b431c84900">
+				<reportElement stretchType="RelativeToTallestObject" x="20" y="0" width="80" height="20" uuid="648441fc-7697-4bbe-b2d1-c7b431c84900">
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box padding="1" topPadding="10" leftPadding="10" bottomPadding="10" rightPadding="10">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{EMPNAME} != null )? $F{EMPNAME} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="15" uuid="914074a3-f752-40fc-8848-1e84ac07877b">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="20" uuid="914074a3-f752-40fc-8848-1e84ac07877b"/>
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{CONTACTNAME} != null )? $F{CONTACTNAME} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="200" y="0" width="120" height="15" uuid="199834b8-7228-4522-9a9c-6269ef9cd16d">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="200" y="0" width="120" height="20" uuid="199834b8-7228-4522-9a9c-6269ef9cd16d">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{CASETYPE} != null)? $F{CASETYPE} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="320" y="0" width="165" height="15" uuid="4106532e-2ec8-4a63-8537-adc68dc2c04d">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<reportElement stretchType="RelativeToTallestObject" x="320" y="0" width="165" height="20" uuid="4106532e-2ec8-4a63-8537-adc68dc2c04d"/>
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Top">
 					<font size="7"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{CASECATEGORY} != null )? $F{CASECATEGORY} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="485" y="0" width="166" height="15" uuid="3de46bb1-9218-43ba-a2d7-fed5f8a3e7d1">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<reportElement stretchType="RelativeToTallestObject" x="485" y="0" width="166" height="20" uuid="3de46bb1-9218-43ba-a2d7-fed5f8a3e7d1"/>
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Top">
 					<font size="7"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{FINAL_ACTION} != null )? $F{FINAL_ACTION} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="651" y="0" width="50" height="15" uuid="ff603bce-cad3-4daa-9cc3-43a73dcc21b8">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="651" y="0" width="50" height="20" uuid="ff603bce-cad3-4daa-9cc3-43a73dcc21b8">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="7"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{INITIALCONTACTDATE} != null) ?	DATEFORMAT($F{INITIALCONTACTDATE},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="701" y="0" width="51" height="15" uuid="1eee2ff9-76f6-4388-a505-790043ddf85d">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="701" y="0" width="69" height="20" uuid="1eee2ff9-76f6-4388-a505-790043ddf85d">
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="7"/>
 					<paragraph leftIndent="4" spacingBefore="4"/>
 				</textElement>
@@ -443,9 +431,9 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, VWERLR.GEN_CUST_INIT_CONTACT_DT]]>
 				<text><![CDATA[There are no cases to display. No cases meet the parameters currently set by the report filters.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="8" width="752" height="24" uuid="a3ac0b61-55d1-498d-9d92-2f933bd85f14"/>
+				<reportElement x="0" y="8" width="792" height="24" uuid="a3ac0b61-55d1-498d-9d92-2f933bd85f14"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="12" isBold="true"/>
+					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Labor Relations (LR)]]></text>
 			</staticText>

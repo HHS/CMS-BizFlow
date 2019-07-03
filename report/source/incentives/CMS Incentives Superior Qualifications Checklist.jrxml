@@ -1,0 +1,1420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-03-07T07:06:23 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives Superior Qualifications Checklist" pageWidth="612" pageHeight="792" columnWidth="576" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="216"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="778"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_Superior_Qualifications_Checklist_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_Superior_Qualifications_Checklist"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="679"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="310"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="inch"/>
+	<parameter name="caseID" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Checked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["repo:/Images/Checkbox_Yes.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Unchecked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["repo:/Images/Checkbox_No.png"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	INC."CANDI_NAME"  AS Applicant_Name,
+	INC."ADMIN_CODE" AS Admin_Code,
+	INC."ORG_NAME" AS Organization,
+	INC."POS_TITLE" AS Title,
+	INC."PAY_PLAN" AS Pay_Plan,
+	INC."SERIES" AS Series,
+	CASE 	WHEN INC."PAY_PLAN" IN ('ES') THEN '00'
+				WHEN INC."PAY_PLAN" IN ('GP', 'GR', 'GS', 'WG') THEN SAM."RCMD_SALARY_GRADE" 
+				ELSE 'N/A' END AS Proposed_Grade,
+	CASE WHEN INC."PAY_PLAN" IN ('ED', 'EE', 'EF', 'EG', 'ES', 'EX') THEN 'N/A'
+				ELSE SAM."RCMD_SALARY_STEP" END AS Proposed_Step,
+	
+	SAM."SELECT_MEET_ELIGIBILITY" AS Eligibility_Req_Met, -- Applicant meets one of the following eligibility reqs
+	SAM."QUAL_REAPPT" AS Qual_Reappoint_Criteria, -- Qualifying Reappointment sub-criteria
+	SAM."OTHER_EXCEPTS"  AS Qual_Reappoint_Other, -- Qualifying Reappointment sub-criteria for Other Exceptions
+	
+	SAM."SELECT_MEET_CRITERIA" AS Criteria_Met, -- Applicant meets one of the following criteria
+	SAM."SUPERIOR_QUAL_REASON" AS Superior_Qualif_Met, -- Reason candidate has superior qualifications
+	SAM."OTHER_FACTORS" AS Superior_Qualif_Explan, -- Reason candidate has superior qualifications, explanation	
+	SAM."SPL_AGENCY_NEED_RSN" AS Special_Agency_Need_Met, -- Reason candidate fills special agency need
+	SAM."SPL_AGENCY_NEED_RSN_ESS" AS Special_Agency_Need_Explan, -- Reason candidate fills special agency need, explanation
+	
+	SAM."BASIC_PAY_RATE_FACTOR1" AS Basic_Pay_Rate_Factor1,
+	SAM."BASIC_PAY_RATE_FACTOR2" AS Basic_Pay_Rate_Factor2,
+	SAM."BASIC_PAY_RATE_FACTOR3" AS Basic_Pay_Rate_Factor3,
+	SAM."BASIC_PAY_RATE_FACTOR4" AS Basic_Pay_Rate_Factor4,
+	SAM."BASIC_PAY_RATE_FACTOR5" AS Basic_Pay_Rate_Factor5,
+	SAM."BASIC_PAY_RATE_FACTOR6" AS Basic_Pay_Rate_Factor6,
+	SAM."BASIC_PAY_RATE_FACTOR7" AS Basic_Pay_Rate_Factor7,
+	SAM."BASIC_PAY_RATE_FACTOR8" AS Basic_Pay_Rate_Factor8,
+	SAM."BASIC_PAY_RATE_FACTOR9" AS Basic_Pay_Rate_Factor9,
+	SAM."BASIC_PAY_RATE_FACTOR10" AS Basic_Pay_Rate_Factor10,
+	SAM."OTHER_RLVNT_FACTOR" AS Basic_Pay_Rate_Factor10_Explan,
+	
+	SAM."OTHER_REQ_JUST_APVD" AS Other_Req_Just_Approved,
+	SAM."OTHER_REQ_SUFF_INFO_PRVD" AS Other_Req_Just_Suffic,
+	SAM."OTHER_REQ_INCEN_REQD" AS Other_Req_Rec_Inc_Consid,
+	SAM."OTHER_REQ_DOC_PRVD" AS Other_Req_Doc_Provided,
+	
+	SAM."RVW_REMARKS" AS Remarks,
+	
+	SAM."APPROVAL_SO_VALUE" AS Approval_SO_Response,
+	SAM."APPROVAL_SO" AS Approval_SO_Name,
+	SAM."APPROVAL_SO_RESP_DATE" AS Approval_SO_Date,
+	 
+	SAM."APPROVAL_TABG_VALUE" AS Approval_TABG_Response,
+	SAM."APPROVAL_TABG" AS Approval_TABG_Name,
+    SAM."APPROVAL_TABG_RESP_DATE" AS Approval_TABG_Date
+  
+FROM HHS_CMS_HR.VW_INCENTIVES_DATA INC
+INNER JOIN  HHS_CMS_HR.VW_INCENTIVES_SAM SAM ON  SAM.PROC_ID = INC.PROC_ID
+WHERE INC.PROC_ID = $P{caseID}]]>
+	</queryString>
+	<field name="APPLICANT_NAME" class="java.lang.String"/>
+	<field name="ADMIN_CODE" class="java.lang.String"/>
+	<field name="ORGANIZATION" class="java.lang.String"/>
+	<field name="TITLE" class="java.lang.String"/>
+	<field name="PAY_PLAN" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="PROPOSED_GRADE" class="java.lang.String"/>
+	<field name="PROPOSED_STEP" class="java.lang.String"/>
+	<field name="ELIGIBILITY_REQ_MET" class="java.lang.String"/>
+	<field name="QUAL_REAPPOINT_CRITERIA" class="java.lang.String"/>
+	<field name="QUAL_REAPPOINT_OTHER" class="java.lang.String"/>
+	<field name="CRITERIA_MET" class="java.lang.String"/>
+	<field name="SUPERIOR_QUALIF_MET" class="java.lang.String"/>
+	<field name="SUPERIOR_QUALIF_EXPLAN" class="java.lang.String"/>
+	<field name="SPECIAL_AGENCY_NEED_MET" class="java.lang.String"/>
+	<field name="SPECIAL_AGENCY_NEED_EXPLAN" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR1" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR2" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR3" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR4" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR5" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR6" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR7" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR8" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR9" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR10" class="java.lang.String"/>
+	<field name="BASIC_PAY_RATE_FACTOR10_EXPLAN" class="java.lang.String"/>
+	<field name="OTHER_REQ_JUST_APPROVED" class="java.lang.String"/>
+	<field name="OTHER_REQ_JUST_SUFFIC" class="java.lang.String"/>
+	<field name="OTHER_REQ_REC_INC_CONSID" class="java.lang.String"/>
+	<field name="OTHER_REQ_DOC_PROVIDED" class="java.lang.String"/>
+	<field name="REMARKS" class="java.lang.String"/>
+	<field name="APPROVAL_SO_RESPONSE" class="java.lang.String"/>
+	<field name="APPROVAL_SO_NAME" class="java.lang.String"/>
+	<field name="APPROVAL_SO_DATE" class="java.lang.String"/>
+	<field name="APPROVAL_TABG_RESPONSE" class="java.lang.String"/>
+	<field name="APPROVAL_TABG_NAME" class="java.lang.String"/>
+	<field name="APPROVAL_TABG_DATE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="576" height="30" uuid="ad0c65d9-18c0-4bde-a237-9a7148a6175f"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="8.0"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true">CMS / OHC / Talent Acquisition and Benefits Group (TABG)</style>
+Superior Qualifications and Special Needs Pay-Setting Authority - Checklist]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="650">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="564" width="576" height="12" uuid="7da1ad69-8f74-4a28-9b06-514a376c16b2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="7.5" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[By signature below, I certify that this request meets all policy & regulatory requirements and the documentation provided supports this pay-setting action.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="596" width="310" height="12" uuid="92372e96-ebc3-4123-a58f-5d363c7a1a5a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Printed Name and Title]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="584" width="310" height="12" uuid="fbcd4842-aa46-4293-89c1-28d983732d20"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPROVAL_SO_RESPONSE}.equals("Approve")) ? $F{APPROVAL_SO_NAME} + " (Selecting Official (or designee))" :  "--"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="340" y="596" width="236" height="12" uuid="a1aa1180-9139-47d6-a1eb-93c07f17ca8c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="340" y="584" width="236" height="12" uuid="f3e31ff5-7294-4d9d-a80b-0d815949405d"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APPROVAL_SO_DATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="340" y="635" width="236" height="12" uuid="ecff27c0-77e8-40ae-91a6-decf39e1506e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="340" y="623" width="236" height="12" uuid="db831b63-c907-4684-93a0-7daf1d2acbaa">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APPROVAL_TABG_DATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="635" width="310" height="12" uuid="47117da7-9945-4296-9bb3-f54b639c6f7d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top" markup="styled">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Printed Name and Title <style isItalic = "True"> (2nd level review)</style>]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="623" width="310" height="12" uuid="db75e57b-1b63-4b84-b7ad-691aa9d22a4e"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{APPROVAL_TABG_RESPONSE}.equals("Approve")) ? $F{APPROVAL_TABG_NAME} + " (TABG Division Director (or designee))" :  "--"]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="10" width="576" height="545" uuid="813de966-0045-44b7-8b14-8993bddb4bbc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<rectangle>
+					<reportElement x="0" y="56" width="576" height="15" backcolor="#DEDCDC" uuid="1f411fe0-b4f5-472f-8d92-67ead903f8c7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="195" height="12" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[Applicant Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="12" width="195" height="12" uuid="f0d34bee-087d-4c88-8d7f-69e9ccb9ba2b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[Position Title]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="24" width="195" height="12" uuid="7a728f60-d28f-4e5d-b2a5-aef22e5900e4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[Pay Plan, Series, Grade and Step (proposed)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="36" width="195" height="12" uuid="17fb835e-31c4-4ed8-b537-d424e308995c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="8"/>
+					</textElement>
+					<text><![CDATA[Organization]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="56" width="576" height="15" uuid="e20ab961-1243-4ca2-a5da-0034f2104066">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Applicant meets one of the following eligibility requirements:]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="78" width="8" height="8" uuid="e590bdb1-e669-4dda-ac52-dc55cf1a6cb7">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{ELIGIBILITY_REQ_MET}.contains("First appointment") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="76" width="552" height="12" uuid="c4353191-5bb9-4e5f-ba0b-153752d58b00">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font fontName="SansSerif" size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[5 CFR 531.212(a)(i) First appointment as a civilian employee.]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="12" y="92" width="8" height="8" uuid="baaed462-c026-408a-8f91-3cca17583408">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{ELIGIBILITY_REQ_MET}.contains("Qualifying Reappointment") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="90" width="552" height="12" uuid="db08c15a-9723-4ca2-8b16-1e7de8906381">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[5 CFR 531.212(a)(ii) Qualifying Reappointment which meets one of the criteria below (check one):]]></text>
+				</staticText>
+				<textField>
+					<reportElement positionType="Float" x="196" y="12" width="380" height="12" uuid="999d9e06-993d-4840-b0a6-5d138fac36fd"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TITLE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="196" y="36" width="380" height="12" uuid="ba0a82ed-2d93-43cf-b7d9-83a4b84f0fd4"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ADMIN_CODE} + ", " + $F{ORGANIZATION}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="196" y="24" width="380" height="12" uuid="86ac5a22-a091-4d4a-94f6-79d8b107636c"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PAY_PLAN} + ", "+ $F{SERIES} + ", " + $F{PROPOSED_GRADE} + " - " + $F{PROPOSED_STEP}]]></textFieldExpression>
+				</textField>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="26" y="106" width="10" height="8" uuid="4b3cb701-77d0-4019-862f-36373ed63e1c">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{QUAL_REAPPOINT_CRITERIA}.contains("90-day") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="38" y="104" width="538" height="12" uuid="9b2cd01e-5572-4af7-9193-59ced59ec71f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[(a)(2) 90-day break in service]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="26" y="120" width="10" height="8" uuid="a1b79526-4e4d-45f7-84cf-1f2fc451c897">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{QUAL_REAPPOINT_CRITERIA}.contains("Other exceptions") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<rectangle>
+					<reportElement positionType="Float" x="0" y="135" width="576" height="15" backcolor="#DEDCDC" uuid="ddfdd731-0bfd-47e5-9899-ef47dcad8c0a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="135" width="576" height="15" uuid="fc557c58-6a3c-432e-8df8-8366be448bdb">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Applicant meets one of the following criteria:]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="157" width="8" height="8" uuid="f44b0028-26dc-4c6b-b532-6d446d043aa2">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{CRITERIA_MET}.contains("Superior Qualifications") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="155" width="552" height="12" uuid="028198b2-2225-4ddd-9b4d-706815323891">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The candidate has superior qualifications.]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="26" y="171" width="10" height="8" uuid="89e2ad97-0902-4560-a078-fed13d8a308a">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{SUPERIOR_QUALIF_MET}.startsWith("As assessed") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="38" y="169" width="538" height="12" uuid="9899dd2a-c9f1-485f-ab0a-8f7b719ff2b8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[As assessed by the candidate’s level, type or quality of skills and competencies]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="26" y="185" width="10" height="8" uuid="151fff41-09cd-44e1-8102-7584308006a3">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{SUPERIOR_QUALIF_MET}.startsWith("As evidenced") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="38" y="183" width="538" height="12" uuid="fceaba9e-a47b-474c-99a4-e52c540eb5f6">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[As evidenced by experience and/or education]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="26" y="199" width="10" height="8" uuid="66ef93a4-1a73-4044-b37c-8776c92766d8">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{SUPERIOR_QUALIF_MET}.startsWith("In comparing") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="38" y="197" width="538" height="12" uuid="688dcc92-d819-4dd6-a5ed-2378bf34cc95">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[In comparing his/her accomplishments to others in the field]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="12" y="232" width="8" height="8" uuid="96f41491-fc71-4447-8ea9-29e4e703ebfc">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{CRITERIA_MET}.contains("special agency need") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="230" width="552" height="12" uuid="df2d4178-4ae5-4503-bf11-0f5546c7dffb">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The candidate fills a special agency need.]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="26" y="246" width="10" height="8" uuid="fd441ab1-10f2-48f5-ac97-c9583b340648">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{SPECIAL_AGENCY_NEED_MET}.contains("workforce need") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="38" y="244" width="538" height="12" uuid="abdd00c2-88ed-42f2-8fb7-650717334dc8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Agency’s workforce need is documented in the agency’s strategic human capital plan]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="26" y="260" width="10" height="8" uuid="187d5503-018b-4f90-9502-9b1fbf80a30c">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{SPECIAL_AGENCY_NEED_MET}.contains("qualities are essential") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="26" y="213" width="10" height="8" uuid="526e4c29-1a27-4a14-b6b4-a5ba0506a2a9">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{SUPERIOR_QUALIF_MET}.startsWith("Based on") ) ? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="38" y="211" width="538" height="12" uuid="bb91488c-f65e-4890-92db-e20db7fb7688"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean ($F{SUPERIOR_QUALIF_EXPLAN} != null) ? "Based on other factors, as explained: " + $F{SUPERIOR_QUALIF_EXPLAN} : "Based on other factors, as explained: "]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement positionType="Float" x="0" y="225" width="540" height="1" forecolor="#969595" uuid="3b2fc334-7bb5-4ddc-8bc4-519adf9ef861">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</graphicElement>
+				</line>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="533" width="576" height="12" uuid="59629905-2af3-4d7c-82dc-b091453ad936"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{REMARKS}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement positionType="Float" x="0" y="275" width="576" height="15" backcolor="#DEDCDC" uuid="36124d35-3ffa-4ac5-863e-9ed92b926c90">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="275" width="576" height="15" uuid="0af464ba-7fdd-4c84-b9d4-88928a20077b">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[One or more of the following factors were considered in determining the rate of basic pay (check all that apply):]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="297" width="8" height="8" uuid="0f03000d-f61e-4db6-a786-5bb08ebcf85b">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("The level")|| 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("The level")|| 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("The level") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("The level")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="295" width="552" height="12" uuid="6e3bcef7-1866-42b3-927d-a58fa945255e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The level, type or quality of the candidate’s skills or competencies;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="311" width="8" height="8" uuid="4d993cbb-9f2c-438e-9c86-9453b5c26cf3">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("The candidate") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("The candidate") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("The candidate") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("The candidate")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="309" width="552" height="12" uuid="1759e477-c3cd-44e6-b805-35ac1442941e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The candidate’s existing salary, recent salary history, or salary documented in a competing job offer (documentation required);]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="325" width="8" height="8" uuid="f60c0ca7-7ae6-449f-a861-b97acbaf8d4f">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Disparities") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Disparities") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Disparities") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Disparities")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="323" width="552" height="12" uuid="c7e7f480-8d26-49b7-8a58-ddbbce1e65ee">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Disparities between Federal and non-Federal salaries for the skills and competencies required;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="339" width="8" height="8" uuid="b90f8d04-6d66-4582-9740-51f0b55b14af">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Existing labor") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Existing labor") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Existing labor") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Existing labor")
+
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="337" width="552" height="12" uuid="b291e461-1583-4590-8de2-fb9e4a53abaa">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Existing labor market conditions and employment trends;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="353" width="8" height="8" uuid="06e7d443-f26e-4068-8dd2-be8d9e412f57">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("The success") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("The success") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("The success") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("The success")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="351" width="552" height="12" uuid="434ab396-77ce-4061-84cc-99326be1149e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The success of recent efforts to recruit for same or similar positions;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="367" width="8" height="8" uuid="1b78158b-fecd-4a9a-9879-b772c21c5cfb">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Recent turnover") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Recent turnover") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Recent turnover") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Recent turnover")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="365" width="552" height="12" uuid="717e11a3-abf4-449d-8355-b5cf1ab8dce4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Recent turnover in the same or similar positions;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="381" width="8" height="8" uuid="98e44988-a599-48fd-863a-0990613be251">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Criticality") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Criticality") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Criticality") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Criticality")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="379" width="552" height="12" uuid="038dd3af-a663-4129-a428-775948ced0d4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Criticality of position to be filled and effect on agency if there are delays in staffing this position;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="395" width="8" height="8" uuid="76d9c11d-9357-4f26-b63d-9842c330741d">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Desirability") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Desirability") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Desirability") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Desirability")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="393" width="552" height="12" uuid="cd7851c3-8d8d-4ec1-bc87-9acdf0a140fc">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Desirability of geographic location, duties and/or other work environment;]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="409" width="8" height="8" uuid="80592f93-2993-4962-a51b-03b455861442">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Agency") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Agency") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Agency") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Agency")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="407" width="552" height="12" uuid="37d5a265-35a7-4e32-9fe8-4633c8f642b3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Agency workforce needs, as evidenced in strategic plans; or]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="423" width="8" height="8" uuid="a9e8c001-7fdf-4b97-9ded-dcfd58b71ef4">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[$F{BASIC_PAY_RATE_FACTOR1}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR2}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR3}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR4}.startsWith("Other") || 
+$F{BASIC_PAY_RATE_FACTOR5}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR6}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR7}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR8}.startsWith("Other") || 
+$F{BASIC_PAY_RATE_FACTOR9}.startsWith("Other") || $F{BASIC_PAY_RATE_FACTOR10}.startsWith("Other")
+
+? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="24" y="421" width="552" height="12" uuid="33b1e351-d6ee-4056-b745-6df20460fd50"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean ($F{BASIC_PAY_RATE_FACTOR10_EXPLAN} != null) ? "Other relevant factors, as explained: " + $F{BASIC_PAY_RATE_FACTOR10_EXPLAN} : "Other relevant factors, as explained: "]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement positionType="Float" x="0" y="438" width="576" height="15" backcolor="#DEDCDC" uuid="cad705db-53b4-47f2-9e36-62fcfffc593f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="438" width="576" height="15" uuid="f87a69f2-c2b5-45c9-8c2e-92c309f86cf1">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Other Requirements:]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="460" width="8" height="8" uuid="be96f76e-bb8e-4c3b-b2de-ea47f0c3b818">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_JUST_APPROVED}.contains("Yes"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="458" width="30" height="12" uuid="8495560e-b758-4b37-bf9e-6c639601e4ee">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Yes]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="60" y="460" width="8" height="8" uuid="1bf2bbe8-3c30-46d1-a015-2816b750cb3b">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_JUST_APPROVED}.contains("No"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="72" y="458" width="30" height="12" uuid="f3ae7ba3-6902-44e5-823b-8d4fbfc76055">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="104" y="458" width="472" height="12" uuid="765da7e9-ce19-4be3-a6ea-6bab3425b28b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[A written justification has been provided and is approved/signed by the Center/Office Director, or equivalent.]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="474" width="8" height="8" uuid="9a8e5650-f167-49eb-99e2-d9a532d67a82">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_JUST_SUFFIC}.contains("Yes"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="472" width="30" height="12" uuid="0e4ff3bd-2d33-42f9-a739-e0ced17250cd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Yes]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="60" y="474" width="8" height="8" uuid="e482955f-699d-4c3a-add7-af9f8189293c">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_JUST_SUFFIC}.contains("No"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="72" y="472" width="30" height="12" uuid="ecc1785d-92c6-45ea-a520-7bb8d363d97f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="104" y="472" width="472" height="12" uuid="7ea03ac0-0a04-4097-8f55-df94ee9a1913">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The written justification provides sufficient information to ensure regulatory compliance.]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="488" width="8" height="8" uuid="01f2717a-5234-47c3-88a8-61793b0cb367">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_REC_INC_CONSID}.contains("Yes"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="486" width="30" height="12" uuid="5e50fb59-d3e5-43bf-94e7-cd3c2f1ee1cc">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Yes]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="60" y="488" width="8" height="8" uuid="7ca82be2-12ec-4496-979b-ac60ef07286a">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_REC_INC_CONSID}.contains("No"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="72" y="486" width="30" height="12" uuid="aa4b680a-15cc-4dfc-a994-1d29dd19529d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="104" y="486" width="472" height="12" uuid="0fc64b98-5dfe-4bc4-9ddc-b8a3f41d366f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[The written justification indicates that a Recruitment Incentive was considered, as required.]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="12" y="502" width="8" height="8" uuid="cfcdd05a-1060-4378-94bf-5770999b8d0a">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_DOC_PROVIDED}.contains("Yes"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="24" y="500" width="30" height="12" uuid="53c4ba42-7499-4942-b933-c868bf9e373c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Yes]]></text>
+				</staticText>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+					<reportElement key="" positionType="Float" x="60" y="502" width="8" height="8" uuid="2db2aa29-fba5-43b7-8552-8c0754bf8e3b">
+						<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+						<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA[new Boolean ($F{OTHER_REQ_DOC_PROVIDED}.contains("No"))? $P{Checked} : $P{Unchecked}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement positionType="Float" x="72" y="500" width="30" height="12" uuid="60101f20-5946-4a3a-93a5-30396991ead3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="104" y="500" width="472" height="12" uuid="e4d691b5-f86e-4c1d-b7cc-074454233594">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[All necessary documentation has been provided to support the request.]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement positionType="Float" x="0" y="517" width="576" height="15" backcolor="#DEDCDC" uuid="29c70adc-aa5a-4c13-9e98-8ab1fe12bc02">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="517" width="576" height="15" uuid="cc3348e8-71ad-499f-885d-8ab15e230d38">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Miscellaneous/Reviewer Notes]]></text>
+				</staticText>
+				<textField>
+					<reportElement positionType="Float" x="196" y="0" width="380" height="12" uuid="5e0a60a8-7b9f-4fd6-9210-94522ab5611a"/>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{APPLICANT_NAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="38" y="258" width="538" height="12" uuid="147a4639-56bc-4224-b313-3273e1f2cf1b">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean ($F{SPECIAL_AGENCY_NEED_EXPLAN} != null) ? "Candidate’s qualities are essential to accomplishing an important agency mission, goal or program activity as explained: " + $F{SPECIAL_AGENCY_NEED_EXPLAN}
+																																: "Candidate’s qualities are essential to accomplishing an important agency mission, goal or program activity as explained: "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="38" y="118" width="538" height="12" uuid="991890aa-d69d-4240-9a57-ddcd645f222a">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean ($F{QUAL_REAPPOINT_OTHER} != null ) ? "(a)(3) Other exceptions: " + $F{QUAL_REAPPOINT_OTHER} :  "(a)(3) Other exceptions: "]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement positionType="Float" x="0" y="12" width="576" height="1" forecolor="#969595" uuid="afd111af-d68b-48ce-9090-9e22e389ccb8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#595858"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement positionType="Float" x="0" y="36" width="576" height="1" forecolor="#969595" uuid="ea53e6b7-7f7b-461a-8792-cf0d63d21d6c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#595858"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement positionType="Float" x="0" y="24" width="576" height="1" forecolor="#969595" uuid="f0e18a0f-2c90-4934-a9f7-989f7e4b52cd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#595858"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement positionType="Float" x="0" y="48" width="576" height="1" forecolor="#969595" uuid="52d86bc7-9632-4b98-86b0-e88ffba346b3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#595858"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="195" y="0" width="1" height="48" uuid="addee9e9-16e0-48b9-b8cd-7f9a21935dad">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="12" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="433" y="0" width="142" height="10" uuid="5905c9bd-f414-4883-b983-3efa9601bbb8"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Issued August 16, 2018"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

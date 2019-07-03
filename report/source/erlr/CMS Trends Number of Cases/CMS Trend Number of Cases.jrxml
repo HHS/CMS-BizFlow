@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-24T15:41:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Trends Report" pageWidth="730" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="690" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTrendsNumberofCases_files/CMS_Trend_Number_Of_Cases_updated.jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTrendsNumberofCases"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="883"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="107"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="Trends Report"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.9" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.9" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.7" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.7" value="Group1"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.7" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.7" value="Group1"/>
+	<property name="net.sf.jasperreports.export.pdf.exclude.key.Names"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.key.Filler"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.key.Filler"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS_Cloud_Bizflow"/>
+	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+		<queryString language="SQL">
+			<![CDATA[Select top 5 * from  "ORDERS"]]>
+		</queryString>
+		<field name="ORDERID" class="java.lang.Integer"/>
+		<field name="SHIPNAME" class="java.lang.String"/>
+		<field name="SHIPPEDDATE" class="java.sql.Timestamp"/>
+	</subDataset>
+	<parameter name="DATE_RANGE_FROM" class="java.sql.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-6)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.sql.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTACT_NAME" class="java.lang.String"/>
+	<parameter name="EMP_NAME" class="java.lang.String"/>
+	<parameter name="PRIMARY_SPECIALIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_CTGRY" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="FNL_ACTN" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+	SUM(INAPPROPRIATE) AS INAPPROPRIATE,
+	SUM(MISUSECREDIT) AS MISUSECREDIT,
+	SUM(MISUSETRAVEL) AS MISUSETRAVEL,
+	SUM(MISUSETIME) AS MISUSETIME,
+	SUM(TIME) AS TIME,
+	SUM(PERFORMANCE) AS PERF,
+	SUM(OTHER) AS OTH,
+	SUM(PMAP) AS PMAP,
+	SUM(NON_PMAP) AS NPMAP
+FROM
+(
+	SELECT
+		CASE
+			WHEN CASE_TYPE = 'Conduct Issue'
+			AND (CASE_CATEGORY LIKE '%Alcohol/Drugs%'
+				OR CASE_CATEGORY LIKE '%Confidential Information - Failure to Protect and/or Disclose%'
+				OR CASE_CATEGORY LIKE '%Discourteous/Inappropriate Behavior%'
+				OR CASE_CATEGORY LIKE '%Ethics Violations%'
+				OR CASE_CATEGORY LIKE '%Failure to Follow Directions/Instructions%'
+				OR CASE_CATEGORY LIKE '%Falsification%'
+				OR CASE_CATEGORY LIKE '%Insubordination%'
+				OR CASE_CATEGORY LIKE '%Merit Principles%'
+				OR CASE_CATEGORY LIKE '%Misuse of Official Position%'
+				OR CASE_CATEGORY LIKE '%Off Duty Conduct%'
+				OR CASE_CATEGORY LIKE '%Prohibited Personnel Action%'
+				OR CASE_CATEGORY LIKE '%Sexual Harassment%'
+				OR CASE_CATEGORY LIKE '%SSA Database Referral%'
+				OR CASE_CATEGORY LIKE '%Telework/Flexplace%'
+				OR CASE_CATEGORY LIKE '%Theft/Unauthorized Possession%'
+				OR CASE_CATEGORY LIKE '%Threatening/Intimidating Behavior%'
+				OR (CASE_CATEGORY LIKE '%Travel%' AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Credit Card - Travel%')
+				OR CASE_CATEGORY LIKE '%Workplace Violence%')
+			THEN 1
+			ELSE 0
+		END AS INAPPROPRIATE,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Purchase%'
+			AND CASE_TYPE IN ('Conduct Issue', 'Probationary Period Action', 'Investigation')
+			THEN 1
+			ELSE 0
+		END AS MISUSECREDIT,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Travel%'
+			AND CASE_TYPE IN ('Conduct Issue', 'Probationary Period Action', 'Investigation')			
+			THEN 1
+			ELSE 0
+		END AS MISUSETRAVEL,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Inappropriate Use of Government Property%'
+			OR CASE_CATEGORY LIKE '%Inappropriate Use of Government Property%'
+			OR CASE_CATEGORY LIKE '%Inappropriate Use of Government Vehicle%'
+			OR CASE_CATEGORY LIKE '%Computer Misuse%'
+			THEN 1
+			ELSE 0
+		END AS MISUSETIME,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Time and Leave%'
+			THEN 1
+			ELSE 0
+		END AS TIME,
+		CASE
+			WHEN CASE_TYPE IN  ('Performance Issue','Within Grade Increase Denial/Reconsideration')
+			THEN 1
+			ELSE 0
+		END AS PERFORMANCE,
+		CASE
+			WHEN CASE_TYPE NOT IN('Performance Issue','Within Grade Increase Denial/Reconsideration','Grievance') 
+			AND ((CASE_TYPE IN ( 'Labor Negotiation', 'Unfair Labor Practice', 'Third Party Hearing', 'Information Request', 'Medical Documentation/Exam')
+			AND ((CASE_CATEGORY NOT LIKE '%Alcohol/Drugs%'
+				AND CASE_CATEGORY NOT LIKE '%Confidential Information - Failure to Protect and/or Disclose%'
+				AND CASE_CATEGORY NOT LIKE '%Discourteous/Inappropriate Behavior%'
+				AND CASE_CATEGORY NOT LIKE '%Ethics Violations%'
+				AND CASE_CATEGORY NOT LIKE '%Failure to Follow Directions/Instructions%'
+				AND CASE_CATEGORY NOT LIKE '%Falsification%'
+				AND CASE_CATEGORY NOT LIKE '%Insubordination%'
+				AND CASE_CATEGORY NOT LIKE '%Merit Principles%'
+				AND CASE_CATEGORY NOT LIKE '%Misuse of Official Position%'
+				AND CASE_CATEGORY NOT LIKE '%Off Duty Conduct%'
+				AND CASE_CATEGORY NOT LIKE '%Prohibited Personnel Action%'
+				AND CASE_CATEGORY NOT LIKE '%Sexual Harassment%'
+				AND CASE_CATEGORY NOT LIKE '%SSA Database Referral%'
+				AND CASE_CATEGORY NOT LIKE '%Telework/Flexplace%'
+				AND CASE_CATEGORY NOT LIKE '%Theft/Unauthorized Possession%'
+				AND CASE_CATEGORY NOT LIKE '%Threatening/Intimidating Behavior%'
+				AND (CASE_CATEGORY NOT LIKE '%Travel%' OR CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Travel%')
+				AND CASE_CATEGORY NOT LIKE '%Workplace Violence%'                                                                                                                        
+				AND CASE_CATEGORY NOT LIKE '%Time and Leave%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Property%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Vehicle%'
+				AND CASE_CATEGORY NOT LIKE '%Computer Misuse%'                   
+			) OR CASE_CATEGORY IS NULL))
+			OR (CASE_TYPE IN ('Conduct Issue', 'Probationary Period Action', 'Investigation') 
+			AND ((CASE_CATEGORY NOT LIKE '%Alcohol/Drugs%'
+				AND CASE_CATEGORY NOT LIKE '%Confidential Information - Failure to Protect and/or Disclose%'
+				AND CASE_CATEGORY NOT LIKE '%Discourteous/Inappropriate Behavior%'
+				AND CASE_CATEGORY NOT LIKE '%Ethics Violations%'
+				AND CASE_CATEGORY NOT LIKE '%Failure to Follow Directions/Instructions%'
+				AND CASE_CATEGORY NOT LIKE '%Falsification%'
+				AND CASE_CATEGORY NOT LIKE '%Insubordination%'
+				AND CASE_CATEGORY NOT LIKE '%Merit Principles%'
+				AND CASE_CATEGORY NOT LIKE '%Misuse of Official Position%'
+				AND CASE_CATEGORY NOT LIKE '%Off Duty Conduct%'
+				AND CASE_CATEGORY NOT LIKE '%Prohibited Personnel Action%'
+				AND CASE_CATEGORY NOT LIKE '%Sexual Harassment%'
+				AND CASE_CATEGORY NOT LIKE '%SSA Database Referral%'
+				AND CASE_CATEGORY NOT LIKE '%Telework/Flexplace%'
+				AND CASE_CATEGORY NOT LIKE '%Theft/Unauthorized Possession%'
+				AND CASE_CATEGORY NOT LIKE '%Threatening/Intimidating Behavior%'
+				AND CASE_CATEGORY NOT LIKE '%Travel%'
+				AND CASE_CATEGORY NOT LIKE '%Workplace Violence%'                                                                                                                        
+				AND CASE_CATEGORY NOT LIKE '%Time and Leave%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Property%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Vehicle%'
+				AND CASE_CATEGORY NOT LIKE '%Computer Misuse%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Credit Card - Travel%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Credit Card - Purchase%'                                   
+			)
+			OR CASE_CATEGORY IS NULL)
+			))
+			THEN 1
+			ELSE 0
+		END AS OTHER,
+		CASE
+			WHEN GI_GRIEVANCE_RELATED_2_PMAP = 'Y'
+			THEN 1
+			ELSE 0
+		END AS PMAP,
+		CASE
+			WHEN GI_GRIEVANCE_RELATED_2_PMAP = 'N'
+			THEN 1
+			ELSE 0
+		END AS NON_PMAP	
+		
+	FROM
+	(
+		SELECT
+			GEN.ERLR_CASE_NUMBER AS CASE_NUMBER,
+			GEN_EMPLOYEE_NAME AS EMPLOYEE_NAME,
+			GEN_CUSTOMER_NAME AS CONTACT_NAME,
+			NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)  AS ADMINCD,
+			GEN_CASE_TYPE AS CASE_TYPE,
+			GEN_CASE_CATEGORY AS CASE_CATEGORY,
+			GEN_CASE_STATUS AS CASE_STATUS,
+			GEN_CUST_INIT_CONTACT_DT,
+			CC_FINAL_ACTION AS FINAL_ACTION,
+			CC_CASE_COMPLETE_DT,
+			GEN_PRIMARY_SPECIALIST_NAME AS PRIMARY_SPECIALIST_NAME,
+			GI_GRIEVANCE_RELATED_2_PMAP
+		FROM HHS_CMS_HR.VW_ERLR_GEN GEN 
+		LEFT JOIN HHS_CMS_HR.VW_ERLR_GRIEVANCE G
+		ON GEN.ERLR_CASE_NUMBER = G.ERLR_CASE_NUMBER
+		WHERE (CANCEL_REASON IS NULL  OR CANCEL_REASON NOT IN ('Case Opened in Error', 'Duplicate Case'))
+		AND (NVL(GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (GEN_CASE_STATUS IN ('Closed') AND CANCEL_REASON IS NOT NULL))
+		AND GEN_CUST_INIT_CONTACT_DT IS NOT NULL
+		AND GEN_CASE_TYPE IS NOT NULL
+		-- Filter : Component
+		AND (($P{COMPONENT} = 'CMS-wide')
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+		OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+		)
+			-- Filter : Date Range
+			
+			AND ((GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND GEN_CUST_INIT_CONTACT_DT  BETWEEN 
+			TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))
+			
+			
+		-- Filter : Employee Name
+		AND (	( TRIM($P{EMP_NAME}) IS NULL )
+		OR ( GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+		
+		-- Filter : Customer Contact Name   
+		AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+		OR ( GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+		
+		-- Filter : Primary ER/LR Specialist
+		AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+		OR ( GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+		
+		-- Filter : Case Type
+		AND (  ($P{CASE_TYPE} = 'All') 	OR ( GEN_CASE_TYPE = $P{CASE_TYPE} ) )
+		
+		-- Filter: Case Category
+		AND (HHS_CMS_HR.FN_FILTER_CATEGORY(GEN.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')
+		
+		-- Filter : Final Action 
+		AND (HHS_CMS_HR.FN_FILTER_FINALACTION(GEN.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+		
+		-- Filter : Case Status
+		AND  ($X{IN, GEN_CASE_STATUS, CASE_STATUS})  			
+	)
+)]]>
+	</queryString>
+	<field name="INAPPROPRIATE" class="java.math.BigDecimal"/>
+	<field name="MISUSECREDIT" class="java.math.BigDecimal"/>
+	<field name="MISUSETRAVEL" class="java.math.BigDecimal"/>
+	<field name="MISUSETIME" class="java.math.BigDecimal"/>
+	<field name="TIME" class="java.math.BigDecimal"/>
+	<field name="PERF" class="java.math.BigDecimal"/>
+	<field name="OTH" class="java.math.BigDecimal"/>
+	<field name="PMAP" class="java.math.BigDecimal"/>
+	<field name="NPMAP" class="java.math.BigDecimal"/>
+	<variable name="category" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{CASE_CTGRY}.size() > 0 ? $P{CASE_CTGRY}.toString().substring(1, $P{CASE_CTGRY}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
+	<variable name="finalaction" class="java.lang.String">
+		<initialValueExpression><![CDATA[$P{FNL_ACTN}.size() > 0 ? $P{FNL_ACTN}.toString().substring(1, $P{FNL_ACTN}.toString().length() - 1) : "All"]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<columnHeader>
+		<band height="27">
+			<staticText>
+				<reportElement mode="Opaque" x="317" y="4" width="280" height="23" backcolor="#FBFAFC" uuid="5b90c7a3-7f1b-4332-bc5a-f226340a5588"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Cases]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="47" y="4" width="270" height="23" backcolor="#FBFAFC" uuid="a760aa39-6d3e-4ee9-9758-754bafb9f5dd"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type of Case]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="271">
+			<staticText>
+				<reportElement x="47" y="0" width="270" height="26" uuid="35e5a4ed-08e4-4d26-ba69-4449e354fbed">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Inappropriate Conduct]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="317" y="0" width="280" height="26" uuid="78518025-e02d-40b6-95a7-9f2ddb63787b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{INAPPROPRIATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="26" width="270" height="26" uuid="593caeff-5c22-4895-85a2-126ae0dcef4d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Misuse of Government Credit Card - Purchase]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="317" y="52" width="280" height="26" uuid="2629e0fe-9354-4236-8073-1b97737f3674"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MISUSETRAVEL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="52" width="270" height="26" uuid="decbe345-cc71-49e3-9c2f-f5dd811fda43">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Misuse of Government Credit Card - Travel]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="317" y="26" width="280" height="26" uuid="44a6bcfb-ce3d-460d-8baa-9fa4ef9665f6"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MISUSECREDIT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="78" width="270" height="26" uuid="6436f17a-9596-4a77-aee6-13ac5e8a2498">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Misuse of Government Property/Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="104" width="270" height="26" uuid="37769cd8-342d-4a25-bf31-0e1d4c492579">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Time & Leave]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="156" width="270" height="26" uuid="7c0280f2-86ba-434b-b3b5-c0024c675ee1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Other (Direct Orders, Medical Issues)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="182" width="270" height="26" uuid="5826bbfd-6dd7-4ba3-8262-9b8096255d83"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Grievance (PMAP)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="208" width="270" height="26" uuid="4ad3c265-6f78-4781-8c5f-eb8fd74b93f6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Grievance (Non-PMAP)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="317" y="78" width="280" height="26" uuid="7552f06d-9323-4912-aa86-1e4acdcf4aca"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MISUSETIME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="104" width="280" height="26" uuid="197d108c-aa61-4abd-8833-145097ab13cc"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TIME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="156" width="280" height="26" uuid="576b9c41-aa48-446b-9ca0-0d2321602974">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OTH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="182" width="280" height="26" uuid="1f8b7aac-1bd9-4f89-b1f8-2c7fa7917e05"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PMAP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="208" width="280" height="26" uuid="328974c3-b665-4d05-a4a0-40a94c42a40e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NPMAP}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="47" y="234" width="270" height="36" uuid="067aa7bb-d71c-4c95-a299-f7e912fa93ef"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="130" width="270" height="26" uuid="a5b41583-72fe-418f-9cd2-28acb8c655b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Performance]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="317" y="130" width="280" height="26" uuid="1f96936f-ccfb-488d-96ce-3c624a74b02c">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PERF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="317" y="234" width="280" height="36" uuid="bf637628-2049-44c1-aa65-848b4bb94dc6">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[SUM($F{INAPPROPRIATE},$F{MISUSECREDIT},$F{MISUSETRAVEL},$F{MISUSETIME},$F{TIME},$F{PERF},$F{OTH},$F{PMAP},$F{NPMAP})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="27">
+			<staticText>
+				<reportElement x="0" y="0" width="620" height="20" uuid="56b892c2-a869-40a4-8e55-fd0ee05d336f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[There are no cases to display. No cases meet the parameters currently set by the report filters.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T12:29:33 -->
+<!-- 2019-06-21T16:40:07 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Performance Improvement Plan (PIP) Report" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sgurung"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Performance_Improvement_Plan__PIP__Report_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Performance_Improvement_Plan__PIP__Report"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="780"/>
@@ -41,6 +41,7 @@
 	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
 	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS_Cloud_Bizflow"/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -71,15 +72,13 @@
 	<parameter name="CASE_TYPE" class="java.lang.String">
 		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="CASE_CTGRY" class="java.util.Collection" nestedType="java.lang.String">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-	</parameter>
-	<parameter name="FNL_ACTN" class="java.util.Collection" nestedType="java.lang.String">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-	</parameter>
 	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String"/>
-	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="CATEGORY" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FINALACTION" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[-- Performance Improvement Plan (PIP) Report
 
@@ -87,9 +86,15 @@ SELECT
     VWERLR.ERLR_CASE_NUMBER CASENUMBER,
     VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
     VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
-    VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+     VWERLR.GEN_EMPLOYEE_ADMIN_CD,
+		VWERLR.GEN_CUSTOMER_ADMIN_CD,
     VWERLR.GEN_CASE_TYPE CASETYPE,
     VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+    CASE 
+    WHEN VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NOT NULL 
+    THEN  VWERLR.GEN_EMPLOYEE_ADMIN_CD
+	ELSE VWERLR.GEN_CUSTOMER_ADMIN_CD
+	END AS ADMINCD,
     CASE 
     WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NOT NULL THEN VWERLR.CC_FINAL_ACTION || ' - ' || VWERLR.CC_FINAL_ACTION_OTHER
     WHEN TRIM( VWERLR.CC_FINAL_ACTION_OTHER ) IS NULL THEN VWERLR.CC_FINAL_ACTION
@@ -111,26 +116,24 @@ FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
    AND PI.PI_ACTION_TYPE = '787' -- 787 IS TBL_LOOKUP.TBL_ID WITH CORRESPONDING TBL_LABEL OF 'PIP'
 
   -- Common Conditions for all ERLR Reports 
-  AND ( VWERLR.GEN_CASE_STATUS <> 'Closed' OR VWERLR.GEN_CASE_STATUS IS NULL )
+AND (CANCEL_REASON IS NULL  OR CANCEL_REASON NOT IN ('Case Opened in Error', 'Duplicate Case'))
+		AND (NVL(GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (GEN_CASE_STATUS IN ('Closed') AND CANCEL_REASON IS NOT NULL))
+		AND GEN_CASE_TYPE IS NOT NULL
+        
 
   -- Filter : Component
-  AND (  ($P{COMPONENT} = 'CMS-wide' AND ( VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE 'FC%' OR VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NULL ) )
-      OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND $P{ADMIN_CD} = 'FC')
-      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD LIKE '$P!{ADMIN_CD}' || '%')
-      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND VWERLR.GEN_EMPLOYEE_ADMIN_CD = $P{ADMIN_CD})
-    )
+   AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+	
     
-  -- Filter : Date Range
-  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-         AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
-         
-   OR (VWERLR.CC_CASE_COMPLETE_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
-        AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+   -- Filter : Date Range
+  AND (VWERLR.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY'))
         
-   OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM}) AND TO_DATE($P{DATE_RANGE_TO}) <= VWERLR.CC_CASE_COMPLETE_DT)
-   OR (VWERLR.GEN_CUST_INIT_CONTACT_DT  <= TO_DATE($P{DATE_RANGE_FROM})  AND VWERLR.CC_CASE_COMPLETE_DT IS NULL)	
-   )
-
+        
   -- Filter : Employee Name
   AND (	( TRIM($P{EMP_NAME}) IS NULL )
    OR ( VWERLR.GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )
@@ -164,9 +167,11 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 	<field name="CASENUMBER" class="java.math.BigDecimal"/>
 	<field name="EMPNAME" class="java.lang.String"/>
 	<field name="CONTACTNAME" class="java.lang.String"/>
-	<field name="ADMINCD" class="java.lang.String"/>
+	<field name="GEN_EMPLOYEE_ADMIN_CD" class="java.lang.String"/>
+	<field name="GEN_CUSTOMER_ADMIN_CD" class="java.lang.String"/>
 	<field name="CASETYPE" class="java.lang.String"/>
 	<field name="CASECATEGORY" class="java.lang.String"/>
+	<field name="ADMINCD" class="java.lang.String"/>
 	<field name="FINAL_ACTION" class="java.lang.String"/>
 	<field name="INITIALCONTACTDATE" class="java.sql.Timestamp"/>
 	<field name="DATE_CASE_COMPLETED" class="java.sql.Timestamp"/>
@@ -175,12 +180,6 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 	<field name="PI_PIP_ACTUAL_DT" class="java.sql.Timestamp"/>
 	<field name="PI_PIP_EFF_ACTN_DT" class="java.sql.Timestamp"/>
 	<field name="ACTION_TAKEN" class="java.lang.String"/>
-	<variable name="category" class="java.lang.String">
-		<initialValueExpression><![CDATA[$P{CASE_CTGRY}.size() > 0 ? $P{CASE_CTGRY}.toString().substring(1, $P{CASE_CTGRY}.toString().length() - 1) : "All"]]></initialValueExpression>
-	</variable>
-	<variable name="finalaction" class="java.lang.String">
-		<initialValueExpression><![CDATA[$P{FNL_ACTN}.size() > 0 ? $P{FNL_ACTN}.toString().substring(1, $P{FNL_ACTN}.toString().length() - 1) : "All"]]></initialValueExpression>
-	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -205,9 +204,15 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font size="16" isBold="true"/>
+					<font size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[DATEFORMAT($P{DATE_RANGE_FROM},"MMMMM d, yyy") + " through " + DATEFORMAT($P{DATE_RANGE_TO},"MMMMM d, yyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide cases initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy"): new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All cases for the Office of the Administrator (OA) initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy"): new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All cases for " + $P{ADMIN_CD} + " and its sub-organizations initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy"): "All cases for " + $P{ADMIN_CD} + " initiated between " + 
+DATEFORMAT($P{DATE_RANGE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{DATE_RANGE_TO},"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -370,10 +375,12 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Prevent">
+		<band height="20" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="380" y="0" width="50" height="15" uuid="a99d0437-a04f-44fd-bb33-89b7b8de8af0"/>
+				<reportElement stretchType="RelativeToTallestObject" x="380" y="0" width="50" height="20" uuid="a99d0437-a04f-44fd-bb33-89b7b8de8af0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
@@ -384,8 +391,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{PI_PIP_START_DT} != null) ?	DATEFORMAT($F{PI_PIP_START_DT},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="15" uuid="1158f43c-8a35-49d7-97b0-5bafb7e69f49">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20" uuid="1158f43c-8a35-49d7-97b0-5bafb7e69f49">
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
 				</reportElement>
 				<box padding="1" topPadding="10" leftPadding="10" bottomPadding="10" rightPadding="10">
@@ -398,9 +404,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{EMPNAME} != null )? $F{EMPNAME} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="140" height="15" uuid="9a3e08ef-b72e-43ca-865f-b71143b60772">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="140" height="20" uuid="9a3e08ef-b72e-43ca-865f-b71143b60772"/>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
@@ -411,8 +415,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{CASECATEGORY} != null )? $F{CASECATEGORY} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="701" y="0" width="51" height="15" uuid="32cc972e-ec2f-4733-8aad-4f889b2c71d0">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="701" y="0" width="51" height="20" uuid="32cc972e-ec2f-4733-8aad-4f889b2c71d0">
 					<property name="net.sf.jasperreports.export.pdf.tag.td" value="end"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -426,8 +429,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{DATE_CASE_COMPLETED} != null) ?	DATEFORMAT($F{DATE_CASE_COMPLETED},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="480" y="0" width="171" height="15" uuid="f3d79d60-f41d-4d69-8292-ebf685b40a7e">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="480" y="0" width="171" height="20" uuid="f3d79d60-f41d-4d69-8292-ebf685b40a7e">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -440,9 +442,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{FINAL_ACTION} != null) ? $F{FINAL_ACTION} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="15" uuid="1fe781c4-ddbc-45a2-b310-182e4d08f827">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="20" uuid="1fe781c4-ddbc-45a2-b310-182e4d08f827"/>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
@@ -453,8 +453,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{CONTACTNAME} != null )? $F{CONTACTNAME} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="200" y="0" width="40" height="15" uuid="c8f640f6-e221-46b4-9efd-3aa45f06e08b">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="200" y="0" width="40" height="20" uuid="c8f640f6-e221-46b4-9efd-3aa45f06e08b">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -467,9 +466,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{ADMINCD} != null) ?	$F{ADMINCD} : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="651" y="0" width="50" height="15" uuid="38aa2482-cc18-406c-87ed-17759d5696c2">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement stretchType="RelativeToTallestObject" x="651" y="0" width="50" height="20" uuid="38aa2482-cc18-406c-87ed-17759d5696c2"/>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
@@ -480,8 +477,7 @@ ORDER BY VWERLR.GEN_EMPLOYEE_NAME, PI.PI_PIP_START_DT]]>
 				<textFieldExpression><![CDATA[new Boolean ($F{PI_PIP_EFF_ACTN_DT} != null) ?	DATEFORMAT($F{PI_PIP_EFF_ACTN_DT},"M/d/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="430" y="0" width="50" height="15" uuid="3236c1c3-f21f-4061-ace0-4b47a0fecab0">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<reportElement stretchType="RelativeToTallestObject" x="430" y="0" width="50" height="20" uuid="3236c1c3-f21f-4061-ace0-4b47a0fecab0">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box padding="1" topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">

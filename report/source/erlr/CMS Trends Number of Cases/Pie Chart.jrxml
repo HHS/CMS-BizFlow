@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-24T15:42:33 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERLR Case Type Pie Chart" pageWidth="730" pageHeight="615" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="730" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="5" uuid="ae13046c-0794-44e9-a0b0-01262c22124c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTrendsNumberofCases"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTrendsNumberofCases_files/Pie_Chart_updated.jrxml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="204"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="791"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS_Cloud_Bizflow"/>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMP_NAME" class="java.lang.String"/>
+	<parameter name="CONTACT_NAME" class="java.lang.String"/>
+	<parameter name="CASE_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FINALACTION" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRIMARY_SPECIALIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.util.Collection" nestedType="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT SERIES, CASE_COUNT
+FROM 
+(
+SELECT 
+	SUM(INAPPROPRIATE) AS INAPPROPRIATE,
+	SUM(MISUSECREDIT) AS MISUSECREDIT,
+	SUM(MISUSETRAVEL) AS MISUSETRAVEL,
+	SUM(MISUSETIME) AS MISUSETIME,
+	SUM(TIME) AS TIME,
+	SUM(PERFORMANCE) AS PERF,
+	SUM(OTHER) AS OTH,
+	SUM(PMAP) AS PMAP,
+	SUM(NON_PMAP) AS NPMAP
+FROM
+(
+	SELECT
+		CASE
+			WHEN CASE_TYPE = 'Conduct Issue'
+			AND (CASE_CATEGORY LIKE '%Alcohol/Drugs%'
+				OR CASE_CATEGORY LIKE '%Confidential Information - Failure to Protect and/or Disclose%'
+				OR CASE_CATEGORY LIKE '%Discourteous/Inappropriate Behavior%'
+				OR CASE_CATEGORY LIKE '%Ethics Violations%'
+				OR CASE_CATEGORY LIKE '%Failure to Follow Directions/Instructions%'
+				OR CASE_CATEGORY LIKE '%Falsification%'
+				OR CASE_CATEGORY LIKE '%Insubordination%'
+				OR CASE_CATEGORY LIKE '%Merit Principles%'
+				OR CASE_CATEGORY LIKE '%Misuse of Official Position%'
+				OR CASE_CATEGORY LIKE '%Off Duty Conduct%'
+				OR CASE_CATEGORY LIKE '%Prohibited Personnel Action%'
+				OR CASE_CATEGORY LIKE '%Sexual Harassment%'
+				OR CASE_CATEGORY LIKE '%SSA Database Referral%'
+				OR CASE_CATEGORY LIKE '%Telework/Flexplace%'
+				OR CASE_CATEGORY LIKE '%Theft/Unauthorized Possession%'
+				OR CASE_CATEGORY LIKE '%Threatening/Intimidating Behavior%'
+				OR (CASE_CATEGORY LIKE '%Travel%' AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Credit Card - Travel%')
+				OR CASE_CATEGORY LIKE '%Workplace Violence%')
+			THEN 1
+			ELSE 0
+		END AS INAPPROPRIATE,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Purchase%'
+			AND CASE_TYPE IN ('Conduct Issue', 'Probationary Period Action', 'Investigation')			
+			THEN 1
+			ELSE 0
+		END AS MISUSECREDIT,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Travel%'
+			AND CASE_TYPE IN ('Conduct Issue', 'Probationary Period Action', 'Investigation')			
+			THEN 1
+			ELSE 0
+		END AS MISUSETRAVEL,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Inappropriate Use of Government Property%'
+			OR CASE_CATEGORY LIKE '%Inappropriate Use of Government Property%'
+			OR CASE_CATEGORY LIKE '%Inappropriate Use of Government Vehicle%'
+			OR CASE_CATEGORY LIKE '%Computer Misuse%'
+			THEN 1
+			ELSE 0
+		END AS MISUSETIME,
+		CASE
+			WHEN CASE_CATEGORY LIKE '%Time and Leave%'
+			THEN 1
+			ELSE 0
+		END AS TIME,
+		CASE
+			WHEN CASE_TYPE IN  ('Performance Issue','Within Grade Increase Denial/Reconsideration')
+			THEN 1
+			ELSE 0
+		END AS PERFORMANCE,
+		CASE
+			WHEN CASE_TYPE NOT IN('Performance Issue','Within Grade Increase Denial/Reconsideration','Grievance') 
+			AND ((CASE_TYPE IN ( 'Labor Negotiation', 'Unfair Labor Practice', 'Third Party Hearing', 'Information Request', 'Medical Documentation/Exam')
+			AND ((CASE_CATEGORY NOT LIKE '%Alcohol/Drugs%'
+				AND CASE_CATEGORY NOT LIKE '%Confidential Information - Failure to Protect and/or Disclose%'
+				AND CASE_CATEGORY NOT LIKE '%Discourteous/Inappropriate Behavior%'
+				AND CASE_CATEGORY NOT LIKE '%Ethics Violations%'
+				AND CASE_CATEGORY NOT LIKE '%Failure to Follow Directions/Instructions%'
+				AND CASE_CATEGORY NOT LIKE '%Falsification%'
+				AND CASE_CATEGORY NOT LIKE '%Insubordination%'
+				AND CASE_CATEGORY NOT LIKE '%Merit Principles%'
+				AND CASE_CATEGORY NOT LIKE '%Misuse of Official Position%'
+				AND CASE_CATEGORY NOT LIKE '%Off Duty Conduct%'
+				AND CASE_CATEGORY NOT LIKE '%Prohibited Personnel Action%'
+				AND CASE_CATEGORY NOT LIKE '%Sexual Harassment%'
+				AND CASE_CATEGORY NOT LIKE '%SSA Database Referral%'
+				AND CASE_CATEGORY NOT LIKE '%Telework/Flexplace%'
+				AND CASE_CATEGORY NOT LIKE '%Theft/Unauthorized Possession%'
+				AND CASE_CATEGORY NOT LIKE '%Threatening/Intimidating Behavior%'
+				AND (CASE_CATEGORY NOT LIKE '%Travel%' OR CASE_CATEGORY LIKE '%Inappropriate Use of Government Credit Card - Travel%')
+				AND CASE_CATEGORY NOT LIKE '%Workplace Violence%'                                                                                                                        
+				AND CASE_CATEGORY NOT LIKE '%Time and Leave%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Property%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Vehicle%'
+				AND CASE_CATEGORY NOT LIKE '%Computer Misuse%'                   
+			) OR CASE_CATEGORY IS NULL))
+			OR (CASE_TYPE IN ('Conduct Issue', 'Probationary Period Action', 'Investigation') 
+			AND ((CASE_CATEGORY NOT LIKE '%Alcohol/Drugs%'
+				AND CASE_CATEGORY NOT LIKE '%Confidential Information - Failure to Protect and/or Disclose%'
+				AND CASE_CATEGORY NOT LIKE '%Discourteous/Inappropriate Behavior%'
+				AND CASE_CATEGORY NOT LIKE '%Ethics Violations%'
+				AND CASE_CATEGORY NOT LIKE '%Failure to Follow Directions/Instructions%'
+				AND CASE_CATEGORY NOT LIKE '%Falsification%'
+				AND CASE_CATEGORY NOT LIKE '%Insubordination%'
+				AND CASE_CATEGORY NOT LIKE '%Merit Principles%'
+				AND CASE_CATEGORY NOT LIKE '%Misuse of Official Position%'
+				AND CASE_CATEGORY NOT LIKE '%Off Duty Conduct%'
+				AND CASE_CATEGORY NOT LIKE '%Prohibited Personnel Action%'
+				AND CASE_CATEGORY NOT LIKE '%Sexual Harassment%'
+				AND CASE_CATEGORY NOT LIKE '%SSA Database Referral%'
+				AND CASE_CATEGORY NOT LIKE '%Telework/Flexplace%'
+				AND CASE_CATEGORY NOT LIKE '%Theft/Unauthorized Possession%'
+				AND CASE_CATEGORY NOT LIKE '%Threatening/Intimidating Behavior%'
+				AND CASE_CATEGORY NOT LIKE '%Travel%'
+				AND CASE_CATEGORY NOT LIKE '%Workplace Violence%'                                                                                                                        
+				AND CASE_CATEGORY NOT LIKE '%Time and Leave%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Property%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Vehicle%'
+				AND CASE_CATEGORY NOT LIKE '%Computer Misuse%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Credit Card - Travel%'
+				AND CASE_CATEGORY NOT LIKE '%Inappropriate Use of Government Credit Card - Purchase%'                                   
+			)
+			OR CASE_CATEGORY IS NULL)
+			))
+			THEN 1
+			ELSE 0
+		END AS OTHER,
+		CASE
+			WHEN GI_GRIEVANCE_RELATED_2_PMAP = 'Y'
+			THEN 1
+			ELSE 0
+		END AS PMAP,
+		CASE
+			WHEN GI_GRIEVANCE_RELATED_2_PMAP = 'N'
+			THEN 1
+			ELSE 0
+		END AS NON_PMAP	
+		
+	FROM
+	(
+		SELECT
+			GEN.ERLR_CASE_NUMBER AS CASE_NUMBER,
+			GEN_EMPLOYEE_NAME AS EMPLOYEE_NAME,
+			GEN_CUSTOMER_NAME AS CONTACT_NAME,
+			NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)  AS ADMINCD,
+			GEN_CASE_TYPE AS CASE_TYPE,
+			GEN_CASE_CATEGORY AS CASE_CATEGORY,
+			GEN_CASE_STATUS AS CASE_STATUS,
+			GEN_CUST_INIT_CONTACT_DT,
+			CC_FINAL_ACTION AS FINAL_ACTION,
+			CC_CASE_COMPLETE_DT,
+			GEN_PRIMARY_SPECIALIST_NAME AS PRIMARY_SPECIALIST_NAME,
+			GI_GRIEVANCE_RELATED_2_PMAP
+		FROM HHS_CMS_HR.VW_ERLR_GEN GEN 
+		LEFT JOIN HHS_CMS_HR.VW_ERLR_GRIEVANCE G
+		ON GEN.ERLR_CASE_NUMBER = G.ERLR_CASE_NUMBER
+		WHERE (CANCEL_REASON IS NULL  OR CANCEL_REASON NOT IN ('Case Opened in Error', 'Duplicate Case'))
+		AND (NVL(GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (GEN_CASE_STATUS IN ('Closed') AND CANCEL_REASON IS NOT NULL))		
+		AND GEN_CUST_INIT_CONTACT_DT IS NOT NULL
+		AND GEN_CASE_TYPE IS NOT NULL
+		-- Filter : Component
+		AND (($P{COMPONENT} = 'CMS-wide')
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+			OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+		OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(GEN_EMPLOYEE_ADMIN_CD, GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+		)
+			-- Filter : Date Range
+
+			AND ((GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND GEN_CUST_INIT_CONTACT_DT  BETWEEN 
+			TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))
+			
+				
+			
+		-- Filter : Employee Name
+		AND (	( TRIM($P{EMP_NAME}) IS NULL )
+		OR ( GEN_EMPLOYEE_NAME LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+		
+		-- Filter : Customer Contact Name   
+		AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+		OR ( GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+		
+		-- Filter : Primary ER/LR Specialist
+		AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+		OR ( GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+		
+		-- Filter : Case Type
+		AND (  ($P{CASE_TYPE} = 'All') 	OR ( GEN_CASE_TYPE = $P{CASE_TYPE} ) )
+		
+		-- Filter: Case Category
+		AND (HHS_CMS_HR.FN_FILTER_CATEGORY(GEN.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')
+		
+		-- Filter : Final Action 
+		AND (HHS_CMS_HR.FN_FILTER_FINALACTION(GEN.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+		
+		-- Filter : Case Status
+		AND  ($X{IN, GEN_CASE_STATUS, CASE_STATUS}) 		
+		
+	)
+)
+
+)
+        UNPIVOT(CASE_COUNT FOR SERIES IN 
+        (
+    INAPPROPRIATE AS 'Inappropriate Conduct',
+    MISUSECREDIT AS 'Misuse of Government Credit Card - Purchase',
+    MISUSETRAVEL AS 'Misuse of Government Credit Card - Travel',
+    MISUSETIME AS 'Misuse of Government Property/Time' ,
+    TIME AS 'Time and Leave',
+    PERF AS 'Performance',
+    OTH AS 'Other (Direct Orders, Medical Issues)',
+	  PMAP AS 'Grievance (PMAP)',
+    NPMAP AS 'Grievance (Non-PMAP)'
+        )
+)
+WHERE CASE_COUNT > 0]]>
+	</queryString>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="CASE_COUNT" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<summary>
+		<band height="236" splitType="Stretch">
+			<pieChart>
+				<chart isShowLegend="true" evaluationTime="Report">
+					<reportElement stretchType="RelativeToBandHeight" x="20" y="0" width="650" height="236" uuid="7ecb5039-57f7-4ebf-b0ca-33089fb2f11f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<chartTitle>
+						<font size="1"/>
+					</chartTitle>
+					<chartSubtitle>
+						<font size="1"/>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{SERIES}]]></keyExpression>
+					<valueExpression><![CDATA[$F{CASE_COUNT}]]></valueExpression>
+				</pieDataset>
+				<piePlot isShowLabels="true" isCircular="true" labelFormat="{1} cases ({2})" legendLabelFormat="{0}">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0">
+						<seriesColor seriesOrder="0" color="#046B99"/>
+						<seriesColor seriesOrder="1" color="#9BDAF1"/>
+						<seriesColor seriesOrder="2" color="#4AA564"/>
+						<seriesColor seriesOrder="3" color="#00A6D2"/>
+						<seriesColor seriesOrder="4" color="#FDB81E"/>
+						<seriesColor seriesOrder="5" color="#981B1E"/>
+						<seriesColor seriesOrder="6" color="#AEB0B5"/>
+						<seriesColor seriesOrder="7" color="#0071BC"/>
+						<seriesColor seriesOrder="8" color="#323A45"/>
+						<seriesColor seriesOrder="9" color="#94BFA2"/>
+						<seriesColor seriesOrder="10" color="#FAD980"/>
+					</plot>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="28">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="20" uuid="f0900a85-0fe6-4f65-a2dc-e5402d0e254d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

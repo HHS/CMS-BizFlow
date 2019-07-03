@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-05-06T11:06:39 -->
+<!-- 2019-04-30T15:27:44 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PDP Justification-Computation Form" pageWidth="612" pageHeight="792" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="36" bottomMargin="14" uuid="16fc0a12-a2db-49f4-99eb-c6a975350805">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
@@ -756,7 +756,9 @@ Requested</style>
 					<paragraph lineSpacing="Fixed" lineSpacingSize="8.0" leftIndent="4" spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Center or Office Director, Center or Office Deputy Director, CMS Chief Physician or Dentist,
+
 CMS Deputy Chief Physician  or Dentist
+
 ]]></text>
 			</staticText>
 			<staticText>
@@ -1355,6 +1357,7 @@ $70,000
 					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[<style pdfFontName="Helvetica-Bold">Centers for Medicare &amp; Medicaid Services (CMS)
+
 Physician and Dentist Pay (PDP) Justification and Computation Worksheet</style>]]></text>
 			</staticText>
 			<staticText>
@@ -1386,7 +1389,9 @@ Physician and Dentist Pay (PDP) Justification and Computation Worksheet</style>]
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<text><![CDATA[Staff Physician or Dentist, Non-Supervisory Regional Office Chief
+
 Physician or Dentist
+
 ]]></text>
 			</staticText>
 			<staticText>
@@ -1396,12 +1401,19 @@ Physician or Dentist
 					<paragraph leftIndent="4" spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[<style isBold="true" pdfFontName="Helvetica-Bold">1. Breadth of real world clinical knowledge and practice experience</style>
+
 <style size = "4"> </style>
+
 This would include scope and duration of the candidate’s clinical practice experience.
+
 Managerial responsibilities of clinical practice also important.
+
 <style size = "4"> </style>
+
 Example: A candidate with substantial experience that includes large volume or high complexity patient care, and who has had responsibilities for management of that practice would receive a higher amount than a candidate
+
 with the same duration of practice but who has not had managerial responsibilities.
+
 ]]></text>
 			</staticText>
 		</band>
@@ -2139,8 +2151,11 @@ with the same duration of practice but who has not had managerial responsibiliti
 					<paragraph leftIndent="4" spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[<style isBold="true" pdfFontName="Helvetica-Bold">2. Organizational leadership experience as <br/>    a clinician</style>
+
 <style size = "4"> </style>
+
 Examples of this include:
+
     •    Prior positions that imply organizational <br/>         leadership as a clinician include <br/>         Chief/Deputy Chief Physician or Dentist <br/>         of an organization, experience as a <br/>         Director of Clinical Service, Chairman of <br/>         a Clinical Department, Chair of a clinical <br/>         services committee of or informal <br/>         clinician leader of the organization <br/>         would warrant a higher amount, as <br/>         would leadership of a clinical committee <br/>         with significant impact on patient care <br/>         and clinical service delivery.]]></text>
 			</staticText>
 			<staticText>
@@ -2153,9 +2168,13 @@ Examples of this include:
 					<paragraph leftIndent="4" spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[<style isBold="true" pdfFontName="Helvetica-Bold">3. Experience as an Agency, Department or <br/>    Organizational clinician expert <br/>    representative for external stakeholders.</style>
+
 <style size = "4"> </style>
+
 Examples of this include:
+
     •    Experience serving on cross- <br/>         component leadership committees <br/>         comprised of Agency, Department or <br/>         Organizational senior leadership; <br/>         and/or
+
     •    Experience serving as a <br/>         program/subject matter expert or <br/>         advisor to Agency, Department or <br/>         Organizational leadership]]></text>
 			</staticText>
 			<staticText>
@@ -2168,10 +2187,15 @@ Examples of this include:
 					<paragraph leftIndent="4" spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[<style isBold="true" pdfFontName="Helvetica-Bold">4. Experience soliciting, gathering, and <br/>    using stakeholder feedback to inform <br/>    program development, implementation <br/>    and refinement.</style>
+
 <style size = "4"> </style>
+
 Examples of this include:
+
     •    Program development, implementation <br/>         and evaluation experience; <br/>         and/or
+
     •    Experience and knowledge of vehicles <br/>         and mechanisms of program impact <br/>         evaluation or scientific methodology
+
 ]]></text>
 			</staticText>
 			<staticText>
@@ -2183,17 +2207,29 @@ Examples of this include:
 					<paragraph firstLineIndent="1" leftIndent="4"/>
 				</textElement>
 				<text><![CDATA[<style isBold="true" pdfFontName="Helvetica-Bold">5. Working knowledge of or experience with <br/>    CMS programs or policies, statutory <br/>    authorities and regulatory process; and <br/>    an understanding of programs and policy <br/>    implications for clinicians and impacts<br/>    on patient care
+
 </style>
 
+
+
 Examples of this include:
+
 •	Program development, implementation and evaluation experience;
+
 and/or
+
 •	Experience and knowledge of vehicles and mechanisms of program impact evaluation or scientific methodology
 
+
+
 advisor to Agency, Department or Organizational leadership
+
 on patient care
+
 and clinical service delivery.
+
 managerial responsibilities.
+
 ]]></text>
 			</staticText>
 		</band>

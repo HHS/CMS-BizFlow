@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-05-20T15:23:00 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERLR Case Type Pie Chart" pageWidth="600" pageHeight="615" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="600" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="5" uuid="ae13046c-0794-44e9-a0b0-01262c22124c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/ERLR_Subreports/CMSTrendsPieChart"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/ERLR_Subreports/CMSTrendsPieChart_files/Main_Jrxml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="204"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="791"/>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMP_NAME" class="java.lang.String"/>
+	<parameter name="CONTACT_NAME" class="java.lang.String"/>
+	<parameter name="CASE_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FINALACTION" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRIMARY_SPECIALIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CATEGORY" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.util.Collection">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+ CASE_TYPE1,COUNT(*),CAST(COUNT(*) * 100.0/SUM(COUNT(*)) OVER() AS DECIMAL(18,0)) AS Percentage
+FROM 
+(( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN VWERLR.GEN_CASE_TYPE IN ('Conduct Issue') AND VWERLR.GEN_CASE_CATEGORY IN ('Alcohol/Drugs',
+                        'Confidential Information- Failure to Protect and/or Disclose','Discouteous/Inappropriate Behaviour',
+                        'Ethics Violation','Failure to Follow Directions/Instructions','Falsification','Insubordination','Merit Principles',
+                        'Misuse of Official Position','Off Duty Conduct','Prohibited Personnel Action',
+                        'Sexual Harassment','SSA Database Referral','Telework/Flexplace','Theft/Unauthorized Possession',
+                        'Threatening/Intimidating Behavior','Travel','Workplace Violence')  
+                        THEN  'Inappropriate' 
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN VWERLR.GEN_CASE_TYPE IN ('Conduct Issue') AND VWERLR.GEN_CASE_CATEGORY IN ('Alcohol/Drugs',
+                        'Confidential Information- Failure to Protect and/or Disclose','Discouteous/Inappropriate Behaviour',
+                        'Ethics Violation','Failure to Follow Directions/Instructions','Falsification','Insubordination','Merit Principles',
+                        'Misuse of Official Position','Off Duty Conduct','Prohibited Personnel Action',
+                        'Sexual Harassment','SSA Database Referral','Telework/Flexplace','Theft/Unauthorized Possession',
+                        'Threatening/Intimidating Behavior','Travel','Workplace Violence')  
+                        THEN  'Inappropriate' 
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                     
+AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')      
+        )
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN VWERLR.GEN_CASE_CATEGORY IN ('Inappropriate Use of Government Credit Card - Purchase') 
+THEN  'Misuse_Credit'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN VWERLR.GEN_CASE_CATEGORY IN ('Inappropriate Use of Government Credit Card - Purchase')
+THEN 'Misuse_Credit'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')      
+        )
+
+
+
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN VWERLR.GEN_CASE_CATEGORY IN ('Inappropriate Use of Government Credit Card - Travel') 
+THEN'Misuse_Travel'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN VWERLR.GEN_CASE_CATEGORY IN ('Inappropriate Use of Government Credit Card - Travel') 
+THEN'Misuse_Travel'
+                      
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                     
+                     
+                     
+                       AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')      
+                     
+)
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN VWERLR.GEN_CASE_CATEGORY IN ('Inappropriate Use of Government Property',
+ 'Inappropriate Use of Government Time',
+'Inappropriate Use of Government Vehicle','Computer Misuse') 
+THEN  'Misuse_Time'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN VWERLR.GEN_CASE_CATEGORY IN ('Inappropriate Use of Government Property',
+ 'Inappropriate Use of Government Time',
+'Inappropriate Use of Government Vehicle','Computer Misuse') 
+THEN  'Misuse_Time'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                       
+                       AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')  
+                     
+)
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN  VWERLR.GEN_CASE_CATEGORY IN ('Time and Leave') 
+THEN  'Time_and_Leave'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN  VWERLR.GEN_CASE_CATEGORY IN ('Time and Leave') 
+THEN  'Time_and_Leave'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                     
+            AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')  
+                     
+)
+
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN  VWERLR.GEN_CASE_TYPE IN ('Performance Issue','WGI Denial/Reconsideration')
+THEN  'Performance'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN  VWERLR.GEN_CASE_TYPE IN ('Performance Issue','WGI Denial/Reconsideration')
+THEN  'Performance'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                     
+           AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')  
+                     
+)
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+(CASE WHEN  VWERLR.GEN_CASE_TYPE IN ('Conduct Issue','Probationary Period Action','Labor Negotiation',
+'Unfair Labor Practice','Third Party Hearing','Information Request','Investigation','Medical Documentation/Exam')
+AND VWERLR.GEN_CASE_TYPE NOT IN('Performance Issue','WGI Denial/Reconsideration','Grievance') 
+AND VWERLR.GEN_CASE_CATEGORY NOT IN ('Alcohol/Drugs',
+ 'Confidential Information - Failure to Protect and/or Disclose',
+'Discourteous/Inappropriate Behavior',
+'Ethics Violations',
+'Failure to Follow Directions/Instructions',
+'Falsification',
+'Insubordination',
+'Merit Principles',
+'Misuse of Official Position',
+'Off Duty Conduct',
+'Prohibited Personnel Action',
+'Sexual Harassment',
+'SSA Database Referral',
+'Telework/Flexplace',
+'Theft/Unauthorized Possession',
+'Threatening/Intimidating Behavior',
+'Travel',
+'Workplace Violence',
+'Time and Leave',
+'Inappropriate Use of Government Property',
+'Inappropriate Use of Government Time',
+'Inappropriate Use of Government Vehicle',
+'Computer Misuse',
+'Inappropriate Use of Government Credit Card - Travel',
+'Inappropriate Use of Government Credit Card -Purchase')
+THEN  'Other'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN  VWERLR.GEN_CASE_TYPE IN ('Conduct Issue','Probationary Period Action','Labor Negotiation',
+'Unfair Labor Practice','Third Party Hearing','Information Request','Investigation','Medical Documentation/Exam')
+AND VWERLR.GEN_CASE_TYPE NOT IN('Performance Issue','WGI Denial/Reconsideration','Grievance') 
+AND VWERLR.GEN_CASE_CATEGORY NOT IN ('Alcohol/Drugs',
+ 'Confidential Information - Failure to Protect and/or Disclose',
+'Discourteous/Inappropriate Behavior',
+'Ethics Violations',
+'Failure to Follow Directions/Instructions',
+'Falsification',
+'Insubordination',
+'Merit Principles',
+'Misuse of Official Position',
+'Off Duty Conduct',
+'Prohibited Personnel Action',
+'Sexual Harassment',
+'SSA Database Referral',
+'Telework/Flexplace',
+'Theft/Unauthorized Possession',
+'Threatening/Intimidating Behavior',
+'Travel',
+'Workplace Violence',
+'Time and Leave',
+'Inappropriate Use of Government Property',
+'Inappropriate Use of Government Time',
+'Inappropriate Use of Government Vehicle',
+'Computer Misuse',
+'Inappropriate Use of Government Credit Card - Travel',
+'Inappropriate Use of Government Credit Card -Purchase')
+THEN  'Other'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+  AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')  
+                     
+)
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+( CASE WHEN GR.GI_GRIEVANCE_RELATED_2_PMAP  IN 'Y' THEN 'PMAP'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN GR.GI_GRIEVANCE_RELATED_2_PMAP  IN 'Y' THEN 'PMAP'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+                     
+)
+
+UNION ALL
+( SELECT
+ VWERLR.ERLR_CASE_NUMBER, 
+
+        VWERLR.ERLR_CASE_NUMBER ERLR_CASE_NUMBER,
+        VWERLR.GEN_EMPLOYEE_NAME EMPNAME,
+        VWERLR.GEN_CUSTOMER_NAME CONTACTNAME,
+        VWERLR.GEN_PRIMARY_SPECIALIST_ID,
+        VWERLR.GEN_EMPLOYEE_ADMIN_CD ADMINCD,
+        VWERLR.GEN_CASE_TYPE CASETYPE,
+        VWERLR.GEN_CASE_CATEGORY CASECATEGORY,
+	VWERLR.GEN_EMPLOYEE_ADMIN_CD  ADMIN_CD,
+( CASE WHEN GR.GI_GRIEVANCE_RELATED_2_PMAP  IN 'N' THEN 'NPMAP'
+                     END 
+                       )   
+                       AS CASE_TYPE1 
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+LEFT JOIN HHS_CMS_HR.ERLR_GRIEVANCE GR ON VWERLR.ERLR_CASE_NUMBER = GR.ERLR_CASE_NUMBER
+WHERE VWERLR.GEN_CASE_TYPE IS NOT NULL AND 	
+(CASE WHEN GR.GI_GRIEVANCE_RELATED_2_PMAP  IN 'N' THEN 'NPMAP'
+                     END ) IS NOT NULL AND VWERLR.GEN_CASE_CATEGORY IS NOT NULL 
+ AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+    OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = 'FC')
+	)
+        
+  AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_FROM}, 'DD-MON-YY') || ' 00:00:00', 'DD-MON-YY HH24:MI:SS')) 
+             AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{DATE_RANGE_TO}, 'DD-MON-YY') || ' 23:59:59', 'DD-MON-YY HH24:MI:SS')))
+       )
+
+
+      
+   -- Filter : Employee Name
+      AND (	( TRIM($P{EMP_NAME}) IS NULL )
+       OR (   VWERLR.GEN_EMPLOYEE_NAME  LIKE '%' || REPLACE($P{EMP_NAME},',%20',', ') || '%' )	)
+
+
+      -- Filter : Customer Contact Name
+      AND (  ( TRIM($P{CONTACT_NAME}) IS NULL )
+       OR (VWERLR.GEN_CUSTOMER_NAME LIKE '%' || REPLACE($P{CONTACT_NAME},',%20',', ') || '%' )	)
+
+  
+      -- Filter : Case Type
+      AND  ( ($P{CASE_TYPE} = 'All') 	OR ( VWERLR.GEN_CASE_TYPE  = $P{CASE_TYPE} ) ) 
+
+        -- Filter : Final Action 
+   AND (HHS_CMS_HR.FN_FILTER_FINALACTION(VWERLR.ERLR_CASE_NUMBER, $P{FINALACTION}) > 0 OR $P{FINALACTION} = 'All')
+   
+ -- Filter : Primary ER/LR Specialist
+      AND (  ( TRIM($P{PRIMARY_SPECIALIST}) = 'All' )
+       OR ( VWERLR.GEN_PRIMARY_SPECIALIST_ID = $P{PRIMARY_SPECIALIST} )	)
+       
+   -- Filter: Case Category
+      AND (HHS_CMS_HR.FN_FILTER_CATEGORY(VWERLR.ERLR_CASE_NUMBER, $P{CATEGORY}) > 0 OR $P{CATEGORY} = 'All')  
+                     
+)
+
+)
+
+
+GROUP BY CASE_TYPE1
+ORDER BY CASE_TYPE1
+
+
+                       ]]>
+	</queryString>
+	<field name="CASE_TYPE1" class="java.lang.String"/>
+	<field name="COUNT(*)" class="java.math.BigDecimal"/>
+	<field name="PERCENTAGE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<summary>
+		<band height="236" splitType="Stretch">
+			<pieChart>
+				<chart isShowLegend="false" evaluationTime="Report">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="-20" width="600" height="256" uuid="16ae38a9-9255-4e18-a020-e7bc754dc369">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<chartTitle>
+						<font size="1"/>
+					</chartTitle>
+					<chartSubtitle>
+						<font size="1"/>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{CASE_TYPE1}]]></keyExpression>
+					<valueExpression><![CDATA[$F{COUNT(*)}]]></valueExpression>
+				</pieDataset>
+				<piePlot isShowLabels="true" isCircular="true" labelFormat="{1} cases ({2})" legendLabelFormat="{0}">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0">
+						<seriesColor seriesOrder="0" color="#046B99"/>
+						<seriesColor seriesOrder="1" color="#9BDAF1"/>
+						<seriesColor seriesOrder="2" color="#4AA564"/>
+						<seriesColor seriesOrder="3" color="#00A6D2"/>
+						<seriesColor seriesOrder="4" color="#FDB81E"/>
+						<seriesColor seriesOrder="5" color="#981B1E"/>
+						<seriesColor seriesOrder="6" color="#AEB0B5"/>
+						<seriesColor seriesOrder="7" color="#0071BC"/>
+						<seriesColor seriesOrder="8" color="#323A45"/>
+						<seriesColor seriesOrder="9" color="#94BFA2"/>
+						<seriesColor seriesOrder="10" color="#FAD980"/>
+					</plot>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="28">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="20" uuid="f0900a85-0fe6-4f65-a2dc-e5402d0e254d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

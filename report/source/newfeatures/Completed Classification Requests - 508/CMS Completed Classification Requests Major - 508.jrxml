@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-25T16:24:35 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Completed Classification Requests Major - 508" pageWidth="500" pageHeight="120" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud Data Adapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="764"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="226"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Completed_Classification_Requests_Major_V2___Chart_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Completed_Classification_Requests_Major_V2___Chart"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- Calculates the number and percentage of completed Classification requests that fell within or exceeded the SLA for the specified MAJOR Classification Types
+
+SELECT DISTINCT SLA_Status, ROUND(AVG(AGE), 1) AS Average_Comp_Time, COUNT(*), CAST(COUNT(*) * 100.0/NULLIF(SUM(COUNT(*)) OVER(), 0) AS DECIMAL(18,0)) AS Percentage
+        FROM (SELECT CP.PROCESS_AGE AS AGE,
+                    (CASE  WHEN CP.PROCESS_AGE <= 7 THEN 'Within Time to Classify Goal' ELSE 'Exceeded Time to Classify Goal' END) AS SLA_Status
+                    FROM "HHS_VW_CLASSIFICATION_PROC" CP
+                    WHERE ("CP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("CP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') -- Classification completed, but not cancelled
+                        AND "CP"."PROCESS_COMPLETION_DATE" BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}
+                     	AND (
+                              ($P{COMPONENT} = 'CMS-wide' AND CP.V_ADMIN_CODE LIKE 'FC%') 
+                              OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND CP.V_ADMIN_CODE = 'FC')
+                              OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND CP.V_ADMIN_CODE LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                              OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND CP.V_ADMIN_CODE = UPPER(TRIM($P{ADMIN_CD})))
+                            )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+                            
+						AND ($P{REQ_TYPE} = 'All' OR CP.V_REQUEST_TYPE = $P{REQ_TYPE}) -- Request Type filter                     
+                        AND (CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Major Duties') )    -- Classification Type filter: All MAJOR Classification Types
+                    
+                ) s
+GROUP BY SLA_Status
+
+ORDER BY SLA_Status DESC]]>
+	</queryString>
+	<field name="SLA_STATUS" class="java.lang.String"/>
+	<field name="AVERAGE_COMP_TIME" class="java.math.BigDecimal"/>
+	<field name="COUNT(*)" class="java.math.BigDecimal"/>
+	<field name="PERCENTAGE" class="java.math.BigDecimal"/>
+	<variable name="Num_Requests" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{COUNT(*)}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="20" uuid="ffb7af1a-c04d-444e-8bb7-4bdf6f950a50">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Average Days to Classify the Completed Major Requests"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="30" forecolor="#000000" uuid="8fec8737-ff4c-451b-8225-a5364b6b1be5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Provides the number of major actions completed within the 7-business day goal and the number that exceeded the goal."]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="350" y="0" width="150" height="20" uuid="b08bb7da-8b5c-4a6f-aeca-2023373aef1e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Percentage of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="150" height="20" uuid="c5898061-a444-4e41-b2d1-a30cbff951b9">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="20" uuid="218f0f99-a6ca-4d23-b30e-dbe6b0da47d2">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Completion Status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="0" width="150" height="20" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="15eb7985-1094-4ead-83f8-ca41f06e4abf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNT(*)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="200" height="20" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="c9d36db0-a835-492e-83c0-179ea574ae11">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SLA_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="0" width="150" height="20" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="26db7bed-1427-45a1-a8f6-cd3ea5ee9c93">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERCENTAGE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="90">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="30" forecolor="#000000" uuid="0b44fcdd-013c-4e31-91be-274ca469d9a0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Provides the number of major actions completed within the 7-business day goal and the number that exceeded the goal. No records match your search criteria."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="350" y="50" width="150" height="20" uuid="33456e6c-4f29-4df9-a303-cb8b146d3c58">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Percentage of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="50" width="150" height="20" uuid="70c523ed-1666-4927-81b9-1332db198848">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Requests]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="200" height="20" uuid="9b23871f-9e89-45f5-8fbc-e7ac548a02c8">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Completion Status]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="200" y="70" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="d3ff7cf0-7727-4bd2-a560-0d631a039f10">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="70" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4f8ec8bd-3047-45b0-947c-a412c5132d5a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="350" y="70" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="67f17b2b-4504-4ed8-9e7b-a8b952ca73a6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="500" height="20" forecolor="#000000" uuid="4dcc84de-8378-4fd1-91ae-da5efae0d1ab">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Average Days to Classify the Completed Major Requests"]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
+</jasperReport>

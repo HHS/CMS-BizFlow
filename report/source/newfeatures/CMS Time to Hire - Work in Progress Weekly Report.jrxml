@@ -1,0 +1,1120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-05-17T12:34:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time to Hire - Work in Progress Weekly Report" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="130"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="863"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="816"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="170"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="CMS Time to Hire - Work in Progress Weekly Report"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.4" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.5" value="Component"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.6" value="groupFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTimeToHireWorkInProgressWeeklyReport_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTimeToHireWorkInProgressWeeklyReport"/>
+	<parameter name="WEEK_OF" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	TRUNC(DATA_PULLED_ON) AS DATA_PULLED_ON,
+	COMPONENT AS Component,
+	(CASE
+		WHEN (COMPONENT = 'CMS - wide') THEN MAX(CAST(REGEXP_REPLACE(REQUEST_NUMBER, '[^0-9]+', '') AS NUMBER))
+		ELSE COUNT(REQUEST_NUMBER)
+	END) AS Active_Actions_In_NEIL,
+	SUM(ACTION_ACTIVE_PRIOR_STRAT_CON) AS Active_Actions_Prior_StratCon,
+	SUM(ACHIEVED_STRAT_CON) AS Achieved_StratCon,
+	SUM(MISSED_STRAT_CON) AS Missed_StratCon,
+	SUM(ACHIEVED_CLASS) AS Achieved_Class,
+	SUM(MISSED_CLASS) AS Missed_Class,
+	SUM(ACHIEVED_QUALS) AS Achieved_Quals,
+	SUM(MISSED_QUALS) AS Missed_Quals,
+	SUM(ACHIEVED_SELECTION) AS Achieved_Selection,	
+	SUM(MISSED_SELECTION) AS Missed_Selection,
+	SUM(ACHIEVED_TENT_OFFER) AS Achieved_Tent_Offer,	
+	SUM(MISSED_TENT_OFFER) AS Missed_Tent_Offer,
+	SUM(ACHIEVED_OFCL_OFFER) AS Achieved_Ofcl_Offer,	
+	SUM(MISSED_OFCL_OFFER) AS Missed_Ofcl_Offer	
+FROM HHS_CMS_HR.CMS_TIME_TO_HIRE_WEEKLY_PILOT
+WHERE TRUNC(WEEK_OF) = TO_DATE(TO_CHAR($P{WEEK_OF}, 'YYYY-MM-DD'), 'YYYY-MM-DD HH24:MI:SS')
+GROUP BY WEEK_OF,
+		COMPONENT,
+		TRUNC(DATA_PULLED_ON)
+ORDER BY COMPONENT]]>
+	</queryString>
+	<field name="DATA_PULLED_ON" class="java.sql.Timestamp"/>
+	<field name="COMPONENT" class="java.lang.String"/>
+	<field name="ACTIVE_ACTIONS_IN_NEIL" class="java.math.BigDecimal"/>
+	<field name="ACTIVE_ACTIONS_PRIOR_STRATCON" class="java.math.BigDecimal"/>
+	<field name="ACHIEVED_STRATCON" class="java.math.BigDecimal"/>
+	<field name="MISSED_STRATCON" class="java.math.BigDecimal"/>
+	<field name="ACHIEVED_CLASS" class="java.math.BigDecimal"/>
+	<field name="MISSED_CLASS" class="java.math.BigDecimal"/>
+	<field name="ACHIEVED_QUALS" class="java.math.BigDecimal"/>
+	<field name="MISSED_QUALS" class="java.math.BigDecimal"/>
+	<field name="ACHIEVED_SELECTION" class="java.math.BigDecimal"/>
+	<field name="MISSED_SELECTION" class="java.math.BigDecimal"/>
+	<field name="ACHIEVED_TENT_OFFER" class="java.math.BigDecimal"/>
+	<field name="MISSED_TENT_OFFER" class="java.math.BigDecimal"/>
+	<field name="ACHIEVED_OFCL_OFFER" class="java.math.BigDecimal"/>
+	<field name="MISSED_OFCL_OFFER" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="47" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="6" width="772" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Time to Hire - Work in Progress Weekly Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="31" width="772" height="16" uuid="d0ac1ef4-a269-43f5-a542-f3c292287484">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Week of: " + DATEFORMAT($P{WEEK_OF},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="120">
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="772" height="120" forecolor="#050505" backcolor="rgba(201, 203, 209, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="120" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Component]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="100" y="0" width="54" height="120" uuid="61474459-8a2f-499f-ae99-c9804952cedb">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions in Hiring]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="214" y="0" width="93" height="90" uuid="e5fc60ca-3842-48c3-98bd-8a22b5c9724e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Strategic Consultation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="307" y="0" width="93" height="90" uuid="1a56c8e2-5108-4f0d-8720-f3958c95eb36">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Classification, Job Analysis, Assessment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="400" y="0" width="93" height="90" uuid="a0d3a960-42bd-4692-8a63-074427435dc2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Qualifications, Certificate Issuance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="493" y="0" width="93" height="90" uuid="c373e4a2-5d3f-487f-b10f-d2a7edeb3f7b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Interviews & Selection]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="40" width="93" height="50" forecolor="#000066" uuid="5ce34f8f-1a90-44cc-91bf-4636d98f4e16">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="6" isBold="true"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[START:
+Date entered into NEIL
+
+End:
+Date HR Approves StratCon
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="25" width="93" height="15" uuid="34a99631-ed99-40f2-9ced-bc2a7acf76fb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Target - 12 Bus. Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="25" width="93" height="15" uuid="54ea5cc0-0baf-4b4b-8a84-9c3e40c97e58">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Target - 13 Bus. Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="493" y="25" width="93" height="15" uuid="3a07de07-f05d-46cc-b619-74b17c8a00b7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Target - 11 Bus. Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="25" width="93" height="15" uuid="9a10ef9d-27dd-4772-8038-0f2d933caf0d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Target - 5 Bus. Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="40" width="93" height="50" forecolor="#000066" uuid="686ffdac-d293-4456-8bdc-ee2613d8c350"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="6" isBold="true"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[START:
+Date HR Approves StratCon
+
+End:
+Announcement Open Date
+(minus 1 business day)
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="40" width="93" height="50" forecolor="#000066" uuid="5a570929-1baa-4a41-b30b-83d7457c9026">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="6" isBold="true"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[START:
+Announcement Close Date
+
+End:
+Certificate Review Sent Date
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="493" y="40" width="93" height="50" forecolor="#000066" uuid="dbf78d4f-7091-4cc5-9ab8-44911c854532">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="6" isBold="true"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[START:
+Certificate Review Sent Date
+
+End:
+Certificate Review Return Date (first selection)
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="154" y="0" width="60" height="120" uuid="8b11dde6-3570-4988-9cd9-05cd1b4205c8">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions Prior to Strategic Consultation Meeting]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="214" y="90" width="93" height="15" uuid="084b95b2-ab22-4346-8f8a-d9d5cde7a198">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="214" y="105" width="47" height="15" uuid="5fa2d9a4-4409-473e-ae1c-990dcfbb112a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Achieved <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="261" y="105" width="46" height="15" uuid="e7140781-c148-48b7-9dcc-5e6ea8030c2c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Missed <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="307" y="90" width="93" height="15" uuid="6a0a0c6e-0113-414e-b1d2-943f193aac6e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="400" y="90" width="93" height="15" uuid="eb285cc0-48f1-46b3-b331-61c641a4398b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="493" y="90" width="93" height="15" uuid="fc681ab1-cee8-46b6-a397-1a84c8f7b9a1">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="493" y="105" width="47" height="15" uuid="ececdb97-a244-455d-b916-17045108d2fc">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Achieved <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="354" y="105" width="46" height="15" uuid="46f2bd36-23ae-49f4-8486-7fe12a1e96ee">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Missed <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="400" y="105" width="47" height="15" uuid="5c6d4d35-8ccb-46dc-885e-66c28c481d30">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Achieved <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="540" y="105" width="46" height="15" uuid="5123def3-bfb2-42f6-8fe3-3c4cba0143c2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Missed <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="307" y="105" width="47" height="15" uuid="4c757d3e-10f8-4352-a0c9-c96c6db37d74">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Achieved <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="447" y="105" width="46" height="15" uuid="4d458e0a-a0ed-4041-888b-496dbc60cd35">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Missed <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="586" y="0" width="93" height="90" uuid="f41a7281-4af2-4bb2-af62-418531656e8c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Tentative Offer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="586" y="90" width="93" height="15" uuid="55eeb9c9-0703-4a8e-bdd6-912bff9490c7">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="586" y="105" width="47" height="15" uuid="2b2a6303-8f51-4ebc-8056-e1df0acfcb1f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Achieved <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="633" y="105" width="46" height="15" uuid="d0025bf4-ebb1-4320-8096-805bb05374e9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Missed <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="586" y="25" width="93" height="15" uuid="1f83f98a-0cee-4c89-a952-f9311858788f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Target - 4 Bus. Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="586" y="40" width="93" height="50" forecolor="#000066" uuid="00f8e5c7-d036-4d54-9588-d84f47d2d071">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="6" isBold="true"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[START:
+Certificate Review Return Date (first selection)
+
+End:
+Send Tentative Offer Date
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="679" y="0" width="93" height="90" uuid="227119d7-a95f-4a31-9b7f-55ec20eccc1c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="4" spacingBefore="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Official Offer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="679" y="25" width="93" height="15" uuid="75425b9c-2425-4a8d-aa3e-1f4284edf8f7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Target - 16 Bus. Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="679" y="40" width="93" height="50" forecolor="#000066" uuid="3af3e5d6-5816-42b9-88fa-a8cc4a478e51">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="6" isBold="true"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[START:
+Send Tentative Offer Date
+
+End:
+Official Offer Complete Date
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="679" y="90" width="93" height="15" uuid="9eeef038-47a4-4da6-8820-2f755de80805">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="4" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[# of Active Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="679" y="105" width="47" height="15" uuid="3c8a5048-fe44-47bb-8669-141b8202f120">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Achieved <br/>Target]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="726" y="105" width="46" height="15" uuid="de3ae371-4565-43f8-ade3-4770729f9906">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="7" isBold="true"/>
+					<paragraph leftIndent="2" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Missed <br/>Target]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="100" height="20" uuid="8ab8488e-4c02-41b4-a864-7946c57d3153">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPONENT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="54" height="20" uuid="4dd88577-0d4a-4443-991b-4763f1cf1007">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTIVE_ACTIONS_IN_NEIL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="400" y="0" width="47" height="20" uuid="55c2041e-2dd0-463b-aa2c-91ed48244b7b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACHIEVED_QUALS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="214" y="0" width="47" height="20" uuid="02ce031b-7483-4a73-937d-0a5213883cf3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACHIEVED_STRATCON}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="307" y="0" width="47" height="20" uuid="521b5e56-9011-47c4-9d74-4b363dd0c89c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACHIEVED_CLASS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="493" y="0" width="47" height="20" uuid="2540734a-aba7-47fb-a1c6-238b6df8df23">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACHIEVED_SELECTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="154" y="0" width="60" height="20" uuid="777a1329-07fa-4018-94b2-afacede7d01c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTIVE_ACTIONS_PRIOR_STRATCON}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="261" y="0" width="46" height="20" uuid="e21785a5-f684-4439-8bef-14ba50302ae0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSED_STRATCON}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="354" y="0" width="46" height="20" uuid="e6161cdc-b028-4e2c-8df9-a012f5cdf3e9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSED_CLASS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="447" y="0" width="46" height="20" uuid="5a6b005f-f0b8-4479-8429-73fd88605633">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSED_QUALS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="540" y="0" width="46" height="20" uuid="3466e771-922b-4456-ac00-dfbbff2a96a3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSED_SELECTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="586" y="0" width="47" height="20" uuid="327a9907-94e1-40ea-a1cb-4a01955aee98">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACHIEVED_TENT_OFFER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="633" y="0" width="46" height="20" uuid="5d88d4c8-fb76-4114-86b7-986b721b7436">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSED_TENT_OFFER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="679" y="0" width="47" height="20" uuid="f6a470e5-4fbe-4f22-8054-ab4553534f1d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACHIEVED_OFCL_OFFER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="726" y="0" width="46" height="20" uuid="c5325161-1053-43b5-8b63-398c0501a1e3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="4" spacingBefore="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSED_OFCL_OFFER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement x="684" y="25" width="50" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="734" y="25" width="38" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="25" width="286" height="15" uuid="6a065a17-f1c8-44bd-9e47-9bebe35e502f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NEIL and USA Staffing Data as of " + DATEFORMAT($F{DATA_PULLED_ON},"MMMM d, yyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="74">
+			<staticText>
+				<reportElement x="1" y="54" width="336" height="20" uuid="56b892c2-a869-40a4-8e55-fd0ee05d336f"/>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="8" width="772" height="25" uuid="a3ac0b61-55d1-498d-9d92-2f933bd85f14">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Time to Hire - Work in Progress Weekly Report]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

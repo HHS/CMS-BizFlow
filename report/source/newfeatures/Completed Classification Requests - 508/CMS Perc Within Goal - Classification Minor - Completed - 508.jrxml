@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-26T11:43:19 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Perc Within Goal - Classification MINor - Completed - 508" pageWidth="900" pageHeight="220" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="900" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f523c967-47af-4385-ab97-d2e09f5e6f62">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud Data Adapter"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="194"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="801"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508_TEST/Completed_Classification_Requests___508/CMS_Perc_Within_Goal___Classification_Minor___Completed___508_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508_TEST/Completed_Classification_Requests___508/CMS_Perc_Within_Goal___Classification_Minor___Completed___508"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="680"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="306"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- Calculates the percentage of requests that completed each step/phase within the performance goal
+-- Calculates the values for MINOR classification types
+-- Calculates the values for CMS as a whole and for a specific Admin Code based on input parameters
+
+SELECT        
+        CAST(S.Complete_Cover_Within * 100.0/ NULLIF(S.Complete_All, 0) AS DECIMAL(18,0)) AS CMS_MIN_Perc_Coversheet,
+        CAST(S.Confirm_Class_Within * 100.0/NULLIF(S.Complete_All, 0) AS DECIMAL(18,0)) AS CMS_MIN_Perc_Confirm,
+        CAST(S.Confirm_BUS_Within * 100.0/NULLIF(S.Complete_All, 0) AS DECIMAL(18,0)) AS CMS_MIN_Perc_BUS,
+        CAST(S.Approve_Cover_Within * 100.0/NULLIF(S.Complete_All, 0) AS DECIMAL(18,0)) AS CMS_MIN_Perc_App_Cover,
+        CAST(S.Create_Package_Within * 100.0/NULLIF(S.Complete_All, 0) AS DECIMAL(18,0)) AS CMS_MIN_Perc_Package,
+        CAST((S.Complete_Cover_Within + S.Confirm_BUS_Within + S.Create_Package_Within) * 100 /(NULLIF(S.Complete_All, 0) * 3) AS DECIMAL(18,0))AS CMS_MIN_HR_Perc_Overall,
+        CAST((S.Confirm_Class_Within + S.Approve_Cover_Within) * 100 /(NULLIF(S.Complete_All, 0) * 2) AS DECIMAL(18,0))AS CMS_MIN_COMP_Perc_Overall,
+        
+        CAST(T.Complete_Cover_Within * 100.0/ NULLIF(T.Complete_All, 0) AS DECIMAL(18,0)) AS COMP_MIN_Perc_Coversheet,
+        CAST(T.Confirm_Class_Within * 100.0/NULLIF(T.Complete_All, 0) AS DECIMAL(18,0)) AS COMP_MIN_Perc_Confirm,
+        CAST(T.Confirm_BUS_Within * 100.0/NULLIF(T.Complete_All, 0) AS DECIMAL(18,0)) AS COMP_MIN_Perc_BUS,
+        CAST(T.Approve_Cover_Within * 100.0/NULLIF(T.Complete_All, 0) AS DECIMAL(18,0)) AS COMP_MIN_Perc_App_Cover,
+        CAST(T.Create_Package_Within * 100.0/NULLIF(T.Complete_All, 0) AS DECIMAL(18,0)) AS COMP_MIN_Perc_Package,
+        CAST((T.Complete_Cover_Within + T.Confirm_BUS_Within + T.Create_Package_Within) * 100 /(NULLIF(T.Complete_All, 0) * 3) AS DECIMAL(18,0))AS COMP_MIN_HR_Perc_Overall,
+        CAST((T.Confirm_Class_Within + T.Approve_Cover_Within) * 100 /(NULLIF(T.Complete_All, 0) * 2) AS DECIMAL(18,0)) AS COMP_MIN_COMP_Perc_Overall
+
+FROM 
+        
+    (SELECT
+        SUM(CASE WHEN CP.PROCESS_STATE_DESC = 'Completed' THEN 1 ELSE 0 END) 
+            AS Complete_All, -- Num requests that completed the CLASSIFICATION WORKFLOW
+            
+        SUM(CASE WHEN (BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Complete PD Coversheet and Classification Analysis')) <= 1 THEN 1 ELSE 0 END) 
+                AS Complete_Cover_Within, -- Num requests that completed the Complete Coversheet step within goal
+                
+        SUM(CASE WHEN CP.CONFIRM_ANALYSIS_AGE <= 0 THEN 1 ELSE 0 END) 
+                AS Confirm_Class_Within, -- Num requests that completed the Confirm Classification Analysis step within goal  
+                                
+        SUM(CASE WHEN (CASE WHEN  CF."BYPASS_DWC_FL" = 'Yes' THEN BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm Final BUS Code') 
+                            WHEN  CF."BYPASS_DWC_FL" = 'No' THEN BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm BUS Code')
+                                                                + BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm Final BUS Code')
+                            ELSE  BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm BUS Code') 
+                                                    + BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Review DWC Entry') END) <= 0 THEN 1 ELSE 0 END) 
+                AS Confirm_BUS_Within, -- Num requests that completed the Confirm BUS Code step within goal     
+                
+        SUM(CASE WHEN CP.APPROVE_PD_COVERSHEET_AGE <= 1 THEN 1 ELSE 0 END) 
+                AS Approve_Cover_Within, -- Num requests that completed the Approve PD Coversheet step within goal                  
+                
+        SUM(CASE WHEN (BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Approve Coversheet and Create Final Pkg')) <= 0 THEN 1 ELSE 0 END) 
+                AS Create_Package_Within -- Num requests that completed the Create Final Package step within goal    
+            
+            FROM "HHS_VW_CLASSIFICATION_PROC" CP
+                    INNER JOIN   "HHS_CMS_HR"."VW_CLASSIFICATION" CF ON  "CP"."PROCESS_ID" =  "CF"."PD_PROCID"
+    
+			WHERE (FN_GET_RLVNTDATAVALUE(CF.PD_PROCID, 'I', 'S', 'requestStatus') <> 'Request Cancelled') -- Classification completed, but not cancelled
+ 				AND "CP"."PROCESS_COMPLETION_DATE" BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
+					AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- Completed in given date range
+
+                AND (($P{REQ_TYPE} = 'All') OR  (CP.V_REQUEST_TYPE = $P{REQ_TYPE}))      -- Request Type filter
+                AND CP.V_CLASSIFICATION_TYPE IN ('Review Existing Position Description', 'Update Coversheet') -- Classification Type Filter: All MINOR types
+        ) S, -- CMS-wide results for MINOR Types
+
+    (SELECT
+        SUM(CASE WHEN CP.PROCESS_STATE_DESC = 'Completed' THEN 1 ELSE 0 END) 
+            AS Complete_All, -- Num requests that completed the CLASSIFICATION WORKFLOW
+            
+        SUM(CASE WHEN (BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Complete PD Coversheet and Classification Analysis')) <= 1 THEN 1 ELSE 0 END) 
+                AS Complete_Cover_Within, -- Num requests that completed the Complete Coversheet step within goal
+                
+        SUM(CASE WHEN CP.CONFIRM_ANALYSIS_AGE <= 0 THEN 1 ELSE 0 END) 
+                AS Confirm_Class_Within, -- Num requests that completed the Confirm Classification Analysis step within goal  
+                
+        SUM(CASE WHEN (CASE WHEN  CF."BYPASS_DWC_FL" = 'Yes' THEN BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm Final BUS Code') 
+                            WHEN  CF."BYPASS_DWC_FL" = 'No' THEN BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm BUS Code')
+                                                                + BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm Final BUS Code')
+                            ELSE  BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Confirm BUS Code') 
+                                                    + BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Review DWC Entry') END) <= 0 THEN 1 ELSE 0 END) 
+                AS Confirm_BUS_Within, -- Num requests that completed the Confirm BUS Code step within goal     
+                
+        SUM(CASE WHEN CP.APPROVE_PD_COVERSHEET_AGE <= 1 THEN 1 ELSE 0 END) 
+                AS Approve_Cover_Within, -- Num requests that completed the Approve PD Coversheet step within goal                  
+                
+        SUM(CASE WHEN (BIZFLOW.HHS_FN_GET_ACCBUSDAYSDIFF(CP.PROCESS_ID, 'Approve Coversheet and Create Final Pkg')) <= 0 THEN 1 ELSE 0 END) 
+                AS Create_Package_Within -- Num requests that completed the Create Final Package step within goal    
+            
+            FROM "HHS_VW_CLASSIFICATION_PROC" CP
+                    INNER JOIN   "HHS_CMS_HR"."VW_CLASSIFICATION" CF ON  "CP"."PROCESS_ID" =  "CF"."PD_PROCID"
+    
+			WHERE (FN_GET_RLVNTDATAVALUE(CF.PD_PROCID, 'I', 'S', 'requestStatus') <> 'Request Cancelled') -- Classification completed, but not cancelled
+ 				AND "CP"."PROCESS_COMPLETION_DATE" BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
+					AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- Completed in given date range
+          
+                AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND NVL(CF.CS_ADMIN_CD, CP.V_ADMIN_CODE) LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND NVL(CF.CS_ADMIN_CD, CP.V_ADMIN_CODE) = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     	
+                AND (($P{REQ_TYPE} = 'All') OR  (CP.V_REQUEST_TYPE = $P{REQ_TYPE}))      -- Request Type filter
+                AND CP.V_CLASSIFICATION_TYPE IN ('Review Existing Position Description', 'Update Coversheet') -- Classification Type Filter: All MINOR types
+
+        ) T -- Component-wide results for MINOR types]]>
+	</queryString>
+	<field name="CMS_MIN_PERC_COVERSHEET" class="java.math.BigDecimal"/>
+	<field name="CMS_MIN_PERC_CONFIRM" class="java.math.BigDecimal"/>
+	<field name="CMS_MIN_PERC_BUS" class="java.math.BigDecimal"/>
+	<field name="CMS_MIN_PERC_APP_COVER" class="java.math.BigDecimal"/>
+	<field name="CMS_MIN_PERC_PACKAGE" class="java.math.BigDecimal"/>
+	<field name="CMS_MIN_HR_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<field name="CMS_MIN_COMP_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_PERC_COVERSHEET" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_PERC_CONFIRM" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_PERC_BUS" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_PERC_APP_COVER" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_PERC_PACKAGE" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_HR_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<field name="COMP_MIN_COMP_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="900" height="20" uuid="e65d6375-f9ba-4b15-a25c-bc8040c32142">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Percentage of Minor Classification Requests Completed Within Performance Goals]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="900" height="30" uuid="d2a262ce-53c9-4db2-bf89-8bdeb67810a4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Provides the performance against business goals for all phases of the Classification workflow for Minor Actions (for example, Update Coversheet and Review Existing Position Description.)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="400" height="20" backcolor="#D6D7D9" uuid="f28f3c5c-fce4-4628-9aaa-e47f17bab128">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Classification Phase]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="400" y="0" width="200" height="20" backcolor="#D6D7D9" uuid="560188f8-22b3-48ce-a45a-0aaa584319bf">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Performance Goals in Business Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="600" y="0" width="150" height="20" backcolor="#D6D7D9" uuid="28897435-8887-45a4-b684-8edd5b768247">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Actuals]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="140">
+			<textField>
+				<reportElement x="600" y="0" width="150" height="20" uuid="b26512f5-5389-4dbd-9051-7fd516c08169">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_MIN_PERC_COVERSHEET} != null ? $F{CMS_MIN_PERC_COVERSHEET} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="20" width="150" height="20" uuid="72f40446-7a1b-49d6-888a-87dd52c23bb6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_MIN_PERC_CONFIRM} != null ? $F{CMS_MIN_PERC_CONFIRM} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="40" width="150" height="20" uuid="70397337-ef71-4f9b-a650-9c63360d8c86">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_MIN_PERC_BUS} != null ? $F{CMS_MIN_PERC_BUS}+ "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="60" width="150" height="20" uuid="09e9ffab-138b-492a-a11a-9d850a262ce2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_MIN_PERC_APP_COVER} != null ? $F{CMS_MIN_PERC_APP_COVER} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="200" height="20" uuid="e5cad4fd-6dc2-4ac5-a370-f97f4ca4f21b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="600" y="120" width="150" height="20" uuid="0e5f3856-cafc-4c54-a238-2c345a2f3c02">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean($F{CMS_MIN_COMP_PERC_OVERALL} != null) ? $F{CMS_MIN_COMP_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="600" y="100" width="150" height="20" uuid="512c3136-bf68-4b19-bd44-719c8859c159">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean($F{CMS_MIN_HR_PERC_OVERALL} != null) ? $F{CMS_MIN_HR_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="750" y="0" width="150" height="140" isRemoveLineWhenBlank="true" uuid="48807052-8bb5-4494-896b-3058090e8bd6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textField>
+					<reportElement x="0" y="0" width="150" height="20" uuid="b9d59b7a-0095-4eb0-8d65-51ec5814ef6b">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_MIN_PERC_COVERSHEET} != null ? $F{COMP_MIN_PERC_COVERSHEET} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="20" width="150" height="20" uuid="330c73fd-79f1-4089-95af-74b12ead0995">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_MIN_PERC_CONFIRM} != null ? $F{COMP_MIN_PERC_CONFIRM} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="40" width="150" height="20" uuid="38f159cf-e63b-45da-98b5-5864e37ecc9c">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_MIN_PERC_BUS} != null ? $F{COMP_MIN_PERC_BUS} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="60" width="150" height="20" uuid="a704f663-fa38-4158-95f4-4ae8edffc397">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_MIN_PERC_APP_COVER} != null ? $F{COMP_MIN_PERC_APP_COVER} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="0" y="120" width="150" height="20" uuid="d4de43f2-4d47-459a-b8ae-a974ef6c7b4b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean($F{COMP_MIN_COMP_PERC_OVERALL} != null) ? $F{COMP_MIN_COMP_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="0" y="100" width="150" height="20" uuid="6d1b5495-1603-4092-82c4-423efaf01d2e">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean($F{COMP_MIN_HR_PERC_OVERALL} != null) ? $F{COMP_MIN_HR_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="80" width="150" height="20" uuid="ba75e90a-7eaa-40d7-82f8-aa1c8e3bcdde">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_MIN_PERC_PACKAGE} != null ? $F{COMP_MIN_PERC_PACKAGE} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement mode="Opaque" x="750" y="-20" width="150" height="20" isRemoveLineWhenBlank="true" backcolor="#D6D7D9" uuid="4832bb1e-5c2c-4365-ac91-5ae767d4d422">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Component Actuals]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="400" height="20" backcolor="#FFFFFF" uuid="0e479e8c-848b-4a66-bd5a-a24820ec538b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Complete PD Coversheet & Classification Analysis (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="20" width="400" height="20" backcolor="#FFFFFF" uuid="75a78fd2-415e-4397-9d98-41fe5ce1a30c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Confirm Analysis (Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="40" width="400" height="20" backcolor="#FFFFFF" uuid="0d301684-b604-4d11-9f44-f1bba91a9945">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[BUS Code Review (HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="60" width="400" height="20" backcolor="#FFFFFF" uuid="728894c0-6c51-4d57-99cf-d89f11c6b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Approve Coversheet (Component)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="400" y="20" width="200" height="20" uuid="3f372722-abfa-4de1-b235-1eb61bf17d83"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="40" width="200" height="20" uuid="8474ffef-d96a-4bb9-9852-1e1624705b9a">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="60" width="200" height="20" uuid="7a008c22-1f36-41d6-ab0a-397bf49c2c83"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="100" width="400" height="20" backcolor="#FFFFFF" uuid="f61bccdc-0c42-4051-b17b-6e350ab1fa4e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Overall Performance for HR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="120" width="400" height="20" backcolor="#FFFFFF" uuid="025e8045-2c33-4017-b7ce-5632b0777a81">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Overall Performance for Component]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="400" y="100" width="200" height="20" uuid="c10d3b2e-fdb3-4bed-ba0b-fe6c7a7df9ca"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="120" width="200" height="20" uuid="c66ff115-3a36-4726-80e0-6b20d8a4e20d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="80" width="400" height="20" backcolor="#FFFFFF" uuid="985967d6-6b43-477b-a7d9-3f205e925dae">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Create Final Package (HR)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="400" y="80" width="200" height="20" uuid="31d5dc03-f7c9-4c8c-8b46-12bd740ad671"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="80" width="150" height="20" uuid="ea2557ec-426f-4942-8935-d8106a5fd3e5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_MIN_PERC_PACKAGE} != null ? $F{CMS_MIN_PERC_PACKAGE} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="90">
+			<staticText>
+				<reportElement x="0" y="20" width="900" height="20" uuid="1c67b439-7dc0-4114-b1fa-525f6635d99d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="900" height="20" uuid="c0d530b0-ee4e-47ce-8985-2e4d8f166e81">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Percentage of Minor Classification Requests Completed Within Performance Goals]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="40" width="400" height="20" backcolor="#D6D7D9" uuid="de33490b-3bf0-45bd-9571-100825f5851e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="2">
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Classification Phase]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="750" y="40" width="150" height="20" isRemoveLineWhenBlank="true" backcolor="#D6D7D9" uuid="1a35a20c-7e13-49ca-b78d-f72ccbd7e4a9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Component Actuals]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="400" y="40" width="200" height="20" backcolor="#D6D7D9" uuid="d2830679-8f48-48a5-915c-2e51268b0d1d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Performance Goals in Business Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="600" y="40" width="150" height="20" backcolor="#D6D7D9" uuid="a6d4afed-e8a9-4d17-b4ac-e14dc19db491">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS Actuals]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="400" y="60" width="200" height="20" uuid="b61f65a6-b413-4a58-b661-9c57f17528cd">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="60" width="150" height="20" uuid="c147fcdb-d00b-47af-9003-6d9813ffd862">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N/A"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="60" width="400" height="20" backcolor="#FFFFFF" uuid="a1c9dcfe-03f3-42f3-874a-8ddca0832489"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA["N/A"]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="750" y="60" width="150" height="20" uuid="aae4f0ca-80b1-4229-9b34-3e3fedc336a2">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N/A"]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
+</jasperReport>

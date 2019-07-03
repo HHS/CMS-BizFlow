@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-03-18T17:45:41 -->
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2019-06-04T10:33:34 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time to Consult Report - Completed" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="774"/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="sriya"/>
-	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Time_to_Consult_Report___Completed"/>
-	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Time_to_Consult_Report___Completed"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMSTimeToConsultReportCompleted_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMSTimeToConsultReportCompleted"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="780"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="206"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -41,6 +41,7 @@
 	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.6" value="Component"/>
 	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.font.size.fix.enabled" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
 	<subDataset name="Grades" uuid="675ab375-bde1-4664-a742-0a499185b64f">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
@@ -107,6 +108,14 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="DAYS" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Calendar Days"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STANDARD_PD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT  "SCP"."PROCESS_CREATION_DATE" AS Request_Date,
 	"SCP"."V_REQUEST_NUMBER" AS Request_Num,
@@ -121,7 +130,13 @@
 	"SCP"."V_CLASSIFICATION_TYPE" AS Classification_Type,
 	"SCF"."POS_TITLE" AS Position_Title,
 	"SCP"."PROCESS_COMPLETION_DATE" AS Complete_Date,
-	"SCP"."PROCESS_AGE" AS Days_To_Complete,
+	
+	CASE
+	 	WHEN $P{DAYS} = 'Calendar Days' 
+	 		THEN  ROUND("SCP"."PROCESS_COMPLETION_DATE" - "SCP"."PROCESS_CREATION_DATE")
+     	ELSE  "SCP"."PROCESS_AGE" 
+    END Days_To_Complete,
+	
 	(
 		SELECT MIN(CMPLTDTIME) 
 		FROM ACT 
@@ -130,10 +145,12 @@
 			AND NAME IN ('Notify Meeting Attendees', 'Notify All inc Special Programs')
 			AND STATE = 'C'
 		GROUP BY PROCID, ACTSEQ
-	)                               AS Initial_Notification_Date,  -- the date that the Notify Meeting Attendees (or Notify All inc Special Programs) Email Activity was first completed. 
-	"MTI"."MIN_MT_DT"               AS Initial_Meeting_Date,       -- the initial date that was set for the meeting. 
-	"MTI"."MAX_MT_DT"               AS Actual_Meeting_Date,        -- the actual date that the meeting was held. 
-	"MTI"."RESCHED_CT"              AS Number_of_Rescheds          -- the count of the number of times the meeting was rescheduled. 
+	)   AS Initial_Notification_Date,  -- the date that the Notify Meeting Attendees (or Notify All inc Special Programs) Email Activity was first completed. 
+	
+	"MTI"."MIN_MT_DT"  AS Initial_Meeting_Date,     -- the initial date that was set for the meeting. 
+	"MTI"."MAX_MT_DT" AS Actual_Meeting_Date,    -- the actual date that the meeting was held. 
+	"MTI"."RESCHED_CT" AS Number_of_Rescheds    -- the count of the number of times the meeting was rescheduled. 
+
 FROM
 	"HHS_VW_CONSULTATION_PROC" SCP
 		INNER JOIN  "HHS_CMS_HR"."VW_STRATCON" SCF ON  "SCF"."SG_PROCID" =  "SCP"."PROCESS_ID" 
@@ -149,7 +166,7 @@ FROM
 		) MTI ON MTI.SSH_REQ_ID = "SCF"."REQ_ID" 
 			    
 
-WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') -- Consultation completed, but not cancelled
+WHERE (FN_GET_RLVNTDATAVALUE(SCF.SG_PROCID, 'I', 'S', 'requestStatus') <> 'Request Cancelled')-- Consultation completed, but not cancelled
 
 	AND "SCP"."PROCESS_COMPLETION_DATE" BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
 		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) -- Completed in given date range
@@ -171,6 +188,8 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
     AND (($P{HRL_ID} = 'All') OR (SCF.SG_HRL_ID = $P{HRL_ID}))           -- HR Liaison
     AND (($P{SS_ID} = 'All') OR (SCF.SG_SS_ID = $P{SS_ID}))              -- Staffing Specialist
     AND (($P{CS_ID} = 'All') OR (SCF.SG_CS_ID = $P{CS_ID}))              -- Classification Specialist
+    
+    AND ($P{STANDARD_PD} = 'All' OR  SCF.POS_STD_PD_TYPE = $P{STANDARD_PD})  -- Standard PD filter
 	
  	
 	ORDER BY Second_Sub_Org, Request_Date]]>
@@ -199,27 +218,23 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 	<group name="Component" minHeightToStartNewPage="45">
 		<groupExpression><![CDATA[$F{SECOND_SUB_ORG}]]></groupExpression>
 		<groupHeader>
-			<band height="21">
-				<rectangle radius="0">
-					<reportElement x="0" y="0" width="752" height="21" backcolor="rgba(252, 250, 250, 0.39215687)" uuid="9bdd3beb-09c9-4706-b7f0-e77a2095ee9e"/>
-					<graphicElement>
-						<pen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
-					</graphicElement>
-				</rectangle>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<textField evaluationTime="Group" evaluationGroup="Component">
-					<reportElement x="0" y="0" width="752" height="20" isPrintInFirstWholeBand="true" printWhenGroupChanges="Component" uuid="1bd3d651-1c36-419d-a1d7-a86d6532f429">
+					<reportElement mode="Opaque" x="0" y="0" width="752" height="20" isPrintInFirstWholeBand="true" printWhenGroupChanges="Component" backcolor="#FAF7F7" uuid="1bd3d651-1c36-419d-a1d7-a86d6532f429">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="net.sf.jasperreports.export.pdf.tag.td" value="start"/>
 					</reportElement>
-					<box leftPadding="2">
+					<box leftPadding="4">
 						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="7" isBold="true"/>
+						<paragraph leftIndent="0"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{SECOND_SUB_ORG}]]></textFieldExpression>
 				</textField>
@@ -271,7 +286,8 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 		<band height="5" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="76" splitType="Stretch">
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
 				<reportElement x="0" y="6" width="752" height="25" uuid="ba4d11e0-6853-443e-a521-6c4bdb22ff9c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -282,224 +298,229 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 				<text><![CDATA[NEIL Time to Consult Report - Completed]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="6" y="46" width="746" height="30" uuid="607131bf-ee95-4acd-a314-aedfdd0aacbb"/>
+				<reportElement x="0" y="35" width="752" height="20" uuid="003c3427-4402-454c-be8d-2523563a6204">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new Boolean ($P{ADMIN_CD} != null) ? "By Admin Code"+ ","  +  $P{ADMIN_CD} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy") : $P{COMPONENT} + " from " + DATEFORMAT($P{COMP_DATE_TO},"MMMMM d, yyy") + " through " + DATEFORMAT($P{COMP_DATE_FROM},"MMMMM d, yyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "All CMS-wide requests completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? 
+"All requests for the Office of the Administrator (OA) completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? 
+"All requests for " + $P{ADMIN_CD} + " and its sub-organizations completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")
+: "All requests for " + $P{ADMIN_CD} + " completed between " + 
+DATEFORMAT($P{COMP_DATE_FROM},"MMMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="40">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<rectangle>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="752" height="40" forecolor="#050505" backcolor="rgba(171, 173, 179, 0.39215687)" uuid="33fb8a91-9882-4ea1-bd0f-02e327bdbf28"/>
-				<graphicElement>
-					<pen lineWidth="1.0" lineColor="rgba(232, 230, 230, 0.39215687)"/>
-				</graphicElement>
-			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="52" height="40" backcolor="#1C16D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="52" height="40" backcolor="#D6D7D9" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="start"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Request Created]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="52" y="0" width="65" height="40" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="52" y="0" width="65" height="40" backcolor="#D6D7D9" uuid="5e027d6c-92a2-4b5b-8e0f-10bfc0958a9b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Job Request Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="117" y="0" width="50" height="40" uuid="9b526774-be06-4411-9885-f5610582c81e">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="117" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="9b526774-be06-4411-9885-f5610582c81e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Admin Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="359" y="0" width="75" height="40" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="359" y="0" width="75" height="40" backcolor="#D6D7D9" uuid="9fcb1521-a6e0-4442-a8e2-f653109af6fe">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Classification Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="434" y="0" width="55" height="40" uuid="84b4f4a0-bbaa-47e9-ae72-48330060b9f1">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="434" y="0" width="55" height="40" backcolor="#D6D7D9" uuid="84b4f4a0-bbaa-47e9-ae72-48330060b9f1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date of Initial Meeting Notification]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="489" y="0" width="50" height="40" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="489" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="1bf92fd6-ff8b-4151-bceb-d54182fce12a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date of Initial Meeting]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="539" y="0" width="50" height="40" uuid="6063dc88-7575-4e03-9bdc-d5bced7aff5b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="539" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="6063dc88-7575-4e03-9bdc-d5bced7aff5b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date of Actual Meeting]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="589" y="0" width="60" height="40" uuid="e1d96d38-c30e-4190-8e77-3a625f7fa825">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="589" y="0" width="60" height="40" backcolor="#D6D7D9" uuid="e1d96d38-c30e-4190-8e77-3a625f7fa825">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[No. of Times Meeting Rescheduled]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="649" y="0" width="50" height="40" uuid="0046fda5-8b12-408b-a1f3-96f56f214324">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="649" y="0" width="50" height="40" backcolor="#D6D7D9" uuid="0046fda5-8b12-408b-a1f3-96f56f214324">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Date Completed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="699" y="0" width="53" height="40" uuid="e41bd2c4-12fd-47f3-be9e-63a0cad59fc9">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="699" y="0" width="53" height="40" backcolor="#D6D7D9" uuid="e41bd2c4-12fd-47f3-be9e-63a0cad59fc9">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="net.sf.jasperreports.export.pdf.tag.th" value="end"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Days to Complete]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="219" y="0" width="75" height="40" uuid="96a2756e-12f6-41bb-b9c8-5e925ba16e2c">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="219" y="0" width="75" height="40" backcolor="#D6D7D9" uuid="96a2756e-12f6-41bb-b9c8-5e925ba16e2c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Position Title]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="294" y="0" width="65" height="40" uuid="2fda400c-f6b7-4edf-a1bd-2fa336b4c9c1">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="294" y="0" width="65" height="40" backcolor="#D6D7D9" uuid="2fda400c-f6b7-4edf-a1bd-2fa336b4c9c1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[Request Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="167" y="0" width="52" height="40" uuid="d7e61bec-7cd0-43c8-b833-295d510b7b9d">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="167" y="0" width="52" height="40" backcolor="#D6D7D9" uuid="d7e61bec-7cd0-43c8-b833-295d510b7b9d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font size="7" isBold="true"/>
-					<paragraph leftIndent="4" spacingAfter="0"/>
+					<paragraph leftIndent="0" spacingAfter="0"/>
 				</textElement>
 				<text><![CDATA[PD Num/ Job Code]]></text>
 			</staticText>
@@ -512,27 +533,27 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0" spacingAfter="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{REQUEST_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" pattern="">
 				<reportElement stretchType="RelativeToTallestObject" x="52" y="0" width="65" height="20" uuid="6cf94747-2425-4989-be50-cbca044fb067">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REQUEST_NUM}]]></textFieldExpression>
 			</textField>
@@ -542,12 +563,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ADMIN_CODE}]]></textFieldExpression>
 			</textField>
@@ -556,12 +577,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{CLASSIFICATION_TYPE} != null )? $F{CLASSIFICATION_TYPE} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -571,12 +592,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{INITIAL_NOTIFICATION_DATE} != null) ?	DATEFORMAT($F{INITIAL_NOTIFICATION_DATE},"MM/dd/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
@@ -586,12 +607,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{INITIAL_MEETING_DATE} != null) ?	DATEFORMAT($F{INITIAL_MEETING_DATE},"MM/dd/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
@@ -599,12 +620,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 				<reportElement stretchType="RelativeToTallestObject" x="539" y="0" width="50" height="20" uuid="ae4661dd-1d05-4509-8b08-1acd4192c173">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{ACTUAL_MEETING_DATE} != null) ?	DATEFORMAT($F{ACTUAL_MEETING_DATE},"MM/dd/yyy") : "N/A"]]></textFieldExpression>
 			</textField>
@@ -613,12 +634,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center">
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{NUMBER_OF_RESCHEDS} != null) ? $F{NUMBER_OF_RESCHEDS} : "N/A"]]></textFieldExpression>
 			</textField>
@@ -626,12 +647,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 				<reportElement stretchType="RelativeToTallestObject" x="649" y="0" width="50" height="20" uuid="c9a5f63f-9d77-4e36-ba36-9b7a478a26cf">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{COMPLETE_DATE},"MM/dd/yyy")]]></textFieldExpression>
 			</textField>
@@ -641,12 +662,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center">
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DAYS_TO_COMPLETE}]]></textFieldExpression>
 			</textField>
@@ -658,12 +679,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{POSITION_TITLE}]]></textFieldExpression>
 			</textField>
@@ -673,12 +694,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REQUEST_TYPE}]]></textFieldExpression>
 			</textField>
@@ -688,12 +709,12 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<box bottomPadding="2">
+				<box topPadding="4" leftPadding="4" bottomPadding="2">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
 					<font size="7"/>
-					<paragraph leftIndent="4" spacingBefore="4"/>
+					<paragraph leftIndent="0" spacingBefore="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Boolean ($F{PD_NUM_1} == null) ? "" 
 																	: new Boolean ($F{PD_NUM_2} == null) ? $F{PD_NUM_1}
@@ -708,8 +729,9 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 		<band height="42" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="649" y="25" width="50" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214">
+				<reportElement x="670" y="25" width="50" height="15" uuid="dcc9a764-82fa-4517-bff1-d301390e5214">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -717,11 +739,11 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="">
-				<reportElement x="699" y="25" width="53" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95"/>
+				<reportElement x="720" y="25" width="32" height="15" uuid="14e07beb-fbea-4d06-b3b1-667b8f93df95"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
 				<reportElement x="0" y="25" width="294" height="15" uuid="5905c9bd-f414-4883-b983-3efa9601bbb8">
@@ -730,20 +752,17 @@ WHERE ("SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS",
 				</reportElement>
 				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4"/>
+					<paragraph leftIndent="0"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Report Date: " + DATEFORMAT(TODAY( ),"MMMM d, yyy")]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="0" width="294" height="25" uuid="d23f5711-b9b4-4e15-a0cd-940508552535">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement verticalAlignment="Bottom">
+			<textField>
+				<reportElement x="0" y="0" width="294" height="15" uuid="26c74822-a0ff-4e4b-a273-ffe8e0c67cca"/>
+				<textElement>
 					<font size="8"/>
-					<paragraph leftIndent="4" rightIndent="0"/>
 				</textElement>
-				<text><![CDATA[Note: All calculations are based on business days.]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[new Boolean ($P{DAYS}.contains("Calendar")) ? "Note: All calculations are based on calendar days." : "Note: All calculations are based on business days."]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<noData>

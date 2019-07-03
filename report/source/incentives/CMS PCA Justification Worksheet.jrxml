@@ -1,0 +1,2640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2019-05-22T15:06:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS PCA Justification Worksheet" pageWidth="612" pageHeight="792" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="36" bottomMargin="18" uuid="234e1c0f-ba70-44ae-a8d7-fedb82ac35b7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="161"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="832"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_PCA_Justification_Worksheet_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_PCA_Justification_Worksheet"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="679"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="310"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="inch"/>
+	<parameter name="param1" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Checked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["repo:/Images/Checkbox_Yes.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Unchecked" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["repo:/Images/Checkbox_No.png"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	REQ_NUM  AS Request_Num,
+	CANDI_NAME  AS Physician_Name,
+	
+	ADMIN_CODE AS Admin_Code,
+	(SELECT AC.AC_ADMIN_CD_DESCR FROM HHS_CMS_HR.ADMIN_CODES AC WHERE AC.AC_ADMIN_CD = HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 1) AND ROWNUM = 1) AS SUB_ORG_1_DSCR,
+	HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 2) AS SUB_ORG_2_CD,
+    (SELECT AC.AC_ADMIN_CD_DESCR FROM HHS_CMS_HR.ADMIN_CODES AC WHERE AC.AC_ADMIN_CD = HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 2) AND ROWNUM = 1) AS SUB_ORG_2_DSCR,
+    HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 3) AS SUB_ORG_3_CD,
+    (SELECT AC.AC_ADMIN_CD_DESCR FROM HHS_CMS_HR.ADMIN_CODES AC WHERE AC.AC_ADMIN_CD = HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 3) AND ROWNUM = 1) AS SUB_ORG_3_DSCR,
+    HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 4) AS SUB_ORG_4_CD,
+    (SELECT AC.AC_ADMIN_CD_DESCR FROM HHS_CMS_HR.ADMIN_CODES AC WHERE AC.AC_ADMIN_CD = HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 4) AND ROWNUM = 1) AS SUB_ORG_4_DSCR,
+    HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 5) AS SUB_ORG_5_CD,
+    (SELECT AC.AC_ADMIN_CD_DESCR FROM HHS_CMS_HR.ADMIN_CODES AC WHERE AC.AC_ADMIN_CD = HHS_CMS_HR.FN_GET_SUBORG_CD(ADMIN_CODE, 5) AND ROWNUM = 1) AS SUB_ORG_5_DSCR,
+	
+	POS_DESC_NUM AS Pos_Desc_Number,
+	POS_TITLE AS Title,
+	PAY_PLAN AS Pay_Plan,
+	SERIES AS Series,
+	GRADE AS Grade,
+	DS1_CITY AS Duty_Station_City,
+	DS1_STATE AS Duty_Station_State,
+
+	TYPE_OF_APPT AS Type_Appointment,
+	NOT_TO_EXDATE AS NTE,
+
+	WORK_SCHEDULE AS Work_Schedule,
+	HOURS_PER_WEEK AS Hours_Week,
+
+	LIC_STATE1_STATE AS License_State1,
+	LIC_STATE1_EXP_DATE AS License_Exp1,
+	LIC_STATE2_STATE AS License_State2,
+	LIC_STATE2_EXP_DATE AS License_Exp2,
+
+	BD_CERT_REQ AS Board_Cert_Req,
+	BD_CERT_SPEC1 AS Board_Cert_Specialty,
+	BD_CERT_SPEC2 AS Board_Cert_Specialty2,
+	BD_CERT_SPEC3 AS Board_Cert_Specialty3,
+    BD_CERT_SPEC_OTHER AS Board_Cert_Other,
+
+	LEN_SERVED AS Govt_Service_Time,
+ 
+	'----' AS Annual_Salary,
+	LEN_SERVICE AS Agreement_Duration,
+	HOURS_PER_WEEK AS Pay_Period_Hours,
+ 
+	ALW_CATEGORY_NUM AS Allowance_Category,
+	ALW_BD_CERT_NUM AS Allowance_Board_Cert,
+	ALW_MULTI_YEAR_AGMT_NUM AS Allowance_MultiYear,
+	ALW_MISSION_SC_NUM AS Allowance_Mission,
+	ALW_TOTAL_NUM AS Allowance_Total,
+	TOTAL_PAYABLE_NUM As Allowance_Total_Payable,
+	
+	CAST (ALW_TOTAL_NUM AS Number(10,4)) AS Allowance_Total222,
+ 
+ 	'01/01/1900' AS Agreement_Eff_Date,
+ 	'01/01/1900' AS Agreement_Exp_Date
+ 
+FROM HHS_CMS_HR.VW_INCENTIVES_DATA
+WHERE PROC_ID = $P{param1}]]>
+	</queryString>
+	<field name="REQUEST_NUM" class="java.lang.String"/>
+	<field name="PHYSICIAN_NAME" class="java.lang.String"/>
+	<field name="ADMIN_CODE" class="java.lang.String"/>
+	<field name="SUB_ORG_1_DSCR" class="java.lang.String"/>
+	<field name="SUB_ORG_2_CD" class="java.lang.String"/>
+	<field name="SUB_ORG_2_DSCR" class="java.lang.String"/>
+	<field name="SUB_ORG_3_CD" class="java.lang.String"/>
+	<field name="SUB_ORG_3_DSCR" class="java.lang.String"/>
+	<field name="SUB_ORG_4_CD" class="java.lang.String"/>
+	<field name="SUB_ORG_4_DSCR" class="java.lang.String"/>
+	<field name="SUB_ORG_5_CD" class="java.lang.String"/>
+	<field name="SUB_ORG_5_DSCR" class="java.lang.String"/>
+	<field name="POS_DESC_NUMBER" class="java.lang.String"/>
+	<field name="TITLE" class="java.lang.String"/>
+	<field name="PAY_PLAN" class="java.lang.String"/>
+	<field name="SERIES" class="java.lang.String"/>
+	<field name="GRADE" class="java.lang.String"/>
+	<field name="DUTY_STATION_CITY" class="java.lang.String"/>
+	<field name="DUTY_STATION_STATE" class="java.lang.String"/>
+	<field name="TYPE_APPOINTMENT" class="java.lang.String"/>
+	<field name="NTE" class="java.lang.String"/>
+	<field name="WORK_SCHEDULE" class="java.lang.String"/>
+	<field name="HOURS_WEEK" class="java.lang.String"/>
+	<field name="LICENSE_STATE1" class="java.lang.String"/>
+	<field name="LICENSE_EXP1" class="java.sql.Timestamp"/>
+	<field name="LICENSE_STATE2" class="java.lang.String"/>
+	<field name="LICENSE_EXP2" class="java.sql.Timestamp"/>
+	<field name="BOARD_CERT_REQ" class="java.lang.String"/>
+	<field name="BOARD_CERT_SPECIALTY" class="java.lang.String"/>
+	<field name="BOARD_CERT_SPECIALTY2" class="java.lang.String"/>
+	<field name="BOARD_CERT_SPECIALTY3" class="java.lang.String"/>
+	<field name="BOARD_CERT_OTHER" class="java.lang.String"/>
+	<field name="GOVT_SERVICE_TIME" class="java.lang.String"/>
+	<field name="ANNUAL_SALARY" class="java.lang.String"/>
+	<field name="AGREEMENT_DURATION" class="java.lang.String"/>
+	<field name="PAY_PERIOD_HOURS" class="java.lang.String"/>
+	<field name="ALLOWANCE_CATEGORY" class="java.math.BigDecimal"/>
+	<field name="ALLOWANCE_BOARD_CERT" class="java.math.BigDecimal"/>
+	<field name="ALLOWANCE_MULTIYEAR" class="java.math.BigDecimal"/>
+	<field name="ALLOWANCE_MISSION" class="java.math.BigDecimal"/>
+	<field name="ALLOWANCE_TOTAL" class="java.math.BigDecimal"/>
+	<field name="ALLOWANCE_TOTAL_PAYABLE" class="java.math.BigDecimal"/>
+	<field name="ALLOWANCE_TOTAL222" class="java.lang.Double"/>
+	<field name="AGREEMENT_EFF_DATE" class="java.lang.String"/>
+	<field name="AGREEMENT_EXP_DATE" class="java.lang.String"/>
+	<variable name="Variable_1" class="java.lang.String">
+		<variableExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($F{ALLOWANCE_TOTAL})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="0" width="368" height="31" uuid="7a8f44b9-0881-452b-a175-acfaabb52fb7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="styled">
+					<font fontName="SansSerif" size="6.5" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="8.0"/>
+				</textElement>
+				<text><![CDATA[<style isBold="true">DEPARTMENT OF HEALTH AND HUMAN SERVICES 
+CENTERS FOR MEDICARE &amp; MEDICAID SERVICES</style>
+TALENT ACQUISITION AND BENEFITS GROUP (TABG)]]></text>
+			</staticText>
+			<image scaleImage="FillFrame">
+				<reportElement x="487" y="0" width="53" height="30" uuid="a1a601e6-dde4-48cd-95c2-2f599af2fd2f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA["repo:/Images/CMS_Logo.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement positionType="Float" x="0" y="31" width="540" height="1" forecolor="#969595" uuid="798275ba-b12c-4c53-af70-32772091d4bd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="54" width="540" height="1" forecolor="#969595" uuid="a672d2e7-eac6-45ea-8e08-79401443ada2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="31" width="540" height="20" uuid="9f22268c-89f4-4abf-bc95-276dd0582a5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCA JUSTIFICATION WORKSHEET]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="540">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<line>
+				<reportElement positionType="Float" x="0" y="26" width="540" height="1" forecolor="#969595" uuid="ae85f157-1117-4925-8048-3feda57dda24">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="158" height="12" uuid="3c312fbb-0cea-47a7-a0d7-cfef7a1452fd">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[1. Name of Physician]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="26" width="368" height="12" uuid="f0d34bee-087d-4c88-8d7f-69e9ccb9ba2b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Organization (Component/Group)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="405" y="26" width="134" height="12" uuid="7a728f60-d28f-4e5d-b2a5-aef22e5900e4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Position Description Number]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="52" width="540" height="1" forecolor="#969595" uuid="b755680f-8127-4a70-a13d-78363ae22dc5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="78" width="540" height="1" forecolor="#969595" uuid="1e829f65-1594-4681-92f3-2483cb605ba9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="52" width="368" height="12" uuid="69c8a690-9e75-46b8-9a83-ce2bce82a6ba">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Title, Pay Plan-Series-Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="405" y="52" width="134" height="12" uuid="17fb835e-31c4-4ed8-b537-d424e308995c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Duty Station]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="12" width="228" height="12" uuid="ccf946fc-b574-43f8-8ccb-26285dfee10d"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PHYSICIAN_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="78" width="368" height="12" uuid="e20ab961-1243-4ca2-a5da-0034f2104066">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[2. Type of Appointment]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="104" width="540" height="1" forecolor="#969595" uuid="b2967893-df45-4943-907f-4ee0dbfe95fb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement key="" x="12" y="91" width="8" height="8" uuid="e590bdb1-e669-4dda-ac52-dc55cf1a6cb7">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{TYPE_APPOINTMENT}.equals("Permanent")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="24" y="91" width="58" height="12" uuid="c4353191-5bb9-4e5f-ba0b-153752d58b00">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Permanent]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement key="" x="87" y="91" width="8" height="8" uuid="27d0ddc4-f269-4e0c-b299-47ef5d67a234">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{TYPE_APPOINTMENT}.equals("Term")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="303" y="91" width="8" height="8" uuid="f7d0bd05-1b1d-41c8-986c-84f4e8cc9ba2">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{TYPE_APPOINTMENT}.equals("Temporary")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="104" width="368" height="12" uuid="7f8d2b68-8cdf-4ed9-92aa-5aae82a266fc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[3. Work Schedule]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="12" y="117" width="8" height="8" uuid="baaed462-c026-408a-8f91-3cca17583408">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{WORK_SCHEDULE}.equals("Full-Time")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="24" y="117" width="58" height="12" uuid="db08c15a-9723-4ca2-8b16-1e7de8906381">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Full-Time]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="87" y="117" width="8" height="8" uuid="670ff9bf-f3cb-462f-be2c-7f1e1353740f">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{WORK_SCHEDULE}.equals("Part-Time")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="99" y="117" width="64" height="12" uuid="99faf628-ef67-4ac0-9c38-ed51d9837337">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Part-Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="150" y="117" width="70" height="12" uuid="a68a07bc-3259-4967-914c-59703d7cd4b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Hours Per Week:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="130" width="540" height="1" forecolor="#969595" uuid="2210d4db-f2f0-4e6c-8b8e-47d3028ca8bf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="130" width="158" height="12" uuid="882c1d69-bb74-4e1d-b90b-848238e2bcbb">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[4. License in the State of]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="156" width="540" height="1" forecolor="#969595" uuid="43301b02-126f-4dcf-86ac-ef4cf778d14c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="405" y="132" width="134" height="12" uuid="c413b096-d132-4a81-bd94-4ad2856dfa5b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Expiration Date]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="142" width="228" height="12" uuid="1006f160-2e02-4958-83c1-e3298715784f"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LICENSE_STATE1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="156" width="158" height="12" uuid="d7763ef3-981e-4a53-a427-5e65923a4ed5">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[ License in the State of]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="168" width="228" height="12" uuid="1f8d4b43-83f7-4483-b4c3-5ca38fbae23d"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LICENSE_STATE2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="405" y="158" width="134" height="12" uuid="e492c5cb-f751-4a6d-acf4-11e141e6f4b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Expiration Date]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="182" width="540" height="1" forecolor="#969595" uuid="82554c98-d7cc-4efa-87d4-09fcad11499d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="188" width="205" height="12" uuid="d94fa88f-6d6e-4371-be73-ec2d16913eb7">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[5. Does the position require a board certification?]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="204" width="540" height="1" forecolor="#969595" uuid="f3226e13-3740-4251-b258-b5b7b2511a61">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="207" y="188" width="8" height="8" uuid="73f8c4ee-81df-487e-852d-2a6f12502fe1">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{BOARD_CERT_REQ}.equals("Yes")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="219" y="188" width="25" height="12" uuid="f2901a52-1b91-462c-ae8a-4c40b4d0a435">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Yes]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="247" y="188" width="8" height="8" uuid="8e21dd7c-4510-4a50-a8df-4396120aacfa">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{BOARD_CERT_REQ}.equals("No")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="259" y="188" width="25" height="12" uuid="48247462-e8eb-46bc-9cf8-ee7bc666d5d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="206" width="540" height="35" uuid="9f632434-a723-45c4-88f2-a27c73c954a0">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[It has been determined that recruitment and retention problems exist for this position. Notice of determination was given in the approval certificate. This position was approved for PCA under Category: IV - Disability Evaluation & Administration of Health & Medical Programs Sub-Category: B (Administration).]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="240" width="540" height="1" forecolor="#969595" uuid="787e6926-46a5-47b9-bfe1-bbe908f65a54">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="240" width="368" height="12" uuid="13d4ad1c-407e-4f1b-8acb-940b92be1272">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[6. Employee has served as a Government physician for:]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="12" y="253" width="8" height="8" uuid="c2f68b9d-0b31-45d0-9c82-b461f507807f">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{GOVT_SERVICE_TIME}.equals("0 to 24 Months")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="24" y="253" width="74" height="12" uuid="b9f42e06-2199-4972-85a3-700fb05fed86">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[0 to 24 months]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="105" y="253" width="8" height="8" uuid="fdf09570-d7a0-427d-bdce-199dc977d8ab">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[$F{GOVT_SERVICE_TIME}.equals("More than 24 Months")? $P{Checked} : $P{Unchecked}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="117" y="253" width="110" height="12" uuid="bcb98cb3-c02e-434e-bc4c-4b1f71b35edf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[More than 24 months]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="266" width="540" height="1" forecolor="#969595" uuid="f3f7527f-8f54-438b-9d83-166425c9a847">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="0" y="271" width="540" height="24" uuid="24d6f27b-9424-40aa-890b-c042622a439e"/>
+				<textElement markup="styled">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ( $F{GOVT_SERVICE_TIME}.equals("0 to 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) <= 14000
+) ? "7. The amount recommended to be paid under this agreement is <style isUnderline='true'>" + new java.text.DecimalFormat("$#,##0").format($F{ALLOWANCE_TOTAL}) + "</style>" + " per year for " + "<style isUnderline='true'>" + $F{AGREEMENT_DURATION} + "</style>" + " year(s) based on " + "<style isUnderline='true'>" + $F{PAY_PERIOD_HOURS} + "</style>"	 + " hours per week. This amount is determined as follows:" 
+
+: new Boolean ( $F{GOVT_SERVICE_TIME}.equals("0 to 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) > 14000
+) ? "7. The amount recommended to be paid under this agreement is <style isUnderline='true'>" + new java.text.DecimalFormat("$#,##0").format($F{ALLOWANCE_TOTAL_PAYABLE}) + "</style>" + " per year for " + "<style isUnderline='true'>" + $F{AGREEMENT_DURATION} + "</style>" + " year(s) based on " + "<style isUnderline='true'>" + $F{PAY_PERIOD_HOURS} + "</style>"	 + " hours per week. This amount is determined as follows:" 
+
+: new Boolean ( $F{GOVT_SERVICE_TIME}.equals("More than 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) <= 30000
+) ? "7. The amount recommended to be paid under this agreement is <style isUnderline='true'>" + new java.text.DecimalFormat("$#,##0").format($F{ALLOWANCE_TOTAL}) + "</style>" + " per year for " + "<style isUnderline='true'>" + $F{AGREEMENT_DURATION} + "</style>" + " year(s) based on " + "<style isUnderline='true'>" + $F{PAY_PERIOD_HOURS} + "</style>"	 + " hours per week. This amount is determined as follows:" 
+
+: new Boolean ( $F{GOVT_SERVICE_TIME}.equals("More than 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) > 30000
+) ? "7. The amount recommended to be paid under this agreement is <style isUnderline='true'>" + new java.text.DecimalFormat("$#,##0").format($F{ALLOWANCE_TOTAL_PAYABLE}) + "</style>" + " per year for " + "<style isUnderline='true'>" + $F{AGREEMENT_DURATION} + "</style>" + " year(s) based on " + "<style isUnderline='true'>" + $F{PAY_PERIOD_HOURS} + "</style>"	 + " hours per week. This amount is determined as follows:" 
+
+
+: ""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="120" y="298" width="300" height="1" forecolor="#969595" uuid="e01ac847-ed93-4923-a95e-2241b4d63164">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="120" y="298" width="200" height="20" uuid="855d2715-ee0a-4d50-9301-066f1988ad84">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Allowance for Category and Subcategory]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="120" y="318" width="300" height="1" forecolor="#969595" uuid="a1d70639-5a7a-4f38-a536-e05e27d65703">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="120" y="318" width="200" height="20" uuid="f88aa136-dad8-4752-8486-7be751a10d5e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Allowance for Board Certification]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="120" y="338" width="300" height="1" forecolor="#969595" uuid="8ec8632a-eb7b-4e68-be49-8faef4b9db4c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="120" y="338" width="200" height="20" uuid="9416ca81-3bd4-438b-8967-c7e0ca22c53c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Allowance for Multi-Year Agreement]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="120" y="358" width="300" height="1" forecolor="#969595" uuid="da266a71-b8bb-4e35-99f5-d64aa4cb3f7b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="120" y="358" width="200" height="20" uuid="09efd065-0e90-49ad-ac98-4d4f2887365c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Allowance for Mission Specific Criteria ]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="120" y="378" width="300" height="1" forecolor="#969595" uuid="42a59a0d-cb24-427f-a61d-d7bc0af1133a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="120" y="378" width="200" height="20" uuid="0564f04d-77c8-43eb-ba16-921c77386233">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="6" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="120" y="398" width="300" height="1" forecolor="#969595" uuid="abc48336-cd60-4622-96c5-c7199f3c6d51">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="0" y="434" width="540" height="35" isRemoveLineWhenBlank="true" uuid="ed2fcea0-b2a0-4809-b9ad-253dbe14415c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean (( $F{GOVT_SERVICE_TIME}.equals("0 to 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) > 14000)
+							|| ( $F{GOVT_SERVICE_TIME}.equals("More than 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) > 30000)
+						)]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["* Qualified physicians are eligible for a PCA allowance of up to $14,000 annually with 24 months or less of service as a Government physician; and $30,000 annually with more than 24 months of service."]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="404" y="26" width="1" height="52" forecolor="#969595" uuid="cd409d37-4efc-4c33-b707-7dd7235d00b8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="404" y="130" width="1" height="52" forecolor="#969595" uuid="af1260e3-1c2d-43ce-88f5-60def009782c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="320" y="298" width="1" height="100" forecolor="#969595" uuid="e33e54c0-2b44-41ae-baaf-e138fffd45f7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="468" width="540" height="1" forecolor="#969595" uuid="dcb60795-55fe-441a-9eaa-c321db1c7b3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="502" width="540" height="1" forecolor="#969595" uuid="a8ea9b29-d60c-413c-9c29-9e72ba019528">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="469" width="540" height="35" uuid="7f6818e4-2f2d-447d-83ef-f561e0fca357">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[TABG will obtain signatures after package is reviewed.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="38" width="368" height="12" uuid="999d9e06-993d-4840-b0a6-5d138fac36fd"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUB_ORG_2_DSCR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="405" y="40" width="134" height="12" uuid="1f945851-75d6-4381-a312-e47b1a63d798"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POS_DESC_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="405" y="65" width="134" height="12" uuid="ba0a82ed-2d93-43cf-b7d9-83a4b84f0fd4"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{DUTY_STATION_CITY} != null)? $F{DUTY_STATION_CITY} + ", " + $F{DUTY_STATION_STATE} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="405" y="144" width="134" height="12" uuid="d0746dbd-c68e-4a65-aeb0-99533647bd81"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{LICENSE_EXP1},"MM/dd/yyy")]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyy" isBlankWhenNull="true">
+				<reportElement x="405" y="170" width="134" height="12" uuid="37bab901-68c6-4e35-8dc7-6385a98aa66e"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LICENSE_EXP2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="65" width="368" height="12" uuid="86ac5a22-a091-4d4a-94f6-79d8b107636c"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TITLE} + ", " + $F{PAY_PLAN} + "-" + $F{SERIES} + "-" + $F{GRADE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="117" width="134" height="12" uuid="6c86b300-d810-4838-921a-2d74bc9bf91a"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HOURS_WEEK}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="290" y="188" width="250" height="12" uuid="aae6a7d2-c29f-44d6-aee3-855aeb8113e7">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{BOARD_CERT_REQ}.equals("Yes")]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{BOARD_CERT_SPECIALTY} == null) ? "Not specified"
+		 : 	new Boolean ($F{BOARD_CERT_SPECIALTY2} == null) ? (new Boolean ($F{BOARD_CERT_SPECIALTY}.equals("Other")) ? "Board Certification Specialty: " + $F{BOARD_CERT_OTHER} : "Board Certification Specialty: " + $F{BOARD_CERT_SPECIALTY})
+				: new Boolean ($F{BOARD_CERT_SPECIALTY3} == null) ? (new Boolean ($F{BOARD_CERT_SPECIALTY2}.equals("Other")) ? "Board Certification Specialty: " + $F{BOARD_CERT_SPECIALTY} + "; " + $F{BOARD_CERT_OTHER} : $F{BOARD_CERT_SPECIALTY} + ": " + $F{BOARD_CERT_SPECIALTY2})
+						: new Boolean ($F{BOARD_CERT_SPECIALTY3}.equals("Other")) ? "Board Certification Specialty: " + $F{BOARD_CERT_SPECIALTY} + "; " + $F{BOARD_CERT_SPECIALTY2} + "; " + $F{BOARD_CERT_OTHER} 
+																																	: "Board Certification Specialty: " + $F{BOARD_CERT_SPECIALTY} + "; " + $F{BOARD_CERT_SPECIALTY2} + ":" + $F{BOARD_CERT_SPECIALTY3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="320" y="298" width="100" height="20" uuid="f28551e3-8b1e-437d-a861-7515a765e6c5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="8" rightIndent="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALLOWANCE_CATEGORY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="320" y="318" width="100" height="20" uuid="7c17566c-2f9d-4222-990b-88986a6294ba"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="8" rightIndent="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALLOWANCE_BOARD_CERT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="320" y="338" width="100" height="20" uuid="db14ff0f-f226-4b6a-9e41-fafe575b60d8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="8" rightIndent="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALLOWANCE_MULTIYEAR}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="320" y="358" width="100" height="20" uuid="5a39f11d-7713-4d75-b98a-a410eeef4885"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="8" rightIndent="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALLOWANCE_MISSION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement positionType="Float" x="320" y="378" width="100" height="20" uuid="1b3f3c9f-a73e-48cb-b65c-1e29792a7bea"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="8" rightIndent="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALLOWANCE_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="99" y="91" width="175" height="12" uuid="b5fbf65b-ec5a-489a-bb29-adcc43dfc774">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TYPE_APPOINTMENT}.equals("Term")? "Term, Not to Exceed: " + $F{NTE} : "Term, Not to Exceed: "]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="315" y="91" width="175" height="12" uuid="f6daa2b4-01d9-4898-aeab-0d06dfd375f0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TYPE_APPOINTMENT}.equals("Temporary")? "Temporary, Not to Exceed: " + $F{NTE} : "Temporary, Not to Exceed: "]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" x="120" y="399" width="323" height="21" isRemoveLineWhenBlank="true" uuid="0a40c6e6-6834-47d6-9bc7-687816f13b38">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean ( $F{GOVT_SERVICE_TIME}.equals("0 to 24 Months") &&	($F{ALLOWANCE_TOTAL}.intValue()) > 14000)]]></printWhenExpression>
+				</reportElement>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="200" height="20" uuid="2bdc237f-8f74-4e59-a3b9-99638633d919">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="6" rightIndent="4"/>
+					</textElement>
+					<text><![CDATA[Per PCA Regulation]]></text>
+				</staticText>
+				<line>
+					<reportElement positionType="Float" x="0" y="20" width="300" height="1" forecolor="#969595" uuid="949919be-9022-40e7-a024-1e4ef8731a85">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
+					</graphicElement>
+				</line>
+				<textField pattern="¤#,##0.00;¤-#,##0.00">
+					<reportElement positionType="Float" x="200" y="0" width="100" height="20" uuid="b9429af9-2ecc-4921-87f6-76f6e16f13f1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="8" rightIndent="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ALLOWANCE_TOTAL_PAYABLE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="291" y="4" width="32" height="12" uuid="b7b8e0d3-c14e-4653-8e9c-d96425be235b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="8" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[*]]></text>
+				</staticText>
+				<line>
+					<reportElement positionType="Float" x="200" y="1" width="1" height="18" forecolor="#969595" uuid="1b28223a-a22a-42df-a8a1-1aed6c5d6007">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+					</graphicElement>
+				</line>
+			</frame>
+		</band>
+		<band height="723">
+			<line>
+				<reportElement positionType="Float" x="0" y="5" width="540" height="1" forecolor="#969595" uuid="dbcaeae3-84a1-4c0a-b231-8799f9975e0b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="28" width="540" height="1" forecolor="#969595" uuid="5457b4a8-5304-4283-91d3-a993c8177de6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="5" width="540" height="20" uuid="bc994c25-87fe-48bd-b83e-c2191101949e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CMS PHYSICIAN SPECIAL PAY DISCRETIONARY FACTORS FOR SETTING PCA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="540" height="122" uuid="c056e6e4-d97c-471c-8301-b3db4747dffc"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[The intent of the criteria is to provide a consistent yet flexible framework for determining recommended amounts for the two discretionary factors in PCA contracts. The goals are: (1) to provide flexible parameters to support administration of medical insurance programs and benefits; (2) to allow salary comparability with the private sector; and (3) to establish equity and consistency in payment of similarly qualified medical officers performing similar work. PCA discretionary factors should be set at rates necessary to recognize the individual’s professional contributions as well as the duties, responsibilities and complexity of the position. Salaries should be set not on the basis of the individual’s professional credentials alone or what he/she might command at other private sector organizations, but rather at a rate that recognizes the nature of the individual’s CMS responsibilities and contributions. 
+
+There are 4 factors in determining the amount of a PCA—2 non-discretionary factors and 2 discretionary factors:
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="170" width="540" height="20" uuid="4399bff4-5380-4509-80f5-1b92503a4761">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[NON-DISCRETIONARY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="190" width="540" height="20" uuid="362a192c-2985-4933-aee9-3aeecd69248d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>1. Board Certification</style> (regardless of grade level)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="210" width="540" height="15" uuid="9eca79d9-8435-442c-97ac-536dd7c75bf4"/>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Position must require board certification in order to receive. All positions with this requirement get $3,000.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="227" width="540" height="1" uuid="af7f3fc3-a138-45de-8fd0-905b26073acc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="230" width="540" height="20" uuid="250deac2-8789-46df-b69a-793b74aff0d6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2. Multi-year service agreements]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="250" width="160" height="15" uuid="db738594-407d-4d77-b08e-dfb457119b59">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[A. 2 year contract = $4,000]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="267" width="540" height="1" uuid="ef1bf1df-f916-4a69-b514-3bf47e95b0e0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="190" y="250" width="160" height="15" uuid="f93a8c9e-24d8-440d-a998-cc88b85bc094">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[B. 3 year contract = $5,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="250" width="160" height="15" uuid="97b864b3-8783-410a-94ff-f77e7c75c161">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[C. 4 year contract = $6,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="290" width="540" height="20" uuid="04c6efef-d6ad-46f5-8978-3b09718f82a1">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[DISCRETIONARY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="310" width="540" height="20" uuid="ef02d6cb-2781-430d-afe2-9f22eb9d35e6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1. Physician Service Criteria]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="330" width="540" height="15" uuid="2ab3587d-7617-4d87-814f-189e8c336dc3"/>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[For less than 24 months of Government physician service:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="350" width="295" height="1" forecolor="#969595" uuid="7ce15057-c669-43b7-916d-af45f399b38d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="350" width="95" height="20" uuid="1e17c0ac-57ca-4e73-9454-c1746a319f19">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-13]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="370" width="295" height="1" forecolor="#969595" uuid="02a4cc2c-459c-4172-b7c3-1b3500d5b329">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="370" width="95" height="20" uuid="c4d28747-fa7e-48d0-96b1-6c9dafff3460">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-14]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="390" width="295" height="1" forecolor="#969595" uuid="e30be830-9416-4413-a141-c58e08f1d558">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="390" width="95" height="20" uuid="9953febf-7cad-44e7-b392-0273e6696ab2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-15]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="410" width="295" height="1" forecolor="#969595" uuid="8864d521-44fc-46f1-908d-ed3d136cb2d8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="95" y="350" width="1" height="60" forecolor="#969595" uuid="65963769-82eb-4b6a-be75-2974c8bd15a8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="350" width="100" height="20" uuid="6cd3f777-6501-4406-bbfd-b56605dc4fe3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $8,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="390" width="100" height="20" uuid="9845316d-61ec-408e-a23b-5f284bd65aa3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $10,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="370" width="100" height="20" uuid="69f95c61-df69-44f6-9f64-a557c26655b2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $9,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="425" width="540" height="15" uuid="af28a16d-edd3-43ff-b186-628dd54c336e"/>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[For more than 24 months of Government physician service:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="445" width="295" height="1" forecolor="#969595" uuid="fde116e6-52cf-4886-9c24-d595c5c2d197">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="445" width="95" height="20" uuid="8cf07413-f642-4085-89e8-0db0e381a431">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-13]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="465" width="295" height="1" forecolor="#969595" uuid="ffeb07b1-af86-4cdd-8efb-e18bbe06442d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="465" width="95" height="20" uuid="56e749a5-07d1-405e-8690-86a1e26b999a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-14]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="485" width="295" height="1" forecolor="#969595" uuid="9098fc85-faca-41fd-884f-908bf29b5956">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="485" width="95" height="20" uuid="9b91a468-b08c-4d00-ba55-2356e06fea9d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-15]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="505" width="295" height="1" forecolor="#969595" uuid="1b46877c-f1ba-4470-b369-82df82150752">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="95" y="445" width="1" height="60" forecolor="#969595" uuid="107be2a3-be06-46d8-9774-3d2831897f3e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="445" width="100" height="20" uuid="edf8a78f-ff54-4abb-ac2b-7b2e99ce5f57">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $8,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="485" width="100" height="20" uuid="af55f9a6-b300-4e9b-9377-ae4ee1efd870">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $16,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="465" width="100" height="20" uuid="f8135ee7-2fa7-4817-81e1-97c365dd7e7e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $12,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="520" width="540" height="15" uuid="9bccaa40-5474-4a20-8056-d8f7b7d95119"/>
+				<textElement verticalAlignment="Bottom" markup="styled">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2. Mission-Specific Allowance Criteria:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="540" width="395" height="1" forecolor="#969595" uuid="5ed9aebf-0049-4447-b716-967291122b1a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="540" width="95" height="20" uuid="7aaff2b6-dad7-43f4-9f8b-89f39b201f4d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="560" width="395" height="1" forecolor="#969595" uuid="d324fc31-3e66-4a0e-94d1-a873024c9156">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="560" width="95" height="20" uuid="e8da8e22-24f5-434a-b392-09eab18d26f8">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-13]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="580" width="395" height="1" forecolor="#969595" uuid="42d0f919-2a91-4086-9524-1833edc27d1b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="580" width="95" height="20" uuid="616a26b1-b252-4969-9207-db8f446f910f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-14]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="600" width="395" height="1" forecolor="#969595" uuid="cbeaf62f-e304-4e54-9463-fe1b92c88258">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="95" y="540" width="1" height="80" forecolor="#969595" uuid="5464f6af-3953-4045-bf30-9f95e3ca36ea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="540" width="100" height="20" uuid="fbd2cd59-121f-488c-81ba-474da7c98c80">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[2-5 years]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="580" width="100" height="20" uuid="9280f1d3-aa66-4e61-9b11-3a5d7af94a2b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $2,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="560" width="100" height="20" uuid="6ed0ca03-817a-4be4-bd4f-26ba0e55263e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $1,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="600" width="95" height="20" uuid="dd038172-48b6-4e12-8142-12f474c22b19">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[GS-15/SES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="600" width="100" height="20" uuid="ccc1c393-8275-42be-a830-a5a5421a3b00">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $4,000]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="620" width="395" height="1" forecolor="#969595" uuid="145e549b-79a7-4a53-b108-73b604de4a3b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="195" y="540" width="1" height="80" forecolor="#969595" uuid="0cf02ade-97aa-484b-8083-6aa6b354ddb7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="195" y="540" width="100" height="20" uuid="9e06a593-957a-4112-8b82-534469f533d6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[5-8 years]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="195" y="560" width="100" height="20" uuid="faac63ef-8866-4559-949e-f401700d9b18">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $3,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="195" y="580" width="100" height="20" uuid="c345f982-4efd-4f06-90a8-6cc0d1af63e9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $5,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="195" y="600" width="100" height="20" uuid="2ebc8a1a-4f34-4e9f-8bff-41a77c9dfa10">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $7,000]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="295" y="540" width="1" height="80" forecolor="#969595" uuid="2fb73ae6-6da2-4555-8cd9-ace5b632bd36">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="295" y="540" width="100" height="20" uuid="3997719f-e082-4d64-9678-5f9ab3caa542">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[More than 8 years]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="295" y="560" width="100" height="20" uuid="7489cb4b-9c2c-40d7-a03f-4e4d322bbc79">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $5,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="295" y="580" width="100" height="20" uuid="c61441be-bc00-4e54-abc2-9151c267fa78">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $8,000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="295" y="600" width="100" height="20" uuid="a02e32bd-f4bf-4287-9593-cf6b92280071">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<text><![CDATA[Up to $10,000]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="228c908a-835e-4563-b712-62866932b5e2"/>
+			</break>
+		</band>
+		<band height="723">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<line>
+				<reportElement positionType="Float" x="0" y="5" width="540" height="1" forecolor="#969595" uuid="43438ec1-f757-4c74-bb69-81aa8184bcf2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="28" width="540" height="1" forecolor="#969595" uuid="341286f0-e08c-412c-8b01-50c8b546fda0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="5" width="540" height="20" uuid="6db7731e-46f0-4936-9e5a-6b1415366f8b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INITIAL PCA CONTRACT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="540" height="15" uuid="c3152e7f-19a7-4baf-ac48-2d924e8da7bf"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Discretionary amounts for category of work are to be determined as follows:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="40" width="540" height="20" uuid="3570d08b-5ca5-4c99-8d03-aa42db730d5c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Pay Setting Criteria for Category & Subcategory of Work (Basic Allowance):]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="77b03428-e236-4844-a72b-e18db4c8325f"/>
+			</break>
+			<staticText>
+				<reportElement x="0" y="75" width="540" height="50" uuid="99d596c6-edec-4b54-9e86-cc0c26b6810b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="10" rightPadding="0"/>
+				<textElement>
+					<font size="9"/>
+					<paragraph firstLineIndent="-23" leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[1. Candidates who meet 4 of the following criteria may be recommended for no more than ½ of the total amount for the grade and length of service applicable to him/her. 
+2. Candidates who meet 5 or more of the following criteria may be recommended for the total amount for the grade and length of service applicable to him/her. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="540" height="15" uuid="2ed8d1a6-312a-4bdd-a746-c6271dddd873"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Please check which factors apply and justify how the Medical Officer meets the criteria below:]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="5" y="152" width="10" height="10" uuid="e37a0c05-dd2a-4ff5-9582-4c7486f5cf8f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="150" width="520" height="150" uuid="4b00dd73-542d-4314-acbe-00d46fd62339">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Experience</style> – Breadth and depth of required medical knowledge. A wide and cross-cutting understanding of a specific field and the field’s inter-relationship in the broader medical arena. Recognized intellectual leadership in the field with demonstrated contributions and high achievements. Highly specialized medical training and/or experience.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="300" width="540" height="1" uuid="db5cc59e-f922-430f-baab-7746db74ad1e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="312" width="10" height="10" uuid="dbc155f3-c57f-43c3-ae43-3d0e1d4332b3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="310" width="520" height="150" uuid="cf86ef1b-9011-4e98-aa36-1e0db3c73e82">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Current clinical experience</style> – At least 2 years of serving as a practicing physician within the preceding 5 years is counted; time as resident and intern does not get credited for this criterion.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="460" width="540" height="1" uuid="7e52e93e-4480-4d37-bcfe-d505cc8817f0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="472" width="10" height="10" uuid="975b3f0c-f853-4527-850c-cf48a00882c0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="470" width="520" height="150" uuid="f0372fbd-141d-424a-9b0b-94387610931f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Managerial Responsibility</style> – CMS position includes official supervisory responsibilities.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="620" width="540" height="1" uuid="9c9de141-9841-431c-ba43-03611ecf2c35">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+		<band height="723">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="93c91aa8-5bbd-47d7-96dd-ac4927d23a85">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<ellipse>
+				<reportElement x="5" y="10" width="10" height="10" uuid="053c7e2c-db35-40ca-9e8d-9955190ce113">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="8" width="520" height="150" uuid="838d7574-710d-4290-bb4a-46845edaeb2b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Service to HHS and/or CMS</style> – The importance and frequency of interactions with various individuals or groups within or outside CMS, service to CMS, and the effect of these interactions on accomplishing the CMS mission. Outstanding contributions to CMS, that because of these accomplishments the employee is heavily recruited by outside organizations.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="158" width="540" height="1" uuid="467eb604-08e7-4ae1-93ee-e5b2f06f13bd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="170" width="10" height="10" uuid="57ccdfb9-2f70-443e-af57-60fb3d2bb3fd">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="168" width="520" height="150" uuid="fbe86388-d16a-4b3a-84e9-8731913521ff">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Internal Partnerships and Networking</style> – Building CMS internal effectiveness by promoting, leading and participating on trans-CMS activities which enhance areas of shared scientific interest, leverage best practices, and lead to policies which enhance CMS’ overall mission and effectiveness. May include participation on CMS committees, work groups, or other governance and management groups and leveraging financial, staff, and space resources. (For new recruits, relevant experience with outside employers should be considered in assessing this criterion.)
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="318" width="540" height="1" uuid="c323e824-daf5-4188-9f8a-58c265aee035">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="330" width="10" height="10" uuid="933edc17-055e-486a-bfae-c628d0d5c47c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="328" width="520" height="150" uuid="a7f77dc0-b264-4e09-ad3f-ef653367b6bf">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>External Partnerships and Networking</style> – Developing networks and alliances, collaborating across boundaries, and developing a mutually beneficial working relationship with the greater medical/health insurance community to achieve shared goals. (For new external applicants, relevant experience with outside employers should be considered in assessing this criterion.)
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="478" width="540" height="1" uuid="ac6ea006-cea2-4209-8f4a-7793b98a59c1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="491" width="10" height="10" uuid="1aeba02c-95f4-4ebd-bc91-19b5f0a529ea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="489" width="520" height="150" uuid="b6437596-a2ba-43c8-a0f5-dcbf068a790b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Market Value for Comparable Functions</style> – Specific clinical or other highly technical skills of benefit to the CMS in their designated CMS function. Alternative job offers may be used as support of this criterion; however, the duties of the CMS position and the alternate position must be similar.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="639" width="540" height="1" uuid="a0d122c9-e709-453c-9476-4cf7a219e9f7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+		<band height="400">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="476bc040-fbab-409f-a582-5a1ee665ba9b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<ellipse>
+				<reportElement x="5" y="10" width="10" height="10" uuid="987ecfdc-f350-4535-ba5d-fbef7db58d73">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="8" width="520" height="150" uuid="b255b688-048b-4d81-8e29-3c4c2199ee27">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Other</style> – Any evidence of pay-related staffing problems which seriously hamper or have the potential to seriously hamper the organization’s ability to recruit and retain medical officers in the specialty or assignment.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="158" width="540" height="1" uuid="f59428db-0e74-404b-a465-28880c00fe4d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="178" width="540" height="1" uuid="6f39e6d4-b971-4f64-b9c6-4d900e1126b3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="218" width="540" height="1" uuid="2b7e7a23-3154-491f-9a82-cc089d32a452">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="178" width="415" height="40" uuid="5a9c5aae-1a4c-4dcf-8118-ba449cad3010">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2"/>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Recommending Supervisor Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="178" width="124" height="40" uuid="b5722771-4182-46cd-93fb-63ba20c477cc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5"/>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="415" y="178" width="1" height="40" forecolor="#969595" uuid="6ca19e82-9277-40bb-9b99-7c166ac26da8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+		</band>
+		<band height="723">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<line>
+				<reportElement positionType="Float" x="0" y="5" width="540" height="1" forecolor="#969595" uuid="2f9d4567-a9ce-464f-b6fa-d646077f274b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="28" width="540" height="1" forecolor="#969595" uuid="7e2db537-3798-4863-b7fe-5a1a38c0d519">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="5" width="540" height="20" uuid="1f4f4ab1-8f59-40cb-8787-f36b14394e4f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RENEWAL OF PCA CONTRACT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="540" height="15" uuid="acf0e920-3247-4c1a-b4ce-8a828d4d0ce5"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Discretionary amounts for category of work are to be determined as follows:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="40" width="540" height="20" uuid="4aa01e88-82ce-48e2-85c3-86403462a7f8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Pay Setting Criteria for Category & Subcategory of Work (Basic Allowance):]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="838d3bad-f8a1-4d0e-9b44-474119b945cb"/>
+			</break>
+			<staticText>
+				<reportElement x="0" y="75" width="540" height="50" uuid="e2a3e678-7460-431f-847c-076a7b26247c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="10" rightPadding="0"/>
+				<textElement>
+					<font size="9"/>
+					<paragraph firstLineIndent="-23" leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[1. Candidates who meet 4 of the following criteria may be recommended for no more than ½ of the total amount for the grade and length of service applicable to him/her. 
+2. Candidates who meet 5 or more of the following criteria may be recommended for the total amount for the grade and length of service applicable to him/her. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="540" height="15" uuid="412e87be-56bc-49a3-a6b3-656cf57bfca2"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Please check which factors apply and justify how the Medical Officer meets the criteria below:]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="5" y="152" width="10" height="10" uuid="38cf11ed-0535-4f50-aecb-f9ff3b6aec9f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="150" width="520" height="130" uuid="b68afd63-bf31-477b-a7e1-dbc8aa7f824e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Managerial Responsibility</style> – CMS position includes official supervisory responsibilities.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="280" width="540" height="1" uuid="525c4f0f-109b-4cbc-9f4d-866e62246066">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="292" width="10" height="10" uuid="060ad23f-6a4c-46de-b16e-ddcf45cc70eb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="290" width="520" height="130" uuid="c5263dc0-250b-421e-b2de-8ebe1094ec89">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Complexity of program or projects managed</style> – Problems solved, difficulty and originality in work performed.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="420" width="540" height="1" uuid="3552b947-a1b5-4a9c-83f6-fcd45014af02">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="432" width="10" height="10" uuid="f7c21153-6f58-40a7-8614-14e92580f67f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="430" width="520" height="130" uuid="6bee04e1-403c-4ca5-a17c-fbc86bbec448">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Proven Productivity</style> – Impact on the medical/health insurance community.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="560" width="540" height="1" uuid="4993c2a7-a781-4d92-82e1-04ee99c49fd8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="575" width="10" height="10" uuid="35ec1b33-ec49-4747-a996-a4a59b265185">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="573" width="520" height="130" uuid="f1156331-1558-4d1c-b52f-687961401420">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Decision-Making Authority</style> – Level of independence, or freedom to act.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="703" width="540" height="1" uuid="42535ca9-26e4-497c-b648-0cb45370ce97">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+		<band height="723">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="a640077a-c0c3-422a-ae01-d09ce1bd7be2"/>
+			</break>
+			<ellipse>
+				<reportElement x="5" y="5" width="10" height="10" uuid="e9c0535a-afa4-416c-ad66-34e9d6b117c5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="3" width="520" height="120" uuid="9ff33074-d600-4e13-93de-e0c4e95f581c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Scope or Breadth of Influence</style> – that an individual exercises at varying levels within and across the organization. Impact relates to how influential the position is within the component or CMS based on the importance of decisions or final recommendations rendered.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="123" width="540" height="1" uuid="4d9efe55-b3ec-4982-8aba-eddbe4b23fac">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="135" width="10" height="10" uuid="1f6c70f6-cec3-4f9c-8e63-a1cc59b01aa0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="133" width="520" height="120" uuid="4148a445-11b1-44af-9ca3-e9d1a9592cc1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Internal Partnerships and Networking</style> – Building CMS internal effectiveness by promoting, leading and participating on trans-CMS activities which enhance areas of shared scientific interest, leverage best practices, and lead to policies which enhance CMS’ overall mission and effectiveness. May include participation on CMS committees, work groups, or other governance and management groups and leveraging financial, staff, and space resources.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="253" width="540" height="1" uuid="e40d27cf-d344-4a13-ae0a-6f260bfc9fa2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="265" width="10" height="10" uuid="fcc172ee-252d-4807-bb92-4a492c02e9aa">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="263" width="520" height="120" uuid="b6163501-aebe-415e-bec9-984ab40b73ee">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>External Partnerships and Networking</style> – Developing networks and alliances, collaborating across boundaries, and developing a mutually beneficial working relationship with the greater medical/health insurance community to achieve shared goals.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="383" width="540" height="1" uuid="092f91c7-1c5e-4c76-b0b5-f84c19f72a22">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="398" width="10" height="10" uuid="5ad8cc8d-dd1c-47fa-8ce7-9941052dd262">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="396" width="520" height="120" uuid="2cf87f71-2537-4183-a77e-9a02128ca206">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Market Value for Comparable Functions</style> – Specific clinical or other highly technical skills of benefit to the CMS in their designated CMS function. Alternative job offers may be used as support of this criterion; however, the duties of the CMS position and the alternate position must be similar.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="516" width="540" height="1" uuid="9124a713-6479-4a53-bf3a-dde87116b137">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="532" width="10" height="10" uuid="5c98fc9e-f9da-47a0-a096-59dd287f7ebf">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="530" width="520" height="120" uuid="88b10eeb-48d3-4ef8-a473-e63ee0b6fa25">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Other</style> – For retention, components must demonstrate with reasonable documentation that the individual would likely leave the CMS if the higher total payments are not approved. This may be demonstrated by submitting recent written job offers where the individual is offered a compensation level that must be met; or, verbal job offers that have been confirmed by a component official at a higher level than the employee.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="650" width="540" height="1" uuid="5e656c96-0e82-4055-968f-1190b060c6f2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="690" width="540" height="1" uuid="1a1d9c2e-58e0-44bb-8aaf-e8913a0f1b85">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="650" width="415" height="40" uuid="b65e2c9a-6074-4505-ae53-206149028543">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2"/>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Recommending Supervisor Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="650" width="124" height="40" uuid="7c8b77be-9de7-4446-b227-74389e56bca8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5"/>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+		<band height="723">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<line>
+				<reportElement positionType="Float" x="0" y="5" width="540" height="1" forecolor="#969595" uuid="19be21e4-d0fe-4e04-b195-df0b88b1c7c9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="28" width="540" height="1" forecolor="#969595" uuid="30d20531-fb28-4529-99c8-668459aa0ae2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#050505"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="5" width="540" height="20" uuid="ffcb01fa-ed8a-4e52-b3b9-32dfccf2e3df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FOR BOTH INITIAL AND RENEWAL OF PCA CONTRACTS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="540" height="15" uuid="c59e3a81-3e61-4d43-8b64-697b6426cebf"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Discretionary amounts for category of work are to be determined as follows:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="40" width="540" height="20" uuid="50b0b20f-f411-4386-bb66-5f438e60a2a4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Pay Setting Criteria for Mission-Specific Allowance Criteria:]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="817a3a70-6dfa-44e6-874c-6ab9da4287bc"/>
+			</break>
+			<staticText>
+				<reportElement x="0" y="75" width="540" height="50" uuid="f91867eb-183a-47da-b159-b84074375f3c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="10" rightPadding="0"/>
+				<textElement>
+					<font size="9"/>
+					<paragraph firstLineIndent="-23" leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[1. Candidates who meet 1 of the following criteria may be recommended for no more than ½ of the total amount for the grade and length of service applicable to him/her. 
+2. Candidates who meet 2 or more of the following criteria may be recommended for the total amount for the grade and length of service applicable to him/her. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="540" height="15" uuid="97a11b80-8c99-4e0e-aadd-3c991d32c038"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Please check which factors apply and justify how the Medical Officer meets the criteria below:]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="5" y="152" width="10" height="10" uuid="6b044226-dc5d-4c39-9a21-b34fef230866">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="150" width="520" height="130" uuid="a6d02458-2f99-4980-8b51-ae4926926710">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Physicians whose work has materially and measurably reduced the cost of health care.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="280" width="540" height="1" uuid="68ff74d8-9017-403b-8702-b3230dec3766">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="292" width="10" height="10" uuid="b7ea51b1-91aa-4175-a8d7-13c0f9ff37b1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="290" width="520" height="130" uuid="bed76035-48fe-4e4a-a428-aa08a791aa32">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Physicians whose work has substantially improved policy development or health care administration.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="420" width="540" height="1" uuid="4cf54cb1-b0c6-4600-83b4-c7d3a81c0575">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<ellipse>
+				<reportElement x="5" y="432" width="10" height="10" uuid="73678753-c657-4ab3-a290-5b29787d99b9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="20" y="430" width="520" height="130" uuid="828c5882-73c7-4062-8690-c76fcb64ae08">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Physicians that have achieved substantial, documented efficiencies in the design or implementation of projects to maximize health care quality and better serve beneficiary needs.
+
+<style isBold='true'>Justification:</style>]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="560" width="540" height="1" uuid="cfc24704-9be3-477d-b8e3-dfac678161b5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="600" width="540" height="1" uuid="7f3b5666-e88f-40ab-8b0b-3e6a766cbd28">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="560" width="415" height="40" uuid="0e10ea2e-36b0-4c1d-b94d-04af58bc783e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2"/>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Recommending Supervisor Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="560" width="124" height="40" uuid="0dd64164-8a29-46b3-8e1d-c4e925953f39">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="5"/>
+				<textElement markup="styled">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<line>
+				<reportElement x="0" y="0" width="540" height="1" uuid="a29ec906-0fb9-4bae-8844-26b90d6b7120">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<textField evaluationTime="Page" pattern="">
+				<reportElement x="0" y="1" width="400" height="12" uuid="bdb3ff24-b7e0-4a1f-96f5-b8db122f5f6c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}.equals(new Integer(1)) ? "PCA Justification Worksheet" 
+		: $V{PAGE_NUMBER}.equals(new Integer(2)) ? "CMS Physician Special Pay Discretionary Factors for Setting PCA" 
+				: $V{PAGE_NUMBER}.equals(new Integer(3)) ? "Initial PCA Contract" 
+					: $V{PAGE_NUMBER}.equals(new Integer(4)) ? "Initial PCA Contract" 
+						: $V{PAGE_NUMBER}.equals(new Integer(5)) ? "Initial PCA Contract" 
+							: $V{PAGE_NUMBER}.equals(new Integer(6)) ? "Renewal of PCA Contract" 
+								: $V{PAGE_NUMBER}.equals(new Integer(7)) ? "Renewal of PCA Contract" 
+								:"For Both Initial and Renewal of PCA Contracts"]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="499" y="2" width="40" height="12" uuid="aef5248c-cec8-4134-a724-ae2c8c6cda69">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

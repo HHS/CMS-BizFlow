@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T11:46:28 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERLR Case Total - 508" pageWidth="500" pageHeight="100" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="53772fe9-5189-421f-bcd8-c9579805698b">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="sriya"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/ER_LR_Quarterly_Data_Dashboard___508/ERLR_Case_Total___508"/>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT ADMIN_CODE, ER, LR
+FROM
+(
+--Admin ER Cases
+SELECT COUNT(CASE_NUMBER) AS CASE_TOTAL, RELATION_TYPE, UPPER(HHS_CMS_HR.FN_GET_2ND_SUB_ORG(ADMIN_CODE)) AS ADMIN_CODE
+FROM
+(
+SELECT
+	VWERLR.ERLR_CASE_NUMBER AS CASE_NUMBER,
+	'Employee Relations' AS RELATION_TYPE,
+	CASE 
+		WHEN VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NOT NULL
+		THEN TO_CHAR(VWERLR.GEN_EMPLOYEE_ADMIN_CD || '-' || VWERLR.GEN_EMPLOYEE_ADMIN_CD_DESC)
+		ELSE TO_CHAR(VWERLR.GEN_CUSTOMER_ADMIN_CD || '-' || VWERLR.GEN_CUSTOMER_ADMIN_CD_DESC)
+	END AS ADMIN_CODE
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+WHERE   UPPER(NVL(VWERLR.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+AND (NVL(VWERLR.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (VWERLR.GEN_CASE_STATUS IN ('Closed') AND VWERLR.CANCEL_REASON IS NOT NULL))
+AND VWERLR.GEN_CASE_TYPE IS NOT NULL
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(TO_CHAR(VWERLR.GEN_EMPLOYEE_ADMIN_CD),TO_CHAR(VWERLR.GEN_CUSTOMER_ADMIN_CD))) != 'N/A'
+AND  (
+   ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Conduct Issue') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Investigation') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Medical Documentation') || '%')
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Performance Issue') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Probationary Period') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Within Grade Increase Denial/Reconsideration') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' AND VWERLR.THRD_PRTY_APPEAL_TYPE = 'MSPB' )
+)
+-- Filter : Component
+AND ( $P{COMPONENT} = 'By Admin Code' AND LENGTH($P{ADMIN_CD}) >= 1 AND
+ ( $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+	OR ( $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+)
+
+-- Filter : Date Range
+
+		 AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))
+)
+GROUP BY HHS_CMS_HR.FN_GET_2ND_SUB_ORG(ADMIN_CODE), RELATION_TYPE
+
+UNION
+--Admin LR Cases
+SELECT COUNT(CASE_NUMBER) AS CASE_TOTAL, RELATION_TYPE, UPPER(HHS_CMS_HR.FN_GET_2ND_SUB_ORG(ADMIN_CODE)) AS ADMIN_CODE
+FROM
+(
+SELECT
+	VWERLR.ERLR_CASE_NUMBER AS CASE_NUMBER,
+	'Labor Relations' AS RELATION_TYPE,
+	CASE 
+		WHEN VWERLR.GEN_EMPLOYEE_ADMIN_CD IS NOT NULL
+		THEN TO_CHAR(VWERLR.GEN_EMPLOYEE_ADMIN_CD || '-' || VWERLR.GEN_EMPLOYEE_ADMIN_CD_DESC)
+		ELSE TO_CHAR(VWERLR.GEN_CUSTOMER_ADMIN_CD || '-' || VWERLR.GEN_CUSTOMER_ADMIN_CD_DESC)
+	END AS ADMIN_CODE
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+WHERE  UPPER(NVL(VWERLR.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+AND (NVL(VWERLR.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (VWERLR.GEN_CASE_STATUS IN ('Closed') AND VWERLR.CANCEL_REASON IS NOT NULL))
+AND VWERLR.GEN_CASE_TYPE IS NOT NULL
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(TO_CHAR(VWERLR.GEN_EMPLOYEE_ADMIN_CD),TO_CHAR(VWERLR.GEN_CUSTOMER_ADMIN_CD))) != 'N/A'
+AND (
+   UPPER(VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Labor Negotiation') || '%' 
+OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Grievance') || '%' 
+OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Information Request') || '%' 
+OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Unfair Labor Practice') || '%' 
+OR (UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' 
+AND ( VWERLR.THRD_PRTY_APPEAL_TYPE = 'Arbitration' 
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FLRA'
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FSIP'
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'Grievance'
+   ))
+)
+-- Filter : Component
+AND ($P{COMPONENT} = 'By Admin Code' AND LENGTH($P{ADMIN_CD}) >= 1 AND
+  ( $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+ OR ( $P{INC_SUBORG} = 'No' AND UPPER(NVL(VWERLR.GEN_EMPLOYEE_ADMIN_CD, VWERLR.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+)
+-- Filter : Date Range
+
+		 AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))	
+)
+GROUP BY HHS_CMS_HR.FN_GET_2ND_SUB_ORG(ADMIN_CODE), RELATION_TYPE
+	
+UNION	
+	
+--CMS-wide ER Cases
+SELECT
+	COUNT(*) AS CASE_TOTAL,
+	'Employee Relations' AS RELATION_TYPE,
+	'CMS-wide' AS ADMIN_CODE
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+WHERE  UPPER(NVL(VWERLR.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+AND (NVL(VWERLR.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (VWERLR.GEN_CASE_STATUS IN ('Closed') AND VWERLR.CANCEL_REASON IS NOT NULL))
+AND VWERLR.GEN_CASE_TYPE IS NOT NULL
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(TO_CHAR(VWERLR.GEN_EMPLOYEE_ADMIN_CD),TO_CHAR(VWERLR.GEN_CUSTOMER_ADMIN_CD))) != 'N/A'
+AND(
+   ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Conduct Issue') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Investigation') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Medical Documentation') || '%')
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Performance Issue') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Probationary Period') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Within Grade Increase Denial/Reconsideration') || '%' )
+OR ( UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' AND VWERLR.THRD_PRTY_APPEAL_TYPE = 'MSPB' )
+)
+-- Filter : Date Range
+
+		 AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))	
+
+UNION
+
+--CMS-wide LR Cases
+SELECT
+	COUNT(*) AS CASE_TOTAL,
+	'Labor Relations' AS RELATION_TYPE,
+	'CMS-wide' AS ADMIN_CODE
+FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR
+WHERE  UPPER(NVL(VWERLR.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+AND (NVL(VWERLR.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (VWERLR.GEN_CASE_STATUS IN ('Closed') AND VWERLR.CANCEL_REASON IS NOT NULL))
+AND VWERLR.GEN_CASE_TYPE IS NOT NULL
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(TO_CHAR(VWERLR.GEN_EMPLOYEE_ADMIN_CD),TO_CHAR(VWERLR.GEN_CUSTOMER_ADMIN_CD))) != 'N/A'
+AND(
+   UPPER(VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Labor Negotiation') || '%' 
+OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Grievance') || '%' 
+OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Information Request') || '%' 
+OR UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Unfair Labor Practice') || '%' 
+OR (UPPER( VWERLR.GEN_CASE_TYPE ) LIKE '%' || UPPER('Third Party Hearing') || '%' 
+AND ( VWERLR.THRD_PRTY_APPEAL_TYPE = 'Arbitration' 
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FLRA'
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'FSIP'
+   OR VWERLR.THRD_PRTY_APPEAL_TYPE = 'Grievance'
+   ))
+)
+-- Filter : Date Range
+		
+		
+		 AND ((VWERLR.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VWERLR.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))
+)
+PIVOT 
+  (MIN(CASE_TOTAL)
+    FOR RELATION_TYPE IN ('Employee Relations' AS ER, 'Labor Relations' AS LR)
+  )]]>
+	</queryString>
+	<field name="ADMIN_CODE" class="java.lang.String"/>
+	<field name="ER" class="java.math.BigDecimal"/>
+	<field name="LR" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="49" splitType="Stretch">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="30" uuid="ab4cc283-9459-463f-b49a-db0b8f570562">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of Cases by Employee Relations and Labor Relations Initiated Between " + DATEFORMAT($P{DATE_RANGE_FROM},"MM/dd/yyyy")  + " and " +DATEFORMAT($P{DATE_RANGE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="500" height="19" uuid="2f6ce47c-a8cb-4537-94c5-2d93b0f2e218"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Displays the cases by Employee Relations and Labor Relations"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="170" height="20" uuid="619c369d-6eec-47d1-80a5-77759809df48">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Component]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="0" width="110" height="20" uuid="c5c1fd2e-fac9-4d46-b461-02edf62c71b8">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Employee Relations]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="110" height="20" uuid="f2148d85-275a-4df0-a652-2e6716559531">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Labor Relations]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="0" width="110" height="20" uuid="293a2cfc-f272-432b-95eb-e51273266d4e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="0" y="0" width="170" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0a4e2948-b509-42a8-b602-5e9e0e606ff5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADMIN_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="170" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="271d7fa7-4b97-495f-bbed-5d34c51e5e80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ER} != null ? $F{ER} : 0]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="280" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="46b32c3b-9242-4e7d-85c8-8a35b6a649cb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LR} != null ? $F{LR} : 0]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="390" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="21fbb87c-19e4-45ef-b1c8-bd854400280f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ER}!= null || $F{LR}!=null) ? ($F{ER}.intValue() + $F{LR}.intValue() )  : 0]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="60">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="40" uuid="4ca89bcf-fdc2-4add-9039-8afd9ce21ba9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of Cases by Employee Relations and Labor Relations Initiated Between " + DATEFORMAT($P{DATE_RANGE_FROM},"MM/dd/yyyy")  + " and " + DATEFORMAT($P{DATE_RANGE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="500" height="20" uuid="36e25023-2f7f-40ec-ae0e-c302aa5af902"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
