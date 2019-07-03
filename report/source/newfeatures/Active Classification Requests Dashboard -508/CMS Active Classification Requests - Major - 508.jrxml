@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-28T11:50:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Active Classification Requests - Major - 508" pageWidth="500" pageHeight="200" orientation="Landscape" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud Data Adapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="764"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="226"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508_TEST/CMS_Active_Classification_Requests___508_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508_TEST/CMS_Active_Classification_Requests___508"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- Calculates the number of running Classification process instances that fall in the specified age ranges
+-- Calculates for major and minor actions based on Classification Type
+
+SELECT 
+
+	SUM(CASE WHEN CP.PROCESS_AGE BETWEEN 0 AND 4 AND CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Major Duties') THEN 1 ELSE 0 END) AS Major_Actions_Green,
+    SUM(CASE WHEN CP.PROCESS_AGE BETWEEN 5 AND 7 AND CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Major Duties') THEN 1 ELSE 0 END) AS Major_Actions_Yellow,
+    SUM(CASE WHEN CP.PROCESS_AGE >= 8 AND CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Major Duties') THEN 1 ELSE 0 END) AS Major_Actions_Red
+			    
+FROM "HHS_VW_CLASSIFICATION_PROC" CP
+
+WHERE CP.PROCESS_STATE_DESC IN ('Running', 'Error') -- Active Classification processes
+	AND CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Major Duties')
+
+ 	AND (
+                              ($P{COMPONENT} = 'CMS-wide' AND CP.V_ADMIN_CODE LIKE 'FC%') 
+                              OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND CP.V_ADMIN_CODE = 'FC')
+                              OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND CP.V_ADMIN_CODE LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                              OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND CP.V_ADMIN_CODE = UPPER(TRIM($P{ADMIN_CD})))
+               )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+               
+	AND (($P{REQ_TYPE} = 'All') OR (CP.V_REQUEST_TYPE = $P{REQ_TYPE}))  -- Request Type filter]]>
+	</queryString>
+	<field name="MAJOR_ACTIONS_GREEN" class="java.math.BigDecimal"/>
+	<field name="MAJOR_ACTIONS_YELLOW" class="java.math.BigDecimal"/>
+	<field name="MAJOR_ACTIONS_RED" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="500" height="20" uuid="975b68ab-dede-4d14-b1a8-c7078a235acc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Major Actions]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="500" height="20" forecolor="#000000" uuid="f95af499-c4f3-4977-bb7f-ab4a2820e04d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Displays the number of major actions in the classification workflow against the 7-business day performance goal. "]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="280" height="0" uuid="9b2c6ac2-282a-4bc8-ae19-e61c69eb32e5">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Business Days in Classification Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="220" height="0" uuid="4e4f6ff1-081b-4d97-befe-1513c8d47871"/>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Classification Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="280" height="20" uuid="478a5912-f850-476c-a303-91e5b1ee6589">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Business Days in Classification Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="220" height="20" uuid="1bc67e42-97c2-48ce-8c43-2e1c6eead16b"/>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Major Actions]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField>
+				<reportElement mode="Opaque" x="280" y="0" width="220" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a59c3174-4855-44cc-afd7-b4934ba755c4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MAJOR_ACTIONS_GREEN} != null ? $F{MAJOR_ACTIONS_GREEN} : "N/A"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="" x="0" y="60" width="500" height="30" uuid="f101f1d2-d206-4726-ae0f-115349f41d64">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="4"/>
+				<textElement markup="none">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[NOTE: The Time to Classify Performance Goal for Major Actions (for example, Create New PD and Update Major Duties) is 7 Business Days.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="280" height="20" uuid="9c087d7c-fee8-4ff2-b92d-aa40c572fe1a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[0 to 4]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="280" y="20" width="220" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7eb59c3d-b300-4cd6-9fcf-ba7d467d361b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MAJOR_ACTIONS_YELLOW} != null ? $F{MAJOR_ACTIONS_YELLOW} : "N/A"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="280" height="20" uuid="81825a68-3498-4e71-a16d-26b3e3387991">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[5 to 7]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="280" y="40" width="220" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4e9bd0c5-d770-4dbf-9a19-fc3226938fb7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MAJOR_ACTIONS_RED} != null ? $F{MAJOR_ACTIONS_RED} : "N/A"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="280" height="20" uuid="0fc3bbaa-ed03-4696-a7ef-eb9b290cacc4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[8 or more]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

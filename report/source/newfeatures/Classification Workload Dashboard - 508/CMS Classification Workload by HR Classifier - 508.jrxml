@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-06-20T11:02:40 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Classification Workload by Classifier - 508" pageWidth="500" pageHeight="650" whenNoDataType="NoDataSection" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud Data Adapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="275"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="721"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="778"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="212"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="manderson"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508_TEST/CMS_Classification_Workload_by_HR_Classifier___508_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508_TEST/CMS_Classification_Workload_by_HR_Classifier___508"/>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WORKFLOW" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="_bf508" class="java.lang.String">
+		<defaultValueExpression><![CDATA["y"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- Retrieves the number of running processes assigned to each Classifier, grouped by Major/Minor action type
+
+
+
+SELECT DISTINCT ClassifierName, SUM(MajorActions) OVER (PARTITION BY ClassifierName) AS TotMajorActions, SUM(MinorActions) OVER (PARTITION BY ClassifierName) AS TotMinorActions
+
+
+
+FROM
+
+    (        -- Requests that are active in Strategic Consultation
+
+       SELECT 
+
+            SC.SG_CS_NAME AS ClassifierName     
+
+            , SUM(CASE WHEN SC.SG_CT_DSCR IN ('Create New Position Description', 'Update Major Duties') THEN 1 ELSE 0 END) AS MajorActions
+
+            , SUM(CASE WHEN SC.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Coversheet') THEN 1 ELSE 0 END) AS MinorActions
+
+    
+
+        FROM HHS_CMS_HR.VW_STRATCON SC 
+
+            INNER JOIN PROCS P ON P.PROCID = SC.SG_PROCID  
+
+        WHERE P.STATE IN ('E', 'R', 'V')
+
+            AND SC.SG_CT_DSCR IN ('Create New Position Description', 'Update Coversheet','Review Existing Position Description', 'Update Major Duties') 
+
+            AND ($P{REQ_TYPE} = 'All' OR SC.SG_RT_DSCR = $P{REQ_TYPE}) -- Request Type filter 
+
+            AND ($P{WORKFLOW} = 'All' OR P.NAME = $P{WORKFLOW}) -- Workflow Type filter 
+
+        GROUP BY SC.SG_CS_NAME
+
+        
+
+        UNION all
+
+    
+
+        -- Requests that are active in Classification
+
+       SELECT 
+
+             CL.CS_NAME AS ClassifierName
+
+            , SUM(CASE WHEN CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Major Duties') THEN 1 ELSE 0 END) AS MajorActions
+
+            , SUM(CASE WHEN CP.V_CLASSIFICATION_TYPE IN ('Review Existing Position Description', 'Update Coversheet') THEN 1 ELSE 0 END) AS MinorActions
+
+    
+
+        FROM HHS_CMS_HR.VW_CLASSIFICATION CL 
+
+            INNER JOIN HHS_VW_CLASSIFICATION_PROC CP ON CP.PROCESS_ID = CL.PD_PROCID  
+
+        WHERE CP.PROCESS_STATE_DESC IN ('Running')
+
+            AND CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Coversheet','Review Existing Position Description', 'Update Major Duties')
+
+            AND ($P{REQ_TYPE} = 'All' OR CP.V_REQUEST_TYPE = $P{REQ_TYPE}) -- Request Type filter 
+
+            AND ($P{WORKFLOW} = 'All' OR CP.PROCESS_NAME = $P{WORKFLOW}) -- Workflow Type filter
+
+        GROUP BY CL.CS_NAME
+
+
+
+    ) 
+
+
+
+WHERE ClassifierName IS NOT NULL
+
+
+
+GROUP BY ClassifierName, MajorActions, MinorActions
+
+			
+
+ORDER BY ClassifierName]]>
+	</queryString>
+	<field name="CLASSIFIERNAME" class="java.lang.String"/>
+	<field name="TOTMAJORACTIONS" class="java.math.BigDecimal"/>
+	<field name="TOTMINORACTIONS" class="java.math.BigDecimal"/>
+	<variable name="Variable_1" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="500" height="20" uuid="b0401abe-2603-49ab-a203-211bfbf4cd54">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Classification Workload by HR Classifier]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="30" forecolor="#000000" uuid="b57c5f18-6737-4201-8c52-6e4cfd52aab0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{REQ_TYPE}.equals("All")) ?
+				new Boolean ($P{WORKFLOW}.contains("All")) ? "Provides the number of major and minor actions assigned to each classifier for all active requests in Strategic Consultation and Classification. "	: "Provides the number of major and minor actions assigned to each classifier for all active requests in " + $P{WORKFLOW}
+				
+:  new Boolean ($P{WORKFLOW}.contains("All")) ? "Provides the number of major and minor actions assigned to each classifier for all active " + $P{REQ_TYPE} + " requests in Strategic Consultation and Classification"
+								: "Provides the number of major and minor actions assigned to each classifier for all active " + $P{REQ_TYPE} + " requests in " + $P{WORKFLOW}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="220" y="0" width="140" height="20" uuid="ca8bf4fd-2b12-4a12-aba5-b20e5c86dfef">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Major Actions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="220" height="20" uuid="123ec676-a2b4-4612-8e4f-f2da413bd19d">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Classification Specialist]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="0" width="140" height="20" uuid="5b92b8b3-7555-437f-96ad-525624ff1b94">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Number of Minor Actions]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="220" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="aee073ad-360b-473a-9a54-670ba16f866b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASSIFIERNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="220" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="28326833-843c-4195-9207-99a9bb08e4a5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTMAJORACTIONS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="360" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f380db68-725e-410c-88ae-cf57c79e33e6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTMINORACTIONS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="500" height="20" uuid="d7c9e46a-7ff3-4c92-807b-0dbb39c75a4f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Classification Workload by HR Classifier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="500" height="20" uuid="a3715503-a877-43c7-8430-da9ed5e8b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

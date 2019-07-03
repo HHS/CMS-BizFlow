@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T16:23:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERLR Case Total - 508" pageWidth="500" pageHeight="500" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="53772fe9-5189-421f-bcd8-c9579805698b">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/ER_LR_Quarterly_Data_Dashboard___508/ERLR_Number_of_Case_by_Case_Type__508_"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508/ER_LR_Quarterly_Data_Dashboard___508/ERLR_Number_of_Case_by_Case_Type__508__files/Main_Jrxml"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow data Adapter - HHS QA"/>
+	<parameter name="DATE_RANGE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_RANGE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	COUNT(VW.CASE_ID) AS CASE_COUNT,
+	TBL.TBL_LABEL AS CASE_TYPE,
+	CAST(COUNT(VW.CASE_ID) * 100.0/SUM(COUNT(*)) OVER() AS DECIMAL(18,0)) AS PERCENTAGE_CASES
+FROM HHS_CMS_HR.TBL_LOOKUP TBL
+LEFT JOIN 
+		(SELECT
+			ERLR_CASE_NUMBER AS CASE_ID,
+			GEN_EMPLOYEE_ADMIN_CD,
+			GEN_CUSTOMER_ADMIN_CD,
+			CASE 
+        WHEN (GEN_CASE_TYPE IN ('Third Party Hearing') AND THRD_PRTY_APPEAL_TYPE IS NULL) THEN CAST('Ignore' as NVARCHAR2(1000))
+        ELSE GEN_CASE_TYPE END
+       AS CASE_TYPE_CODE,
+			GEN_CUST_INIT_CONTACT_DT,
+			CC_CASE_COMPLETE_DT,
+			GEN_CASE_STATUS
+      ,CANCEL_REASON
+		FROM HHS_CMS_HR.VW_ERLR_GEN VWERLR) VW
+	ON UPPER(TBL.TBL_LABEL) = UPPER(VW.CASE_TYPE_CODE)
+WHERE TBL_CATEGORY = 'ERLR'
+	AND UPPER(NVL(VW.CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+	AND (NVL(VW.GEN_CASE_STATUS,'X') NOT IN ('Closed') OR (VW.GEN_CASE_STATUS IN ('Closed') AND VW.CANCEL_REASON IS NOT NULL))
+AND VW.CASE_TYPE_CODE IS NOT NULL
+AND HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(TO_CHAR(VW.GEN_EMPLOYEE_ADMIN_CD),TO_CHAR(VW.GEN_CUSTOMER_ADMIN_CD))) != 'N/A'
+	AND TBL_LTYPE = 'ERLRInitialResponseCaseType'
+	AND TBL_ACTIVE = '1'
+	AND (($P{COMPONENT} = 'CMS-wide')
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND UPPER(NVL(VW.GEN_EMPLOYEE_ADMIN_CD, VW.GEN_CUSTOMER_ADMIN_CD)) LIKE UPPER('$P!{ADMIN_CD}%'))
+		OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND UPPER(NVL(VW.GEN_EMPLOYEE_ADMIN_CD, VW.GEN_CUSTOMER_ADMIN_CD)) = UPPER($P{ADMIN_CD}))
+	)
+	-- Filter : Date Range
+ AND ((VW.GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND VW.GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{DATE_RANGE_FROM}, 'DD-MON-YY') AND TO_DATE($P{DATE_RANGE_TO}, 'DD-MON-YY')))		
+GROUP BY
+	TBL.TBL_LABEL
+ORDER BY
+	TBL.TBL_LABEL]]>
+	</queryString>
+	<field name="CASE_COUNT" class="java.math.BigDecimal"/>
+	<field name="CASE_TYPE" class="java.lang.String"/>
+	<field name="PERCENTAGE_CASES" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="61" splitType="Stretch">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="40" uuid="ab4cc283-9459-463f-b49a-db0b8f570562">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of Cases By Case Type Initiated Between " + DATEFORMAT($P{DATE_RANGE_FROM},"MM/dd/yyyy")  + " and " + DATEFORMAT($P{DATE_RANGE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="500" height="20" uuid="1178ed8b-0d25-43a1-814f-068b84bd2f9c"/>
+				<textFieldExpression><![CDATA["Displays the number of cases by case type and percentage of of the case count"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="260" height="20" uuid="619c369d-6eec-47d1-80a5-77759809df48">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Case Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="110" height="20" uuid="c5c1fd2e-fac9-4d46-b461-02edf62c71b8">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Case Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="130" height="20" uuid="293a2cfc-f272-432b-95eb-e51273266d4e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75"/>
+				</textElement>
+				<text><![CDATA[Percentage]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="0" y="0" width="260" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0a4e2948-b509-42a8-b602-5e9e0e606ff5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASE_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="260" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="271d7fa7-4b97-495f-bbed-5d34c51e5e80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASE_COUNT} != null ? $F{CASE_COUNT} : 0]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="370" y="0" width="130" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="21fbb87c-19e4-45ef-b1c8-bd854400280f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERCENTAGE_CASES} != null ? $F{PERCENTAGE_CASES} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="60">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="40" uuid="4ca89bcf-fdc2-4add-9039-8afd9ce21ba9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of Cases By Case Type" + DATEFORMAT($P{DATE_RANGE_FROM},"MM/dd/yyyy")  + " and " + DATEFORMAT($P{DATE_RANGE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="500" height="20" uuid="36e25023-2f7f-40ec-ae0e-c302aa5af902"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
