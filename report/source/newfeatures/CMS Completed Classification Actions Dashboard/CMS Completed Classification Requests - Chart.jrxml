@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:31:28 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Completed Classification Requests - Chart" pageWidth="440" pageHeight="300" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="440" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="0" uuid="9e9c6aa5-1672-43ec-aabb-a7bdd2039e93">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Completed_Classification_Requests___Chart_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Completed_Classification_Requests___Chart"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="SLA_STATUS" class="java.lang.String"/>
+	<field name="AVERAGE_COMP_TIME" class="java.math.BigDecimal"/>
+	<field name="COUNT(*)" class="java.math.BigDecimal"/>
+	<field name="PERCENTAGE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="440" height="15" uuid="0ebe55ae-f7cb-4353-8325-71337af650ac">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Average Days to Classify Completed Major & Minor Requests]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="44" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="200" height="44" uuid="ec71274c-27dc-4292-a87f-7b384e1de260">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="COMPONENT">
+					<subreportParameterExpression><![CDATA[$P{COMPONENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ADMIN_CD">
+					<subreportParameterExpression><![CDATA[$P{ADMIN_CD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="INC_SUBORG">
+					<subreportParameterExpression><![CDATA[$P{INC_SUBORG}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REQ_TYPE">
+					<subreportParameterExpression><![CDATA[$P{REQ_TYPE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COMP_DATE_FROM">
+					<subreportParameterExpression><![CDATA[$P{COMP_DATE_FROM}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COMP_DATE_TO">
+					<subreportParameterExpression><![CDATA[$P{COMP_DATE_TO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["repo:/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Completed_Classification_Requests_Major_V2___Chart_files/main_jrxml"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="220" y="0" width="200" height="44" uuid="5cb9c182-3fba-45d3-9476-ca8925a739f8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="COMPONENT">
+					<subreportParameterExpression><![CDATA[$P{COMPONENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ADMIN_CD">
+					<subreportParameterExpression><![CDATA[$P{ADMIN_CD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="INC_SUBORG">
+					<subreportParameterExpression><![CDATA[$P{INC_SUBORG}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REQ_TYPE">
+					<subreportParameterExpression><![CDATA[$P{REQ_TYPE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COMP_DATE_FROM">
+					<subreportParameterExpression><![CDATA[$P{COMP_DATE_FROM}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COMP_DATE_TO">
+					<subreportParameterExpression><![CDATA[$P{COMP_DATE_TO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["repo:/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Completed_Classification_Requests_Minor_V3___Chart_files/main_jrxml"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

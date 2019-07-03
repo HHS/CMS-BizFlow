@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:35:47 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Time of Possession - Strategic Consultation Chart - Completed" pageWidth="700" pageHeight="240" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="680" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="10" uuid="f523c967-47af-4385-ab97-d2e09f5e6f62">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BizFlow data Adapter - HHS QA"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="194"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="801"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Time_of_Possession___Strategic_Consultation_Chart___Completed_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Completed_Classification_Actions_Dashboard/CMS_Time_of_Possession___Strategic_Consultation_Chart___Completed"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="680"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="306"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLSF_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- Calculates the percentage of requests that completed each step/phase within the performance goal
+-- Calculates the values for CMS as a whole and for a specific Admin Code based on input parameters
+
+SELECT  CAST(X.CreateRevMod_Within * 100.0/NULLIF(X.Create_Request_All, 0) AS DECIMAL(18,0)) AS CMS_Perc_CreateRevMod,
+        CAST(X.Hold_Meeting_Within * 100.0/NULLIF(X.Hold_Meeting_All, 0) AS DECIMAL(18,0)) AS CMS_Perc_Meeting,
+        CAST(X.Ack_Meeting_Within * 100.0/NULLIF(X.Ack_Meeting_All, 0) AS DECIMAL(18,0)) AS CMS_Perc_Ack,
+        CAST(X.App_Meeting_Within * 100.0/NULLIF(X.App_Meeting_All, 0) AS DECIMAL(18,0)) AS CMS_Perc_App,
+        CAST(((X.Hold_Meeting_Within/NULLIF(X.Hold_Meeting_All, 0)) + (X.App_Meeting_Within/NULLIF(X.App_Meeting_All, 0)))* 50 AS DECIMAL(18,0))AS CMS_HR_Perc_Overall,
+        CAST(((X.CreateRevMod_Within/NULLIF(X.Create_Request_All, 0)) + (X.Ack_Meeting_Within/NULLIF(X.Ack_Meeting_All, 0)))* 50 AS DECIMAL(18,0))AS CMS_COMP_Perc_Overall,
+              
+        CAST(Y.CreateRevMod_Within * 100.0/NULLIF(Y.Create_Request_All, 0) AS DECIMAL(18,0)) AS COMP_Perc_CreateRevMod,
+        CAST(Y.Hold_Meeting_Within * 100.0/NULLIF(Y.Hold_Meeting_All, 0) AS DECIMAL(18,0)) AS COMP_Perc_Meeting,
+        CAST(Y.Ack_Meeting_Within * 100.0/NULLIF(Y.Ack_Meeting_All, 0) AS DECIMAL(18,0)) AS COMP_Perc_Ack,
+        CAST(Y.App_Meeting_Within * 100.0/NULLIF(Y.App_Meeting_All, 0) AS DECIMAL(18,0)) AS COMP_Perc_App,
+        CAST(((Y.Hold_Meeting_Within/NULLIF(Y.Hold_Meeting_All, 0)) + (Y.App_Meeting_Within/NULLIF(Y.App_Meeting_All, 0)))* 50 AS DECIMAL(18,0))AS COMP_HR_Perc_Overall,
+        CAST(((Y.CreateRevMod_Within/NULLIF(Y.Create_Request_All, 0)) + (Y.Ack_Meeting_Within/NULLIF(Y.Ack_Meeting_All, 0)))* 50 AS DECIMAL(18,0))AS COMP_COMP_Perc_Overall
+        
+FROM 
+    (SELECT
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Create Request')) = 'C' THEN 1 ELSE 0 END) 
+            AS Create_Request_All, -- Num requests that completed the Create Request step
+            
+        SUM(CASE WHEN "SCP"."CREATE_REQUEST_AGE" + "SCP"."REVIEW_REQUEST_AGE" + "SCP"."MODIFY_REQUEST_AGE" <= 1 THEN 1 ELSE 0 END) AS CreateRevMod_Within, 
+        -- Num requests that completed the Create Request, Review Request and Modify Request steps within 1 day
+   
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Hold Strategic Consultation Meeting')) = 'C' THEN 1 ELSE 0 END) 
+            AS Hold_Meeting_All, -- Num requests that completed the Hold SC Meeting step
+        SUM(CASE
+                WHEN ("SCP"."HOLD_MEETING_AGE" <= 1) 
+                        AND ((SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Hold Strategic Consultation Meeting')) = 'C')
+                THEN 1 ELSE 0 END) 
+            AS Hold_Meeting_Within, -- Num requests that completed the Hold SC Meeting step within 1 day
+            
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Acknowledge Strat Cons Meeting')) = 'C' THEN 1 ELSE 0 END) 
+            AS Ack_Meeting_All, -- Num requests that completed the Acknowl SC Meeting step
+        SUM(CASE
+                WHEN ("SCP"."ACK_MEETING_AGE" <= 1) 
+                        AND ((SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Acknowledge Strat Cons Meeting')) = 'C')
+                THEN 1 ELSE 0 END) 
+            AS Ack_Meeting_Within, -- Num requests that completed the Acknowl SC Meeting step within 1 day        
+    
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Approve Strat Cons Meeting')) = 'C' THEN 1 ELSE 0 END) 
+            AS App_Meeting_All, -- Num requests that completed the Approve SC Meeting step
+        SUM(CASE
+                WHEN ("SCP"."APRV_MEETING_AGE" <= 2) 
+                        AND ((SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Approve Strat Cons Meeting')) = 'C')
+                THEN 1 ELSE 0 END) 
+            AS App_Meeting_Within -- Num requests that completed the Approve SC Meeting step within 2 days   
+            
+            FROM "HHS_VW_CONSULTATION_PROC" SCP
+    
+            WHERE (	"SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') 
+            
+				AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(SCP.PROCESS_COMPLETION_DATE, $P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999 -- Completed in given date range
+		
+                AND (($P{REQ_TYPE} = 'All') OR (SCP.V_REQUEST_TYPE = $P{REQ_TYPE}) )     -- Request Type filter	  
+                AND (SCP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Review Existing Position Description', 'Update Coversheet', 'Update Major Duties'))
+        ) X, -- CMS-wide results
+
+    (SELECT
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Create Request')) = 'C' THEN 1 ELSE 0 END) 
+            AS Create_Request_All, -- Num requests that completed the Create Request step
+            
+        SUM(CASE WHEN "SCP"."CREATE_REQUEST_AGE" + "SCP"."REVIEW_REQUEST_AGE" + "SCP"."MODIFY_REQUEST_AGE" <= 1 THEN 1 ELSE 0 END) AS CreateRevMod_Within, 
+        -- Num requests that completed the Create Request, Review Request and Modify Request steps within 1 day
+    
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Hold Strategic Consultation Meeting')) = 'C' THEN 1 ELSE 0 END) 
+            AS Hold_Meeting_All, -- Num requests that completed the Hold SC Meeting step
+        SUM(CASE
+                WHEN ("SCP"."HOLD_MEETING_AGE" <= 1) 
+                        AND ((SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Hold Strategic Consultation Meeting')) = 'C')
+                THEN 1 ELSE 0 END) 
+            AS Hold_Meeting_Within, -- Num requests that completed the Hold SC Meeting step within goal
+            
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Acknowledge Strat Cons Meeting')) = 'C' THEN 1 ELSE 0 END) 
+            AS Ack_Meeting_All, -- Num requests that completed the Acknowl SC Meeting step
+        SUM(CASE
+                WHEN ("SCP"."ACK_MEETING_AGE" <= 1) 
+                        AND ((SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Acknowledge Strat Cons Meeting')) = 'C')
+                THEN 1 ELSE 0 END) 
+            AS Ack_Meeting_Within, -- Num requests that completed the Acknowl SC Meeting step within goal        
+    
+        SUM(CASE WHEN (SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Approve Strat Cons Meeting')) = 'C' THEN 1 ELSE 0 END) 
+            AS App_Meeting_All, -- Num requests that completed the Approve SC Meeting step
+        SUM(CASE
+                WHEN ("SCP"."APRV_MEETING_AGE" <= 2) 
+                        AND ((SELECT STATE FROM ACT WHERE PROCID = SCP.PROCESS_ID AND NAME IN ('Approve Strat Cons Meeting')) = 'C')
+                THEN 1 ELSE 0 END) 
+            AS App_Meeting_Within -- Num requests that completed the Approve SC Meeting step within goal   
+            
+            FROM "HHS_VW_CONSULTATION_PROC" SCP
+    
+            WHERE (	"SCP"."PROCESS_STATE_DESC" = 'Completed' AND  NVL("SCP"."REQUEST_STATUS", 'Nothing') <> 'Request Cancelled') 
+          
+                AND (($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND SCP.V_ADMIN_CODE  LIKE UPPER(TRIM('$P!{ADMIN_CD}' || '%')))
+                        OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND SCP.V_ADMIN_CODE  = UPPER(TRIM($P{ADMIN_CD})))
+                    )  -- Component filter: Admin Code with children; Admin Code w/o children     
+            
+				AND HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(SCP.PROCESS_COMPLETION_DATE, $P{TIMEZONE}) BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}+0.99999 -- Completed in given date range
+		
+                AND (($P{REQ_TYPE} = 'All') OR (SCP.V_REQUEST_TYPE = $P{REQ_TYPE}) )     -- Request Type filter
+                AND (SCP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Review Existing Position Description', 'Update Coversheet', 'Update Major Duties'))
+        ) Y -- Component-wide results]]>
+	</queryString>
+	<field name="CMS_PERC_CREATEREVMOD" class="java.math.BigDecimal"/>
+	<field name="CMS_PERC_MEETING" class="java.math.BigDecimal"/>
+	<field name="CMS_PERC_ACK" class="java.math.BigDecimal"/>
+	<field name="CMS_PERC_APP" class="java.math.BigDecimal"/>
+	<field name="CMS_HR_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<field name="CMS_COMP_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<field name="COMP_PERC_CREATEREVMOD" class="java.math.BigDecimal"/>
+	<field name="COMP_PERC_MEETING" class="java.math.BigDecimal"/>
+	<field name="COMP_PERC_ACK" class="java.math.BigDecimal"/>
+	<field name="COMP_PERC_APP" class="java.math.BigDecimal"/>
+	<field name="COMP_HR_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<field name="COMP_COMP_PERC_OVERALL" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="680" height="20" uuid="e65d6375-f9ba-4b15-a25c-bc8040c32142"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Percentage of Strategic Consultation Requests Completed Within Performance Goals]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="110" y="0" width="110" height="50" backcolor="#D6D7D9" uuid="0e479e8c-848b-4a66-bd5a-a24820ec538b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Create/Review/ Modify Request
+(Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="220" y="0" width="100" height="50" backcolor="#D6D7D9" uuid="75a78fd2-415e-4397-9d98-41fe5ce1a30c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Hold Strategic Cons. Meeting
+(HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="320" y="0" width="100" height="50" backcolor="#D6D7D9" uuid="0d301684-b604-4d11-9f44-f1bba91a9945">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Ack. Strategic Cons. Meeting
+(Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="420" y="0" width="100" height="50" backcolor="#D6D7D9" uuid="728894c0-6c51-4d57-99cf-d89f11c6b23b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Approve Strategic Cons. Meeting
+(HR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="520" y="0" width="80" height="50" backcolor="#D6D7D9" uuid="d6af2893-1320-459a-b312-7361c65cfb98"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Overall Perf.
+(Component)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="600" y="0" width="80" height="50" backcolor="#D6D7D9" uuid="f61bccdc-0c42-4051-b17b-6e350ab1fa4e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Overall Perf.
+(HR)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="120">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="110" y="0" width="110" height="40" uuid="00e07ce1-864d-4ee0-b381-807d963f07ad">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="100" height="40" uuid="4f7f7abd-5756-413c-ab8c-9840e3c8f00c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="100" height="40" uuid="6402a983-96ef-406c-93b7-101d4ace6b06">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="0" width="100" height="40" uuid="faf38603-eb53-4197-8552-927bb05f02b3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="110" height="40" backcolor="#D6D7D9" uuid="f53bbb59-00f8-4e07-9e43-afa22219bb64"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Performance Goals
+(Business Days)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="80" width="110" height="40" uuid="b26512f5-5389-4dbd-9051-7fd516c08169">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_PERC_CREATEREVMOD} != null ? $F{CMS_PERC_CREATEREVMOD} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="80" width="100" height="40" uuid="72f40446-7a1b-49d6-888a-87dd52c23bb6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_PERC_MEETING} != null ? $F{CMS_PERC_MEETING} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="80" width="100" height="40" uuid="70397337-ef71-4f9b-a650-9c63360d8c86">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_PERC_ACK} != null ? $F{CMS_PERC_ACK} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="80" width="100" height="40" uuid="09e9ffab-138b-492a-a11a-9d850a262ce2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CMS_PERC_APP} != null ? $F{CMS_PERC_APP} + "%" : "N/A"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="80" width="110" height="40" backcolor="#D6D7D9" uuid="367fc1f7-35b1-411b-8680-7aca91275b5c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Actual Percentage
+for CMS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="520" y="0" width="80" height="40" uuid="e5cad4fd-6dc2-4ac5-a370-f97f4ca4f21b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2"]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="520" y="80" width="80" height="40" uuid="0e5f3856-cafc-4c54-a238-2c345a2f3c02">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean($F{CMS_COMP_PERC_OVERALL} != null) ? $F{CMS_COMP_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="0" width="80" height="40" uuid="36c780c5-4506-4e25-a605-3120789279da">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3"]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="600" y="80" width="80" height="40" uuid="512c3136-bf68-4b19-bd44-719c8859c159">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean($F{CMS_HR_PERC_OVERALL} != null) ? $F{CMS_HR_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="40" width="680" height="40" isRemoveLineWhenBlank="true" uuid="48807052-8bb5-4494-896b-3058090e8bd6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean ($P{COMPONENT}.equals("By Admin Code"))]]></printWhenExpression>
+				</reportElement>
+				<textField>
+					<reportElement x="110" y="0" width="110" height="40" uuid="b9d59b7a-0095-4eb0-8d65-51ec5814ef6b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_PERC_CREATEREVMOD} != null ? $F{COMP_PERC_CREATEREVMOD} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="220" y="0" width="100" height="40" uuid="330c73fd-79f1-4089-95af-74b12ead0995">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_PERC_MEETING} != null ? $F{COMP_PERC_MEETING} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="320" y="0" width="100" height="40" uuid="38f159cf-e63b-45da-98b5-5864e37ecc9c">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_PERC_ACK} != null ? $F{COMP_PERC_ACK} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="420" y="0" width="100" height="40" uuid="a704f663-fa38-4158-95f4-4ae8edffc397">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COMP_PERC_APP} != null ? $F{COMP_PERC_APP} + "%" : "N/A"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="110" height="40" backcolor="#D6D7D9" uuid="63227bbf-0272-410d-bf17-59c17e0a33c7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+						<paragraph lineSpacing="Single" lineSpacingSize="1.0"/>
+					</textElement>
+					<text><![CDATA[Actual Percentage
+for Component]]></text>
+				</staticText>
+				<textField pattern="">
+					<reportElement x="520" y="0" width="80" height="40" uuid="d4de43f2-4d47-459a-b8ae-a974ef6c7b4b">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<leftPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean($F{COMP_COMP_PERC_OVERALL} != null) ? $F{COMP_COMP_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="600" y="0" width="80" height="40" uuid="6d1b5495-1603-4092-82c4-423efaf01d2e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Boolean($F{COMP_HR_PERC_OVERALL} != null) ? $F{COMP_HR_PERC_OVERALL} + "%": "N/A"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="24" width="680" height="20" uuid="1c67b439-7dc0-4114-b1fa-525f6635d99d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="1" width="680" height="25" uuid="c0d530b0-ee4e-47ce-8985-2e4d8f166e81">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Percentage of Strategic Consultation Requests Completed Within Performance Goals]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

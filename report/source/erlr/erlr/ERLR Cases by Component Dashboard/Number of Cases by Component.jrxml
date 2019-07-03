@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:09:34 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Number of Cases by Component" pageWidth="700" pageHeight="655" whenNoDataType="NoDataSection" columnWidth="700" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="5" uuid="ae13046c-0794-44e9-a0b0-01262c22124c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Cases_by_Component_Dashboard/Number_of_Cases_by_Component"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Cases_by_Component_Dashboard/Number_of_Cases_by_Component_files/main_jrxml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="204"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="791"/>
+	<parameter name="INITIAL_CONTACT_DATE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INITIAL_CONTACT_DATE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.lang.String">
+		<parameterDescription><![CDATA[Filter out cases - active, cancelled or completed.]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_THRESHOLD" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT REGEXP_SUBSTR(COMPONENT, '^[^-]*') AS COMPONENT, COUNT(*) AS CASE_COUNT, CAST(COUNT(*) * 100.0/SUM(COUNT(*)) OVER() AS DECIMAL(18,0)) AS PERCENTAGE_OF_CASES
+    FROM
+    
+    (
+        SELECT
+          ERLR_CASE_NUMBER AS CASE_ID,
+          HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(GEN_EMPLOYEE_ADMIN_CD,GEN_CUSTOMER_ADMIN_CD)) AS COMPONENT,
+          GEN_CUST_INIT_CONTACT_DT,
+          CASE
+            WHEN GEN_CASE_STATUS IS NULL OR GEN_CASE_STATUS NOT IN ('Closed', 'Completed') THEN 'Active'
+            WHEN GEN_CASE_STATUS IN ('Closed') AND CANCEL_REASON IS NOT NULL THEN 'Canceled'
+            WHEN GEN_CASE_STATUS IN ('Completed') THEN 'Completed'
+            ELSE 'N/A'
+          END AS CASE_STATUS
+          ,CANCEL_REASON
+        FROM HHS_CMS_HR.VW_ERLR_GEN 
+        WHERE UPPER(NVL(CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+        AND GEN_CASE_TYPE IS NOT NULL
+        
+         -- Filter : Date Range
+	
+	
+	AND ((GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND GEN_CUST_INIT_CONTACT_DT BETWEEN 
+       TO_DATE($P{INITIAL_CONTACT_DATE_FROM}, 'DD-MON-YY') AND TO_DATE($P{INITIAL_CONTACT_DATE_TO}, 'DD-MON-YY')))
+   
+    )
+    WHERE COMPONENT != 'N/A' AND CASE_STATUS != 'N/A'
+    AND ($P{CASE_STATUS} = 'All' OR CASE_STATUS = $P{CASE_STATUS}) -- Filter Active, Canceled or Completed cases
+    HAVING COUNT(*) >= $P{CASE_THRESHOLD}
+    GROUP BY COMPONENT
+    ORDER BY COMPONENT]]>
+	</queryString>
+	<field name="COMPONENT" class="java.lang.String"/>
+	<field name="CASE_COUNT" class="java.lang.Integer"/>
+	<field name="PERCENTAGE_OF_CASES" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="700" height="20" uuid="90e18c9b-5485-45b7-9818-ee5046fcfa07">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Cases by Component]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="20" uuid="1c79272a-3af3-4fe2-aed4-fe0e331999c9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="1" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="700" height="20" uuid="f2c8a05b-edeb-4cc1-ba85-c721481b53b7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{INITIAL_CONTACT_DATE_FROM},"MM/dd/yyyy") +" through " + DATEFORMAT($P{INITIAL_CONTACT_DATE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="600" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="700" height="300" uuid="55adfde3-bfa6-4ab2-b7fd-7719294f4fa4"/>
+					<chartTitle>
+						<font size="1"/>
+					</chartTitle>
+					<chartSubtitle>
+						<font size="1"/>
+					</chartSubtitle>
+					<chartLegend>
+						<font size="9"/>
+					</chartLegend>
+				</chart>
+				<pieDataset minPercentage="0.0">
+					<keyExpression><![CDATA[$F{COMPONENT}]]></keyExpression>
+					<valueExpression><![CDATA[$F{CASE_COUNT}]]></valueExpression>
+				</pieDataset>
+				<piePlot isShowLabels="true" isCircular="true" labelFormat="{0}: {1} cases ({2})" legendLabelFormat="{0}">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0">
+						<seriesColor seriesOrder="0" color="#F58231"/>
+						<seriesColor seriesOrder="1" color="#046B99"/>
+						<seriesColor seriesOrder="2" color="#9BDAF1"/>
+						<seriesColor seriesOrder="3" color="#4AA564"/>
+						<seriesColor seriesOrder="4" color="#FAD980"/>
+						<seriesColor seriesOrder="5" color="#823E73"/>
+						<seriesColor seriesOrder="6" color="#2F5151"/>
+						<seriesColor seriesOrder="7" color="#AC143F"/>
+						<seriesColor seriesOrder="8" color="#BF9000"/>
+						<seriesColor seriesOrder="9" color="#0071BC"/>
+						<seriesColor seriesOrder="10" color="#00A6D2"/>
+						<seriesColor seriesOrder="11" color="#FDB81E"/>
+						<seriesColor seriesOrder="12" color="#4B9828"/>
+						<seriesColor seriesOrder="13" color="#AEB0B5"/>
+						<seriesColor seriesOrder="14" color="#886EC2"/>
+						<seriesColor seriesOrder="15" color="#186825"/>
+						<seriesColor seriesOrder="16" color="#374989"/>
+						<seriesColor seriesOrder="17" color="#323A45"/>
+						<seriesColor seriesOrder="18" color="#E59393"/>
+						<seriesColor seriesOrder="19" color="#8C5834"/>
+						<seriesColor seriesOrder="20" color="#94BFA2"/>
+						<seriesColor seriesOrder="21" color="#523685"/>
+						<seriesColor seriesOrder="22" color="#3C844B"/>
+						<seriesColor seriesOrder="23" color="#8B3535"/>
+						<seriesColor seriesOrder="24" color="#378972"/>
+						<seriesColor seriesOrder="25" color="#981B1E"/>
+						<seriesColor seriesOrder="26" color="#C55A11"/>
+					</plot>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<barChart>
+				<chart isShowLegend="false" evaluationTime="Report" hyperlinkType="" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement x="0" y="350" width="700" height="250" forecolor="#524D4D" uuid="fa9b8fb5-e722-4633-926e-5ddd92686d67">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<chartTitle>
+						<font fontName="SansSerif" size="8"/>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{COMPONENT}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{CASE_COUNT}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#112E51"/>
+					</plot>
+					<itemLabel color="#000000">
+						<font size="8"/>
+					</itemLabel>
+					<categoryAxisLabelExpression><![CDATA["Component"]]></categoryAxisLabelExpression>
+					<categoryAxisFormat labelRotation="0.0">
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" verticalTickLabels="false" axisLineColor="#000000">
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="7"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA["Number of Cases"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+						</axisFormat>
+					</valueAxisFormat>
+					<rangeAxisMinValueExpression><![CDATA[0]]></rangeAxisMinValueExpression>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="78">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="1" width="700" height="20" uuid="2f02127d-19c3-483a-9cb1-3be8d0898a0c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Number of Cases by Component]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="22" width="700" height="20" uuid="c9e35cb2-a3a8-41e7-8660-b3ff3bda123f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{INITIAL_CONTACT_DATE_FROM},"MM/dd/yyyy") +" through " + DATEFORMAT($P{INITIAL_CONTACT_DATE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="58" width="700" height="20" uuid="f0900a85-0fe6-4f65-a2dc-e5402d0e254d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:06:15 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives Requests Chart - Active Single Row" pageWidth="360" pageHeight="97" orientation="Landscape" columnWidth="360" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="764"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="226"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508/Incentives_SAM_LE_Dashboard___508/CMS_Incentives_Requests_Chart___Active_Single_Row_SAM___508_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/Incentives_SAM_LE_Dashboard___508/CMS_Incentives_Requests_Chart___Active_Single_Row_SAM___508"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="TEST Dataset" uuid="2561ae54-7048-4dc7-9235-0d759048ada2">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Data Adapter (DEV)"/>
+		<queryString language="SQL">
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String"/>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+
+	SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 0 AND 10 AND COM.INCEN_TYPE = 'SAM' THEN 1 ELSE 0 END) AS SAM_Green
+    
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 11 AND 15 AND COM.INCEN_TYPE = 'SAM' THEN 1 ELSE 0 END) AS SAM_Yellow
+
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            >= 16 AND COM.INCEN_TYPE = 'SAM' THEN 1 ELSE 0 END) AS SAM_Red	
+            
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 0 AND 5 AND COM.INCEN_TYPE = 'LE' THEN 1 ELSE 0 END) AS LE_Green
+    
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 6 AND 10 AND COM.INCEN_TYPE = 'LE' THEN 1 ELSE 0 END) AS LE_Yellow
+
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME,$P{TIMEZONE}) AS CREATIONDTIME FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            >= 11 AND COM.INCEN_TYPE = 'LE' THEN 1 ELSE 0 END) AS LE_Red
+			    
+FROM "HHS_CMS_HR"."VW_INCENTIVES_COM" COM
+        INNER JOIN PROCS P ON COM.PROC_ID = P.PROCID
+		LEFT OUTER JOIN  HHS_VW_CONSULTATION_PROC SC ON SC.PROCESS_ID = COM.PROC_ID
+
+WHERE P.STATE IN ('R', 'E') -- Active processes
+
+ 	AND (
+          ($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+          OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND COM.ADMIN_CODE = 'FC')
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+        )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children]]>
+	</queryString>
+	<field name="SAM_GREEN" class="java.math.BigDecimal"/>
+	<field name="SAM_YELLOW" class="java.math.BigDecimal"/>
+	<field name="SAM_RED" class="java.math.BigDecimal"/>
+	<field name="LE_GREEN" class="java.math.BigDecimal"/>
+	<field name="LE_YELLOW" class="java.math.BigDecimal"/>
+	<field name="LE_RED" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="360" height="15" uuid="1c9de4e7-8d79-494c-bf73-a35925e9616a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[All Active SAM Incentives Requests for CMS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="360" height="15" uuid="cf62c23e-c066-4882-b5d8-116b3a6e3126">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Displays the status of all active SAM requests and the time it takes to complete the activities]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="67" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<staticText>
+				<reportElement x="0" y="1" width="360" height="15" uuid="ae19a290-bbc0-4fc8-a1e6-cf57f682bde0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salary Above Minimum (SAM)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="120" height="18" uuid="343748aa-f8d1-4da4-9a79-922621bb92ca">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[0-10 Business Days in Incentives Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="16" width="120" height="18" uuid="c353009f-7b92-40aa-ba3c-985b7e37ac30"/>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[11-15 Business Days in Incentives Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="16" width="120" height="18" uuid="96c2d816-fbe1-4cb1-aa9e-a02198ccc352">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[16+ Business Days in Incentives Workflow]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="34" width="120" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="cfddc72c-c1d2-4fbd-a736-8c2491ec4eec">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SAM_GREEN} == null) ? "N/A" : $F{SAM_GREEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="120" y="34" width="120" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="af8784a5-b800-41e7-8e57-012beba3f283"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SAM_YELLOW} == null) ? "N/A" : $F{SAM_YELLOW}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="240" y="34" width="120" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="746e5942-65d6-4fd5-a801-274621e75844"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{SAM_RED} == null) ? "N/A" : $F{SAM_RED}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="" x="0" y="52" width="360" height="15" uuid="c93327c1-e9dc-40ca-a6ff-ce476d1113ec">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box topPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[NOTE: Time to Complete Performance Goal for SAM requests is 15 Business Days.]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:22:35 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Incentives PCA PDP Dashboard Section Header - Completed" pageWidth="1024" pageHeight="35" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1024" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d8e267ff-df13-4930-96e6-ad7974a1778e">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_Incentives_PCA_PDP_Dashboard/CMS_PCA_PDP_Dashboard_Section_Header___Completed_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_Incentives_PCA_PDP_Dashboard/CMS_PCA_PDP_Dashboard_Section_Header___Completed"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="796"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[LTRIM("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[-- Calculates the number of PCA and PDP requests completed, but not cancelled, within the given date range and for the specified component
+
+SELECT
+	SUM(CASE WHEN COM.INCEN_TYPE = 'PCA' THEN 1 ELSE 0 END) AS PCA_Count,
+    SUM(CASE WHEN COM.INCEN_TYPE = 'PDP' THEN 1 ELSE 0 END) AS PDP_Count
+
+FROM HHS_CMS_HR.VW_INCENTIVES_COM COM 
+INNER JOIN BIZFLOW.PROCS PR ON COM.PROC_ID = PR.PROCID
+WHERE PR.STATE = 'C' AND "COM"."CANCEL_RESAON" IS NULL -- Request is completed but not cancelled
+    AND PR.NAME IN ('PCA Incentives', 'PDP Incentives') -- PCA and PDP Incentives only
+                     
+	AND (
+	      ($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+	      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+	      OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+	    )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children
+    
+	AND PR.CMPLTDTIME BETWEEN SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_FROM}, 'YYYY-MM-DD') || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) 
+		AND SYS_EXTRACT_UTC(TO_TIMESTAMP(TO_CHAR($P{COMP_DATE_TO}, 'YYYY-MM-DD') || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')) --  Date range filter]]>
+	</queryString>
+	<field name="PCA_COUNT" class="java.math.BigDecimal"/>
+	<field name="PDP_COUNT" class="java.math.BigDecimal"/>
+	<title>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" x="757" y="0" width="267" height="30" forecolor="#CCCACA" backcolor="#FFFFFF" uuid="9fa14892-c4a1-431f-b7f1-d199ca475469">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FCFCFC"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="0" width="750" height="30" forecolor="#074FAD" uuid="cac7747b-7bed-412c-b93a-b7de7da5333a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{COMPONENT}.contains("CMS-wide")) ? "Incentives Requests for CMS, Completed Between " + DATEFORMAT($P{COMP_DATE_FROM},"MMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMM d, yyy")
+			: new Boolean ($P{COMPONENT}.contains("Office of the Administrator (OA) Only")) ? "Incentives Requests for the Office of the Administrator (OA), Completed Between " + DATEFORMAT($P{COMP_DATE_FROM},"MMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMM d, yyy")
+					: new Boolean ($P{COMPONENT}.contains("By Admin Code") && $P{INC_SUBORG}.contains("Yes")) ? "Incentives Requests for " + $P{ADMIN_CD}.toUpperCase() + " and its sub-organizations, Completed Between " + DATEFORMAT($P{COMP_DATE_FROM},"MMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMM d, yyy")
+					: "Incentives Requests for " + $P{ADMIN_CD}.toUpperCase() + ", Completed Between " + DATEFORMAT($P{COMP_DATE_FROM},"MMM d, yyy") +" and " + DATEFORMAT($P{COMP_DATE_TO},"MMM d, yyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="757" y="2" width="60" height="25" forecolor="#303030" uuid="18e1c13c-5c00-40d1-bb26-39d23fa9b102">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCA]]></text>
+			</staticText>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement x="828" y="2" width="60" height="25" forecolor="#074FAD" uuid="5caa9dd1-01dd-48b9-8098-ffd5ad99a43b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PCA_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="822" y="7" width="1" height="20" forecolor="#3D3C3C" uuid="b3b845f8-a99d-43c0-903a-3cc5747d44d6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="885" y="2" width="60" height="25" forecolor="#303030" uuid="7969b6a0-9931-475c-afe9-629b21a1ba48">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PDP]]></text>
+			</staticText>
+			<line>
+				<reportElement x="950" y="7" width="1" height="20" forecolor="#3D3C3C" uuid="f9f3b05b-7bc8-47e9-96f9-059c2125f5bb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement x="956" y="2" width="60" height="25" forecolor="#074FAD" uuid="c2b1077a-827d-47a0-bc1d-3538172a97ef">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PDP_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

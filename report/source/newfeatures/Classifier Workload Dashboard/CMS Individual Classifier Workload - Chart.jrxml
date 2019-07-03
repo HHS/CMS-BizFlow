@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:30:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS Individual Classifier Workload - Chart" pageWidth="1024" pageHeight="300" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="1024" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="0" uuid="b32b68ca-c34b-4da8-9080-4f6b9bc7dfee">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CMS Cloud BizFlow Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="175"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="820"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="778"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="212"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Class_Workload_Dashboard/CMS_Individual_Classifier_Workload___Chart_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Class_Workload_Dashboard/CMS_Individual_Classifier_Workload___Chart"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="REQ_TYPE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WORKFLOW" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLASS_SPEC_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[-- Retrieves the number of running processes assigned to the selected Classifier, grouped by Component (2nd Suborg)
+
+SELECT SecondSubOrg, ActionType, COUNT(*) AS HowMany, ClassifierName
+
+FROM
+    (
+        -- Requests that are active in Strategic Consultation
+       SELECT 
+            CAST(SC.SUB_ORG_2_CD AS NVARCHAR2(10)) AS SecondSubOrg
+            , SC.SG_CT_DSCR AS ClassificationType
+            , SC.SG_CS_NAME AS ClassifierName     
+            , CASE
+                WHEN SC.SG_CT_DSCR IN ('Create New Position Description', 'Update Coversheet') THEN 'Major Action'
+                WHEN SC.SG_CT_DSCR IN ('Review Existing Position Description', 'Update Major Duties') THEN 'Minor Action'
+                    ELSE 'Other Action'
+                END AS ActionType    
+            , P.NAME AS Workflow
+    
+        FROM HHS_CMS_HR.VW_STRATCON SC 
+            INNER JOIN PROCS P ON P.PROCID = SC.SG_PROCID  
+        WHERE P.STATE IN ('E', 'R')
+            AND SC.SG_CT_DSCR IN ('Create New Position Description', 'Update Coversheet','Review Existing Position Description', 'Update Major Duties')
+            AND ($P{REQ_TYPE} = 'All' OR SC.SG_RT_DSCR = $P{REQ_TYPE}) -- Request Type filter 
+            AND ($P{WORKFLOW} = 'All' OR P.NAME = $P{WORKFLOW}) -- Workflow Type filter
+            AND SC.SG_CS_ID = $P{CLASS_SPEC_ID} 
+        
+        
+        UNION
+    
+        -- Requests that are active in Classification
+       SELECT 
+            CL.PD_SUB_ORG_2 AS SecondSubOrg
+            , CP.V_CLASSIFICATION_TYPE AS ClassificationType
+            , CL.CS_NAME AS ClassifierName
+            , CASE
+                WHEN CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Coversheet') THEN 'Major Action'
+                WHEN CP.V_CLASSIFICATION_TYPE IN ('Review Existing Position Description', 'Update Major Duties') THEN 'Minor Action'
+                    ELSE 'Other Action'
+                END AS ActionType    
+            , CP.PROCESS_NAME AS Workflow
+    
+        FROM HHS_CMS_HR.VW_CLASSIFICATION CL 
+            INNER JOIN HHS_VW_CLASSIFICATION_PROC CP ON CP.PROCESS_ID = CL.PD_PROCID  
+        WHERE CP.PROCESS_STATE_DESC IN ('Running')
+            AND CP.V_CLASSIFICATION_TYPE IN ('Create New Position Description', 'Update Coversheet','Review Existing Position Description', 'Update Major Duties')
+            AND ($P{REQ_TYPE} = 'All' OR CP.V_REQUEST_TYPE = $P{REQ_TYPE}) -- Request Type filter 
+            AND ($P{WORKFLOW} = 'All' OR CP.PROCESS_NAME = $P{WORKFLOW}) -- Workflow Type filter
+            AND CL.CS_ID = $P{CLASS_SPEC_ID} 
+
+    ) 
+
+WHERE SecondSubOrg IS NOT NULL
+
+			
+GROUP BY SecondSubOrg, ActionType, ClassifierName
+ORDER BY SecondSubOrg]]>
+	</queryString>
+	<field name="SECONDSUBORG" class="java.lang.String"/>
+	<field name="ACTIONTYPE" class="java.lang.String"/>
+	<field name="HOWMANY" class="java.math.BigDecimal"/>
+	<field name="CLASSIFIERNAME" class="java.lang.String"/>
+	<variable name="Variable_1" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="1024" height="20" uuid="38458b0e-24f2-4899-966d-25ad17a09ee6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Classifier’s Workload by Action Type for " + $F{CLASSIFIERNAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="275">
+			<barChart>
+				<chart isShowLegend="true" evaluationTime="Report" customizerClass="com.bizflow.jaspersoft.chart.HWBarChartCustomizer">
+					<reportElement x="0" y="0" width="1024" height="275" uuid="a7a679e8-b5ec-4dab-8bd4-82b8fdb2eae8">
+						<property name="MaximumCategoryLabelWidthRatio" value="1.0f"/>
+						<property name="ItemMargin" value="0.0f"/>
+						<property name="MaximumCategoryLabelLines" value="3"/>
+						<property name="UpperMargin" value="0.40"/>
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font size="10"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{ACTIONTYPE}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{SECONDSUBORG}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{HOWMANY}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true" isShowTickMarks="false">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0" labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#112E51"/>
+						<seriesColor seriesOrder="1" color="#046B99"/>
+						<seriesColor seriesOrder="2" color="#9BDAF1"/>
+					</plot>
+					<itemLabel>
+						<font size="10"/>
+					</itemLabel>
+					<categoryAxisFormat labelRotation="0.0">
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" verticalTickLabels="false" axisLineColor="#000000">
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="10"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA["Number of Active Job Requests"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+							<tickLabelFont>
+								<font size="10"/>
+							</tickLabelFont>
+						</axisFormat>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<textField>
+				<reportElement x="0" y="0" width="1024" height="20" uuid="6ee4025a-5648-4f38-b3ec-23971ae0cda4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Classifier’s Workload by Action Type"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="25" width="1024" height="20" uuid="92eef03b-8117-47c5-8103-39dde8d7556c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($P{CLASS_SPEC_ID} == null) ? "Please select a Classification Specialist from the dashboard filter."
+: "No records match your search criteria."]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
+</jasperReport>

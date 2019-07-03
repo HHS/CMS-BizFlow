@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-03T06:08:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cases by Component" pageWidth="700" pageHeight="300" columnWidth="700" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="178e67af-bfbe-4b37-9ada-f383e5b86098">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508/ER_LR_Cases_by_Component_Dashboard___508/Cases_by_Component___508_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/ER_LR_Cases_by_Component_Dashboard___508/Cases_by_Component___508"/>
+	<parameter name="INITIAL_CONTACT_DATE_FROM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INITIAL_CONTACT_DATE_TO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_STATUS" class="java.lang.String">
+		<parameterDescription><![CDATA[Filter out cases - active, cancelled or completed.]]></parameterDescription>
+		<defaultValueExpression><![CDATA["All"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CASE_THRESHOLD" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT COMPONENT, SUM(CASE_COUNT) AS CASE_COUNT, 
+CAST(SUM(CASE_COUNT) * 100.0/SUM(COUNT(*)) OVER() AS DECIMAL(18,0)) AS PERCENTAGE_CASES, 
+SUM(DISCIPLINARY_CASE) AS DISCIPLINARY_CASE_COUNT,
+CAST(SUM(DISCIPLINARY_CASE) * 100.0/SUM(COUNT(*)) OVER() AS DECIMAL(18,0)) AS PERCENTAGE_DISCIPLINARY
+FROM
+    
+    (
+        SELECT
+          ERLR_CASE_NUMBER AS CASE_ID,
+          HHS_CMS_HR.FN_GET_2ND_SUB_ORG(NVL(GEN_EMPLOYEE_ADMIN_CD,GEN_CUSTOMER_ADMIN_CD)) AS COMPONENT,
+          GEN_CUST_INIT_CONTACT_DT,
+          CASE
+            WHEN GEN_CASE_STATUS IS NULL OR GEN_CASE_STATUS NOT IN ('Closed', 'Completed') THEN 'Active'
+            WHEN GEN_CASE_STATUS IN ('Closed') AND CANCEL_REASON IS NOT NULL THEN 'Canceled'
+            WHEN GEN_CASE_STATUS IN ('Completed') THEN 'Completed'
+            ELSE 'N/A'
+          END AS CASE_STATUS,
+          CC_FINAL_ACTION AS FINAL_ACTION,
+          1 AS CASE_COUNT,
+          CASE
+            WHEN (CC_FINAL_ACTION LIKE '%Long-Term Suspension%' 
+              OR CC_FINAL_ACTION LIKE '%Short-Term Suspension%' OR CC_FINAL_ACTION LIKE '%Reprimand%' OR CC_FINAL_ACTION LIKE '%Demotion%'
+              OR CC_FINAL_ACTION LIKE '%Removal%')
+            THEN 1 ELSE 0 
+          END AS DISCIPLINARY_CASE
+        FROM HHS_CMS_HR.VW_ERLR_GEN 
+        WHERE UPPER(NVL(CANCEL_REASON,'X')) NOT IN ('CASE OPENED IN ERROR', 'DUPLICATE CASE')
+        AND GEN_CASE_TYPE IS NOT NULL
+        
+         -- Filter : Date Range	
+        AND ((GEN_CUST_INIT_CONTACT_DT IS NOT NULL AND GEN_CUST_INIT_CONTACT_DT BETWEEN 
+        TO_DATE($P{INITIAL_CONTACT_DATE_FROM}, 'DD-MON-YY') AND TO_DATE($P{INITIAL_CONTACT_DATE_TO}, 'DD-MON-YY')))
+   
+    )
+    WHERE COMPONENT != 'N/A' AND CASE_STATUS != 'N/A'
+    AND ($P{CASE_STATUS} = 'All' OR CASE_STATUS = $P{CASE_STATUS}) -- Filter Active, Canceled or Completed cases
+    HAVING SUM(CASE_COUNT) >= $P{CASE_THRESHOLD}
+    GROUP BY COMPONENT
+    ORDER BY COMPONENT]]>
+	</queryString>
+	<field name="COMPONENT" class="java.lang.String"/>
+	<field name="CASE_COUNT" class="java.math.BigDecimal"/>
+	<field name="PERCENTAGE_CASES" class="java.math.BigDecimal"/>
+	<field name="DISCIPLINARY_CASE_COUNT" class="java.math.BigDecimal"/>
+	<field name="PERCENTAGE_DISCIPLINARY" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="700" height="20" uuid="36ad10a5-ca27-4c12-a1e0-90eb7a5e9dbb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cases and Disciplinary Cases by Component]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="700" height="20" uuid="96d4dde1-d8bb-43ac-8b28-a3ac4a77e4e3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Number of Cases and Disciplinary Cases by Component Initiated between "+DATEFORMAT($P{INITIAL_CONTACT_DATE_FROM},"MM/dd/yyyy") +" through " + DATEFORMAT($P{INITIAL_CONTACT_DATE_TO},"MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="300" height="25" uuid="9548edf3-076f-4dee-92dc-3d71f93c05df">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Component Admin Code and Organization Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="25" uuid="5ae9670d-68ca-45c5-9844-bb40773df53b">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Number of Cases]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="0" width="100" height="25" uuid="46a91a14-fc04-4a71-9ac6-1d3286fee2cd">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Number of Disciplinary Cases]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="100" height="25" uuid="c40d704e-3867-4923-8f3a-ec7c851d0fba">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Percentage of Disciplinary Cases]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="100" height="25" uuid="2143fa73-cd74-4acb-9cb2-0fc481771417">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4" bottomPadding="0" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="0.75" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[Percentage of Cases]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="300" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="16bed0b3-5021-4284-a495-67d53467c013">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph tabStopWidth="80"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPONENT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="300" y="0" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5e088bb7-7bbf-4b34-b54e-ac9b5caef6bf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASE_COUNT} + " cases"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="500" y="0" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c29f593a-11b8-4938-b6f8-b69aa4237a00">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DISCIPLINARY_CASE_COUNT} + " cases"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="600" y="0" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="29bc2e0d-c770-4afb-90bf-da80fc35f754">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERCENTAGE_DISCIPLINARY}+"%"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="400" y="0" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="409536b7-f10a-427c-b0e7-172fba31b2fa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERCENTAGE_CASES}+"%"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="700" height="20" uuid="9599baf9-af8d-49ed-a596-782b76f6664e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cases and Disciplinary Cases by Component]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="700" height="20" uuid="a685a500-757d-41de-a397-6b82ad7bb526">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[No records match your search criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
