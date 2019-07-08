@@ -75,7 +75,7 @@
         // Default Values
         vm.orgSelected = {
             component: '',
-            incentiveType: 'All',
+            incentiveType: null,
             incentiveTypes: [],
             adminCode: '',
             includeSubOrg: 'Yes',
@@ -295,7 +295,7 @@
             }
 
             if (vm.selected.hrSpecialist) {
-                url = url + '&HRS_ID=' + (vm.isSection508User == true ? vm.selected.hrSpecialist.memberid : vm.selected.hrSpecialist); // HR Specialist
+                url = url + '&HRS_ID=' + vm.selected.hrSpecialist.memberid; // HR Specialist
             }
 
             if (vm.selected.incentiveType) {
@@ -453,12 +453,12 @@
                 'minlength': 'Enter a minimum of three characters for the administrative code'
             },
             'dateRCompletedFromInput': {
-                'required': 'Type the from date in the format MM/DD/YYYY for the request date range',
-                'date': 'Type the date in the format: MM/DD/YYYY'
+                'required': 'Type the from date in the format "MM/DD/YYYY" for the request date range',
+                'date': 'Type the date in the format: MM/DD/YYYY.'
             },
             'dateRCompletedToInput': {
-                'required': 'Type the end date in the format MM/DD/YYYY for the request date range',
-                'date': 'Type the date in the format: MM/DD/YYYY'
+                'required': 'Type the end date in the format "MM/DD/YYYY" for the request date range',
+                'date': 'Type the date in the format: MM/DD/YYYY.'
             },
             'dayType': {
                 'required': 'Select Business or Calendar Days'
@@ -522,6 +522,9 @@
             if (vm.selected.incentiveTypes.length == 0) {
                 vm.selected.incentiveType = 'All';
             }
+            setTimeout(function() {
+                $('#selectIncentiveType').focus();
+            }, 0);                 
         }
 
         vm.getIncentiveTypeLabel = function(value) {
@@ -568,10 +571,13 @@
             vm.dayTypes = vm.getSelectizeOptions(vm._dayTypes); //#290605 - Business and Calendar Days filter 
 
             if (vm.isSection508User == true) {
+                vm.selected.incentiveType = 'All';
                 // #selectComponent is not processed yet. So, use setTimeout.
                 setTimeout(function() {
                     $('#selectComponent').on('keydown', vm.onKeyDownComponent);
                 }, 0);
+            } else {
+                vm.selected.incentiveType = null;
             }
 
             setTimeout(function() {

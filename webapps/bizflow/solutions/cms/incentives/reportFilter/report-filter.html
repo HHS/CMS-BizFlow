@@ -37,6 +37,11 @@
         margin-left: 3px;
         margin-top: -3px;
     }    
+
+    /* Fix for Selectize bug - Show only 4px on input tag */
+    .selectize-input.not-full > input {
+        width: 100% !important;
+    }
 </style>
 
 <div role="dialog" id="reportFilter" ng-form="fReportSection">

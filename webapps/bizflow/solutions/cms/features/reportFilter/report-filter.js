@@ -544,12 +544,12 @@
                 'minlength': 'Enter a minimum of three characters for the administrative code'
             },
             'dateRCompletedFromInput': {
-                'required': 'Type the from date in the format MM/DD/YYYY for the request date range',
-                'date': 'Type the date in the format: MM/DD/YYYY'
+                'required': 'Type the from date in the format "MM/DD/YYYY" for the request date range',
+                'date': 'Type the date in the format: MM/DD/YYYY.'
             },
             'dateRCompletedToInput': {
-                'required': 'Type the end date in the format MM/DD/YYYY for the request date range',
-                'date': 'Type the date in the format: MM/DD/YYYY'
+                'required': 'Type the end date in the format "MM/DD/YYYY" for the request date range',
+                'date': 'Type the date in the format: MM/DD/YYYY.'
             },
             'dayType': {
                 'required': 'Select Business or Calendar Days'
