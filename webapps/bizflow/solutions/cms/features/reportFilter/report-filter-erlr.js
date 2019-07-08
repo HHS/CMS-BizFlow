@@ -168,6 +168,10 @@
             if (vm.selected.finalActions.length == 0) {
                 vm.selected.finalAction = 'All';
             }
+
+            setTimeout(function() {
+                $('#finalActionSelect').focus();
+            }, 0);            
         }
 
         vm.addCaseCategory = function(value) {
@@ -213,6 +217,9 @@
             if (vm.selected.caseCategories.length == 0) {
                 vm.selected.caseCategory = 'All';
             }
+            setTimeout(function() {
+                $('#caseCategorySelect').focus();
+            }, 0);
         }        
 
         vm.addStatus = function(value) {
@@ -259,6 +266,9 @@
             if (vm.selected.statusList.length == 0) {
                 vm.selected.status = 'All';
             }
+            setTimeout(function() {
+                $('#caseStatusSelect').focus();
+            }, 0);
         }        
 
         vm.categories = [];
@@ -710,12 +720,12 @@
                 'minlength': 'Enter a minimum of three characters for the administrative code'
             },
             'dateRCompletedFromInput': {
-                'required': 'Type the from date in the format MM/DD/YYYY for the request date range',
-                'date': 'Type the date in the format: MM/DD/YYYY'
+                'required': 'Type the from date in the format "MM/DD/YYYY" for the request date range',
+                'date': 'Type the date in the format: MM/DD/YYYY.'
             },
             'dateRCompletedToInput': {
-                'required': 'Type the end date in the format MM/DD/YYYY for the request date range',
-                'date': 'Type the date in the format: MM/DD/YYYY'
+                'required': 'Type the end date in the format "MM/DD/YYYY" for the request date range',
+                'date': 'Type the date in the format: MM/DD/YYYY.'
             },
             'dayType': {
                 'required': 'Select Business or Calendar Days'
