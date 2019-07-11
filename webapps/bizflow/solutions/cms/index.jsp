@@ -125,6 +125,8 @@ private String getCMSUserGroups() throws Exception
     } else {
         System.out.println("Using cached cms.userGroup");
     }
+
+    String userTimeZone = (String)session.getAttribute("TIMEZONE");
 %>
 
 <!DOCTYPE html>
@@ -187,6 +189,8 @@ private String getCMSUserGroups() throws Exception
 
     <script src="section508.js"></script>
     <script src="app.main.js"></script>
+    <script src="moment.js"></script>
+    <script src="moment-timezone-10year.js"></script>
     <script src="features/reportFilter/report-filter.js"></script>
 </head>
 <script language="javascript">
@@ -209,6 +213,7 @@ CMS_REPORT_FILTER.SHOW.TYPE_OF_STANDARD_PD = '<%= SHOW_TYPEOFSTANDARDPD %>';
 
 CMS_REPORT_FILTER.LABEL = {};
 CMS_REPORT_FILTER.LABEL.DATE = '<%= DATELABEL %>';
+CMS_REPORT_FILTER.TIMEZONE = '<%=userTimeZone%>';
 
 
 -->    

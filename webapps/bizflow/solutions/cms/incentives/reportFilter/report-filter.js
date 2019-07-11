@@ -295,7 +295,13 @@
             }
 
             if (vm.selected.hrSpecialist) {
-                url = url + '&HRS_ID=' + vm.selected.hrSpecialist.memberid; // HR Specialist
+                if (vm.isSection508User == false) {
+                    url = url + '&HRS_ID=' + vm.selected.hrSpecialist; // HR Specialist
+                } else {
+                    url = url + '&HRS_ID=' + vm.selected.hrSpecialist.memberid;
+                }
+            } else {
+                url = url + '&HRS_ID=All';
             }
 
             if (vm.selected.incentiveType) {
@@ -329,6 +335,8 @@
             }
             url = url + '&INC_SUBORG=' + vm.selected.includeSubOrg;
             url = url + '&_bf508=' + (vm.isSection508User ? 'y' : 'n');
+            //url = url + '&_bfUserTimezone=' + CMS_REPORT_FILTER.TIMEZONE;
+            url = url + '&TIMEZONE=' + moment.tz.guess();
             return url;
         };
 
@@ -577,7 +585,10 @@
                     $('#selectComponent').on('keydown', vm.onKeyDownComponent);
                 }, 0);
             } else {
+                vm.selected.hrSpecialist = 'All';
                 vm.selected.incentiveType = null;
+                vm.orgSelected.hrSpecialist = 'All';
+                vm.orgSelected.incentiveType = null;
             }
 
             setTimeout(function() {
