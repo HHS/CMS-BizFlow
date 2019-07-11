@@ -17,11 +17,20 @@
                 searchFiterFullyLoaded = checkFilterFullyLoaded();
             }
 
+            jQuery("#dashboard").removeAttr("role");
+
             if (searchFiterFullyLoaded) {
                 if (!searchFilterProcessed) {
                     searchFilterProcessed = BF508DashboardFilterWorker.run();
                 }
             } else {
+                //hide dashboard search filter if not search condition exists
+                if (jQuery("#display div.body div[data-componentid]").length > 0
+                    && jQuery("#display div.body div[data-componentid='Filter_Group']").length > 0) {
+                        jQuery("#display div.body").css("width", "99%");
+                        jQuery("#display div.body").css("background-color", "silver");
+                    }
+                
                 setTimeout(function(){
                     recursion_count++;
                     if (recursion_count < MAX_RECURSION_COUNT) {

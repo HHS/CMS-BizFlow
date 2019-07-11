@@ -1,6 +1,6 @@
 	function say(s){	
 		if(0==jQuery("#bf-speaker").length){
-			jQuery('<div>').attr("id","bf-speaker").css({height:"0px",width:"0px"}).attr("aria-live","polite").attr("aria-atomic","true").attr("aria-relevant","additions text").appendTo('body');
+			jQuery('<div>').attr("id","bf-speaker").css({height:"0px",width:"0px"}).attr("aria-live","assertive").attr("aria-atomic","true").attr("aria-relevant","additions text").appendTo('body');
 		}
 		jQuery("#bf-speaker").text('');
 		setTimeout(function(){jQuery("#bf-speaker").text(s);},100);
@@ -35,8 +35,18 @@
 				// Date Field
 				jQuery("#inputControls .ui-datepicker-trigger").remove();
 				jQuery("#inputControls .button.picker.calTriggerWrapper").remove();				
-				jQuery("#inputControls INPUT.date.hasDatepicker").attr("aria-label","Type in date in the format MM/DD/YYYY.");				
-				
+				//jQuery("#inputControls INPUT.date.hasDatepicker").attr("aria-label","Type in date in the format MM/DD/YYYY.");				
+                jQuery("#inputControls INPUT.date.hasDatepicker").each(function( index ) {
+                    
+                    var fieldLabel = jQuery( this ).prev().text();
+                    if (typeof fieldLabel === "undefined" || fieldLabel === null) {
+                        fieldLabel = "";
+                    } else {
+                        fieldLabel += ". ";
+                    }
+                    jQuery(this).attr("aria-label", fieldLabel + " Type in date in the format MM / DD / Y Y Y Y .")
+                
+                });				
 			}
         };
 
