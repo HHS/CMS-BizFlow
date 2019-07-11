@@ -253,6 +253,7 @@ private String getERLRTypes() throws Exception
     } else {
         System.out.println("Using cached cms.erlrCaseStatus");
     }
+    String userTimeZone = (String)session.getAttribute("TIMEZONE");
 
 %>
 
@@ -318,6 +319,10 @@ private String getERLRTypes() throws Exception
     <script src="./common/components/titlebar/directive-titlebar.js"></script>
     <script src="./common/components/infobar/directive-infobar.js"></script>
     <script src="./common/components/csvtodata/directive-csvtodata.js"></script>
+
+    <script src="moment.js"></script>
+    <script src="moment-timezone-10year.js"></script>
+
     <script src="section508.js"></script>
     <script src="app.main.js"></script>
     <script src="features/reportFilter/report-filter-erlr.js"></script>
@@ -340,6 +345,7 @@ CMS_REPORT_FILTER.LABEL.DATE = '<%= DATELABEL %>';
 CMS_REPORT_FILTER.ERLRTYPE = '<%= erlrType %>';
 
 CMS_REPORT_FILTER.ERLRCASESTATUS = '<%= erlrCaseStatus %>';
+CMS_REPORT_FILTER.TIMEZONE = '<%=userTimeZone%>';
 
 -->    
 </script>

@@ -514,7 +514,9 @@
 			}
 			url = url + '&_bf508=' + (vm.isSection508User ? 'y' : 'n');
             // $log.debug('Report URL [' + url + ']');
-            return url;
+            //url = url + '&_bfUserTimezone=' + CMS_REPORT_FILTER.TIMEZONE;
+            url = url + '&TIMEZONE=' + moment.tz.guess();     
+	    return url;
         };
 
         vm.submit = function () {
