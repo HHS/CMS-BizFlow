@@ -10,12 +10,13 @@
 		var recursion_count = 0;
 		var reportTables = new Object();
 		var browserType = "";
-		
-		logMessage("file is loaded.");
+		var debugLogEnabled = false;
+
+		console.log(LOG_ID + "file is loaded.");
 				
 		function start() {
 			
-			logMessage("BF508DashboardProcessor.start()");
+			logMessage("started (" + (recursion_count + 1) + ")");
 
 			BF508ReportProcessor.setRootContainer(rootContainerId);
 			
@@ -30,20 +31,33 @@
 			browserType = browserTP;
 		}
 		
+		function getDebugLogEnabled() {
+			return debugLogEnabled;
+		}
+		
+		function setDebugLogEnabled(enabled) {
+			debugLogEnabled = enabled;
+		}
+
 		function logMessage(message, style) {
-			if (typeof style !== "undefined") {
-				if (browserType !== "IE") {
-					console.log("%c" + LOG_ID + message, style);
+			if (debugLogEnabled) {			
+				if (typeof style !== "undefined") {
+					if (browserType !== "IE") {
+						console.log("%c" + LOG_ID + message, style);
+					} else {
+						console.log(LOG_ID + message);
+					}
 				} else {
 					console.log(LOG_ID + message);
 				}
-			} else {
-				console.log(LOG_ID + message);
-			}				
+			}			
 		}
+
 		
         return {
 			setBrowserType: setBrowserType
+			, getDebugLogEnabled: getDebugLogEnabled
+			, setDebugLogEnabled: setDebugLogEnabled
 			,start: start
         }
     }

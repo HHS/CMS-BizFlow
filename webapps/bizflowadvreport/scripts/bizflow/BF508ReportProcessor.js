@@ -11,7 +11,7 @@
 		var browserType = "";
 		var debugLogEnabled = false;
 
-		logMessage("file is loaded.");
+		console.log(LOG_ID + " file is loaded.");
 
 		//---------------------------------------------------------------------
 		// Main Workflow Logic
@@ -20,9 +20,11 @@
 		//--------------------
 		// Runner - Main Scheduler
 		function start() {
-			logMessage("BF508ReportProcessor started (" + (recursion_count + 1) + ")");
+			logMessage("started (" + (recursion_count + 1) + ")");
 			
 			scanReportTables(rootContainerId);
+
+			jQuery("body").removeAttr("role");
 			
 			if (jQuery("#" + rootContainerId + " table.jrPage[_bf508status]" ).length > 0) {
 				processAll(rootContainerId);
@@ -39,8 +41,8 @@
 		//--------------------
 		// Processor - Bath
 		function processAll(rootId) {
-			logMessage("processing all registered tables. ");
-
+			logMessage("processing all registered tables.");
+			
 			jQuery("#" + rootId + " table.jrPage[_bf508status]" ).each(function( index ) {
 				var _bf508status = jQuery(this).attr("_bf508status");
 				var tableId = jQuery(this).attr("id");
@@ -65,46 +67,21 @@
 			registerReportTable(tableId, false, false);
 			
 			//initialize the table
-			if (!isTableInitialized(tableId)) {
-				initReportViewer();
+			if (rootContainerId == "reportContainer") {
+				if (!isTableInitialized(tableId)) {
+					initReportViewer();
+				}
 			}
-
+			
 			//remove 508 blockers
 			remove508Blockers(tableId);
+			jQuery(window).trigger('resize');
 
 			//remove empty rows from the table
 			trimEmptyRows(tableId);
 			
-			if (rootContainerId == "reportContainer") {
+			addTableMetaInfo(tableId);
 
-				//add table caption from table contents
-				var tblCaption;
-				if (typeof reportTables.tableCaption === "undefined") {
-					tblCaption = getReportCaption(tableId);
-				} else {
-					tblCaption = reportTables.tableCaption;
-				}
-				if (typeof tblCaption !== "undefined") {
-					reportTables.tableCaption = tblCaption;
-					addTableCaption(tableId, tblCaption);
-				}
-
-				//add page navigation info
-				var pageNaviInfo = getCurrentPageNaviInfo();
-
-				//add table summary attribute from table contents
-				var tblSummary;
-				if (typeof reportTables.tableSummary === "undefined") {
-					tblSummary = getReportSummmary(tableId);
-				} else {
-					tblSummary = reportTables.tableSummary;
-				}
-				if (typeof tblSummary !== "undefined") {
-					reportTables.tableSummary = tblSummary;
-					addTableSummary(tableId, tblSummary + ". " + pageNaviInfo);
-				}
-
-			}
 			//trimDuplicateReportCaptionSummary(tableId);
 			
 			//populateTableHeader(tableId);
@@ -117,6 +94,46 @@
 			jQuery("#" + tableId).attr("_bf508status", "processed");
 		}
 
+		function addTableMetaInfo(tableId) {
+				//add table caption from table contents
+				var tblCaption;
+				if (rootContainerId == "reportContainer") {
+					if (typeof reportTables.tableCaption === "undefined") {
+						tblCaption = getReportCaption(tableId);
+					} else {
+						tblCaption = reportTables.tableCaption;
+					}
+				} else {
+					tblCaption = getReportCaption(tableId)
+				}
+
+				if (typeof tblCaption !== "undefined") {
+					reportTables.tableCaption = tblCaption;
+					addTableCaption(tableId, tblCaption);
+				}
+
+				//add page navigation info
+				var pageNaviInfo = getCurrentPageNaviInfo();
+
+				//add table summary attribute from table contents
+				var tblSummary;
+				if (rootContainerId == "reportContainer") {
+					if (typeof reportTables.tableSummary === "undefined") {
+						tblSummary = getReportSummmary(tableId);
+					} else {
+						tblSummary = reportTables.tableSummary;
+					}
+				} else {
+					tblSummary = getReportSummmary(tableId);
+				}
+				if (typeof tblSummary !== "undefined") {
+					reportTables.tableSummary = tblSummary;
+					addTableSummary(tableId, tblSummary + " " + pageNaviInfo);
+				}
+
+		}
+
+
 		//---------------------------------------------------------------------
 		// Report Content Modifier
 		//---------------------------------------------------------------------
@@ -124,13 +141,13 @@
 			logMessage("initializing section 508 in the report");
 			
 			if ("y" == _bf508Enbabled || "yes" == _bf508Enbabled) {
-				
 				jQuery("#dataRefreshButton_508").show();
-				jQuery("#dataRefreshButton").hide();
 				
 				logMessage("hiding report zoom toolbar buttons");
+				jQuery("#viewerToolbar").css("margin", "5px");
 				jQuery("#viewerToolbar.toolbar ul.buttonSet").hide();
-				
+				jQuery("#dataRefreshButton").hide();
+				jQuery("#pagination").hide();
 				jQuery("#viewerToolbar #reportZoom").hide();
 				jQuery("#viewerToolbar #reportSearch").hide();
 				
@@ -140,59 +157,107 @@
 				jQuery("#pagination #page_last").attr('aria-label', 'move to the last page');
 				jQuery("#pagination #page_current").attr('aria-label', 'current report page number');
 				
-				//Toolbar button - Refersh
-				if (jQuery("#dataRefreshButton_508").length == 0) {
-					var reportTitle = jQuery("#reportViewFrame div.title").text();
-					if (reportTitle == null) reportTitle = "";
-					reportTitle = reportTitle.trim();
-					var reportUpdatedDTime = jQuery("#dataTimestampMessage").text();
-					
-					jQuery("#viewerToolbar.toolbar").append(
-						'&nbsp;&nbsp;&nbsp;<span style="display:;"><button id="dataRefreshButton_508" '
-						+ ' aria-label="Refresh ' + reportTitle + '  with latest data. ' + reportUpdatedDTime + '"' 
-						+ ' style="width:100px;height:30px;"'
-						+ ' tabindex="0" '
-						+ ' onclick="window.BF508ReportProcessor.refreshCurrentReport()">'
-						+ 'Refresh</button>'
-						+ ' </span>');
-				}
+				//Page Navigation
+				generatePageNavigation();
 
-				//Toolbar button - Export PDF
-				if (jQuery("#Export_PDF").length == 0) {
-					jQuery("#viewerToolbar.toolbar").append(
-						'<span style="display:;"><button id="Export_PDF"'
-							+ ' style="width:100px;height:30px;"'
-							+ ' tabindex="0" '
-							+ ' aria-label="Export the report to a PDF file"'
-							+ ' onclick="window.BF508ReportProcessor.exportReport(\'pdf\');">'
-							+ ' Export PDF</button>'
-						+ ' </span>');
-				}
-
-				//Toolbar button - Export EXCEL
-				if (jQuery("#Export_EXCEL").length == 0) {
-					jQuery("#viewerToolbar.toolbar").append(
-						'<span style="display:;"><button id="Export_EXCEL"'
-							+ ' style="width:100px;height:30px;"'
-							+ ' aria-label="Export the report to an excel file"'
-							+ ' onclick="window.BF508ReportProcessor.exportReport(\'xlsx\');">'
-							+ ' Export Excel</button>'
-						+ ' </span>');
-				}
-
-				//Toolbar button - Option
-				if (jQuery("#ICDialog_508").length == 0) {
-					jQuery("#viewerToolbar.toolbar").append(
-						'<span style="display:;"><button id="ICDialog_508"'
-							+ ' style="width:150px;height:30px;"'
-							+ ' tabindex="0" '
-							+ ' aria-label="Open Input Controls Dialog"'
-							+ ' onclick="window.BF508ReportProcessor.showReportOption();">'
-							+ 'Input Controls</button>'
-						+ ' </span>');
-				}
+				generateToolbarButtons();
 				
+				jQuery("#viewerToolbar .bfToolbarItems").focus(function(){
+					jQuery(this).css("font-weight", "bold");
+					});
+
+				jQuery("#viewerToolbar .bfToolbarItems").focusout(function(){
+					jQuery(this).css("font-weight", "normal");
+					});
+										
 				removeApplicationMode("pagination");
+			}
+		}
+
+		function generatePageNavigation() {
+			var lastPageIndex = Report.lastPageIndex;
+
+			if (lastPageIndex > 0) {
+				if (jQuery("#viewerToolbar.toolbar #pageNavigationAction").length == 0) {
+					jQuery("#viewerToolbar.toolbar").append(
+						"<span style='margin-left:10px;'>"
+						+ "<label for='pageNavigationAction'>Page Navigation</label>&nbsp;&nbsp;"
+						+ "<select id='pageNavigationAction' "
+						+ " class='bfToolbarItems' "
+						+ " style='height:30px;width:200px' onchange='window.BF508ReportProcessor.goToPage(this)' "
+						+ " aria-label='Page navigation dropdown list. to expand list use space key, to change selection arrow key'></select>"
+						+ "</span>"
+					);
+
+					if (jQuery("#viewerToolbar.toolbar #pageNavigationAction").length > 0) {
+						var mySelect = jQuery("#viewerToolbar.toolbar #pageNavigationAction");
+						for (var i=0; i<lastPageIndex; i++) {
+							var myOption = mySelect.append(
+								jQuery('<option></option>').val(i).html("Go to page " + (i+1) + " of " + lastPageIndex + " in the report")
+							);
+							var x = 1;
+						}
+					}					
+				}
+
+			}	
+		}
+
+		function generateToolbarButtons() {
+			//Toolbar button - Refersh
+			if (jQuery("#dataRefreshButton_508").length == 0) {
+				var reportTitle = jQuery("#reportViewFrame div.title").text();
+				if (reportTitle == null) reportTitle = "";
+				reportTitle = reportTitle.trim();
+				var reportUpdatedDTime = ""; //jQuery("#dataTimestampMessage").text();
+				
+				jQuery("#viewerToolbar.toolbar").append(
+					'&nbsp;&nbsp;&nbsp;<span style="display:;"><button id="dataRefreshButton_508" '
+					+ ' class="bfToolbarItems" '						
+					+ ' style="width:100px;height:30px;font-weight:normal;"'
+					+ ' tabindex="0" '
+					+ ' aria-label="Refresh ' + reportTitle + ' with latest data ' + reportUpdatedDTime + '"' 
+					+ ' onclick="window.BF508ReportProcessor.refreshCurrentReport()">'
+					+ 'Refresh</button>'
+					+ ' </span>');
+			}
+
+			//Toolbar button - Export PDF
+			if (jQuery("#Export_PDF").length == 0) {
+				jQuery("#viewerToolbar.toolbar").append(
+					'<span style="display:;"><button id="Export_PDF"'
+						+ ' class="bfToolbarItems" '
+						+ ' style="width:150px;height:30px;font-weight:normal;"'
+						+ ' tabindex="0" '
+						+ ' aria-label="Export the report to a PDF file"'
+						+ ' onclick="window.BF508ReportProcessor.exportReport(\'pdf\');">'
+						+ ' Export PDF</button>'
+					+ ' </span>');
+			}
+
+			//Toolbar button - Export EXCEL
+			if (jQuery("#Export_EXCEL").length == 0) {
+				jQuery("#viewerToolbar.toolbar").append(
+					'<span style="display:;"><button id="Export_EXCEL"'
+						+ ' class="bfToolbarItems" '				
+						+ ' style="width:100px;height:30px;font-weight:normal;"'
+						+ ' aria-label="Export the report to an excel file"'
+						+ ' onclick="window.BF508ReportProcessor.exportReport(\'xlsx\');">'
+						+ ' Export Excel</button>'
+					+ ' </span>');
+			}
+
+			//Toolbar button - Option
+			if (jQuery("#ICDialog_508").length == 0) {
+				jQuery("#viewerToolbar.toolbar").append(
+					'<span style="display:;"><button id="ICDialog_508"'
+						+ ' class="bfToolbarItems" '						
+						+ ' style="width:150px;height:30px;font-weight:normal;"'
+						+ ' tabindex="0" '
+						+ ' aria-label="Open Input Controls Dialog"'
+						+ ' onclick="window.BF508ReportProcessor.showReportOption();">'
+						+ 'Input Controls</button>'
+					+ ' </span>');
 			}
 		}
 
@@ -212,33 +277,29 @@
 
 			//remove new line <BR> tag so that Jaws does not stop reading content of the cell at new line <BR> tag.
 			jQuery("#" + tableId + " td[role='gridcell'] br").remove();
-			/*
-			try {
-				jQuery("#" + tableId).css("transform", "");
-				jQuery("#" + tableId).css("transform-origin", "");
-			} catch (e) {
-				
-			}
-			*/
+			jQuery("#" + tableId).css("width", "auto");
+
+			//remove new line <BR> tag so that Jaws does not stop reading content of the cell at new line <BR> tag.
+			jQuery("#" + tableId + " td span br").remove();	
+
 		}
 
 		function removeApplicationMode(elementId, mode) {
 			if (typeof mode === "undefined" || mode == null) {
-				console.log("%cremoveApplicationMode-remove");
 				jQuery("#" + elementId).removeAttr("role");
 			} else {
-				console.log("%cremoveApplicationMode-update");
 				jQuery("#" + elementId).attr("role", mode);
 			}
 		}
 
 		function trimEmptyRows(tableId) {
+
 			//------------------------------
 			//Trimming empty rows from tables
 			//------------------------------
 			logMessage("removing empty rows from tables for screen reader software to read and naviagte tables easily. tableId=" + tableId);
 			jQuery("#" + tableId + " tr[style] td[colspan]" ).each(function( index ) {
-				if ((jQuery( this ).text() == "\n" || jQuery( this ).text() == "\r") && jQuery( this ).siblings().length == 0) {
+				if ((jQuery( this ).text() == "\n" || jQuery( this ).text() == "\r" || jQuery( this ).text() == "") && jQuery( this ).siblings().length == 0) {
 					logMessage(">>" + index + ": " + jQuery( this ).prop("tagName") + '=' + jQuery( this ).text() + ". siblings=" + jQuery( this ).siblings().length);
 					if (index >= 0) {
 						jQuery( this ).parent().remove();
@@ -246,19 +307,41 @@
 				}
 			});
 			
+			jQuery("#" + tableId + " tr[style] td" ).each(function( index ) {
+				if ((jQuery( this ).text() == "\n" || jQuery( this ).text() == "\r" || jQuery( this ).text() == "") && jQuery( this ).siblings().length == 0) {
+					logMessage(">>" + index + ": " + jQuery( this ).prop("tagName") + '=' + jQuery( this ).text() + ". siblings=" + jQuery( this ).siblings().length);
+					if (index >= 0) {
+						jQuery( this ).parent().remove();
+					}
+				}
+			});
+
 			jQuery("#" + tableId + " tr[style='height:0']").remove(); 
 
 			//for IE
 			jQuery("#" + tableId + " tr[style]" ).each(function( index ) {
-				if (jQuery( this ).css('height') == "0px" || jQuery( this ).css('height') == "0") {
+				var height = jQuery( this ).css('height');
+				if (height == "0px" || height == "0" || height == "1") {
 					jQuery( this ).remove();
 				}
 			});
-			//jQuery("#" + tableId + " tr[style][role='row'][style='height: 0px']").remove(); 
-			
+
+			//for IE
+			var find = '\n';
+			var re = new RegExp(find, 'g');
+			jQuery("#" + tableId + " tr[style]" ).each(function( index ) {
+				var text = jQuery( this ).text();
+				text = text.replace(re, "");
+				if (text == "") {
+					jQuery( this ).remove();
+				}
+			});
+
+			/*
 			jQuery("#" + tableId + " td[role='gridcell']").filter(function(index) {
 				return (jQuery( this ).text() == "\n" || jQuery( this ).text() == "\r");
 			}).remove();
+			*/
 			
 		}
 
@@ -275,7 +358,7 @@
 		function addTableCaption(tableId, caption) {
 			logMessage("adding a table caption. " + caption);
 			if (jQuery("#" + tableId + " caption").length == 0) {
-				jQuery("<caption style='display:none'>" + caption + "</caption>").prependTo("#" + tableId);
+				jQuery("<caption style='color:white;font-size:3px;height:2px;display:'>" + caption + "</caption>").prependTo("#" + tableId);
 			}
 		}
 		
@@ -296,8 +379,13 @@
 		//--------------------
 		//Removing first two rows - they are report caption and summary per CMS report templates
 		function trimDuplicateReportCaptionSummary(tableId) {
-			jQuery("#" + tableId + " tr[role='row']:first").remove(); 
-			jQuery("#" + tableId + " tr[role='row']:first").remove(); 
+			if (rootContainerId === "reportContainer") {
+				jQuery("#" + tableId + " tr[role='row']:first").remove(); 
+				jQuery("#" + tableId + " tr[role='row']:first").remove(); 
+			} else {
+				jQuery("#" + tableId + " tr:first").remove(); 
+				jQuery("#" + tableId + " tr:first").remove(); 
+			}
 		}		
 
 		//---------------------------------------------------------------------
@@ -367,7 +455,15 @@
 				Report.refreshReport({freshData: true}, null, '');
 			}
 		}
+
+		//--------------------
+		function goToPage() {
+			if(viewer.jive) viewer.jive.hide();
+			var pageIndex = jQuery("#viewerToolbar.toolbar #pageNavigationAction").val();
+            viewer.reportInstance.gotoPage(pageIndex);
+		}
 		
+
 		//--------------------
 		function showReportOption() {
             if (Controls.controlDialog){
@@ -394,7 +490,7 @@
 		//--------------------
 		// Logger - web browser console log
 		function logMessage(message, style) {
-			if (true) {
+			if (debugLogEnabled) {
 				if (typeof style !== "undefined") {
 					if (browserType !== "IE") {
 						console.log("%c" + LOG_ID + message, style);
@@ -413,7 +509,7 @@
 		//	when to navigate page by clicking on the page navigation toolbar button.
 		//	therefore, we need to scan tables again.
 		function scanReportTables(rootId) {
-			logMessage("scanning report tables under #" + rootId);
+			logMessage("scanning report tables under!!! #" + rootId);
 			//finding tables that the 508 processor has not found.
 			jQuery("#" + rootId + " table.jrPage:not([id])" ).each(function( index ) {				
 				//set ID if no ID exists
@@ -421,7 +517,7 @@
 				if (typeof tableId === "undefined") {
 					tableId = "_bftable_" + Math.floor(Math.random() * 1000000000);
 					
-					jQuery(this).attr("id", tableId);			
+					jQuery(this).attr("id", tableId);
 					var tableContent = jQuery(this).text()
 					//Do not process Disclaimer sections
 					if ((tableContent.indexOf("Disclaimer") < 0) 
@@ -461,9 +557,9 @@
 					}
 				}
 			} catch (e) {
-				console.log(e);
+				logMessage(e, "color:red;");
 			} finally {
-				console.log("initialized="+ initialized);
+				logMessage("initialized="+ initialized);
 			}
 			return initialized;
 		}
@@ -516,7 +612,7 @@
 			, refreshCurrentReport: refreshCurrentReport
 			, showReportOption: showReportOption
 			, exportReport: exportReport
-			
+			, goToPage: goToPage			
 			//Getter and Setter
 			, getRootContainer: getRootContainer
 			, setRootContainer: setRootContainer
