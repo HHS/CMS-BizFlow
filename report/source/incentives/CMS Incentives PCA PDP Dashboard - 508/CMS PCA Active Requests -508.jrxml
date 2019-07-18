@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-10T16:52:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS PCA Active Requests" pageWidth="500" pageHeight="125" orientation="Landscape" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d9739caf-949b-4a83-b0cf-e52956a8ee1e">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508/Incentives_PCA_PDP_Dashboard___508/CMS_PCA_Active_Requests__508_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/Incentives_PCA_PDP_Dashboard___508/CMS_PCA_Active_Requests__508"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[LTRIM("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+
+	SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 0 AND 5 AND COM.INCEN_TYPE = 'PCA' THEN 1 ELSE 0 END) AS PCA_Green
+    
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 6 AND 8 AND COM.INCEN_TYPE = 'PCA' THEN 1 ELSE 0 END) AS PCA_Yellow
+
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            >= 9 AND COM.INCEN_TYPE = 'PCA' THEN 1 ELSE 0 END) AS PCA_Red	
+            
+			    
+FROM "HHS_CMS_HR"."VW_INCENTIVES_COM" COM
+        INNER JOIN PROCS P ON COM.PROC_ID = P.PROCID
+		LEFT OUTER JOIN  HHS_VW_CONSULTATION_PROC SC ON SC.PROCESS_ID = COM.PROC_ID
+
+WHERE P.STATE IN ('R', 'E') -- Active processes
+
+ AND (TO_DATE("COM"."REQ_DATE", 'YYYY/MM/DD') BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}) --  Plus Date range filter
+ 
+ 	AND (
+          ($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+          OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND COM.ADMIN_CODE = 'FC')
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+        )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children]]>
+	</queryString>
+	<field name="PCA_GREEN" class="java.math.BigDecimal"/>
+	<field name="PCA_YELLOW" class="java.math.BigDecimal"/>
+	<field name="PCA_RED" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="20" uuid="7bf25350-888e-495e-84f8-3555acbf521f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["All Active PCA Incentive Requests for CMS"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="30" forecolor="#000000" uuid="a9c97c8d-d914-4502-9eb3-352be492a8b1">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Displays the status of all active PCA requests and the time it takes to complete the activities"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="75" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="500" height="15" uuid="c346b7e2-863c-4df7-be4e-6d5e78910e6c"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+					<paragraph lineSpacing="Proportional"/>
+				</textElement>
+				<text><![CDATA[Physician's Comparability Allowance (PCA)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="15" width="166" height="20" uuid="4bdcf300-35d4-4b4a-875d-54fbc92a2fdc">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[9+ Business Days in PCA Incentives Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="15" width="167" height="20" uuid="2b4bf289-cc87-4369-96bd-334c213c0ee1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[6-8 Business Days in PCA Incentives Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="167" height="20" uuid="dec3b4b9-07c2-4d9c-bc31-2facf4f4a6dc">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[0-5 Business Days in PCA Incentives Workflow]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="35" width="167" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="59d837bc-0117-4ded-afc9-517369c8060c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PCA_GREEN} == null) ? "N/A" : $F{PCA_GREEN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="" x="0" y="55" width="500" height="20" uuid="fe415134-8efc-494b-9b7f-bbb84dbd491f">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box topPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[NOTE: Time to Complete Performance Goal for PCA requests is 8 Business Days.]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="334" y="35" width="166" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="2741213a-5cbe-4332-9b8a-573e5ee6fc22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PCA_RED} == null) ? "N/A" : $F{PCA_RED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="167" y="35" width="167" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="43816abf-3470-48e9-b387-d70385ecdcd0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PCA_YELLOW} == null) ? "N/A" : $F{PCA_YELLOW}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
