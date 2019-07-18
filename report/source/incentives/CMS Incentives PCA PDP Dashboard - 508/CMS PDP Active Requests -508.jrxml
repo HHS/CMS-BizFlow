@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2019-07-10T12:05:11 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMS PDP Active Requests" pageWidth="500" pageHeight="125" orientation="Landscape" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f8300598-04a9-4a1c-9af1-e5751551450f">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
+	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/Section_508/Incentives_PCA_PDP_Dashboard___508/CMS_PDP_Active_Requests__508"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/Section_508/Incentives_PCA_PDP_Dashboard___508/CMS_PDP_Active_Requests__508_files/main_jrxml"/>
+	<parameter name="COMPONENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CMS-wide"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ADMIN_CD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[LTRIM("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INC_SUBORG" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Yes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_FROM" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[EDATE(TODAY( ),-12)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMP_DATE_TO" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIMEZONE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["America/New_York"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+
+            
+    SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 0 AND 15 AND COM.INCEN_TYPE = 'PDP' THEN 1 ELSE 0 END) AS PDP_Green
+    
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            BETWEEN 16 AND 20 AND COM.INCEN_TYPE = 'PDP' THEN 1 ELSE 0 END) AS PDP_Yellow
+
+    ,SUM(CASE WHEN (HHS_FN_GET_BUSDAYSDIFF((SELECT HHS_CMS_HR.FN_CONVERT_UTC_TO_LOCAL(CREATIONDTIME, $P{TIMEZONE}) FROM PROCS WHERE PROCID =  FN_GET_RLVNTDATAVALUE(P.PROCID, 'I', 'N', 'parentProcId') ), SYSDATE))
+            >= 21 AND COM.INCEN_TYPE = 'PDP' THEN 1 ELSE 0 END) AS PDP_Red
+			    
+FROM "HHS_CMS_HR"."VW_INCENTIVES_COM" COM
+        INNER JOIN PROCS P ON COM.PROC_ID = P.PROCID
+		LEFT OUTER JOIN  HHS_VW_CONSULTATION_PROC SC ON SC.PROCESS_ID = COM.PROC_ID
+
+WHERE P.STATE IN ('R', 'E') -- Active processes
+
+ AND (TO_DATE("COM"."REQ_DATE", 'YYYY/MM/DD') BETWEEN $P{COMP_DATE_FROM} AND $P{COMP_DATE_TO}) --  Plus Date range filter
+ 
+ 	AND (
+          ($P{COMPONENT} = 'CMS-wide' AND COM.ADMIN_CODE LIKE 'FC%') 
+          OR ($P{COMPONENT} = 'Office of the Administrator (OA) Only' AND COM.ADMIN_CODE = 'FC')
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'Yes' AND COM.ADMIN_CODE LIKE UPPER('$P!{ADMIN_CD}' || '%'))
+          OR ($P{COMPONENT} = 'By Admin Code' AND $P{INC_SUBORG} = 'No' AND COM.ADMIN_CODE = UPPER($P{ADMIN_CD}))
+        )  -- Admin Code filter: CMS-wide; FC only; Admin Code with children; Admin Code w/o children]]>
+	</queryString>
+	<field name="PDP_GREEN" class="java.math.BigDecimal"/>
+	<field name="PDP_YELLOW" class="java.math.BigDecimal"/>
+	<field name="PDP_RED" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="0" width="500" height="20" uuid="2725f581-2e9b-49cb-a8b0-da231dee9028">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["All Active PDP Incentive Requests for CMS"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="500" height="30" forecolor="#000000" uuid="4bff473b-871c-4447-8538-9e44a63f7352">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Displays the status of all active PDP requests and the time it takes to complete the activities"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="75" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="15" width="167" height="20" uuid="ad060427-7d47-4123-93d0-eebeacd0ef88">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[0-15 Business Days in PDP Incentives Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="500" height="15" uuid="92fa7051-3706-4c40-b282-700e59f084e5"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Physician and Dentist Pay (PDP)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="167" y="15" width="167" height="20" uuid="db327a52-3f98-43d2-b013-5081c8c60921">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[16-20 Business Days in PDP Incentives Workflow]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="334" y="15" width="166" height="20" uuid="39f71716-19d1-4909-987c-78e0285afddd">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="2" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0" leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[21+ Business Days in PDP Incentives Workflow]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="334" y="35" width="166" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b79a4ad7-5e73-4cad-b73a-0f179cdb8947">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PDP_RED} == null) ? "N/A" : $F{PDP_RED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="167" y="35" width="167" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="d133fb5f-41dd-46a0-b136-96a017f5962d">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PDP_YELLOW} == null) ? "N/A" : $F{PDP_YELLOW}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="35" width="167" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="53ba20f1-883e-464a-ad70-54ecfed2992b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{PDP_GREEN} == null) ? "N/A" : $F{PDP_GREEN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="55" width="500" height="20" uuid="abbb1493-3980-4d2f-b31e-3cbd427359a2"/>
+				<box topPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="6.0"/>
+				</textElement>
+				<text><![CDATA[NOTE: Time to Complete Performance Goal for PDP requests is 20 Business Days.]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>
