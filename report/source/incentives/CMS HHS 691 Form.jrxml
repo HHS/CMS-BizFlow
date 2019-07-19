@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-04-26T12:22:33 -->
+<!-- 2019-07-18T23:49:35 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HHS_691" pageWidth="612" pageHeight="792" columnWidth="556" leftMargin="28" rightMargin="28" topMargin="23" bottomMargin="14" uuid="7c334dda-d299-4536-b100-e384d1d39b94">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/HHS_691_Form"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/HHS_691_Form_files/HHS_691_Form_"/>
 	<parameter name="Checked" class="java.lang.String" isForPrompting="false">
@@ -1581,29 +1581,41 @@ AND  COM.PROC_ID = $P{PROCID}]]>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{PDP_TYPE_OTHER}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="3" y="226" width="40" height="13" uuid="46181df1-39e2-4661-89e2-0393dbd7d088">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_FED_EMPLOYEE} == "Y") ? $F{CURRENT_PAY_GRADE} : ""]]></textFieldExpression>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_PAY_GRADE} != null) ? $F{CURRENT_PAY_GRADE} : ""]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="48" y="226" width="40" height="13" uuid="b317a7ae-e6bb-449e-ace5-3e851ef15e62">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_FED_EMPLOYEE} == "Y") ? $F{CURRENT_PAY_STEP} : ""]]></textFieldExpression>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_PAY_STEP} != null) ? $F{CURRENT_PAY_STEP} : ""]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="3" y="255" width="40" height="13" uuid="62359618-7fe0-4554-9d40-ffcbd9bffdeb">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_FED_EMPLOYEE} == "Y") ? $F{CURRENT_PAY_TABLE} : ""]]></textFieldExpression>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_PAY_TABLE} != null) ? $F{CURRENT_PAY_TABLE} : ""]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="48" y="255" width="40" height="13" uuid="99b4720d-a38d-4737-92f3-8d42c3bee7c8">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_FED_EMPLOYEE} == "Y") ? $F{CURRENT_PAY_TIER} : ""]]></textFieldExpression>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Boolean ($F{CURRENT_PAY_TIER} != null) ? $F{CURRENT_PAY_TIER} : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="93" y="225" width="285" height="15" uuid="2ce7be30-a11e-477e-bc05-84358030b03f">
@@ -1613,7 +1625,7 @@ AND  COM.PROC_ID = $P{PROCID}]]>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="92" y="254" width="285" height="15" uuid="57d52409-27c2-413b-8cbc-a85007329008"/>
-				<textFieldExpression><![CDATA[new Boolean ($F{CLINICAL_SPECIALTY_BOARD_CERT} != "Other") ? $F{CLINICAL_SPECIALTY_BOARD_CERT} : $F{OTHER_SPECIALTY}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($F{CLINICAL_SPECIALTY_BOARD_CERT}.contains("Other")) ? $F{CLINICAL_SPECIALTY_BOARD_CERT}.replace( "Other", $F{OTHER_SPECIALTY} ) : $F{CLINICAL_SPECIALTY_BOARD_CERT}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###,##0.00" isBlankWhenNull="true">
 				<reportElement x="398" y="225" width="155" height="15" uuid="656a0479-0d8a-4f20-b9ad-13ea3c76a632">

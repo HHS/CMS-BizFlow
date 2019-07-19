@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-05-01T14:54:22 -->
+<!-- 2019-07-18T23:48:42 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PDP Panel Documentation Forms" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="35" bottomMargin="18" uuid="797b5232-d5e5-4fef-b30f-a1c321f4eefa">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -10,7 +10,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="ireport.jasperserver.url" value="http://cms.bizflow.com/bizflowadvreport/"/>
-	<property name="ireport.jasperserver.user" value="clehman"/>
+	<property name="ireport.jasperserver.user" value="vprabhjyot"/>
 	<property name="ireport.jasperserver.report.resource" value="/reports/CMS/CMS_PDP_Panel_Documentation_Forms_files/main_jrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/reports/CMS/CMS_PDP_Panel_Documentation_Forms"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
@@ -138,7 +138,7 @@ AND COM.PROC_ID = $P{PROCID}]]>
 				<textElement textAlignment="Left" markup="styled">
 					<font fontName="Times New Roman" size="11" isBold="false"/>
 				</textElement>
-				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Panel’s Recommended Annual Salary</style>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Panelâ€™s Recommended Annual Salary</style>
 ]]></text>
 			</staticText>
 			<staticText>
@@ -146,7 +146,7 @@ AND COM.PROC_ID = $P{PROCID}]]>
 				<textElement textAlignment="Center" markup="styled">
 					<font fontName="Times New Roman" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[<style pdfFontName="Times-Bold">PHYSICIANS’ SPECIAL PAY
+				<text><![CDATA[<style pdfFontName="Times-Bold">PHYSICIANSâ€™ SPECIAL PAY
 COMPENSATION PANEL</style>
 ]]></text>
 			</staticText>
@@ -166,7 +166,7 @@ COMPENSATION PANEL</style>
 					<paragraph leftIndent="0"/>
 				</textElement>
 				<text><![CDATA[<style pdfFontName="Times-Roman">*Alternate
-In addition to the physician’s base salary (not including locality pay), the</style> <style isBold="true" isItalic="true"  pdfFontName="Times-BoldItalic">panel</style> <style pdfFontName="Times-Roman">recommends that the physician’s total compensation include the following:</style>
+In addition to the physicianâ€™s base salary (not including locality pay), the</style> <style isBold="true" isItalic="true"  pdfFontName="Times-BoldItalic">panel</style> <style pdfFontName="Times-Roman">recommends that the physicianâ€™s total compensation include the following:</style>
 ]]></text>
 			</staticText>
 			<staticText>
@@ -175,7 +175,7 @@ In addition to the physician’s base salary (not including locality pay), the</st
 					<font fontName="Times New Roman" size="11" isBold="false"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<text><![CDATA[            <style pdfFontName="Times-Roman">Current Salary – GP-			$__________     Base Salary (not including locality pay)
+				<text><![CDATA[            <style pdfFontName="Times-Roman">Current Salary â€“ GP-			$__________     Base Salary (not including locality pay)
             PDP in the amount of			$__________</style>     
 ]]></text>
 			</staticText>
@@ -203,7 +203,7 @@ In addition to the physician’s base salary (not including locality pay), the</st
 					<font fontName="Times New Roman" size="11" isBold="false"/>
 					<paragraph leftIndent="15"/>
 				</textElement>
-				<text><![CDATA[<style pdfFontName="Times-Roman">NOTE:  Chief Medical Officer (Panel Chair) &amp; OFM (funding clearance) signatures are documented on HHS-691 “Request for Title 38 Physicians and Dentists Pay.</style>]]></text>
+				<text><![CDATA[<style pdfFontName="Times-Roman">NOTE:  Chief Medical Officer (Panel Chair) &amp; OFM (funding clearance) signatures are documented on HHS-691 â€œRequest for Title 38 Physicians and Dentists Pay.</style>]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="32" width="136" height="15" uuid="d0e08cde-7734-4e36-86a4-9501646af6ea"/>
@@ -233,12 +233,12 @@ Position Description Number:</style>]]></text>
 				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Current Federal Employee:</style> ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="57" width="160" height="15" uuid="27e01641-0539-42b3-8ee3-1af56540a0d1"/>
+				<reportElement x="0" y="57" width="120" height="15" uuid="27e01641-0539-42b3-8ee3-1af56540a0d1"/>
 				<textElement markup="styled">
 					<font fontName="Times New Roman" size="11"/>
 					<paragraph leftIndent="15"/>
 				</textElement>
-				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Name of Physician:</style> <style pdfFontName="Times-Roman" isUnderline="true">Dr.</style>]]></text>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Name of Physician:</style>]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="146" width="210" height="15" uuid="f51b6c4c-194d-4a35-896a-0f51d87a1b51"/>
@@ -254,7 +254,7 @@ Position Description Number:</style>]]></text>
 					<font fontName="Times New Roman" size="11"/>
 					<paragraph leftIndent="15"/>
 				</textElement>
-				<text><![CDATA[<style pdfFontName="Times-Roman">The</style> <style isBold="true" isItalic="true" pdfFontName="Times-BoldItalic">manager</style> <style pdfFontName="Times-Roman">recommends that the physician’s total compensation include the following incentives:</style> ]]></text>
+				<text><![CDATA[<style pdfFontName="Times-Roman">The</style> <style isBold="true" isItalic="true" pdfFontName="Times-BoldItalic">manager</style> <style pdfFontName="Times-Roman">recommends that the physicianâ€™s total compensation include the following incentives:</style> ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="240" y="196" width="350" height="15" uuid="9385f3e5-12ac-4b28-8fe0-6da98d8fd1ba"/>
@@ -278,7 +278,7 @@ Position Description Number:</style>]]></text>
 					<font fontName="Times New Roman" size="11"/>
 					<paragraph leftIndent="15"/>
 				</textElement>
-				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Manager’s Recommended Annual Salary</style>]]></text>
+				<text><![CDATA[<style isBold="true" pdfFontName="Times-Bold">Managerâ€™s Recommended Annual Salary</style>]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="93" y="32" width="130" height="15" uuid="e64f8c66-bede-4968-b61b-7efc570aa7a7"/>
@@ -296,7 +296,7 @@ Position Description Number:</style>]]></text>
 					<font fontName="SansSerif" size="9"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Dr. " +$F{NAME}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="454" y="57" width="110" height="15" uuid="a61c9631-725b-410d-8a80-a1ed90a90d29">
@@ -368,7 +368,7 @@ Position Description Number:</style>]]></text>
 					<font fontName="SansSerif" size="9"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{POS_TITLE} + ", " + $F{PAY_PLAN} + ", " + $F{SERIES} + ", " + $F{GRADE} + ", " + $F{STEP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Boolean ($F{PAY_PLAN}.equals("ES"))? $F{POS_TITLE} + ", " + $F{PAY_PLAN} + ", " + $F{SERIES} : $F{POS_TITLE} + ", " + $F{PAY_PLAN} + ", " + $F{SERIES} + ", " + $F{GRADE} + ", " + $F{STEP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###,###" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="245" y="498" width="62" height="12" uuid="7b006f42-b969-4062-9d2c-da7a889341ce">
@@ -640,7 +640,7 @@ Compensation</style>
 				<textElement textAlignment="Center" markup="styled">
 					<font fontName="Times New Roman" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[<style pdfFontName="Times-Bold">PHYSICIANS’ SPECIAL PAY
+				<text><![CDATA[<style pdfFontName="Times-Bold">PHYSICIANSâ€™ SPECIAL PAY
 COMPENSATION PANEL</style>
 ]]></text>
 			</staticText>
