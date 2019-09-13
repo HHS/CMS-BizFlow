@@ -11,7 +11,6 @@
 * **ui** : UI form
 * **webapps** : Web application, including BizFlow web solution, WebMaker runtime directory
 
-
 ## Java Module Build Instruction
 
 ### CMS PDF Module
