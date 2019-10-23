@@ -2,9 +2,6 @@
 ## (a.k.a. NEIL - Networking people with Enterprise systems & Information Link)
 
 
-
-
-
 ## System Components
 
 * **database** : Database scripts for BIZFLOW schema and HHS_CMS_HR schema
